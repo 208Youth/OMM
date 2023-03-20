@@ -1,4 +1,4 @@
-package com.cc24.back;
+package com.cc24;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
