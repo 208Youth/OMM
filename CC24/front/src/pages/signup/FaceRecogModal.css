@@ -29,10 +29,10 @@
 }
 
 .btn-inactive {
-  margin: 2rem auto 2rem auto;
+  margin: 2rem 0 2rem 1.8rem;
   border-radius: 20px;
   width: 17rem;
-  height: 3rem;
+  height: 2.6rem;
   font-size: 1rem;
   font-weight: 700;
   background-color: white;
@@ -42,10 +42,10 @@
 }
 
 .btn-active {
-  margin: 2rem auto 2rem auto;
+  margin: 2rem 0 2rem 1.8rem;
   border-radius: 20px;
   width: 17rem;
-  height: 3rem;
+  height: 2.6rem;
   font-size: 1rem;
   font-weight: 500;
   color: white;
