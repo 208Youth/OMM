@@ -10,11 +10,11 @@ function FaceRecogModal() {
   
   // 얼굴 인증 버튼 누른후 인식이 되면 버튼 변경
   return (
-    <div className="flex-col w-80 mx-auto">
-      <p className="flex">
-        <img src={CloseBtn} className="w-8 h-8 ml-auto mt-2" alt="닫기" />
+    <div className="face-recog-modal">
+      <p className="face-recog-close-box">
+        <img src={CloseBtn} className="face-recog-close" alt="닫기" />
       </p>
-      <p className="text-3xl text-left ml-9 leading-relaxed">
+      <p className="face-recog-title">
         얼굴
         <br />
         인증
