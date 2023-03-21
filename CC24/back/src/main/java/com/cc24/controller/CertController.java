@@ -30,4 +30,11 @@ public class CertController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/job")
+    public ResponseEntity<?> getJobList() {
+        Map<String, Object> result = new HashMap<>();
+        result.put("list", certService.getJobList());
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 }
