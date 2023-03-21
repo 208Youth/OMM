@@ -1,10 +1,13 @@
 package com.cc24.service;
 
 import com.cc24.exception.CustomException;
+import com.cc24.model.dto.job.response.JobDto;
 import com.cc24.model.dto.university.AuthInfoDto;
 import com.cc24.model.dto.university.response.UniversityDto;
+import com.cc24.model.entity.job.Job;
 import com.cc24.model.entity.university.Student;
 import com.cc24.model.entity.university.University;
+import com.cc24.repository.job.JobRepository;
 import com.cc24.repository.university.StudentRepository;
 import com.cc24.repository.university.UniversityRepository;
 import com.cc24.util.error.ErrorCode;
@@ -20,6 +23,7 @@ import java.util.List;
 public class CertService {
     private final UniversityRepository universityRepository;
     private final StudentRepository studentRepository;
+    private final JobRepository jobRepository;
 
     public List<UniversityDto> getUniversityList() {
         List<University> universities = universityRepository.findAll();
@@ -43,5 +47,17 @@ public class CertService {
         if(student.getUniversity().getId() != universityId) {
             throw new CustomException(ErrorCode.CANNOT_AUTHORIZE_MEMBER);
         }
+    }
+
+    public List<JobDto> getJobList() {
+        List<Job> jobs = jobRepository.findAll();
+        List<JobDto> result = new ArrayList<>();
+        jobs.forEach(job -> {
+            result.add(JobDto.builder()
+                    .jobId(job.getId())
+                    .name(job.getName())
+                    .build());
+        });
+        return result;
     }
 }
