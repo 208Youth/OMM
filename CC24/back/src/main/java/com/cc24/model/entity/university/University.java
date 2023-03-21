@@ -10,9 +10,9 @@ import javax.persistence.*;
 public class University {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="university_id")
+    @Column(name = "university_id")
     private Long id;
 
-    @Column(name="name", nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 }
