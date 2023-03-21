@@ -12,9 +12,9 @@ import javax.persistence.*;
 public class Income extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="income_id")
+    @Column(name = "income_id")
     private Long id;
 
-    @Column(name="amount", nullable = false)
+    @Column(name = "amount", nullable = false)
     private Long amount;
 }

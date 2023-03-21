@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class Authenticator extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="authenticator_id")
+    @Column(name = "authenticator_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
