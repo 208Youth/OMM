@@ -15,11 +15,11 @@ public class CertService {
     private final CertRepository certRepository;
 
     public List<UniversityDto> getUniversityList() {
-        List<University> universities=certRepository.findAll();
-        List<UniversityDto> result=new ArrayList<>();
+        List<University> universities = universityRepository.findAll();
+        List<UniversityDto> result = new ArrayList<>();
         universities.forEach(university -> {
             result.add(UniversityDto.builder()
-                            .university_id(university.getId())
+                            .universityId(university.getId())
                             .name(university.getName())
                             .build());
         });

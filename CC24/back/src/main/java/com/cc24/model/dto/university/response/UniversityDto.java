@@ -1,5 +1,6 @@
 package com.cc24.model.dto.university.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @Getter
@@ -7,6 +8,8 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class UniversityDto {
-    private Long university_id;
+    @JsonProperty(value = "university_id")
+    private Long universityId;
+    @JsonProperty(value = "name")
     private String name;
 }
