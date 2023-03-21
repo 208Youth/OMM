@@ -37,4 +37,9 @@ public class CertController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @GetMapping("/job/{job-id}")
+    public ResponseEntity<?> getJobCert(@RequestBody AuthInfoDto authInfoDto, @PathVariable("job-id") Long jobId) {
+        certService.getJobCert(authInfoDto, jobId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
