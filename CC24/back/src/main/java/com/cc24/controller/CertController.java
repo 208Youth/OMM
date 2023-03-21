@@ -1,5 +1,6 @@
 package com.cc24.controller;
 
+import com.cc24.model.dto.estate.response.GetEstateResponseDto;
 import com.cc24.model.dto.income.response.GetIncomeResponseDto;
 import com.cc24.model.dto.job.response.GetJobsResponseDto;
 import com.cc24.model.dto.university.AuthInfoDto;
@@ -43,5 +44,10 @@ public class CertController {
     @GetMapping("/income")
     public ResponseEntity<?> getIncomeCert(@RequestBody AuthInfoDto authInfoDto) {
         return new ResponseEntity<>(new GetIncomeResponseDto(certService.getIncomeCert(authInfoDto)), HttpStatus.OK);
+    }
+
+    @GetMapping("/estate")
+    public ResponseEntity<?> getEstateCert(@RequestBody AuthInfoDto authInfoDto) {
+        return new ResponseEntity<>(new GetEstateResponseDto(certService.getEstateCert(authInfoDto)), HttpStatus.OK);
     }
 }

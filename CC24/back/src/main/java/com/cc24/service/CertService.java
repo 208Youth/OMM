@@ -4,11 +4,13 @@ import com.cc24.exception.CustomException;
 import com.cc24.model.dto.job.response.JobDto;
 import com.cc24.model.dto.university.AuthInfoDto;
 import com.cc24.model.dto.university.response.UniversityDto;
+import com.cc24.model.entity.estate.Estate;
 import com.cc24.model.entity.income.Income;
 import com.cc24.model.entity.job.Employee;
 import com.cc24.model.entity.job.Job;
 import com.cc24.model.entity.university.Student;
 import com.cc24.model.entity.university.University;
+import com.cc24.repository.estate.EstateRepository;
 import com.cc24.repository.income.IncomeRepository;
 import com.cc24.repository.job.EmployeeRepository;
 import com.cc24.repository.job.JobRepository;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +33,8 @@ public class CertService {
     private final JobRepository jobRepository;
     private final EmployeeRepository employeeRepository;
     private final IncomeRepository incomeRepository;
+    private final EstateRepository estateRepository;
+
 
     public List<UniversityDto> getUniversityList() {
         List<University> universities = universityRepository.findAll();
@@ -85,5 +90,16 @@ public class CertService {
 
         return incomeRepository.findByNameAndBirthDate(name, birthDate)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND)).getAmount();
+    }
+
+    public List<Long> getEstateCert(AuthInfoDto authInfoDto) {
+        String name = authInfoDto.getName();
+        Date birthDate = authInfoDto.getBirthDate();
+        List<Estate> estates=estateRepository.findByNameAndBirthDate(name, birthDate);
+        if(estates == null || estates.isEmpty()) {
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        }
+
+        return estates.stream().map(estate -> estate.getAmount()).collect(Collectors.toList());
     }
 }
