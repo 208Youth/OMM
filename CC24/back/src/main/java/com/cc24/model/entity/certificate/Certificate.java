@@ -11,9 +11,9 @@ import javax.persistence.*;
 public class Certificate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="certificate_id")
+    @Column(name = "certificate_id")
     private Long id;
 
-    @Column(name="name", nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 }

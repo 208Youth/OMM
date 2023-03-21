@@ -11,9 +11,9 @@ import javax.persistence.*;
 public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="job_id")
+    @Column(name = "job_id")
     private Long id;
 
-    @Column(name="name", nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 }

@@ -1,0 +1,10 @@
+.cert-title {
+  font-size: 3.4rem;
+  font-weight: 700;
+  margin-left: 2rem;
+}
+
+.cert-point {
+  color: rgba(70, 84, 163, 1);
+  font-weight: 700;
+}
