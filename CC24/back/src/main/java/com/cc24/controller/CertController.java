@@ -1,6 +1,8 @@
 package com.cc24.controller;
 
+import com.cc24.model.dto.job.response.GetJobsResponseDto;
 import com.cc24.model.dto.university.AuthInfoDto;
+import com.cc24.model.dto.university.response.GetUniversitiesResponseDto;
 import com.cc24.service.CertService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,26 +21,24 @@ public class CertController {
 
     @GetMapping("/university")
     public ResponseEntity<?> getUniversityList() {
-        Map<String, Object> result = new HashMap<>();
-        result.put("list", certService.getUniversityList());
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(new GetUniversitiesResponseDto(certService.getUniversityList()), HttpStatus.OK);
     }
 
     @GetMapping("/university/{university-id}")
-    public ResponseEntity<?> getUniversityCert(@RequestBody AuthInfoDto authInfoDto, @PathVariable("university-id") Long universityId) {
+    public ResponseEntity<?> getUniversityCert(@RequestBody AuthInfoDto authInfoDto,
+                                               @PathVariable("university-id") Long universityId) {
         certService.getUniversityCert(authInfoDto, universityId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/job")
     public ResponseEntity<?> getJobList() {
-        Map<String, Object> result = new HashMap<>();
-        result.put("list", certService.getJobList());
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(new GetJobsResponseDto(certService.getJobList()), HttpStatus.OK);
     }
 
     @GetMapping("/job/{job-id}")
-    public ResponseEntity<?> getJobCert(@RequestBody AuthInfoDto authInfoDto, @PathVariable("job-id") Long jobId) {
+    public ResponseEntity<?> getJobCert(@RequestBody AuthInfoDto authInfoDto,
+                                        @PathVariable("job-id") Long jobId) {
         certService.getJobCert(authInfoDto, jobId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
