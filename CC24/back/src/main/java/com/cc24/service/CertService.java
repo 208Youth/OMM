@@ -4,10 +4,12 @@ import com.cc24.exception.CustomException;
 import com.cc24.model.dto.job.response.JobDto;
 import com.cc24.model.dto.university.AuthInfoDto;
 import com.cc24.model.dto.university.response.UniversityDto;
+import com.cc24.model.entity.income.Income;
 import com.cc24.model.entity.job.Employee;
 import com.cc24.model.entity.job.Job;
 import com.cc24.model.entity.university.Student;
 import com.cc24.model.entity.university.University;
+import com.cc24.repository.income.IncomeRepository;
 import com.cc24.repository.job.EmployeeRepository;
 import com.cc24.repository.job.JobRepository;
 import com.cc24.repository.university.StudentRepository;
@@ -27,6 +29,7 @@ public class CertService {
     private final StudentRepository studentRepository;
     private final JobRepository jobRepository;
     private final EmployeeRepository employeeRepository;
+    private final IncomeRepository incomeRepository;
 
     public List<UniversityDto> getUniversityList() {
         List<University> universities = universityRepository.findAll();
@@ -74,5 +77,13 @@ public class CertService {
         if(employee.getJob().getId() != jobId) {
             throw new CustomException(ErrorCode.CANNOT_AUTHORIZE_MEMBER);
         }
+    }
+
+    public Long getIncomeCert(AuthInfoDto authInfoDto) {
+        String name = authInfoDto.getName();
+        Date birthDate = authInfoDto.getBirthDate();
+
+        return incomeRepository.findByNameAndBirthDate(name, birthDate)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND)).getAmount();
     }
 }

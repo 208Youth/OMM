@@ -1,5 +1,6 @@
 package com.cc24.controller;
 
+import com.cc24.model.dto.income.response.GetIncomeResponseDto;
 import com.cc24.model.dto.job.response.GetJobsResponseDto;
 import com.cc24.model.dto.university.AuthInfoDto;
 import com.cc24.model.dto.university.response.GetUniversitiesResponseDto;
@@ -8,10 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/cert")
@@ -41,5 +38,10 @@ public class CertController {
                                         @PathVariable("job-id") Long jobId) {
         certService.getJobCert(authInfoDto, jobId);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/income")
+    public ResponseEntity<?> getIncomeCert(@RequestBody AuthInfoDto authInfoDto) {
+        return new ResponseEntity<>(new GetIncomeResponseDto(certService.getIncomeCert(authInfoDto)), HttpStatus.OK);
     }
 }
