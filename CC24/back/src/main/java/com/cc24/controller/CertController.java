@@ -21,7 +21,7 @@ public class CertController {
 
     @GetMapping("/university")
     public ResponseEntity<?> getUniversityList() {
-        Map<String, Object> result=new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
         result.put("list", certService.getUniversityList());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
