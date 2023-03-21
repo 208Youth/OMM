@@ -1,6 +1,7 @@
 package com.cc24.controller;
 
 import com.cc24.model.dto.estate.response.GetEstateResponseDto;
+import com.cc24.model.dto.health.response.GetHealthResponseDto;
 import com.cc24.model.dto.income.response.GetIncomeResponseDto;
 import com.cc24.model.dto.job.response.GetJobsResponseDto;
 import com.cc24.model.dto.university.AuthInfoDto;
@@ -10,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/cert")
@@ -49,5 +53,11 @@ public class CertController {
     @GetMapping("/estate")
     public ResponseEntity<?> getEstateCert(@RequestBody AuthInfoDto authInfoDto) {
         return new ResponseEntity<>(new GetEstateResponseDto(certService.getEstateCert(authInfoDto)), HttpStatus.OK);
+    }
+    @GetMapping("/health")
+    public ResponseEntity<?> getHealthCert(@RequestBody AuthInfoDto authInfoDto) {
+        Map<String, Object> result=certService.getHealthCert(authInfoDto);
+        return new ResponseEntity<>(new GetHealthResponseDto((String) result.get("value"),
+                (Date) result.get("date")), HttpStatus.OK);
     }
 }
