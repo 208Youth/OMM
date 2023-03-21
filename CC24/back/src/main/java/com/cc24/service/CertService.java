@@ -95,7 +95,7 @@ public class CertService {
     public List<Long> getEstateCert(AuthInfoDto authInfoDto) {
         String name = authInfoDto.getName();
         Date birthDate = authInfoDto.getBirthDate();
-        List<Estate> estates=estateRepository.findByNameAndBirthDate(name, birthDate);
+        List<Estate> estates = estateRepository.findByNameAndBirthDate(name, birthDate);
         if(estates == null || estates.isEmpty()) {
             throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         }
