@@ -1,6 +1,7 @@
 package com.cc24.service;
 
 import com.metadium.did.MetadiumWallet;
+import com.metadium.did.crypto.MetadiumKey;
 import com.metadium.did.exception.DidException;
 import com.metadium.did.protocol.MetaDelegator;
 import com.metadium.did.verifiable.Verifier;
@@ -9,6 +10,7 @@ import com.metadium.vc.VerifiablePresentation;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.SignedJWT;
 import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,15 +28,24 @@ import org.springframework.stereotype.Service;
 public class DidService {
 
     private final MetaDelegator delegator;
-    private final Verifier verifier;
     private final Long ONE_YEAR = 365L * 24L * 60L * 60L * 1000L;
 
     /**
      * @return
      * @throws DidException
      */
-    public MetadiumWallet createDID() throws DidException {
+    public MetadiumWallet createDid() throws DidException {
         return MetadiumWallet.createDid(delegator);
+    }
+
+    /**
+     * @param wallet 키를 수정할 지갑 정보
+     * @throws InvalidAlgorithmParameterException
+     * @throws DidException
+     */
+    public void updateDidKey(MetadiumWallet wallet)
+        throws InvalidAlgorithmParameterException, DidException {
+        wallet.updateKeyOfDid(delegator, new MetadiumKey());
     }
     
     /**
@@ -85,77 +96,68 @@ public class DidService {
     }
 
     /**
-     * @param vpForVerify 발급자가 검증할 vp 정보
+     * @param serializedVP
      * @return
      * @throws ParseException
-     * @throws IOException
-     * @throws DidException
      */
-    public SignedJWT verifyPresentation(String vpForVerify)
-        throws ParseException, IOException, DidException {
+    public List<SignedJWT> getCredentials(String serializedVP) throws ParseException {
 
-        SignedJWT vp = SignedJWT.parse(vpForVerify);
-        if (!verifier.verify(vp)) {
-            log.info("vpForVerify 검증실패");
-        }
-        else if (vp.getJWTClaimsSet().getExpirationTime() != null && vp.getJWTClaimsSet().getExpirationTime().getTime() < new Date().getTime()) {
-            log.info("vpForVerify 만료");
-        }
+        VerifiablePresentation vp = new VerifiablePresentation(SignedJWT.parse(serializedVP));
+        List<SignedJWT> credentials = new ArrayList<>();
 
-        return vp;
+        for (Object o : vp.getVerifiableCredentials()) {
+            String serializedVC = (String) o;
+            SignedJWT signedVCJWT = SignedJWT.parse(serializedVC);
+            credentials.add(signedVCJWT);
+        }
+        return credentials;
     }
 
     /**
-     * @param vp
-     * @param holderWallet
+     * @param signedVCJWT
      * @return
      * @throws ParseException
      * @throws IOException
      * @throws DidException
      */
-    public Map<String, String> getClaims(SignedJWT vp, MetadiumWallet holderWallet)
+    public Map<String, String> getClaims(SignedJWT signedVCJWT)
         throws ParseException, IOException, DidException {
-
-        VerifiablePresentation vpObj = new VerifiablePresentation(vp);
-        String holderDid = vpObj.getHolder().toString();
 
         Map<String, String> claims = new HashMap<>();
 
-        // credential 목록 확인 및 검증
-        for (Object vc : vpObj.getVerifiableCredentials()) {
-            // credential 검증
-            SignedJWT signedVc = SignedJWT.parse((String)vc);
-            if (!verifier.verify(signedVc)) {
-                log.info("vp 검증실패");
-            }
-            else if (signedVc.getJWTClaimsSet().getExpirationTime() != null &&
-                signedVc.getJWTClaimsSet().getExpirationTime().getTime() < new Date().getTime()) {
-                log.info("vp 만료");
-            }
-
-            // credential 소유자 확인
-            if (!signedVc.getJWTClaimsSet().getSubject().equals(holderWallet.getDid()) ||
-                !holderDid.equals(holderWallet.getDid())) {
-                log.info("credential 소유자가 아님");
-            }
-
-            // 요구하는 발급자가 발급한 credential 인지 확인
-            VerifiableCredential credential = new VerifiableCredential(signedVc);
-            if (!credential.getIssuer().toString().equals(holderWallet.getDid())) {
-                log.info("credential 발급자 아님");
-            }
-
-            // claim 정보 확인
-            Map<String, String> subjects = credential.getCredentialSubject();
-            for (Map.Entry<String, String> entry : subjects.entrySet()) {
-                String claimName = entry.getKey();
-                String claimValue = entry.getValue();
-                System.out.println(claimName + "=" + claimValue);
-                claims.put(claimName, claimValue);
-            }
+        VerifiableCredential vc = new VerifiableCredential(signedVCJWT);
+        Map<String, String> subject = vc.getCredentialSubject();
+        for (Map.Entry<String, String> entry : subject.entrySet()) {
+            String name = entry.getKey();
+            String value = entry.getValue();
+            claims.put(name, value);
         }
 
         return claims;
+    }
+
+    private void verify(String serializedJWT) throws ParseException, IOException, DidException {
+
+        Verifier verifier = new Verifier();
+
+        SignedJWT signedJwt = SignedJWT.parse(serializedJWT);
+        if (!verifier.verify(signedJwt)) {
+            log.info("serializedJWT 검증실패");
+        } else if (signedJwt.getJWTClaimsSet().getExpirationTime() != null &&
+            signedJwt.getJWTClaimsSet().getExpirationTime().getTime() < new Date().getTime()) {
+            log.info("serializedJWT 만료");
+        }
+//            // credential 소유자 확인
+//            if (!signedVc.getJWTClaimsSet().getSubject().equals(holderWallet.getDid()) ||
+//                !holderDid.equals(holderWallet.getDid())) {
+//                log.info("credential 소유자가 아님");
+//            }
+//
+//            // 요구하는 발급자가 발급한 credential 인지 확인
+//            VerifiableCredential credential = new VerifiableCredential(signedVc);
+//            if (!credential.getIssuer().toString().equals(holderWallet.getDid())) {
+//                log.info("credential 발급자 아님");
+//            }
     }
 
     /**
