@@ -54,9 +54,10 @@ public class CertController {
     public ResponseEntity<?> getEstateCert(@RequestBody AuthInfoDto authInfoDto) {
         return new ResponseEntity<>(new GetEstateResponseDto(certService.getEstateCert(authInfoDto)), HttpStatus.OK);
     }
+
     @GetMapping("/health")
     public ResponseEntity<?> getHealthCert(@RequestBody AuthInfoDto authInfoDto) {
-        Map<String, Object> result=certService.getHealthCert(authInfoDto);
+        Map<String, Object> result = certService.getHealthCert(authInfoDto);
         return new ResponseEntity<>(new GetHealthResponseDto((String) result.get("value"),
                 (Date) result.get("date")), HttpStatus.OK);
     }
