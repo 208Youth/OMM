@@ -1,5 +1,7 @@
 package com.cc24.service;
 
+import com.cc24.exception.CustomException;
+import com.cc24.util.error.ErrorCode;
 import com.metadium.did.MetadiumWallet;
 import com.metadium.did.crypto.MetadiumKey;
 import com.metadium.did.exception.DidException;
@@ -30,6 +32,7 @@ public class DidService {
 
     private final MetaDelegator delegator;
     private final Long ONE_YEAR = 365L * 24L * 60L * 60L * 1000L;
+    private final Long FIVE_MINUTE = 5L * 60L * 1000L;
 
     /**
      * Did 지갑을 생성하는 함수
@@ -88,7 +91,7 @@ public class DidService {
         List<String> foundVcList) throws JOSEException {
 
         Date issuanceDate = new Date();
-        Date expirationDate = new Date(issuanceDate.getTime() + ONE_YEAR);
+        Date expirationDate = new Date(issuanceDate.getTime() + FIVE_MINUTE);
 
         return holderWallet.issuePresentation(
             Collections.singletonList(presentationName),
@@ -147,16 +150,16 @@ public class DidService {
      * @throws IOException
      * @throws DidException
      */
-    private void verify(String serializedJWT) throws ParseException, IOException, DidException {
+    public void verify(String serializedJWT) throws ParseException, IOException, DidException {
 
         Verifier verifier = new Verifier();
 
         SignedJWT signedJwt = SignedJWT.parse(serializedJWT);
         if (!verifier.verify(signedJwt)) {
-            log.info("serializedJWT 검증실패");
+            throw new CustomException(ErrorCode.JWT_VERIFY_FAILED);
         } else if (signedJwt.getJWTClaimsSet().getExpirationTime() != null &&
             signedJwt.getJWTClaimsSet().getExpirationTime().getTime() < new Date().getTime()) {
-            log.info("serializedJWT 만료");
+            throw new CustomException(ErrorCode.JWT_EXPIRED);
         }
 
 //            // credential 소유자 확인
