@@ -14,13 +14,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {CustomException.class})
-    protected ResponseEntity<ErrorResponse> handleCustomException(CustomException e){
+    protected ResponseEntity<ErrorResponse> handleCustomException(CustomException e) {
         log.error("handleCustomException throw CustomException : {}", e.getErrorCode());
         return ErrorResponse.toResponseEntity(e.getErrorCode());
     }
 
     @ExceptionHandler(value = {ReportRuntimeException.class})
-    protected ResponseEntity<ReportExceptionResponse> handleCustomException(ReportRuntimeException e){
+    protected ResponseEntity<ReportExceptionResponse> handleCustomException(ReportRuntimeException e) {
         log.error("handleCustomException throw ReportException : {}", e.getReportExceptionCode());
         return ReportExceptionResponse.toResponseEntity(e.getReportExceptionCode());
     }

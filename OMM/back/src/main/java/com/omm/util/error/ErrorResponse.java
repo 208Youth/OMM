@@ -8,9 +8,10 @@ import org.springframework.http.ResponseEntity;
 @Builder
 public class ErrorResponse {
     private final String message;
-    public static ResponseEntity<ErrorResponse> toResponseEntity(ErrorCode errorCode){
+
+    public static ResponseEntity<ErrorResponse> toResponseEntity(ErrorCode errorCode) {
         return ResponseEntity.status(errorCode.getHttpStatus())
-                .body((ErrorResponse.builder().message(errorCode.getDetail())).build() );
+                .body((ErrorResponse.builder().message(errorCode.getDetail())).build());
     }
 
 }

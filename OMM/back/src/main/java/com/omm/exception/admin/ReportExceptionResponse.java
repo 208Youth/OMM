@@ -9,8 +9,8 @@ import org.springframework.http.ResponseEntity;
 public class ReportExceptionResponse {
     private final String message;
 
-    public static ResponseEntity<ReportExceptionResponse> toResponseEntity(ReportExceptionCode reportExceptionCode){
+    public static ResponseEntity<ReportExceptionResponse> toResponseEntity(ReportExceptionCode reportExceptionCode) {
         return ResponseEntity.status(reportExceptionCode.getHttpStatus())
-                .body((ReportExceptionResponse.builder().message(reportExceptionCode.getDetail())).build() );
+                .body((ReportExceptionResponse.builder().message(reportExceptionCode.getDetail())).build());
     }
 }
