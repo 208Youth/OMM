@@ -1,5 +1,6 @@
 package com.cc24.controller;
 
+import com.cc24.model.dto.certificate.response.GetCertificatesResponseDto;
 import com.cc24.model.dto.estate.response.GetEstateResponseDto;
 import com.cc24.model.dto.health.response.GetHealthResponseDto;
 import com.cc24.model.dto.income.response.GetIncomeResponseDto;
@@ -60,5 +61,10 @@ public class CertController {
         Map<String, Object> result = certService.getHealthCert(authInfoDto);
         return new ResponseEntity<>(new GetHealthResponseDto((String) result.get("value"),
                 (Date) result.get("date")), HttpStatus.OK);
+    }
+
+    @GetMapping("/certificate")
+    public ResponseEntity<?> getCertificateList() {
+        return new ResponseEntity<>(new GetCertificatesResponseDto(certService.getCertificateList()), HttpStatus.OK);
     }
 }
