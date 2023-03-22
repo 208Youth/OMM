@@ -1,2 +1,0 @@
-
-    for text in texts:
