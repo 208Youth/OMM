@@ -67,4 +67,11 @@ public class CertController {
     public ResponseEntity<?> getCertificateList() {
         return new ResponseEntity<>(new GetCertificatesResponseDto(certService.getCertificateList()), HttpStatus.OK);
     }
+
+    @GetMapping("/certificate/{certificate-id}")
+    public ResponseEntity<?> getCertificateCert(@RequestBody AuthInfoDto authInfoDto,
+                                        @PathVariable("certificate-id") Long certificateId) {
+        certService.getCertificateCert(authInfoDto, certificateId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
