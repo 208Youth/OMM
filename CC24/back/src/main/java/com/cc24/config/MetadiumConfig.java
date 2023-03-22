@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class NetworkConfig {
+public class MetadiumConfig {
 
     @Value("${metadium.apikey}")
     private String apiKey;
