@@ -4,7 +4,7 @@ import com.cc24.model.dto.estate.response.GetEstateResponseDto;
 import com.cc24.model.dto.health.response.GetHealthResponseDto;
 import com.cc24.model.dto.income.response.GetIncomeResponseDto;
 import com.cc24.model.dto.job.response.GetJobsResponseDto;
-import com.cc24.model.dto.university.AuthInfoDto;
+import com.cc24.model.dto.AuthInfoDto;
 import com.cc24.model.dto.university.response.GetUniversitiesResponseDto;
 import com.cc24.service.CertService;
 import lombok.RequiredArgsConstructor;

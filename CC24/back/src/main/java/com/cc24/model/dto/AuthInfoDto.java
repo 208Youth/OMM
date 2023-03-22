@@ -1,4 +1,4 @@
-package com.cc24.model.dto.university;
+package com.cc24.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

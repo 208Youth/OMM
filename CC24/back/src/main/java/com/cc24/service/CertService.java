@@ -2,7 +2,7 @@ package com.cc24.service;
 
 import com.cc24.exception.CustomException;
 import com.cc24.model.dto.job.response.JobDto;
-import com.cc24.model.dto.university.AuthInfoDto;
+import com.cc24.model.dto.AuthInfoDto;
 import com.cc24.model.dto.university.response.UniversityDto;
 import com.cc24.model.entity.estate.Estate;
 import com.cc24.model.entity.health.Health;
