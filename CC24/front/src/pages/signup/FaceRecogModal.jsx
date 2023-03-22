@@ -3,17 +3,17 @@ import CloseBtn from '../../assets/CloseBtn.svg';
 import FaceId from '../../assets/FaceId.svg';
 import './FaceRecogModal.css';
 
-function FaceRecogModal() {
+function FaceRecogModal(props) {
   const [completed, setBtn] = useState(false);
   const [camera, setCamera] = useState(false);
 
   // 얼굴 인증 버튼 누른후 인식이 되면 버튼 변경
   return (
-    <div className="flex-col w-80 mx-auto">
-      <p className="flex">
-        <img src={CloseBtn} className="w-8 h-8 ml-auto mt-2" alt="닫기" />
+    <div className="flex-col mx-auto">
+      <p className="flex ml-64">
+        <img onClick={() => props.setFaceModal(false)} src={CloseBtn} className="w-8 h-8" alt="닫기" />
       </p>
-      <p className="text-3xl text-left ml-9 leading-relaxed">
+      <p className="text-3xl text-left ml-2 mt-2 leading-relaxed">
         얼굴
         <br />
         인증
@@ -22,7 +22,7 @@ function FaceRecogModal() {
         <img
           onClick={() => {
             console.log('카메라 시작');
-            setCamera(true);
+            setCamera(true)
           }}
           aria-hidden="true"
           src={FaceId}

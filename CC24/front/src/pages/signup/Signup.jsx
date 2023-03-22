@@ -1,7 +1,17 @@
+import React, { useEffect, useState } from 'react';
 import './Signup.css';
-import React from 'react';
+import Modal from 'react-modal';
+import FaceRecogModal from './FaceRecogModal';
 
 function Signup() {
+  const [faceModal, setFaceModal] = useState(false);
+  useEffect(() => {
+    if (faceModal) {
+      console.log('모달 열림');
+    } else {
+      console.log('모달 닫힘');
+    }
+  }, [faceModal]);
   const years = [];
   for (let i = 1980; i < 2004; i++) {
     years.push(i);
@@ -16,6 +26,9 @@ function Signup() {
   }
   return (
     <div className="wrap-box">
+      <Modal isOpen={faceModal} onRequestClose={() => setFaceModal(false)} ariaHideApp={false}>
+        <FaceRecogModal setFaceModal={setFaceModal}/>
+      </Modal>
       <div className="flex-col w-80 mx-auto">
         <p className="text-3xl text-left mb-4 leading-relaxed">
           회원
@@ -118,15 +131,40 @@ function Signup() {
               </div>
             </div>
             <div className="grid grid-cols-6 gap-4 my-6">
-              <div htmlFor="face" className="col-start-1 col-end-3">
-                얼굴인식
+              <div htmlFor="face" className="col-start-1 col-end-3 inline">
+                얼굴 인식
               </div>
               <div className="col-end-7 col-span-2">
-                <button className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                <div onClick={() => { setFaceModal(true); }} className=" inline text-white bg-[#4654a3] hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mt-1 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                   촬영
-                </button>
+                </div>
                 <svg
-                  className="w-6"
+                  className="w-6 ml-1 inline text-[#4654a3]"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div className="grid grid-cols-6 gap-4 my-6">
+              <div htmlFor="face" className="col-start-1 col-end-3 inline">
+                본인 확인
+              </div>
+              <div className="col-end-7 col-span-2">
+                <div className="inline text-white bg-[#4654a3] hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                  촬영
+                </div>
+                <svg
+                  className="w-6 ml-1 inline text-[#4654a3]"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="1"
