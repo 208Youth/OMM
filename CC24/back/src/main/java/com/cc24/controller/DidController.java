@@ -9,8 +9,8 @@ import com.metadium.did.MetadiumWallet;
 import com.metadium.did.exception.DidException;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.SignedJWT;
+import java.io.IOException;
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,16 +47,14 @@ public class DidController {
         try {
             MetadiumWallet holderWallet = MetadiumWallet.fromJson(
                 credentialRequestDto.getWalletJson());
-            MetadiumWallet issuerWallet = didService.createDid(); // 처리
 
             String vc = didService.issueCredential(
-                issuerWallet,
                 credentialRequestDto.getCredentialName(),
                 holderWallet.getDid(),
                 credentialRequestDto.getClaims());
 
             return new ResponseEntity<>(vc, HttpStatus.OK);
-        } catch (DidException | JOSEException | ParseException e) {
+        } catch (JOSEException | ParseException e) {
             throw new CustomException(ErrorCode.DID_ERROR);
         }
     }
@@ -72,11 +70,14 @@ public class DidController {
             List<String> foundVcList = didService.findVC(
                 presentationRequestDto.getHolderVcList(),
                 presentationRequestDto.getTypesOfRequireVcs());
+            for (String serializedJWT : foundVcList) {
+                didService.verify(serializedJWT);
+            }
             String vp = didService.issuePresentation(holderWallet,
                 presentationRequestDto.getPresentationName(), foundVcList);
 
             return new ResponseEntity<>(vp, HttpStatus.OK);
-        } catch (ParseException | JOSEException e) {
+        } catch (ParseException | JOSEException | IOException | DidException e) {
             throw new CustomException(ErrorCode.DID_ERROR);
         }
     }
@@ -86,6 +87,7 @@ public class DidController {
         @RequestBody String vp) { // dto 만들겠삼..
 
         try {
+            didService.verify(vp);
             List<SignedJWT> credentials = didService.getCredentials(vp);
             Map<String, String> claims = new HashMap<>();
             for (SignedJWT credential : credentials) {
@@ -93,7 +95,7 @@ public class DidController {
             }
 
             return new ResponseEntity<>(claims, HttpStatus.OK);
-        } catch (ParseException e) {
+        } catch (ParseException | IOException | DidException e) {
             throw new CustomException(ErrorCode.DID_ERROR);
         }
     }
