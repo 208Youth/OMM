@@ -7,6 +7,7 @@ import com.cc24.service.DidService;
 import com.cc24.util.error.ErrorCode;
 import com.metadium.did.MetadiumWallet;
 import com.metadium.did.exception.DidException;
+import com.metadium.vc.VerifiablePresentation;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.SignedJWT;
 import java.io.IOException;
@@ -71,7 +72,8 @@ public class DidController {
                 presentationRequestDto.getHolderVcList(),
                 presentationRequestDto.getTypesOfRequireVcs());
             for (String serializedJWT : foundVcList) {
-                didService.verify(serializedJWT);
+                SignedJWT signedJwt = SignedJWT.parse(serializedJWT);
+                didService.verify(signedJwt, holderWallet.getDid());
             }
             String vp = didService.issuePresentation(holderWallet,
                 presentationRequestDto.getPresentationName(), foundVcList);
@@ -84,13 +86,14 @@ public class DidController {
 
     @GetMapping("/presentation")
     public ResponseEntity<?> verifyPresentation(
-        @RequestBody String vp) { // dto 만들겠삼..
+        @RequestBody String serializedVP) { // dto 만들겠삼..
 
         try {
-            didService.verify(vp);
+            VerifiablePresentation vp = new VerifiablePresentation(SignedJWT.parse(serializedVP));
             List<SignedJWT> credentials = didService.getCredentials(vp);
             Map<String, String> claims = new HashMap<>();
             for (SignedJWT credential : credentials) {
+                didService.verify(credential, "", vp.getHolder().toString());
                 claims.putAll(didService.getClaims(credential));
             }
 

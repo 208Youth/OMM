@@ -39,12 +39,12 @@ public class DidService {
     /**
      * 발행자 설정 함수
      *
-     * @param did
+     * @param walletJson
      */
     @Autowired
-    public void setIssuerWallet(@Value("${metadium.issuer.wallet}") String did) {
+    public void setIssuerWallet(@Value("${metadium.issuer.wallet-json}") String walletJson) {
         try {
-            this.issuerWallet = MetadiumWallet.fromJson(did);
+            this.issuerWallet = MetadiumWallet.fromJson(walletJson);
         } catch (ParseException e) {
             throw new CustomException(ErrorCode.DID_ERROR);
         }
@@ -124,19 +124,17 @@ public class DidService {
     /**
      * VP에서 VC 추출하는 함수
      *
-     * @param serializedVP
+     * @param vp
      * @return
      * @throws ParseException
      */
-    public List<SignedJWT> getCredentials(String serializedVP) throws ParseException {
+    public List<SignedJWT> getCredentials(VerifiablePresentation vp) throws ParseException {
 
-        VerifiablePresentation vp = new VerifiablePresentation(SignedJWT.parse(serializedVP));
         List<SignedJWT> credentials = new ArrayList<>();
 
         for (Object o : vp.getVerifiableCredentials()) {
             String serializedVC = (String) o;
-            SignedJWT signedVCJWT = SignedJWT.parse(serializedVC);
-            credentials.add(signedVCJWT);
+            credentials.add(SignedJWT.parse(serializedVC));
         }
         return credentials;
     }
@@ -167,22 +165,51 @@ public class DidService {
     /**
      * serializedJWT를 검증하는 함수
      *
-     * @param serializedJWT
+     * @param signedJwt
+     * @param holderDid
      * @throws ParseException
      * @throws IOException
      * @throws DidException
      */
-    public void verify(String serializedJWT) throws ParseException, IOException, DidException {
+    public void verify(SignedJWT signedJwt, String holderDid)
+        throws ParseException, IOException, DidException {
 
         Verifier verifier = new Verifier();
 
-        SignedJWT signedJwt = SignedJWT.parse(serializedJWT);
         if (!verifier.verify(signedJwt)) {
             throw new CustomException(ErrorCode.JWT_VERIFY_FAILED);
         } else if (signedJwt.getJWTClaimsSet().getExpirationTime() != null &&
             signedJwt.getJWTClaimsSet().getExpirationTime().getTime() < new Date().getTime()) {
             throw new CustomException(ErrorCode.JWT_EXPIRED);
         }
+        // credential 소유자 확인
+        if (!signedJwt.getJWTClaimsSet().getSubject().equals(holderDid)) {
+            throw new CustomException(ErrorCode.JWT_SIGN_NOT_MATCH);
+        }
+        // 요구하는 발급자가 발급한 credential 인지 확인
+        VerifiableCredential credential = new VerifiableCredential(signedJwt);
+        if (!credential.getIssuer().toString().equals(issuerWallet.getDid())) {
+            throw new CustomException(ErrorCode.JWT_SIGN_NOT_MATCH);
+        }
+    }
+
+    /**
+     *
+     * @param signedJwt
+     * @param holderDid
+     * @param presentorDid
+     * @throws ParseException
+     * @throws IOException
+     * @throws DidException
+     */
+    public void verify(SignedJWT signedJwt, String holderDid, String presentorDid)
+        throws ParseException, IOException, DidException {
+        verify(signedJwt, holderDid);
+        // credential 소유자 확인
+        if (!presentorDid.equals(holderDid)) {
+            throw new CustomException(ErrorCode.JWT_SIGN_NOT_MATCH);
+        }
+
     }
 
 
