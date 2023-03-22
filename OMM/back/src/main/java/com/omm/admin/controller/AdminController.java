@@ -2,6 +2,7 @@ package com.omm.admin.controller;
 
 import com.omm.admin.model.dto.ReportDto;
 import com.omm.admin.model.request.CreateReportRequestDto;
+import com.omm.admin.model.request.PunishMemberRequestDto;
 import com.omm.admin.model.response.GetReportsResponseDto;
 import com.omm.admin.service.AdminService;
 import com.omm.exception.admin.ReportExceptionCode;
@@ -18,37 +19,59 @@ public class AdminController {
 
     private final AdminService adminService;
 
-    // 채팅방에서 신고 내역을 생성한다.
+    /**
+     * 채팅방에서 새로운 신고 내역을 생성하는 함수
+     * 회원 로직 생성 후 추가 수정 필요
+     * @param createReportRequestDto 신고내역정보가 담긴 객체
+     * @return
+     */
     @PostMapping("/report")
     public ResponseEntity<?> createReport(@RequestBody CreateReportRequestDto createReportRequestDto){
         // JWT 생성하고 현재 로그인 유저, 타겟 로그인유저 정보 알아와야 함
         String memberNickname = "김미미";
-        String targetNickname = "곽두팔";
+        Long targetId = 5L;
 
         // 결과에 따라
-        if(adminService.createReport(createReportRequestDto, memberNickname, targetNickname)){
+        if(adminService.createReport(createReportRequestDto, memberNickname, targetId)){
             return new ResponseEntity<>(HttpStatus.OK);
         }else{
             throw new ReportRuntimeException(ReportExceptionCode.REPORT_POST_SAVE_EXCEPTION);
         }
     }
 
-    // 신고내역을 불러온다
+    /**
+     * 신고 내역을 불러오는 함수
+     * @return
+     */
     @GetMapping("/report")
     public ResponseEntity<?> getReportList(){
         return new ResponseEntity<>(new GetReportsResponseDto(adminService.getReportList()), HttpStatus.OK);
     }
 
-    // 특정 신고 내역을 조회한다.
+    /**
+     * 특정 신고 내역을 불러오는 함수
+     * @param reportId 신고내역 아이디
+     * @return
+     */
     @GetMapping("/report/{report-id}")
     public ResponseEntity<?> getReport(@PathVariable("report-id") Long reportId){
         return new ResponseEntity<>(adminService.getReport(reportId), HttpStatus.OK);
     }
 
-    // 신고를 처리했다고 전송한다.
+    /**
+     * 신고 내역을 "처리 완료" 상태로 변경
+     * @param reportId 신고내역 아이디
+     * @return
+     */
     @PutMapping("/report/{report-id}")
     public ResponseEntity<?> processReport(@PathVariable("report-id") Long reportId){
         adminService.processReport(reportId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/penalty")
+    public ResponseEntity<?> punishMember(@RequestBody PunishMemberRequestDto punishMemberRequestDto){
+        adminService.punishMember(punishMemberRequestDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
