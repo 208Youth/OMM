@@ -8,6 +8,9 @@ import java.time.LocalDate;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "member")
 public class Member {
 
@@ -15,19 +18,13 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(name = "address", nullable = false)
-    private String address;
-
-    @Column(name = "did_key", nullable = false)
-    private String didKey;
-
     @Column(name = "is_black", nullable = false)
     private boolean isBlack;
 
     @Column(name = "grade", nullable = false)
     private String grade;
 
-    @Column(name = "nickname", nullable = false)
+    @Column(name = "nickname", nullable = false, unique = true)
     private String nickname;
 
     @Column(name = "suspend_date")

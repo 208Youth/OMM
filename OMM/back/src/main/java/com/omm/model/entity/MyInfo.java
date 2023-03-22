@@ -1,12 +1,18 @@
 package com.omm.model.entity;
 
 import com.omm.model.entity.enums.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "myinfo")
 public class MyInfo {
 

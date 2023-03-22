@@ -1,6 +1,8 @@
 package com.omm.handler;
 
 import com.omm.exception.CustomException;
+import com.omm.exception.report.ReportExceptionResponse;
+import com.omm.exception.report.ReportRuntimeException;
 import com.omm.util.error.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -15,5 +17,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<ErrorResponse> handleCustomException(CustomException e){
         log.error("handleCustomException throw CustomException : {}", e.getErrorCode());
         return ErrorResponse.toResponseEntity(e.getErrorCode());
+    }
+
+    @ExceptionHandler(value = {ReportRuntimeException.class})
+    protected ResponseEntity<ReportExceptionResponse> handleCustomException(ReportRuntimeException e){
+        log.error("handleCustomException throw ReportException : {}", e.getReportExceptionCode());
+        return ReportExceptionResponse.toResponseEntity(e.getReportExceptionCode());
     }
 }
