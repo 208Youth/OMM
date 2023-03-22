@@ -47,16 +47,14 @@ public class DidController {
         try {
             MetadiumWallet holderWallet = MetadiumWallet.fromJson(
                 credentialRequestDto.getWalletJson());
-            MetadiumWallet issuerWallet = didService.createDid(); // 처리
 
             String vc = didService.issueCredential(
-                issuerWallet,
                 credentialRequestDto.getCredentialName(),
                 holderWallet.getDid(),
                 credentialRequestDto.getClaims());
 
             return new ResponseEntity<>(vc, HttpStatus.OK);
-        } catch (DidException | JOSEException | ParseException e) {
+        } catch (JOSEException | ParseException e) {
             throw new CustomException(ErrorCode.DID_ERROR);
         }
     }
