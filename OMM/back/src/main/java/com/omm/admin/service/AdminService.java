@@ -3,6 +3,8 @@ package com.omm.admin.service;
 import com.omm.admin.model.dto.ReportDto;
 import com.omm.admin.model.request.CreateReportRequestDto;
 import com.omm.admin.repository.ReportRepository;
+import com.omm.exception.admin.ReportExceptionCode;
+import com.omm.exception.admin.ReportRuntimeException;
 import com.omm.member.repository.MemberRepository;
 import com.omm.model.entity.Member;
 import com.omm.model.entity.Report;
@@ -36,11 +38,6 @@ public class AdminService {
 
         // report 를 생성한다.
         try{
-//            ReportCategory reportCategory = null;
-//            String cate = createReportRequest.getCategory();
-//            switch (cate){
-//            }
-
             Report report = Report.builder()
                     .member(member)
                     .reported(target)
@@ -70,6 +67,20 @@ public class AdminService {
                     .category(report.getCategory().name()).build()
             );
         });
+        return result;
+    }
+
+    public ReportDto getReport(Long reportId) {
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(() -> new ReportRuntimeException(ReportExceptionCode.REPORT_NOT_FOUND));
+        ReportDto result = ReportDto.builder()
+            .reportId(report.getId())
+            .memberId(report.getMember().getId())
+            .targetId(report.getReported().getId())
+            .reason(report.getReason())
+            .image(report.getImage())
+            .state(report.isState())
+            .category(report.getCategory().name()).build();
         return result;
     }
 }
