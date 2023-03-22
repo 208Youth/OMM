@@ -1,10 +1,11 @@
 package com.cc24.controller;
 
+import com.cc24.model.dto.certificate.response.GetCertificatesResponseDto;
 import com.cc24.model.dto.estate.response.GetEstateResponseDto;
 import com.cc24.model.dto.health.response.GetHealthResponseDto;
 import com.cc24.model.dto.income.response.GetIncomeResponseDto;
 import com.cc24.model.dto.job.response.GetJobsResponseDto;
-import com.cc24.model.dto.university.AuthInfoDto;
+import com.cc24.model.dto.AuthInfoDto;
 import com.cc24.model.dto.university.response.GetUniversitiesResponseDto;
 import com.cc24.service.CertService;
 import lombok.RequiredArgsConstructor;
@@ -54,10 +55,16 @@ public class CertController {
     public ResponseEntity<?> getEstateCert(@RequestBody AuthInfoDto authInfoDto) {
         return new ResponseEntity<>(new GetEstateResponseDto(certService.getEstateCert(authInfoDto)), HttpStatus.OK);
     }
+
     @GetMapping("/health")
     public ResponseEntity<?> getHealthCert(@RequestBody AuthInfoDto authInfoDto) {
-        Map<String, Object> result=certService.getHealthCert(authInfoDto);
+        Map<String, Object> result = certService.getHealthCert(authInfoDto);
         return new ResponseEntity<>(new GetHealthResponseDto((String) result.get("value"),
                 (Date) result.get("date")), HttpStatus.OK);
+    }
+
+    @GetMapping("/certificate")
+    public ResponseEntity<?> getCertificateList() {
+        return new ResponseEntity<>(new GetCertificatesResponseDto(certService.getCertificateList()), HttpStatus.OK);
     }
 }
