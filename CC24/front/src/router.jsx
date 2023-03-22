@@ -1,10 +1,11 @@
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
-import Signup from '././pages/signup/Signup.jsx';
+import Signup from './pages/signup/Signup.jsx';
+import IdenModal from './pages/signup/IdenModal.jsx';
 import Index from './pages/index/Index';
 import Login from './pages/login/login';
 import FaceRecogModal from './pages/signup/FaceRecogModal';
-import Cert from './pages/cert/Cert'
+import Cert from './pages/cert/Cert';
 
 const router = createBrowserRouter([
   {
@@ -12,7 +13,7 @@ const router = createBrowserRouter([
     element: <Index />,
   },
   {
-    path: "/signup",
+    path: '/signup',
     element: <Signup />,
   },
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
   {
     path: '/Cert',
     element: <Cert />,
+  },
+  {
+    path: '/IdenModal',
+    element: <IdenModal />,
   },
 ]);
 
