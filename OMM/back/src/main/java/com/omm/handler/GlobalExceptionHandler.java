@@ -1,8 +1,8 @@
 package com.omm.handler;
 
 import com.omm.exception.CustomException;
-import com.omm.exception.report.ReportExceptionResponse;
-import com.omm.exception.report.ReportRuntimeException;
+import com.omm.exception.admin.ReportExceptionResponse;
+import com.omm.exception.admin.ReportRuntimeException;
 import com.omm.util.error.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.omm.exception.report;
+package com.omm.exception.admin;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
