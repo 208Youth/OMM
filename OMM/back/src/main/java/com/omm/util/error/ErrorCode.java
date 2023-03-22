@@ -13,8 +13,7 @@ public enum ErrorCode {
     MEMBER_NOT_FOUND(NOT_FOUND, "없는 사용자입니다."),
 
     /* 400 BAD_REQUEST : 잘못된 요청 */
-    CANNOT_AUTHORIZE_MEMBER(BAD_REQUEST, "인증에 실패했습니다.")
-    ;
+    CANNOT_AUTHORIZE_MEMBER(BAD_REQUEST, "인증에 실패했습니다.");
     private final HttpStatus httpStatus;
     private final String detail;
 }

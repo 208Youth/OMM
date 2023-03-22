@@ -16,7 +16,8 @@ import java.sql.Blob;
 @Table(name = "memberimg")
 public class MemberImg {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "image_id")
     private Long id;
 

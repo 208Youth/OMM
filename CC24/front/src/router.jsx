@@ -5,6 +5,7 @@ import IdenModal from './pages/signup/IdenModal.jsx';
 import Index from './pages/index/Index';
 import Login from './pages/login/login';
 import Cert from './pages/cert/Cert';
+import Main from './pages/main/Main';
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
   {
     path: '/IdenModal',
     element: <IdenModal />,
+  },
+  {
+    path: '/main',
+    element: <Main />,
   },
 ]);
 

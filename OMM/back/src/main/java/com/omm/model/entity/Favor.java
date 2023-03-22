@@ -15,7 +15,8 @@ import javax.persistence.*;
 @Table(name = "favor")
 public class Favor {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "favor_id")
     private Long id;
 
