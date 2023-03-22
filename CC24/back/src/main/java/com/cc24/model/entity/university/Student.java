@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class Student extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="student_id")
+    @Column(name = "student_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -12,12 +13,15 @@ import javax.persistence.*;
 public class Health extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="health_id")
+    @Column(name = "health_id")
     private Long id;
 
-    @Column(name="value", nullable = false)
+    @Column(name = "value", nullable = false)
     private String value;
 
-    @Column(name="name", nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "date", nullable = false)
+    private Date date;
 }

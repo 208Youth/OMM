@@ -2,10 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
-/* .fileinput::file-selector-button {
-
-  width: 500px;
-  height: 500px;
+.fileinput {
+  /* font-weight: bold;
+  color: dodgerblue;
+  padding: 0.5em;
+  border: thin solid grey;
+  border-radius: 3px; */
+  width: 10em;
+  height: 10em;
+  
+  background-size: cover;
   background-image: url('../../public/upload.png');
 } */
 
