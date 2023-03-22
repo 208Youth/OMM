@@ -19,11 +19,12 @@ public class MemberController {
 
     /**
      * 닉네임 중복 체크 함수
+     *
      * @param checkNicknameRequest 닉네임 중복 체크 요청
      * @return
      */
     @GetMapping("/nickname")
-    public ResponseEntity<?> checkNickname(@RequestBody CheckNicknameRequest checkNicknameRequest){
+    public ResponseEntity<?> checkNickname(@RequestBody CheckNicknameRequest checkNicknameRequest) {
         boolean exist = memberService.existNickname(checkNicknameRequest.getNickname());
         return new ResponseEntity<>(exist, HttpStatus.OK);
     }

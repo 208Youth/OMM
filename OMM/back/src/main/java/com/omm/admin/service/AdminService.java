@@ -30,23 +30,24 @@ public class AdminService {
 
     /**
      * 채팅방에서 새로운 신고 내역을 전송한다.
+     *
      * @param createReportRequestDto 신고 내역 정보
-     * @param memberNickname 신고자 멤버 닉네임
-     * @param targetId 신고할 멤버 아이디
+     * @param memberNickname         신고자 멤버 닉네임
+     * @param targetId               신고할 멤버 아이디
      * @return
      */
-    public boolean createReport(CreateReportRequestDto createReportRequestDto, String memberNickname, Long targetId){
+    public boolean createReport(CreateReportRequestDto createReportRequestDto, String memberNickname, Long targetId) {
 
         // 현재 등록중인 멤버를 찾는다.
         Member member = memberRepository.findByNickname(memberNickname)
-            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         // 신고당한 멤버를 찾는다.
         Member target = memberRepository.findById(targetId)
-            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         // report 를 생성한다.
-        try{
+        try {
             Report report = Report.builder()
                     .member(member)
                     .reported(target)
@@ -56,13 +57,14 @@ public class AdminService {
                     .category(ReportCategory.valueOf(createReportRequestDto.getCategory())).build();
             reportRepository.save(report);
             return true;
-        }catch(Exception e) {
+        } catch (Exception e) {
             return false;
         }
     }
 
     /**
      * 신고내역을 불러온다
+     *
      * @return
      */
     public List<ReportDto> getReportList() {
@@ -87,6 +89,7 @@ public class AdminService {
 
     /**
      * 특정 신고 내역을 조회한다
+     *
      * @param reportId 신고내역 아이디
      * @return
      */
@@ -96,18 +99,19 @@ public class AdminService {
                 .orElseThrow(() -> new ReportRuntimeException(ReportExceptionCode.REPORT_NOT_FOUND));
         // 반환 형식에 맞게 변경하여 전송한다.
         ReportDto result = ReportDto.builder()
-            .reportId(report.getId())
-            .memberId(report.getMember().getId())
-            .targetId(report.getReported().getId())
-            .reason(report.getReason())
-            .image(report.getImage())
-            .state(report.isState())
-            .category(report.getCategory().name()).build();
+                .reportId(report.getId())
+                .memberId(report.getMember().getId())
+                .targetId(report.getReported().getId())
+                .reason(report.getReason())
+                .image(report.getImage())
+                .state(report.isState())
+                .category(report.getCategory().name()).build();
         return result;
     }
 
     /**
      * 신고내역을 "처리완료" 상태로 변경한다.
+     *
      * @param reportId 신고내역 아이디
      */
     public void processReport(Long reportId) {
@@ -121,19 +125,20 @@ public class AdminService {
 
     /**
      * 특정 사용자를 처벌한다.
+     *
      * @param punishMemberRequestDto 처벌할 정보
      */
     public void punishMember(PunishMemberRequestDto punishMemberRequestDto) {
         // 정보가 제대로 왔는지 확인하고
-        if(punishMemberRequestDto != null){
-            switch(punishMemberRequestDto.getType()){
+        if (punishMemberRequestDto != null) {
+            switch (punishMemberRequestDto.getType()) {
                 // 처리할 게 없다면 넘어감
                 case "nothing":
                     break;
                 // 계정 정지 처리
                 case "suspend":
                     Member suspendTarget = memberRepository.findById(punishMemberRequestDto.getMemberId())
-                        .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
                     LocalDate tempDate = suspendTarget.getSuspendDate();
                     tempDate.plusDays(punishMemberRequestDto.getPeriod());
                     suspendTarget.setSuspendDate(tempDate);
@@ -142,7 +147,7 @@ public class AdminService {
                 // 계정 삭제 처리
                 case "resign":
                     Member resignTarget = memberRepository.findById(punishMemberRequestDto.getMemberId())
-                        .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
                     resignTarget.setBlack(true);
                     memberRepository.save(resignTarget);
                     break;
@@ -150,6 +155,6 @@ public class AdminService {
                 default:
                     throw new ReportRuntimeException(ReportExceptionCode.REPORT_BAD_REQUEST);
             }
-        }else throw new ReportRuntimeException(ReportExceptionCode.REPORT_BAD_REQUEST);
+        } else throw new ReportRuntimeException(ReportExceptionCode.REPORT_BAD_REQUEST);
     }
 }

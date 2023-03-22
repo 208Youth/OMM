@@ -14,7 +14,8 @@ import javax.persistence.*;
 @Builder
 @Table(name = "membercert")
 public class MemberCert {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cert_id")
     private Long id;
 

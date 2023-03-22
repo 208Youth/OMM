@@ -11,6 +11,7 @@ public class MemberService {
 
     /**
      * 닉네임 중복 체크 함수
+     *
      * @param nickname 닉네임
      * @return
      */
