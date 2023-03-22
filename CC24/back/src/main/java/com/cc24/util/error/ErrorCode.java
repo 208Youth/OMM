@@ -14,6 +14,8 @@ public enum ErrorCode {
 
     /* 400 BAD_REQUEST : 잘못된 요청 */
     CANNOT_AUTHORIZE_MEMBER(BAD_REQUEST, "인증에 실패했습니다."),
+    JWT_VERIFY_FAILED(BAD_REQUEST, "검증에 실패했습니다."),
+    JWT_EXPIRED(BAD_REQUEST, "만료된 토큰입니다."),
 
     /* 500 INTERNAL_SERVER_ERROR : 서버 문제 발생 */
     DID_ERROR(INTERNAL_SERVER_ERROR, "did 처리 중 문제가 발생했습니다."),
