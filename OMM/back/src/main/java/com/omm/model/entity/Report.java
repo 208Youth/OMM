@@ -1,13 +1,19 @@
 package com.omm.model.entity;
 
 import com.omm.model.entity.enums.ReportCategory;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Blob;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "report")
 public class Report {
 
