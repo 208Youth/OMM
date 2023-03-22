@@ -3,6 +3,7 @@ import React from 'react';
 import Carousel from './Carousel';
 import Cards from './Cards';
 import Navbar from '../../components/Navbar';
+import Carousel1 from './Carousel1';
 
 function Main() {
   const cards = [
@@ -39,6 +40,9 @@ function Main() {
             showArrows={true}
           />
         </div>
+      </div>
+      <div className="flex-col w-80 mx-auto">
+          <Carousel1 />
       </div>
       <Navbar />
     </div>
