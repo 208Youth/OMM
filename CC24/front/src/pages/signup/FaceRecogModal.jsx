@@ -7,7 +7,6 @@ function FaceRecogModal() {
   const [completed, setBtn] = useState(false);
   const [camera, setCamera] = useState(false);
 
-  
   // 얼굴 인증 버튼 누른후 인식이 되면 버튼 변경
   return (
     <div className="flex-col w-80 mx-auto">
@@ -23,7 +22,7 @@ function FaceRecogModal() {
         <img
           onClick={() => {
             console.log('카메라 시작');
-            setCamera(true)
+            setCamera(true);
           }}
           aria-hidden="true"
           src={FaceId}

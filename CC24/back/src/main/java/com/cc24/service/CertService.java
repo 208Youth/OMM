@@ -1,15 +1,20 @@
 package com.cc24.service;
 
 import com.cc24.exception.CustomException;
+import com.cc24.model.dto.certificate.response.CertificateDto;
 import com.cc24.model.dto.job.response.JobDto;
-import com.cc24.model.dto.university.AuthInfoDto;
+import com.cc24.model.dto.AuthInfoDto;
 import com.cc24.model.dto.university.response.UniversityDto;
+import com.cc24.model.entity.certificate.Authenticator;
+import com.cc24.model.entity.certificate.Certificate;
 import com.cc24.model.entity.estate.Estate;
 import com.cc24.model.entity.health.Health;
 import com.cc24.model.entity.job.Employee;
 import com.cc24.model.entity.job.Job;
 import com.cc24.model.entity.university.Student;
 import com.cc24.model.entity.university.University;
+import com.cc24.repository.certificate.AuthenticatorRepository;
+import com.cc24.repository.certificate.CertificateRepository;
 import com.cc24.repository.estate.EstateRepository;
 import com.cc24.repository.health.HealthRepository;
 import com.cc24.repository.income.IncomeRepository;
@@ -34,6 +39,8 @@ public class CertService {
     private final IncomeRepository incomeRepository;
     private final EstateRepository estateRepository;
     private final HealthRepository healthRepository;
+    private final CertificateRepository certificateRepository;
+    private final AuthenticatorRepository authenticatorRepository;
 
 
     public List<UniversityDto> getUniversityList() {
@@ -114,5 +121,29 @@ public class CertService {
         result.put("value", health.getValue());
         result.put("date", health.getDate());
         return result;
+    }
+
+    public List<CertificateDto> getCertificateList() {
+        List<Certificate> certificates = certificateRepository.findAll();
+        List<CertificateDto> result = new ArrayList<>();
+        certificates.forEach(certificate -> {
+            result.add(CertificateDto.builder()
+                    .certificateId(certificate.getId())
+                    .name(certificate.getName())
+                    .build());
+        });
+        return result;
+    }
+
+    public void getCertificateCert(AuthInfoDto authInfoDto, Long certificateId) {
+        String name = authInfoDto.getName();
+        Date birthDate = authInfoDto.getBirthDate();
+
+        Authenticator authenticator = authenticatorRepository.findByNameAndBirthDate(name, birthDate)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        if(authenticator.getCertificate().getId() != certificateId) {
+            throw new CustomException(ErrorCode.CANNOT_AUTHORIZE_MEMBER);
+        }
     }
 }
