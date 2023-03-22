@@ -1,22 +1,34 @@
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
-import App from './App';
-import Signup from './pages/signup/Signup_modal_test';
-import test from './pages/signup/test';
+
+import Signup from './pages/signup/Signup.jsx';
+import Index from './pages/index/Index';
+import Login from './pages/login/login';
+import FaceRecogModal from './pages/signup/FaceRecogModal';
+import Cert from './pages/cert/Cert';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: <Index />,
   },
   {
-    path: '/Signup',
+    path: '/signup',
     element: <Signup />,
   },
   {
-    path: '/Signup/test',
-    element: <Signup />,
+    path: '/login',
+    element: <Login />,
   },
+  {
+    path: '/FaceRecogModal',
+    element: <FaceRecogModal />,
+  },
+  {
+    path: '/Cert',
+    element: <Cert />,
+  },
+
 ]);
 
 export default router;
