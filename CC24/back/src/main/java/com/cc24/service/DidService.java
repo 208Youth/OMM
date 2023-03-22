@@ -41,7 +41,7 @@ public class DidService {
     }
 
     /**
-     * 키 유출 등을 대비해 지갑의 개인키를 수정하 함수
+     * 키 유출 등을 대비해 지갑의 개인키를 수정하는 함수
      * @param wallet 키를 수정할 지갑 정보
      * @throws InvalidAlgorithmParameterException
      * @throws DidException
@@ -158,6 +158,7 @@ public class DidService {
             signedJwt.getJWTClaimsSet().getExpirationTime().getTime() < new Date().getTime()) {
             log.info("serializedJWT 만료");
         }
+
 //            // credential 소유자 확인
 //            if (!signedVc.getJWTClaimsSet().getSubject().equals(holderWallet.getDid()) ||
 //                !holderDid.equals(holderWallet.getDid())) {
@@ -178,7 +179,7 @@ public class DidService {
      * @return
      * @throws ParseException
      */
-    private List<String> findVC(List<String> holderVcList, List<List<String>> typesOfRequireVcs)
+    public List<String> findVC(List<String> holderVcList, List<List<String>> typesOfRequireVcs)
         throws ParseException {
 
         List<String> ret = new ArrayList<>();
