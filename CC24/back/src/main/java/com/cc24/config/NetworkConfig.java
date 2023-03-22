@@ -12,10 +12,10 @@ public class NetworkConfig {
     @Value("${metadium.apikey}")
     private String apiKey;
 
-    @Bean
-    public MetaDelegator setupMainnet() {
-        return new MetaDelegator();
-    }
+//    @Bean
+//    public MetaDelegator setupMainnet() {
+//        return new MetaDelegator();
+//    }
 
     @Bean
     public MetaDelegator setupTestnet() {
