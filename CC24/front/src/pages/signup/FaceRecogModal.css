@@ -1,7 +1,7 @@
 .face-recog-modal {
   display: flex;
   flex-direction: column;
-  width: 22.5rem;
+  width: 360px;
 }
 
 .face-recog-close-box {
@@ -29,7 +29,8 @@
 }
 
 .btn-inactive {
-  margin: 2rem 0 2rem 1.8rem;
+  margin-top: 50px;
+  margin-left: 10px;
   border-radius: 20px;
   width: 17rem;
   height: 2.6rem;
@@ -42,7 +43,8 @@
 }
 
 .btn-active {
-  margin: 2rem 0 2rem 1.8rem;
+  margin-top: 50px;
+  margin-left: 10px;
   border-radius: 20px;
   width: 17rem;
   height: 2.6rem;
