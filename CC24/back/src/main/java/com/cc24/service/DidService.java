@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,6 +32,7 @@ public class DidService {
     private final Long ONE_YEAR = 365L * 24L * 60L * 60L * 1000L;
 
     /**
+     * Did 지갑을 생성하는 함수
      * @return
      * @throws DidException
      */
@@ -39,6 +41,7 @@ public class DidService {
     }
 
     /**
+     * 키 유출 등을 대비해 지갑의 개인키를 수정하 함수
      * @param wallet 키를 수정할 지갑 정보
      * @throws InvalidAlgorithmParameterException
      * @throws DidException
@@ -49,6 +52,7 @@ public class DidService {
     }
     
     /**
+     * VC 발급하는 함수
      * @param issuerWallet 발급자의 지갑 정보
      * @param credentialName 사용자에게 제공할 credential 이름
      * @param holderDid 사용자의 DID
@@ -73,15 +77,15 @@ public class DidService {
     }
 
     /**
+     * VP 발급
      * @param holderWallet 사용자의 지갑 정보
      * @param presentationName 검증자에게 제공할 presentation 이름
      * @param foundVcList 검증자에게 제공하는 credential 목록
      * @return
-     * @throws ParseException
      * @throws JOSEException
      */
     public String issuePresentation(MetadiumWallet holderWallet, String presentationName,
-        List<String> foundVcList) throws ParseException, JOSEException {
+        List<String> foundVcList) throws JOSEException {
 
         Date issuanceDate = new Date();
         Date expirationDate = new Date(issuanceDate.getTime() + ONE_YEAR);
@@ -96,6 +100,7 @@ public class DidService {
     }
 
     /**
+     * VP에서 VC 추출하는 함수
      * @param serializedVP
      * @return
      * @throws ParseException
@@ -114,14 +119,13 @@ public class DidService {
     }
 
     /**
+     * VC에서 claims 추출하는 함수
      * @param signedVCJWT
      * @return
      * @throws ParseException
-     * @throws IOException
-     * @throws DidException
      */
     public Map<String, String> getClaims(SignedJWT signedVCJWT)
-        throws ParseException, IOException, DidException {
+        throws ParseException {
 
         Map<String, String> claims = new HashMap<>();
 
@@ -136,6 +140,13 @@ public class DidService {
         return claims;
     }
 
+    /**
+     * serializedJWT를 검증하는 함수
+     * @param serializedJWT
+     * @throws ParseException
+     * @throws IOException
+     * @throws DidException
+     */
     private void verify(String serializedJWT) throws ParseException, IOException, DidException {
 
         Verifier verifier = new Verifier();
@@ -161,6 +172,7 @@ public class DidService {
     }
 
     /**
+     * 사용자의 VC 리스트에서 필요한 VC 목록을 받아 추출하는 함수
      * @param holderVcList
      * @param typesOfRequireVcs
      * @return
@@ -168,6 +180,7 @@ public class DidService {
      */
     private List<String> findVC(List<String> holderVcList, List<List<String>> typesOfRequireVcs)
         throws ParseException {
+
         List<String> ret = new ArrayList<>();
 
         for (String serializedVc : holderVcList) {
