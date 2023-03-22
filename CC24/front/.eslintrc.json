@@ -20,6 +20,12 @@
     "rules": {
         "linebreak-style": ["error", "windows"],
         "react/prop-types": "off",
-        "react/button-has-type": "off"
+        "react/button-has-type": "off",
+        "jsx-a11y/label-has-associated-control": [
+            2,
+            {
+                "labelAttributes": ["htmlFor"]
+            }
+        ]
     }
 }
