@@ -1,5 +1,6 @@
 package com.cc24.service;
 
+import com.cc24.repository.certificate.CertificateRepository;
 import com.metadium.did.MetadiumWallet;
 import com.metadium.did.crypto.MetadiumKey;
 import com.metadium.did.exception.DidException;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class DidService {
+    private final CertificateRepository certificateRepository;
 
     private final MetaDelegator delegator;
     private final Long ONE_YEAR = 365L * 24L * 60L * 60L * 1000L;
