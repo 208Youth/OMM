@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+// import CloseBtn from '../../assets/CloseBtn.svg';
 import './index.css';
+// import './FaceRecogModal.css';
 
 function Result() {
   return (
