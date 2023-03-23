@@ -179,6 +179,7 @@ public class MemberController {
 
     /**
      * 유저 인증 정보 수정
+     *
      * @param memberCertDto 요정된 인증수정 정보
      * @return
      */
@@ -189,5 +190,15 @@ public class MemberController {
 
         memberService.putMemberCertificate(currentMemberNickname, memberCertDto);
         return new ResponseEntity<>("유저 인증정보 수정에 성공했습니다.", HttpStatus.OK);
+    }
+
+    /**
+     * 유저 관심사 정보 가져오기
+     * @param memberId 멤버 아이디
+     * @return
+     */
+    @GetMapping("/{member-id}/interest")
+    public ResponseEntity<?> getMemberInterestList(@PathVariable("member-id") Long memberId) {
+        return new ResponseEntity<>(memberService.getMemberInterestList(memberId), HttpStatus.OK);
     }
 }

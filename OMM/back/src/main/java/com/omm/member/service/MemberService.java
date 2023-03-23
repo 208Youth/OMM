@@ -2,8 +2,10 @@ package com.omm.member.service;
 
 import com.omm.exception.member.MemberExceptionCode;
 import com.omm.exception.member.MemberRuntimeException;
+import com.omm.member.model.dto.InterestDto;
 import com.omm.member.model.dto.MemberCertDto;
 import com.omm.member.model.request.*;
+import com.omm.member.model.response.GetInterestListResponseDto;
 import com.omm.member.model.response.GetMemberFilteringResponseDto;
 import com.omm.member.model.response.GetMemberInfoResponseDto;
 import com.omm.member.repository.*;
@@ -28,6 +30,10 @@ public class MemberService {
     private final MemberImgRepository memberImgRepository;
 
     private final MemberCertRepository memberCertRepository;
+
+    private final InterestRepository interestRepository;
+
+    private final InterestListRepository interestListRepository;
 
     /**
      * 닉네임 중복 체크 함수
@@ -277,7 +283,8 @@ public class MemberService {
 
     /**
      * 멤버 필터링 정보 수정
-     * @param currentMemberNickname 현재 로그인 유저
+     *
+     * @param currentMemberNickname        현재 로그인 유저
      * @param putMemberFilteringRequestDto 필터링 정보 객체
      */
     public void putMemberFiltering(String currentMemberNickname, PutMemberFilteringRequestDto putMemberFilteringRequestDto) {
@@ -297,7 +304,7 @@ public class MemberService {
             filtering.setContactStyle(FilterContactStyle.valueOf(putMemberFilteringRequestDto.getContactStyle()));
             filtering.setDrinkingStyle(FilterDrinkingStyle.valueOf(putMemberFilteringRequestDto.getDrinkingStyle()));
             filtering.setSmokingStyle(FilterSmokingStyle.valueOf(putMemberFilteringRequestDto.getSmokingStyle()));
-            
+
             filteringRepository.save(filtering);
         } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
@@ -307,7 +314,8 @@ public class MemberService {
 
     /**
      * 유저 위치 정보 수정
-     * @param currentMemberNickname 현재 로그인 유저 닉네임
+     *
+     * @param currentMemberNickname       현재 로그인 유저 닉네임
      * @param putMemberLocationRequestDto 요청 유저 수정 위치 정보
      */
     public void putMemberLocation(String currentMemberNickname, PutMemberLocationRequestDto putMemberLocationRequestDto) {
@@ -330,6 +338,7 @@ public class MemberService {
 
     /**
      * 유저 자기소개 수정
+     *
      * @param currentMemberNickname 현재 로그인 유저 닉네임
      * @param putMemberPrRequestDto 수정 자기소개 정보
      */
@@ -350,6 +359,7 @@ public class MemberService {
 
     /**
      * 유저 인증정보 가져오기
+     *
      * @param currentMemberNickname 현재 로그인 유저 닉네임
      * @return
      */
@@ -362,13 +372,13 @@ public class MemberService {
 
         try {
             MemberCertDto memberCertDto = MemberCertDto.builder()
-                .university(memberCert.isUniversity())
-                .job(memberCert.isJob())
-                .certificate(memberCert.isCertificate())
-                .health(memberCert.isHealth())
-                .estate(memberCert.isEstate())
-                .income(memberCert.isIncome())
-                .build();
+                    .university(memberCert.isUniversity())
+                    .job(memberCert.isJob())
+                    .certificate(memberCert.isCertificate())
+                    .health(memberCert.isHealth())
+                    .estate(memberCert.isEstate())
+                    .income(memberCert.isIncome())
+                    .build();
             return memberCertDto;
         } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
@@ -377,8 +387,9 @@ public class MemberService {
 
     /**
      * 멤버 인증 정보 수정
+     *
      * @param currentMemberNickname 현재 로그인 회원 닉네임
-     * @param memberCertDto 유저 수정 인증 정보
+     * @param memberCertDto         유저 수정 인증 정보
      */
     public void putMemberCertificate(String currentMemberNickname, MemberCertDto memberCertDto) {
         Member member = memberRepository.findByNickname(currentMemberNickname)
@@ -399,5 +410,34 @@ public class MemberService {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
         }
 
+    }
+
+    /**
+     * 유저 관심사 정보 리스트 가져오기
+     * @param memberId 멤버 아이디
+     * @return
+     */
+    public GetInterestListResponseDto getMemberInterestList(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        try {
+            List<InterestList> interestList = interestListRepository.findAllByMember(member);
+            List<InterestDto> interestDtos = new ArrayList<>();
+            interestList.forEach((interest)->{
+                interestDtos.add(
+                    InterestDto.builder()
+                            .interestListId(interest.getId())
+                            .name(interest.getInterest().getName())
+                            .build()
+                );
+            });
+            
+            GetInterestListResponseDto getInterestListResponseDto = GetInterestListResponseDto.builder()
+                    .interestList(interestDtos).build();
+            return getInterestListResponseDto;
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
+        }
     }
 }
