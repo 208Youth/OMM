@@ -456,4 +456,53 @@ public class MemberService {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INTEREST_DELETE_FAILED);
         }
     }
+
+    /**
+     * 유저 관심사 새 등록
+     * @param currentMemberNickname 현재 로그인한 유저
+     * @param name 관심사 이름
+     * @return
+     */
+    public InterestDto addInterest(String currentMemberNickname, String name) {
+        // 먼저 현재 유저를 찾는다
+        Member member = memberRepository.findByNickname(currentMemberNickname)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        try {
+            // 현재등록된 관심사 리스트를 검색한다
+            List<InterestList> interestLists = interestListRepository.findAllByMember(member);
+            // 6개가 찼다면 더이상 등록 불가
+            if(interestLists.size() == 6) throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_MAX_EXCEED);
+
+            // 존재하지 않은 관심사면 새로 만들어준다
+            if(!interestRepository.existsByName(name)){
+                Interest interest = Interest.builder()
+                        .name(name).build();
+                interestRepository.save(interest);
+            }
+
+            // 새 관심사 리스트를 생성하고 저장해준다
+            Interest tempInterest = interestRepository.findByName(name)
+                    .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+
+            InterestList interestList = InterestList.builder()
+                    .interest(tempInterest)
+                    .member(member)
+                    .build();
+
+            interestListRepository.save(interestList);
+
+            // 방금 저장한 관심사 리스트를 불러와서, 아이디값을 알아낸다. 이 값을 바탕으로 DTO를 생성해서 반환한다.
+            InterestList uploadedInterestList = interestListRepository.findByMemberAndInterest(member, tempInterest)
+                    .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+
+            InterestDto interestDto = InterestDto.builder()
+                    .interestListId(uploadedInterestList.getId())
+                    .name(name)
+                    .build();
+            return interestDto;
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
+        }
+    }
 }

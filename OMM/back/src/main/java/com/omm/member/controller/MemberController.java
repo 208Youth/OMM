@@ -3,6 +3,7 @@ package com.omm.member.controller;
 import com.omm.member.model.dto.MemberCertDto;
 import com.omm.member.model.request.*;
 import com.omm.member.service.MemberService;
+import com.sun.org.apache.regexp.internal.RE;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -194,6 +195,7 @@ public class MemberController {
 
     /**
      * 유저 관심사 정보 가져오기
+     *
      * @param memberId 멤버 아이디
      * @return
      */
@@ -204,15 +206,25 @@ public class MemberController {
 
     /**
      * 관심사 정보 삭제
+     *
      * @param deleteInterestRequestDto 관심사 정보 삭제 객체
      * @return
      */
     @DeleteMapping("/interest")
     public ResponseEntity<?> deleteInterest(@RequestBody DeleteInterestRequestDto deleteInterestRequestDto) {
-        String currentMemberNickname = "김미미";
-        //먼가의 로직 추가 필요
-
         memberService.deleteInterest(deleteInterestRequestDto.getInterestListId());
         return new ResponseEntity<>("관심사 삭제에 성공했습니다.", HttpStatus.OK);
     }
+
+    /**
+     * 관심사 새로 등록
+     * @param postInterestRequestDto 관심사 정보 객체
+     * @return
+     */
+    @PostMapping("/interest")
+    public ResponseEntity<?> addInterest(@RequestBody PostInterestRequestDto postInterestRequestDto) {
+        String currentMemberNickname = "김미미";
+        return new ResponseEntity<>(memberService.addInterest(currentMemberNickname, postInterestRequestDto.getName()), HttpStatus.OK);
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.omm.member.repository;
 
+import com.omm.model.entity.Interest;
 import com.omm.model.entity.InterestList;
 import com.omm.model.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,7 @@ public interface InterestListRepository extends JpaRepository<InterestList, Long
     List<InterestList> findAllByMember(Member member);
 
     Optional<InterestList> findById(Long interestListId);
+
+    Optional<InterestList> findByMemberAndInterest(Member member, Interest interest);
+
 }

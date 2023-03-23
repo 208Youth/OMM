@@ -20,7 +20,9 @@ public enum MemberExceptionCode {
 
     MEMBER_IMAGE_DELETE_FAILED(HttpStatus.CONFLICT,"사진 삭제에 실패했습니다."),
 
-    MEMBER_INTEREST_DELETE_FAILED(HttpStatus.CONFLICT,"관심사 삭제에 실패했습니다.")
+    MEMBER_INTEREST_DELETE_FAILED(HttpStatus.CONFLICT,"관심사 삭제에 실패했습니다."),
+
+    MEMBER_INPUT_MAX_EXCEED(HttpStatus.BAD_REQUEST,"갯수 제한을 초과했습니다.")
     ;
 
     private final HttpStatus httpStatus;
