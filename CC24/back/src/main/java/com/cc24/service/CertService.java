@@ -74,18 +74,6 @@ public class CertService {
         return claims;
     }
 
-//    public void getUniversityCert(AuthInfoDto authInfoDto, Long universityId) {
-//        String name = authInfoDto.getName();
-//        Date birthDate = authInfoDto.getBirthDate();
-//
-//        Student student = studentRepository.findByNameAndBirthDate(name, birthDate)
-//                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-//
-//        if(student.getUniversity().getId() != universityId) {
-//            throw new CustomException(ErrorCode.CANNOT_AUTHORIZE_MEMBER);
-//        }
-//    }
-
     public List<JobDto> getJobList() {
         List<Job> jobs = jobRepository.findAll();
         List<JobDto> result = new ArrayList<>();
