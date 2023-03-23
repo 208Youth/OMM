@@ -12,7 +12,7 @@
   height: 10em;
   
   background-size: cover;
-  background-image: url('../../public/upload.png');
+  background-image: url('/upload.png');
 }
 
 
