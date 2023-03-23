@@ -18,7 +18,9 @@ public enum MemberExceptionCode {
 
     MEMBER_IMAGE_UPLOAD_FAILED(HttpStatus.BAD_REQUEST,"사진 등록에 실패했습니다."),
 
-    MEMBER_IMAGE_DELETE_FAILED(HttpStatus.CONFLICT,"사진 삭제에 실패했습니다.")
+    MEMBER_IMAGE_DELETE_FAILED(HttpStatus.CONFLICT,"사진 삭제에 실패했습니다."),
+
+    MEMBER_INTEREST_DELETE_FAILED(HttpStatus.CONFLICT,"관심사 삭제에 실패했습니다.")
     ;
 
     private final HttpStatus httpStatus;

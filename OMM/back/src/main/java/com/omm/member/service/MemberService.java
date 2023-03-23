@@ -440,4 +440,20 @@ public class MemberService {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
         }
     }
+
+    /**
+     * 관심사 정보 삭제
+     * @param interestListId 관심사 리스트 아이디
+     */
+    public void deleteInterest(Long interestListId) {
+
+        try {
+            InterestList interestList = interestListRepository.findById(interestListId)
+                    .orElseThrow(()-> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+
+            interestListRepository.delete(interestList);
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INTEREST_DELETE_FAILED);
+        }
+    }
 }
