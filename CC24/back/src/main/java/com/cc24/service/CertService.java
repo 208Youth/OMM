@@ -1,6 +1,7 @@
 package com.cc24.service;
 
 import com.cc24.exception.CustomException;
+import com.cc24.model.dto.cert.CertRequestDto;
 import com.cc24.model.dto.certificate.response.CertificateDto;
 import com.cc24.model.dto.job.response.JobDto;
 import com.cc24.model.dto.AuthInfoDto;
@@ -26,6 +27,7 @@ import com.cc24.util.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -55,16 +57,21 @@ public class CertService {
         return result;
     }
 
-    public void getUniversityCert(AuthInfoDto authInfoDto, Long universityId) {
-        String name = authInfoDto.getName();
-        Date birthDate = authInfoDto.getBirthDate();
-
-        Student student = studentRepository.findByNameAndBirthDate(name, birthDate)
+    public Map<String, Object> getUniversityCert(Map<String, Object> claim, Long universityId) {
+        String name = (String) claim.get("name");
+        String birthDate = (String) claim.get("birth_date");
+        String gender = (String) claim.get("gender");
+        System.out.println(birthDate);
+        Student student = studentRepository.findByNameAndBirthDateAndGender(name, LocalDate.parse(birthDate), gender)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
         if(student.getUniversity().getId() != universityId) {
             throw new CustomException(ErrorCode.CANNOT_AUTHORIZE_MEMBER);
         }
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("universityName", student.getUniversity().getName());
+
+        return claims;
     }
 
     public List<JobDto> getJobList() {

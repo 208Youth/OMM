@@ -146,16 +146,16 @@ public class DidService {
      * @return
      * @throws ParseException
      */
-    public Map<String, String> getClaims(SignedJWT signedVCJWT)
+    public Map<String, Object> getClaims(SignedJWT signedVCJWT)
         throws ParseException {
 
-        Map<String, String> claims = new HashMap<>();
+        Map<String, Object> claims = new HashMap<>();
 
         VerifiableCredential vc = new VerifiableCredential(signedVCJWT);
-        Map<String, String> subject = vc.getCredentialSubject();
-        for (Map.Entry<String, String> entry : subject.entrySet()) {
+        Map<String, Object> subject = vc.getCredentialSubject();
+        for (Map.Entry<String, Object> entry : subject.entrySet()) {
             String name = entry.getKey();
-            String value = entry.getValue();
+            Object value = entry.getValue();
             claims.put(name, value);
         }
 
@@ -215,7 +215,6 @@ public class DidService {
 
     /**
      * 사용자의 VC 리스트에서 필요한 VC 목록을 받아 추출하는 함수
-     *
      * @param holderVcList
      * @param typesOfRequireVcs
      * @return
