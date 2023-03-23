@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface MyInfoRepository extends JpaRepository<MyInfo, Long> {
 
     Optional<MyInfo> findByMember(Member member);
+
 }
