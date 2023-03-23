@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 @Getter
-public class PutMemberLocation {
+public class PutMemberLocationRequestDto {
 
     @JsonProperty(value = "lat")
     private float lat;
