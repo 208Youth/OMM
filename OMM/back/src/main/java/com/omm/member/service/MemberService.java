@@ -2,9 +2,12 @@ package com.omm.member.service;
 
 import com.omm.exception.member.MemberExceptionCode;
 import com.omm.exception.member.MemberRuntimeException;
+import com.omm.member.model.request.InitMemberFilteringRequestDto;
 import com.omm.member.model.request.InitMemberInfoRequestDto;
+import com.omm.member.repository.FilteringRepository;
 import com.omm.member.repository.MemberRepository;
 import com.omm.member.repository.MyInfoRepository;
+import com.omm.model.entity.Filtering;
 import com.omm.model.entity.Member;
 import com.omm.model.entity.MyInfo;
 import com.omm.model.entity.enums.*;
@@ -17,6 +20,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     private final MyInfoRepository myInfoRepository;
+
+    private final FilteringRepository filteringRepository;
 
     /**
      * 닉네임 중복 체크 함수
@@ -54,6 +59,37 @@ public class MemberService {
 
             myInfoRepository.save(myInfo);
         }catch(Exception e){
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
+        }
+    }
+
+    /**
+     * 멤버의 초기 필터링 정보 설정
+     * @param currentMemberNickname 현재 유저 닉네임
+     * @param initMemberFilteringRequestDto 등록 정보
+     */
+    public void initMemberFiltering(String currentMemberNickname, InitMemberFilteringRequestDto initMemberFilteringRequestDto) {
+
+        Member member = memberRepository.findByNickname(currentMemberNickname)
+                .orElseThrow(()-> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        try{
+            Filtering filtering = Filtering.builder()
+                    .member(member)
+                    .ageMin(initMemberFilteringRequestDto.getAgeMin())
+                    .ageMax(initMemberFilteringRequestDto.getAgeMax())
+                    .heightMin(initMemberFilteringRequestDto.getHeightMin())
+                    .heightMax(initMemberFilteringRequestDto.getHeightMax())
+                    .rangeMin(initMemberFilteringRequestDto.getRangeMin())
+                    .rangeMax(initMemberFilteringRequestDto.getRangeMax())
+                    .contactStyle(FilterContactStyle.valueOf(initMemberFilteringRequestDto.getContactStyle()))
+                    .drinkingStyle(FilterDrinkingStyle.valueOf(initMemberFilteringRequestDto.getDrinkingStyle()))
+                    .smokingStyle(FilterSmokingStyle.valueOf(initMemberFilteringRequestDto.getSmokingStyle()))
+                    .build();
+
+            filteringRepository.save(filtering);
+
+        } catch (Exception e){
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
         }
     }
