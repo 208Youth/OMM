@@ -4,7 +4,7 @@ import CloseBtn from '../../assets/CloseBtn.svg';
 import FaceId from '../../assets/FaceId.svg';
 import './FaceRecogModal.css';
 
-function FaceRecogModal(props) {
+function FaceRecogModal({ setFaceModal, name, setFaceComplete }) {
   const [completed, setBtn] = useState(false);
   const [imageSrc, setImageSrc] = useState('');
   const [imgfile, setFile] = useState(null);
@@ -12,7 +12,7 @@ function FaceRecogModal(props) {
   const encodeFileToBase64 = (fileBlob) => {
     // 파일명 변경(회원이름 가져올것)
     let editFile = null;
-    editFile = new File([fileBlob], '변경.jpg', { type: fileBlob.type });
+    editFile = new File([fileBlob], '{name}.jpg', { type: fileBlob.type });
     // 파일명 변경된 파일을 저장
     setFile(editFile);
     // 업로드한 이미지 보여주기
@@ -30,6 +30,8 @@ function FaceRecogModal(props) {
   };
 
   async function sendImg() {
+    setFaceComplete(true)
+    console.log(faceComplete)
     // axios로 fastapi 에 이미지 보내기
     await axios({
       method: 'post',
@@ -44,10 +46,12 @@ function FaceRecogModal(props) {
       .then((res) => {
         console.log(res);
         console.log('이미지를 보냈습니다.');
-        props.setFaceModal(false);
+        setFaceModal(false);
+        setFaceComplete(true)
       })
       .catch((err) => {
         console.log(err);
+        setFaceComplete(true)
       });
   }
 
@@ -56,7 +60,7 @@ function FaceRecogModal(props) {
     <div className="flex-col mx-auto">
       <p className="flex justify-end">
         <img
-          onClick={() => props.setFaceModal(false)}
+          onClick={() => setFaceModal(false)}
           src={CloseBtn}
           className="w-8 h-8"
           alt="닫기"
@@ -68,6 +72,7 @@ function FaceRecogModal(props) {
         <br />
         인증
       </p>
+      <h4 className='ml-3 mt-5'>마스크를 벗은 정면 사진을 올려주세요.</h4>
       <label htmlFor="imginput">
         <img
           aria-hidden="true"
@@ -79,6 +84,7 @@ function FaceRecogModal(props) {
       </label>
       <input
         id="imginput"
+        capture="camera"
         type="file"
         accept="image/*"
         required
@@ -90,11 +96,7 @@ function FaceRecogModal(props) {
       />
       <div className="preview">
         {imageSrc && (
-          <img
-            src={imageSrc}
-            className="max-w-xs max-h-xs mt-3 px-3 mx-auto"
-            alt="preview-img"
-          />
+          <img src={imageSrc} className="max-w-xs max-h-xs mt-3 px-3 mx-auto" alt="preview-img" />
         )}
       </div>
       <div className="flex">

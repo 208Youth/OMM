@@ -51,3 +51,19 @@
   bottom: 0;
   background-color: rgba(245, 245, 245, 0.495);
 }
+
+.checkmark {
+  color: #4654a3;
+  display: inline;
+  width: 1.5rem;
+  margin-left: 0.1rem;
+
+}
+.checked-mark {
+  color: white;
+  background-color: #4654a3;
+  display: inline;
+  width: 1.5rem;
+  margin-left: 0.1rem;
+
+}

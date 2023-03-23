@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import LocalStorageComponent from './LocalStorageComponent';
 
 function Login() {
   const [file, setFile] = useState(null);
@@ -113,6 +114,7 @@ function Login() {
       <button onClick={updateFile}>파일 수정</button>
       <button onClick={deleteFile}>파일 삭제</button>
       <span>{text}</span>
+      <LocalStorageComponent />
     </div>
   );
 };
