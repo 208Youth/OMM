@@ -122,6 +122,7 @@ public class MemberService {
 
     /**
      * 특정 멤버의 정보를 조회
+     *
      * @param memberId 멤버의 아이디
      * @return
      */
@@ -162,17 +163,18 @@ public class MemberService {
 
     /**
      * 특정 유저의 (실질적으로는 현재 로그인 유저의) 필터링 정보 조회
+     *
      * @param currentMemberNickname 현재 멤버 닉네임
      * @return
      */
     public GetMemberFilteringResponseDto getMemberFiltering(String currentMemberNickname) {
         Member member = memberRepository.findByNickname(currentMemberNickname)
-                .orElseThrow(()-> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         Filtering filtering = filteringRepository.findByMember(member)
-                .orElseThrow(()-> new MemberRuntimeException(MemberExceptionCode.MEMBER_FILTERING_NOT_EXISTS));
-        
-        try{
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_FILTERING_NOT_EXISTS));
+
+        try {
             GetMemberFilteringResponseDto getMemberFilteringResponseDto = GetMemberFilteringResponseDto.builder()
                     .ageMin(filtering.getAgeMin())
                     .ageMax(filtering.getAgeMax())
@@ -185,31 +187,59 @@ public class MemberService {
                     .smokingStyle(filtering.getSmokingStyle().name())
                     .build();
             return getMemberFilteringResponseDto;
-        } catch (Exception e){
+        } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_FILTERING_NOT_EXISTS);
         }
     }
 
     /**
      * 유저 이미지 업로드 함수
+     *
      * @param currentMemberNickname 현재 로그인 유저 닉네임
      * @param uploadImageRequestDto 업로드 폼
      */
     public void postMemberImages(String currentMemberNickname, UploadImageRequestDto uploadImageRequestDto) {
         Member member = memberRepository.findByNickname(currentMemberNickname)
-                .orElseThrow(()-> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
-        try{
+        try {
             List<Blob> images = uploadImageRequestDto.getImages();
 
-            images.forEach((image)->{
+            images.forEach((image) -> {
                 MemberImg memberImg = MemberImg.builder()
                         .member(member)
                         .imageContent(image)
                         .build();
                 memberImgRepository.save(memberImg);
             });
-        } catch (Exception e){
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_IMAGE_UPLOAD_FAILED);
+        }
+    }
+
+    public void putMemberImages(String currentMemberNickname, UploadImageRequestDto uploadImageRequestDto) {
+        Member member = memberRepository.findByNickname(currentMemberNickname)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        try {
+            List<MemberImg> memberImages = memberImgRepository.findAllById(member.getId());
+
+            memberImgRepository.deleteAll(memberImages);
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_IMAGE_DELETE_FAILED);
+        }
+
+        try {
+            List<Blob> images = uploadImageRequestDto.getImages();
+
+            images.forEach((image) -> {
+                MemberImg memberImg = MemberImg.builder()
+                        .member(member)
+                        .imageContent(image)
+                        .build();
+                memberImgRepository.save(memberImg);
+            });
+        } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_IMAGE_UPLOAD_FAILED);
         }
     }

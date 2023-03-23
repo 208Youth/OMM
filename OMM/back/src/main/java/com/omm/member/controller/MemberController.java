@@ -64,6 +64,7 @@ public class MemberController {
 
     /**
      * 특정 유저의 정보 조희
+     *
      * @param memberId 멤버의 아이디
      * @return
      */
@@ -74,24 +75,34 @@ public class MemberController {
 
     /**
      * 현재 유저의 필터링 정보 조회
+     *
      * @return
      */
     @GetMapping("/filtering")
-    public ResponseEntity<?> getMemberFiltering(){
+    public ResponseEntity<?> getMemberFiltering() {
         String currentMemberNickname = "김미미";
         return new ResponseEntity<>(memberService.getMemberFiltering(currentMemberNickname), HttpStatus.OK);
     }
 
     /**
      * 유저 이미지 업로드 함수
+     *
      * @param uploadImageRequestDto 유저 이미지 업로드 폼
      * @return
      */
     @PostMapping("/img")
-    public ResponseEntity<?> postMemberimages(@RequestBody UploadImageRequestDto uploadImageRequestDto) {
+    public ResponseEntity<?> postMemberImages(@RequestBody UploadImageRequestDto uploadImageRequestDto) {
         String currentMemberNickname = "김미미";
 
         memberService.postMemberImages(currentMemberNickname, uploadImageRequestDto);
         return new ResponseEntity<>("사진 등록을 성공했습니다.", HttpStatus.OK);
+    }
+
+    @PutMapping("/img")
+    public ResponseEntity<?> putMemberImages(@RequestBody UploadImageRequestDto uploadImageRequestDto) {
+        String currentMemberNickname = "김미미";
+
+        memberService.putMemberImages(currentMemberNickname, uploadImageRequestDto);
+        return new ResponseEntity<>("사진 교체에 성공했습니다.", HttpStatus.OK);
     }
 }
