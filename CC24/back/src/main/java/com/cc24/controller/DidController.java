@@ -96,7 +96,7 @@ public class DidController {
             VerifiablePresentation vp = new VerifiablePresentation(
                 SignedJWT.parse(verifyPresentationRequestDto.getSerializedVP()));
             List<SignedJWT> credentials = didService.getCredentials(vp);
-            Map<String, String> claims = new HashMap<>();
+            Map<String, Object> claims = new HashMap<>();
             for (SignedJWT credential : credentials) {
                 didService.verify(credential, holderWallet.getDid(), vp.getHolder().toString());
                 claims.putAll(didService.getClaims(credential));

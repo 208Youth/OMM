@@ -1,5 +1,6 @@
 package com.cc24.controller;
 
+import com.cc24.exception.CustomException;
 import com.cc24.model.dto.cert.CertRequestDto;
 import com.cc24.model.dto.certificate.response.GetCertificatesResponseDto;
 import com.cc24.model.dto.estate.response.GetEstateResponseDto;
@@ -10,13 +11,21 @@ import com.cc24.model.dto.AuthInfoDto;
 import com.cc24.model.dto.university.response.GetUniversitiesResponseDto;
 import com.cc24.service.CertService;
 import com.cc24.service.DidService;
+import com.cc24.util.error.ErrorCode;
+import com.metadium.did.MetadiumWallet;
+import com.metadium.did.exception.DidException;
+import com.metadium.vc.VerifiablePresentation;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jwt.SignedJWT;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,18 +43,26 @@ public class CertController {
 
     @GetMapping("university/{university-id}")
     public ResponseEntity<?> getUniversityCert(@RequestBody CertRequestDto certRequestDto,
-                                               @PathVariable("university-id") Long universityId) throws ParseException {
-//        Map<String, String> map = didService.getClaimsFromVp(certRequestDto.getVp());
-        return null;
-//        return new ResponseEntity<>(certService.getUniversityCert(certRequestDto, universityId), HttpStatus.OK);
-    }
+                                               @PathVariable("university-id") Long universityId) {
+        try {
+            VerifiablePresentation vp = new VerifiablePresentation(
+                    SignedJWT.parse(certRequestDto.getVp()));
+            List<SignedJWT> credentials = didService.getCredentials(vp);
+            MetadiumWallet holderWallet = MetadiumWallet.fromJson(certRequestDto.getWalletJson());
+            Map<String, Object> claims = new HashMap<>();
+            for (SignedJWT credential : credentials) {
+                didService.verify(credential, holderWallet.getDid(), vp.getHolder().toString());
+                claims.putAll(didService.getClaims(credential));
+            }
+            Map<String, Object> universityInfo = certService.getUniversityCert(claims, universityId);
+            String did = holderWallet.getDid();
 
-//    @GetMapping("/university/{university-id}")
-//    public ResponseEntity<?> getUniversityCert(@RequestBody AuthInfoDto authInfoDto,
-//                                               @PathVariable("university-id") Long universityId) {
-//        certService.getUniversityCert(authInfoDto, universityId);
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
+            String vc = didService.issueCredential("UniversityCredential", did, universityInfo);
+            return new ResponseEntity<>(vc, HttpStatus.OK);
+        } catch (ParseException | JOSEException | DidException | IOException e) {
+            throw new CustomException(ErrorCode.DID_ERROR);
+        }
+    }
 
     @GetMapping("/job")
     public ResponseEntity<?> getJobList() {

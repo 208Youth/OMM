@@ -1,6 +1,5 @@
 package com.cc24.service;
 
-import com.cc24.repository.certificate.CertificateRepository;
 import com.cc24.exception.CustomException;
 import com.cc24.util.error.ErrorCode;
 import com.metadium.did.MetadiumWallet;
@@ -31,7 +30,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class DidService {
-    private final CertificateRepository certificateRepository;
 
     private final Long ONE_YEAR = 365L * 24L * 60L * 60L * 1000L;
     private final Long FIVE_MINUTE = 5L * 60L * 1000L;
@@ -148,16 +146,16 @@ public class DidService {
      * @return
      * @throws ParseException
      */
-    public Map<String, String> getClaims(SignedJWT signedVCJWT)
+    public Map<String, Object> getClaims(SignedJWT signedVCJWT)
         throws ParseException {
 
-        Map<String, String> claims = new HashMap<>();
+        Map<String, Object> claims = new HashMap<>();
 
         VerifiableCredential vc = new VerifiableCredential(signedVCJWT);
-        Map<String, String> subject = vc.getCredentialSubject();
-        for (Map.Entry<String, String> entry : subject.entrySet()) {
+        Map<String, Object> subject = vc.getCredentialSubject();
+        for (Map.Entry<String, Object> entry : subject.entrySet()) {
             String name = entry.getKey();
-            String value = entry.getValue();
+            Object value = entry.getValue();
             claims.put(name, value);
         }
 
