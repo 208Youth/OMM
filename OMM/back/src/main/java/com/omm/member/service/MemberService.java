@@ -2,17 +2,12 @@ package com.omm.member.service;
 
 import com.omm.exception.member.MemberExceptionCode;
 import com.omm.exception.member.MemberRuntimeException;
+import com.omm.member.model.dto.MemberCertDto;
 import com.omm.member.model.request.*;
 import com.omm.member.model.response.GetMemberFilteringResponseDto;
 import com.omm.member.model.response.GetMemberInfoResponseDto;
-import com.omm.member.repository.FilteringRepository;
-import com.omm.member.repository.MemberImgRepository;
-import com.omm.member.repository.MemberRepository;
-import com.omm.member.repository.MyInfoRepository;
-import com.omm.model.entity.Filtering;
-import com.omm.model.entity.Member;
-import com.omm.model.entity.MemberImg;
-import com.omm.model.entity.MyInfo;
+import com.omm.member.repository.*;
+import com.omm.model.entity.*;
 import com.omm.model.entity.enums.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,6 +26,8 @@ public class MemberService {
     private final FilteringRepository filteringRepository;
 
     private final MemberImgRepository memberImgRepository;
+
+    private final MemberCertRepository memberCertRepository;
 
     /**
      * 닉네임 중복 체크 함수
@@ -348,6 +345,33 @@ public class MemberService {
             myInfoRepository.save(myInfo);
         } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
+        }
+    }
+
+    /**
+     * 유저 인증정보 가져오기
+     * @param currentMemberNickname 현재 로그인 유저 닉네임
+     * @return
+     */
+    public MemberCertDto getMemberCertificate(String currentMemberNickname) {
+        Member member = memberRepository.findByNickname(currentMemberNickname)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        MemberCert memberCert = memberCertRepository.findByMember(member)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+
+        try {
+            MemberCertDto memberCertDto = MemberCertDto.builder()
+                .university(memberCert.isUniversity())
+                .job(memberCert.isJob())
+                .certificate(memberCert.isCertificate())
+                .health(memberCert.isHealth())
+                .estate(memberCert.isEstate())
+                .income(memberCert.isIncome())
+                .build();
+            return memberCertDto;
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
         }
     }
 }
