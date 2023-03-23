@@ -40,6 +40,7 @@
   border-radius: 20px;
   padding: 1.5rem;
   width: 100%;
+  min-height: 30rem;
 }
 
 .Overlay {
