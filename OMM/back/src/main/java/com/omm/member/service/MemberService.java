@@ -2,10 +2,7 @@ package com.omm.member.service;
 
 import com.omm.exception.member.MemberExceptionCode;
 import com.omm.exception.member.MemberRuntimeException;
-import com.omm.member.model.request.InitMemberFilteringRequestDto;
-import com.omm.member.model.request.InitMemberInfoRequestDto;
-import com.omm.member.model.request.PutMemberInfoRequestDto;
-import com.omm.member.model.request.UploadImageRequestDto;
+import com.omm.member.model.request.*;
 import com.omm.member.model.response.GetMemberFilteringResponseDto;
 import com.omm.member.model.response.GetMemberInfoResponseDto;
 import com.omm.member.repository.FilteringRepository;
@@ -220,6 +217,7 @@ public class MemberService {
 
     /**
      * 이미지 교체 방식
+     *
      * @param currentMemberNickname 현재 로그인 유저
      * @param uploadImageRequestDto 이미지 교체 요청 정보
      */
@@ -252,7 +250,8 @@ public class MemberService {
 
     /**
      * 유저 정보 수정 로직
-     * @param currentMemberNickname 현재 로그인 유저
+     *
+     * @param currentMemberNickname   현재 로그인 유저
      * @param putMemberInfoRequestDto 수정 유저 정보 객체
      */
     public void putMemberInfo(String currentMemberNickname, PutMemberInfoRequestDto putMemberInfoRequestDto) {
@@ -273,6 +272,36 @@ public class MemberService {
 
             myInfoRepository.save(myInfo);
 
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
+        }
+
+    }
+
+    /**
+     * 멤버 필터링 정보 수정
+     * @param currentMemberNickname 현재 로그인 유저
+     * @param putMemberFilteringRequestDto 필터링 정보 객체
+     */
+    public void putMemberFiltering(String currentMemberNickname, PutMemberFilteringRequestDto putMemberFilteringRequestDto) {
+        Member member = memberRepository.findByNickname(currentMemberNickname)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        Filtering filtering = filteringRepository.findByMember(member)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_FILTERING_NOT_EXISTS));
+
+        try {
+            filtering.setAgeMin(putMemberFilteringRequestDto.getAgeMin());
+            filtering.setAgeMax(putMemberFilteringRequestDto.getAgeMax());
+            filtering.setHeightMin(putMemberFilteringRequestDto.getHeightMin());
+            filtering.setHeightMax(putMemberFilteringRequestDto.getHeightMax());
+            filtering.setRangeMin(putMemberFilteringRequestDto.getRangeMin());
+            filtering.setRangeMax(putMemberFilteringRequestDto.getRangeMax());
+            filtering.setContactStyle(FilterContactStyle.valueOf(putMemberFilteringRequestDto.getContactStyle()));
+            filtering.setDrinkingStyle(FilterDrinkingStyle.valueOf(putMemberFilteringRequestDto.getDrinkingStyle()));
+            filtering.setSmokingStyle(FilterSmokingStyle.valueOf(putMemberFilteringRequestDto.getSmokingStyle()));
+            
+            filteringRepository.save(filtering);
         } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
         }
