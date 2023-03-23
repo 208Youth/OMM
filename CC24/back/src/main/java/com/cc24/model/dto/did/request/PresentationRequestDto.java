@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.ToString;
 
 @Getter
-@ToString
 public class PresentationRequestDto {
 
     private String walletJson;
