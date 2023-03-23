@@ -4,6 +4,7 @@ import com.omm.exception.member.MemberExceptionCode;
 import com.omm.exception.member.MemberRuntimeException;
 import com.omm.member.model.request.InitMemberFilteringRequestDto;
 import com.omm.member.model.request.InitMemberInfoRequestDto;
+import com.omm.member.model.request.PutMemberInfoRequestDto;
 import com.omm.member.model.request.UploadImageRequestDto;
 import com.omm.member.model.response.GetMemberFilteringResponseDto;
 import com.omm.member.model.response.GetMemberInfoResponseDto;
@@ -217,6 +218,11 @@ public class MemberService {
         }
     }
 
+    /**
+     * 이미지 교체 방식
+     * @param currentMemberNickname 현재 로그인 유저
+     * @param uploadImageRequestDto 이미지 교체 요청 정보
+     */
     public void putMemberImages(String currentMemberNickname, UploadImageRequestDto uploadImageRequestDto) {
         Member member = memberRepository.findByNickname(currentMemberNickname)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
@@ -242,5 +248,34 @@ public class MemberService {
         } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_IMAGE_UPLOAD_FAILED);
         }
+    }
+
+    /**
+     * 유저 정보 수정 로직
+     * @param currentMemberNickname 현재 로그인 유저
+     * @param putMemberInfoRequestDto 수정 유저 정보 객체
+     */
+    public void putMemberInfo(String currentMemberNickname, PutMemberInfoRequestDto putMemberInfoRequestDto) {
+        Member member = memberRepository.findByNickname(currentMemberNickname)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        MyInfo myInfo = myInfoRepository.findByMember(member)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+
+        try {
+            myInfo.setHeight(putMemberInfoRequestDto.getHeight());
+            myInfo.setContactStyle(InfoContactStyle.valueOf(putMemberInfoRequestDto.getContactStyle()));
+            myInfo.setDrinkingStyle(InfoDrinkingStyle.valueOf(putMemberInfoRequestDto.getDrinkingStyle()));
+            myInfo.setSmokingStyle(InfoSmokingStyle.valueOf(putMemberInfoRequestDto.getSmokingStyle()));
+            myInfo.setMilitary(InfoMilitary.valueOf(putMemberInfoRequestDto.getMilitary()));
+            myInfo.setPet(InfoPet.valueOf(putMemberInfoRequestDto.getPet()));
+            myInfo.setMbti(InfoMBTI.valueOf(putMemberInfoRequestDto.getMbti()));
+
+            myInfoRepository.save(myInfo);
+
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
+        }
+
     }
 }

@@ -1,9 +1,6 @@
 package com.omm.member.controller;
 
-import com.omm.member.model.request.CheckNicknameRequest;
-import com.omm.member.model.request.InitMemberFilteringRequestDto;
-import com.omm.member.model.request.InitMemberInfoRequestDto;
-import com.omm.member.model.request.UploadImageRequestDto;
+import com.omm.member.model.request.*;
 import com.omm.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -98,11 +95,29 @@ public class MemberController {
         return new ResponseEntity<>("사진 등록을 성공했습니다.", HttpStatus.OK);
     }
 
+    /**
+     * 유저 새 이미지로 교체
+     * @param uploadImageRequestDto 이미지 업로드 정보
+     * @return
+     */
     @PutMapping("/img")
     public ResponseEntity<?> putMemberImages(@RequestBody UploadImageRequestDto uploadImageRequestDto) {
         String currentMemberNickname = "김미미";
 
         memberService.putMemberImages(currentMemberNickname, uploadImageRequestDto);
         return new ResponseEntity<>("사진 교체에 성공했습니다.", HttpStatus.OK);
+    }
+
+    /**
+     * 유저 정보 수정
+     * @param putMemberInfoRequestDto 요청된 수정 유저 정보
+     * @return
+     */
+    @PutMapping("/info")
+    public  ResponseEntity<?> putMemberInfo(@RequestBody PutMemberInfoRequestDto putMemberInfoRequestDto) {
+        String currentMemberNickname = "김미미";
+
+        memberService.putMemberInfo(currentMemberNickname, putMemberInfoRequestDto);
+        return new ResponseEntity<>("유저 정보 수정에 성공했습니다.", HttpStatus.OK);
     }
 }
