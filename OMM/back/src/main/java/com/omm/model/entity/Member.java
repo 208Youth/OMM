@@ -19,11 +19,11 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(name = "is_black", nullable = false)
-    private boolean isBlack;
+    @Column(name = "is_black")
+    private boolean isBlack = false;
 
-    @Column(name = "grade", nullable = false)
-    private String grade;
+    @Column(name = "grade")
+    private String grade = "role_user";
 
     @Column(name = "nickname", nullable = false, unique = true)
     private String nickname;
