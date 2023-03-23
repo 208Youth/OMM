@@ -374,4 +374,30 @@ public class MemberService {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
         }
     }
+
+    /**
+     * 멤버 인증 정보 수정
+     * @param currentMemberNickname 현재 로그인 회원 닉네임
+     * @param memberCertDto 유저 수정 인증 정보
+     */
+    public void putMemberCertificate(String currentMemberNickname, MemberCertDto memberCertDto) {
+        Member member = memberRepository.findByNickname(currentMemberNickname)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        MemberCert memberCert = memberCertRepository.findByMember(member)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+
+        try {
+            memberCert.setUniversity(memberCert.isUniversity());
+            memberCert.setJob(memberCert.isJob());
+            memberCert.setCertificate(memberCert.isCertificate());
+            memberCert.setHealth(memberCert.isHealth());
+            memberCert.setEstate(memberCert.isEstate());
+            memberCert.setIncome(memberCert.isIncome());
+            memberCertRepository.save(memberCert);
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
+        }
+
+    }
 }
