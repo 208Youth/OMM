@@ -307,4 +307,27 @@ public class MemberService {
         }
 
     }
+
+    /**
+     * 유저 위치 정보 수정
+     * @param currentMemberNickname 현재 로그인 유저 닉네임
+     * @param putMemberLocation 요청 유저 수정 위치 정보
+     */
+    public void putMemberLocation(String currentMemberNickname, PutMemberLocation putMemberLocation) {
+        Member member = memberRepository.findByNickname(currentMemberNickname)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        MyInfo myInfo = myInfoRepository.findByMember(member)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+
+        try {
+            myInfo.setLat(putMemberLocation.getLat());
+            myInfo.setLng(putMemberLocation.getLng());
+
+            myInfoRepository.save(myInfo);
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
+        }
+
+    }
 }

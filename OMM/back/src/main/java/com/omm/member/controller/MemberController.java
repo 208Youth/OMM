@@ -133,4 +133,17 @@ public class MemberController {
         memberService.putMemberFiltering(currentMemberNickname, putMemberFilteringRequestDto);
         return new ResponseEntity<>("유저 필터링 정보 수정에 성공했습니다.", HttpStatus.OK);
     }
+
+    /**
+     * 유저 위치 정보 수정
+     * @param putMemberLocation 요청 수정 위치 정보
+     * @return
+     */
+    @PutMapping("/location")
+    public ResponseEntity<?> putMemberLocation(@RequestBody PutMemberLocation putMemberLocation) {
+        String currentMemberNickname = "김미미";
+
+        memberService.putMemberLocation(currentMemberNickname, putMemberLocation);
+        return new ResponseEntity<>("유저 위치 정보 수정에 성공했습니다.", HttpStatus.OK);
+    }
 }
