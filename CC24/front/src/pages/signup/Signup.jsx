@@ -26,8 +26,14 @@ function Signup() {
   }
   return (
     <div className="wrap-box">
-      <Modal isOpen={faceModal} onRequestClose={() => setFaceModal(false)} ariaHideApp={false}>
-        <FaceRecogModal setFaceModal={setFaceModal}/>
+      <Modal
+        isOpen={faceModal}
+        onRequestClose={() => setFaceModal(false)}
+        ariaHideApp={false}
+        className="Modal"
+        overlayClassName="Overlay"
+      >
+        <FaceRecogModal setFaceModal={setFaceModal} />
       </Modal>
       <div className="flex-col w-80 mx-auto">
         <p className="text-3xl text-left mb-4 leading-relaxed">
@@ -51,12 +57,12 @@ function Signup() {
                 placeholder="김미미"
               />
             </div>
-              <label
-                htmlFor="age"
-                className="mt-6 block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                생년월일
-              </label>
+            <label
+              htmlFor="age"
+              className="mt-6 block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              생년월일
+            </label>
             <div className="flex mt-6">
               <div>
                 <select
@@ -135,7 +141,12 @@ function Signup() {
                 얼굴 인식
               </div>
               <div className="col-end-7 col-span-2">
-                <div onClick={() => { setFaceModal(true); }} className=" inline text-white bg-[#4654a3] hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mt-1 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                <div
+                  onClick={() => {
+                    setFaceModal(true);
+                  }}
+                  className=" inline text-white bg-[#4654a3] hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mt-1 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
                   촬영
                 </div>
                 <svg

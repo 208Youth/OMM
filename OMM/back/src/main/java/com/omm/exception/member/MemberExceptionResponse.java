@@ -9,8 +9,8 @@ import org.springframework.http.ResponseEntity;
 public class MemberExceptionResponse {
     private final String message;
 
-    public static ResponseEntity<MemberExceptionResponse> toResponseEntity(MemberExceptionCode memberExceptionCode){
+    public static ResponseEntity<MemberExceptionResponse> toResponseEntity(MemberExceptionCode memberExceptionCode) {
         return ResponseEntity.status(memberExceptionCode.getHttpStatus())
-                .body((MemberExceptionResponse.builder().message(memberExceptionCode.getDetail())).build() );
+                .body((MemberExceptionResponse.builder().message(memberExceptionCode.getDetail())).build());
     }
 }
