@@ -12,7 +12,9 @@ public enum MemberExceptionCode {
 
     MEMBER_INPUT_TYPE_WRONG(HttpStatus.BAD_REQUEST, "입력 정보가 잘못되었습니다."),
 
-    MEMBER_INFO_NOT_EXISTS(HttpStatus.NOT_FOUND, "회원 정보가 존재하지 않습니다.")
+    MEMBER_INFO_NOT_EXISTS(HttpStatus.NOT_FOUND, "회원 정보가 존재하지 않습니다."),
+
+    MEMBER_FILTERING_NOT_EXISTS(HttpStatus.NOT_FOUND, "회원 필터링 정보가 존재하지 않습니다.")
     ;
 
     private final HttpStatus httpStatus;

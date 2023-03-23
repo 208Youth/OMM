@@ -52,7 +52,7 @@ public class MemberController {
      * @param initMemberFilteringRequestDto 유저 초기 정보 객체
      * @return
      */
-    @PostMapping("/info")
+    @PostMapping("/filtering")
     public ResponseEntity<?> initMemberFiltering(@RequestBody InitMemberFilteringRequestDto initMemberFilteringRequestDto) {
         // 유저 생성
         String currentMemberNickname = "김미미";
@@ -69,5 +69,15 @@ public class MemberController {
     @GetMapping("/{member-id}")
     public ResponseEntity<?> getMemberInfo(@PathVariable("member-id") Long memberId) {
         return new ResponseEntity<>(memberService.getMemberInfo(memberId), HttpStatus.OK);
+    }
+
+    /**
+     * 현재 유저의 필터링 정보 조회
+     * @return
+     */
+    @GetMapping("/filtering")
+    public ResponseEntity<?> getMemberFiltering(){
+        String currentMemberNickname = "김미미";
+        return new ResponseEntity<>(memberService.getMemberFiltering(currentMemberNickname), HttpStatus.OK);
     }
 }
