@@ -1,0 +1,9 @@
+.recog-wrap {
+  position: relative;
+}
+
+.recog-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
