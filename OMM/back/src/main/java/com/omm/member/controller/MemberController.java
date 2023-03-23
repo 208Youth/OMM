@@ -1,5 +1,6 @@
 package com.omm.member.controller;
 
+import com.omm.member.model.dto.MemberCertDto;
 import com.omm.member.model.request.*;
 import com.omm.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -158,5 +159,15 @@ public class MemberController {
 
         memberService.putMemberPr(currentMemberNickname, putMemberPrRequestDto);
         return new ResponseEntity<>("유저 자기소개 수정에 성공했습니다.", HttpStatus.OK);
+    }
+
+    /**
+     * 현재 로그인 유저 인증정보 가져오기
+     * @return
+     */
+    @GetMapping("/certificate")
+    public ResponseEntity<?> getMemberCertificate() {
+        String currentMemberNickname = "김미미";
+        return new ResponseEntity<>(memberService.getMemberCertificate(currentMemberNickname), HttpStatus.OK);
     }
 }
