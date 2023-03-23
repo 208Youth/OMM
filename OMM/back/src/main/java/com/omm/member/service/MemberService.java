@@ -4,6 +4,7 @@ import com.omm.exception.member.MemberExceptionCode;
 import com.omm.exception.member.MemberRuntimeException;
 import com.omm.member.model.request.InitMemberFilteringRequestDto;
 import com.omm.member.model.request.InitMemberInfoRequestDto;
+import com.omm.member.model.response.GetMemberFilteringResponseDto;
 import com.omm.member.model.response.GetMemberInfoResponseDto;
 import com.omm.member.repository.FilteringRepository;
 import com.omm.member.repository.MemberImgRepository;
@@ -155,6 +156,36 @@ public class MemberService {
             return getMemberInfoResponseDto;
         } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
+        }
+    }
+
+    /**
+     * 특정 유저의 (실질적으로는 현재 로그인 유저의) 필터링 정보 조회
+     * @param currentMemberNickname 현재 멤버 닉네임
+     * @return
+     */
+    public GetMemberFilteringResponseDto getMemberFiltering(String currentMemberNickname) {
+        Member member = memberRepository.findByNickname(currentMemberNickname)
+                .orElseThrow(()-> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        Filtering filtering = filteringRepository.findByMember(member)
+                .orElseThrow(()-> new MemberRuntimeException(MemberExceptionCode.MEMBER_FILTERING_NOT_EXISTS));
+        
+        try{
+            GetMemberFilteringResponseDto getMemberFilteringResponseDto = GetMemberFilteringResponseDto.builder()
+                    .ageMin(filtering.getAgeMin())
+                    .ageMax(filtering.getAgeMax())
+                    .heightMin(filtering.getHeightMin())
+                    .heightMax(filtering.getHeightMax())
+                    .rangeMin(filtering.getRangeMin())
+                    .rangeMax(filtering.getRangeMax())
+                    .contactStyle(filtering.getContactStyle().name())
+                    .drinkingStyle(filtering.getDrinkingStyle().name())
+                    .smokingStyle(filtering.getSmokingStyle().name())
+                    .build();
+            return getMemberFilteringResponseDto;
+        } catch (Exception e){
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_FILTERING_NOT_EXISTS);
         }
     }
 }
