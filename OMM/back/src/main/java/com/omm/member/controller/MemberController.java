@@ -201,4 +201,18 @@ public class MemberController {
     public ResponseEntity<?> getMemberInterestList(@PathVariable("member-id") Long memberId) {
         return new ResponseEntity<>(memberService.getMemberInterestList(memberId), HttpStatus.OK);
     }
+
+    /**
+     * 관심사 정보 삭제
+     * @param deleteInterestRequestDto 관심사 정보 삭제 객체
+     * @return
+     */
+    @DeleteMapping("/interest")
+    public ResponseEntity<?> deleteInterest(@RequestBody DeleteInterestRequestDto deleteInterestRequestDto) {
+        String currentMemberNickname = "김미미";
+        //먼가의 로직 추가 필요
+
+        memberService.deleteInterest(deleteInterestRequestDto.getInterestListId());
+        return new ResponseEntity<>("관심사 삭제에 성공했습니다.", HttpStatus.OK);
+    }
 }
