@@ -98,6 +98,7 @@ public class MemberController {
 
     /**
      * 유저 새 이미지로 교체
+     *
      * @param uploadImageRequestDto 이미지 업로드 정보
      * @return
      */
@@ -111,6 +112,7 @@ public class MemberController {
 
     /**
      * 유저 정보 수정
+     *
      * @param putMemberInfoRequestDto 요청된 수정 유저 정보
      * @return
      */
@@ -124,6 +126,7 @@ public class MemberController {
 
     /**
      * 유저 필터링 정보 수정
+     *
      * @param putMemberFilteringRequestDto 요청된 수정 필터링 정보
      * @return
      */
@@ -137,6 +140,7 @@ public class MemberController {
 
     /**
      * 유저 위치 정보 수정
+     *
      * @param putMemberLocationRequestDto 요청 수정 위치 정보
      * @return
      */
@@ -150,11 +154,12 @@ public class MemberController {
 
     /**
      * 유저 자기소개 수정
+     *
      * @param putMemberPrRequestDto 수정 자기소개 정보
      * @return
      */
     @PutMapping("/pr")
-    public ResponseEntity<?> putMemberPr(@RequestBody PutMemberPrRequestDto putMemberPrRequestDto){
+    public ResponseEntity<?> putMemberPr(@RequestBody PutMemberPrRequestDto putMemberPrRequestDto) {
         String currentMemberNickname = "김미미";
 
         memberService.putMemberPr(currentMemberNickname, putMemberPrRequestDto);
@@ -163,11 +168,26 @@ public class MemberController {
 
     /**
      * 현재 로그인 유저 인증정보 가져오기
+     *
      * @return
      */
     @GetMapping("/certificate")
     public ResponseEntity<?> getMemberCertificate() {
         String currentMemberNickname = "김미미";
         return new ResponseEntity<>(memberService.getMemberCertificate(currentMemberNickname), HttpStatus.OK);
+    }
+
+    /**
+     * 유저 인증 정보 수정
+     * @param memberCertDto 요정된 인증수정 정보
+     * @return
+     */
+    @PutMapping("/certificate")
+    public ResponseEntity<?> putMemberCertificate(@RequestBody MemberCertDto memberCertDto) {
+        String currentMemberNickname = "김미미";
+        //먼가의 로직 추가 필요
+
+        memberService.putMemberCertificate(currentMemberNickname, memberCertDto);
+        return new ResponseEntity<>("유저 인증정보 수정에 성공했습니다.", HttpStatus.OK);
     }
 }
