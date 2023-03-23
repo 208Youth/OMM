@@ -17,12 +17,12 @@ public class MemberController {
     /**
      * 닉네임 중복 체크 함수
      *
-     * @param checkNicknameRequest 닉네임 중복 체크 요청
+     * @param checkNicknameRequestDto 닉네임 중복 체크 요청
      * @return
      */
     @GetMapping("/nickname")
-    public ResponseEntity<?> checkNickname(@RequestBody CheckNicknameRequest checkNicknameRequest) {
-        boolean exist = memberService.existNickname(checkNicknameRequest.getNickname());
+    public ResponseEntity<?> checkNickname(@RequestBody CheckNicknameRequestDto checkNicknameRequestDto) {
+        boolean exist = memberService.existNickname(checkNicknameRequestDto.getNickname());
         return new ResponseEntity<>(exist, HttpStatus.OK);
     }
 
@@ -136,14 +136,27 @@ public class MemberController {
 
     /**
      * 유저 위치 정보 수정
-     * @param putMemberLocation 요청 수정 위치 정보
+     * @param putMemberLocationRequestDto 요청 수정 위치 정보
      * @return
      */
     @PutMapping("/location")
-    public ResponseEntity<?> putMemberLocation(@RequestBody PutMemberLocation putMemberLocation) {
+    public ResponseEntity<?> putMemberLocation(@RequestBody PutMemberLocationRequestDto putMemberLocationRequestDto) {
         String currentMemberNickname = "김미미";
 
-        memberService.putMemberLocation(currentMemberNickname, putMemberLocation);
+        memberService.putMemberLocation(currentMemberNickname, putMemberLocationRequestDto);
         return new ResponseEntity<>("유저 위치 정보 수정에 성공했습니다.", HttpStatus.OK);
+    }
+
+    /**
+     * 유저 자기소개 수정
+     * @param putMemberPrRequestDto 수정 자기소개 정보
+     * @return
+     */
+    @PutMapping("/pr")
+    public ResponseEntity<?> putMemberPr(@RequestBody PutMemberPrRequestDto putMemberPrRequestDto){
+        String currentMemberNickname = "김미미";
+
+        memberService.putMemberPr(currentMemberNickname, putMemberPrRequestDto);
+        return new ResponseEntity<>("유저 자기소개 수정에 성공했습니다.", HttpStatus.OK);
     }
 }

@@ -311,9 +311,9 @@ public class MemberService {
     /**
      * 유저 위치 정보 수정
      * @param currentMemberNickname 현재 로그인 유저 닉네임
-     * @param putMemberLocation 요청 유저 수정 위치 정보
+     * @param putMemberLocationRequestDto 요청 유저 수정 위치 정보
      */
-    public void putMemberLocation(String currentMemberNickname, PutMemberLocation putMemberLocation) {
+    public void putMemberLocation(String currentMemberNickname, PutMemberLocationRequestDto putMemberLocationRequestDto) {
         Member member = memberRepository.findByNickname(currentMemberNickname)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
@@ -321,13 +321,33 @@ public class MemberService {
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
 
         try {
-            myInfo.setLat(putMemberLocation.getLat());
-            myInfo.setLng(putMemberLocation.getLng());
+            myInfo.setLat(putMemberLocationRequestDto.getLat());
+            myInfo.setLng(putMemberLocationRequestDto.getLng());
 
             myInfoRepository.save(myInfo);
         } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
         }
 
+    }
+
+    /**
+     * 유저 자기소개 수정
+     * @param currentMemberNickname 현재 로그인 유저 닉네임
+     * @param putMemberPrRequestDto 수정 자기소개 정보
+     */
+    public void putMemberPr(String currentMemberNickname, PutMemberPrRequestDto putMemberPrRequestDto) {
+        Member member = memberRepository.findByNickname(currentMemberNickname)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        MyInfo myInfo = myInfoRepository.findByMember(member)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+
+        try {
+            myInfo.setPr(putMemberPrRequestDto.getPr());
+            myInfoRepository.save(myInfo);
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
+        }
     }
 }

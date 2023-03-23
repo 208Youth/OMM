@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 @Getter
-public class CheckNicknameRequest {
+public class PutMemberPrRequestDto {
 
-    @JsonProperty(value = "nickname")
-    private String nickname;
+    @JsonProperty(value = "pr")
+    private String pr;
 }
