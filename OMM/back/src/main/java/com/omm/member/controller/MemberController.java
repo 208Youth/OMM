@@ -114,10 +114,23 @@ public class MemberController {
      * @return
      */
     @PutMapping("/info")
-    public  ResponseEntity<?> putMemberInfo(@RequestBody PutMemberInfoRequestDto putMemberInfoRequestDto) {
+    public ResponseEntity<?> putMemberInfo(@RequestBody PutMemberInfoRequestDto putMemberInfoRequestDto) {
         String currentMemberNickname = "김미미";
 
         memberService.putMemberInfo(currentMemberNickname, putMemberInfoRequestDto);
         return new ResponseEntity<>("유저 정보 수정에 성공했습니다.", HttpStatus.OK);
+    }
+
+    /**
+     * 유저 필터링 정보 수정
+     * @param putMemberFilteringRequestDto 요청된 수정 필터링 정보
+     * @return
+     */
+    @PutMapping("/filtering")
+    public ResponseEntity<?> putMemberFiltering(@RequestBody PutMemberFilteringRequestDto putMemberFilteringRequestDto) {
+        String currentMemberNickname = "김미미";
+
+        memberService.putMemberFiltering(currentMemberNickname, putMemberFilteringRequestDto);
+        return new ResponseEntity<>("유저 필터링 정보 수정에 성공했습니다.", HttpStatus.OK);
     }
 }
