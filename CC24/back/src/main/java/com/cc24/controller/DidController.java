@@ -3,6 +3,7 @@ package com.cc24.controller;
 import com.cc24.exception.CustomException;
 import com.cc24.model.dto.did.request.CredentialRequestDto;
 import com.cc24.model.dto.did.request.PresentationRequestDto;
+import com.cc24.model.dto.did.request.VerifyPresentationRequestDto;
 import com.cc24.service.DidService;
 import com.cc24.util.error.ErrorCode;
 import com.metadium.did.MetadiumWallet;
@@ -86,14 +87,18 @@ public class DidController {
 
     @GetMapping("/presentation")
     public ResponseEntity<?> verifyPresentation(
-        @RequestBody String serializedVP) { // dto 만들겠삼..
+        @RequestBody VerifyPresentationRequestDto verifyPresentationRequestDto) {
 
         try {
-            VerifiablePresentation vp = new VerifiablePresentation(SignedJWT.parse(serializedVP));
+            MetadiumWallet holderWallet = MetadiumWallet.fromJson(
+                verifyPresentationRequestDto.getWalletJson());
+
+            VerifiablePresentation vp = new VerifiablePresentation(
+                SignedJWT.parse(verifyPresentationRequestDto.getSerializedVP()));
             List<SignedJWT> credentials = didService.getCredentials(vp);
             Map<String, String> claims = new HashMap<>();
             for (SignedJWT credential : credentials) {
-                didService.verify(credential, "", vp.getHolder().toString());
+                didService.verify(credential, holderWallet.getDid(), vp.getHolder().toString());
                 claims.putAll(didService.getClaims(credential));
             }
 
