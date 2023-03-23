@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import CloseBtn from '../../assets/CloseBtn.svg';
 import FaceId from '../../assets/FaceId.svg';
 import './FaceRecogModal.css';
-import axios from 'axios';
 
 function FaceRecogModal(props) {
   const [completed, setBtn] = useState(false);
@@ -44,6 +44,7 @@ function FaceRecogModal(props) {
       .then((res) => {
         console.log(res);
         console.log('이미지를 보냈습니다.');
+        props.setFaceModal(false);
       })
       .catch((err) => {
         console.log(err);
@@ -53,8 +54,14 @@ function FaceRecogModal(props) {
   // 얼굴 인증 버튼 누른후 인식이 되면 버튼 변경
   return (
     <div className="flex-col mx-auto">
-      <p className="flex ml-64">
-        <img onClick={() => props.setFaceModal(false)} src={CloseBtn} className="w-8 h-8" alt="닫기" />
+      <p className="flex justify-end">
+        <img
+          onClick={() => props.setFaceModal(false)}
+          src={CloseBtn}
+          className="w-8 h-8"
+          alt="닫기"
+          aria-hidden="true"
+        />
       </p>
       <p className="text-3xl text-left ml-2 mt-2 leading-relaxed">
         얼굴
@@ -66,7 +73,7 @@ function FaceRecogModal(props) {
           aria-hidden="true"
           src={FaceId}
           id="faceidicon"
-          className="w-60 h-60 mx-auto mt-8"
+          className="max-w-xs mx-auto mt-3"
           alt="아이콘"
         />
       </label>
@@ -82,16 +89,24 @@ function FaceRecogModal(props) {
         }}
       />
       <div className="preview">
-        {imageSrc && <img src={imageSrc} className="w-60 h-60 mx-auto mt-8" alt="preview-img" />}
+        {imageSrc && (
+          <img
+            src={imageSrc}
+            className="max-w-xs max-h-xs mt-3 px-3 mx-auto"
+            alt="preview-img"
+          />
+        )}
       </div>
-      <button
-        onClick={() => {
-          sendImg();
-        }}
-        className={completed ? 'btn-active' : 'btn-inactive'}
-      >
-        인증 완료
-      </button>
+      <div className="flex">
+        <button
+          onClick={() => {
+            sendImg();
+          }}
+          className={completed ? 'btn-active' : 'btn-inactive'}
+        >
+          인증 완료
+        </button>
+      </div>
     </div>
   );
 }
