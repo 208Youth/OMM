@@ -4,6 +4,7 @@ import com.omm.exception.member.MemberExceptionCode;
 import com.omm.exception.member.MemberRuntimeException;
 import com.omm.member.model.request.InitMemberFilteringRequestDto;
 import com.omm.member.model.request.InitMemberInfoRequestDto;
+import com.omm.member.model.request.UploadImageRequestDto;
 import com.omm.member.model.response.GetMemberFilteringResponseDto;
 import com.omm.member.model.response.GetMemberInfoResponseDto;
 import com.omm.member.repository.FilteringRepository;
@@ -186,6 +187,30 @@ public class MemberService {
             return getMemberFilteringResponseDto;
         } catch (Exception e){
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_FILTERING_NOT_EXISTS);
+        }
+    }
+
+    /**
+     * 유저 이미지 업로드 함수
+     * @param currentMemberNickname 현재 로그인 유저 닉네임
+     * @param uploadImageRequestDto 업로드 폼
+     */
+    public void postMemberImages(String currentMemberNickname, UploadImageRequestDto uploadImageRequestDto) {
+        Member member = memberRepository.findByNickname(currentMemberNickname)
+                .orElseThrow(()-> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        try{
+            List<Blob> images = uploadImageRequestDto.getImages();
+
+            images.forEach((image)->{
+                MemberImg memberImg = MemberImg.builder()
+                        .member(member)
+                        .imageContent(image)
+                        .build();
+                memberImgRepository.save(memberImg);
+            });
+        } catch (Exception e){
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_IMAGE_UPLOAD_FAILED);
         }
     }
 }

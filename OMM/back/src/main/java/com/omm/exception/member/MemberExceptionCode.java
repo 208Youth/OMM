@@ -14,7 +14,9 @@ public enum MemberExceptionCode {
 
     MEMBER_INFO_NOT_EXISTS(HttpStatus.NOT_FOUND, "회원 정보가 존재하지 않습니다."),
 
-    MEMBER_FILTERING_NOT_EXISTS(HttpStatus.NOT_FOUND, "회원 필터링 정보가 존재하지 않습니다.")
+    MEMBER_FILTERING_NOT_EXISTS(HttpStatus.NOT_FOUND, "회원 필터링 정보가 존재하지 않습니다."),
+
+    MEMBER_IMAGE_UPLOAD_FAILED(HttpStatus.BAD_REQUEST,"사진 등록에 실패했습니다.")
     ;
 
     private final HttpStatus httpStatus;

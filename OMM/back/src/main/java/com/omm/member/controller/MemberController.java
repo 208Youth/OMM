@@ -3,6 +3,7 @@ package com.omm.member.controller;
 import com.omm.member.model.request.CheckNicknameRequest;
 import com.omm.member.model.request.InitMemberFilteringRequestDto;
 import com.omm.member.model.request.InitMemberInfoRequestDto;
+import com.omm.member.model.request.UploadImageRequestDto;
 import com.omm.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -79,5 +80,18 @@ public class MemberController {
     public ResponseEntity<?> getMemberFiltering(){
         String currentMemberNickname = "김미미";
         return new ResponseEntity<>(memberService.getMemberFiltering(currentMemberNickname), HttpStatus.OK);
+    }
+
+    /**
+     * 유저 이미지 업로드 함수
+     * @param uploadImageRequestDto 유저 이미지 업로드 폼
+     * @return
+     */
+    @PostMapping("/img")
+    public ResponseEntity<?> postMemberimages(@RequestBody UploadImageRequestDto uploadImageRequestDto) {
+        String currentMemberNickname = "김미미";
+
+        memberService.postMemberImages(currentMemberNickname, uploadImageRequestDto);
+        return new ResponseEntity<>("사진 등록을 성공했습니다.", HttpStatus.OK);
     }
 }
