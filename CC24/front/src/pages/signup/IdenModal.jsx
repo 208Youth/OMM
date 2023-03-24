@@ -1,4 +1,7 @@
-// onClick으로 모달창 닫는 로직을 구현하면 된다.
+import React, { useState } from 'react';
+import CloseBtn from '../../assets/CloseBtn.svg';
+import './index.css';
+// import './FaceRecogModal.css';
 
 import React, { useState, useEffect } from 'react';
 import CloseBtn from '../../assets/CloseBtn.svg';
@@ -10,12 +13,13 @@ import Idenconfirm2 from '../../assets/Idenconfirm2.svg';
 // import fastapi from '../../api/fastapi.js';
 import axios from 'axios';
 
-function IdenModal() {
+function IdenModal({ setIdenModal, setIdenComplete, name, year, month, day, gender }) {
   const [imageSrc, setImageSrc] = useState('');
   const [imgfile, setFile] = useState('');
   const [name, setName] = useState('');
   const [gender, setGender] = useState('');
   const [birthday, setBirthday] = useState('');
+  const [completed, setBtn] = useState(false);
 
   // fastapi의 idening를 실행시키기 위한 코드
   async function sendImg() {
@@ -51,7 +55,8 @@ function IdenModal() {
     return new Promise((resolve) => {
       reader.onload = () => {
         setImageSrc(reader.result);
-
+        setBtn(true);
+        setIdenComplete(true);
         resolve();
       };
     });

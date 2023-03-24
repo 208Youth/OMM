@@ -15,7 +15,8 @@ function Signup() {
   const [day, setDay] = useState(null);
   const [gender, setGender] = useState(null);
 
-  const signup = function () {
+  const signup = function (event) {
+    event.preventDefault();
     console.log(name);
     console.log(year);
     console.log(month);
@@ -164,9 +165,8 @@ function Signup() {
               성별
             </label>
             <div className="flex mb-6">
-              <div className="flex items-center mr-4">
+              <div onClick={() => setGender('male')} className="flex items-center mr-4">
                 <input
-                  onChange={(e) => setGender(e.target.value)}
                   id="inline-radio"
                   type="radio"
                   value=""
@@ -180,9 +180,8 @@ function Signup() {
                   남
                 </label>
               </div>
-              <div className="flex items-center mr-4">
+              <div onClick={() => setGender('female')} className="flex items-center mr-4">
                 <input
-                  onChange={(e) => setGender(e.target.value)}
                   id="inline-2-radio"
                   type="radio"
                   value=""
