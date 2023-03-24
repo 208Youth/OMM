@@ -39,12 +39,14 @@ def detect_text(path):
     doc_type = (texts[0].description)[0:5]
     name = (texts[0].description)[6:9]
     birthday = (texts[0].description)[15:21]
-    # sex = (texts[0].description)[22:23]
+    gender = (texts[0].description)[22:23]
     print(doc_type)
     print(name)
     print(birthday)
-    # print(sex)
-    return {'doc_type': doc_type, 'name': name, 'birthday': birthday}
+    print(gender)
+    for file in filenames:
+        os.remove(os.path.join('./iden_img', file))
+    return {'doc_type': doc_type, 'name': name, 'birthday': birthday, 'gender': gender}
 
 
 # 1.1 로컬상의 사진 분석

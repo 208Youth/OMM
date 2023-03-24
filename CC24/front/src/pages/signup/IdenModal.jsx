@@ -1,105 +1,21 @@
-// import React, { useState } from 'react';
-// import CloseBtn from '../../assets/CloseBtn.svg';
-// import './index.css';
-// import './FaceRecogModal.css';
-// import http from '../api/fastapi';
-
-// function Result() {
-//   return (
-//     <div>
-//       <div>
-//         <span>이름</span>
-//         <span>이름값</span>
-//         {/* <span>{이름값}</span> */}
-//       </div>
-//     </div>
-//   );
-// }
-
-// function IdenModal() {
-//   const [imageSrc, setImageSrc] = useState('');
-
-//   const encodeFileToBase64 = (fileBlob) => {
-//     const reader = new FileReader();
-//     reader.readAsDataURL(fileBlob);
-//     return new Promise((resolve) => {
-//       reader.onload = () => {
-//         setImageSrc(reader.result);
-
-//         resolve();
-//         const url = await fileOrBlobToUrl(imageSrc);
-//       };
-//     });
-//   };
-
-//   return (
-//     <div className="flex-col w-80 mx-auto">
-//       <p className="flex">
-//         <img src={CloseBtn} className="w-8 h-8 ml-auto mt-2" alt="닫기" />
-//       </p>
-//       <p className="text-3xl text-left ml-9 leading-relaxed">
-//         본인
-//         <br />
-//         확인
-//       </p>
-
-//       <div>
-//         {/* <img src="/public/upload.png" alt="Upload" /> */}
-//       </div>
-//       {!imageSrc && (
-//       <label htmlFor="imginput">
-//         <div className="fileinput" />
-//       </label>
-//       )}
-//       <input
-//         // className="fileinput"
-//         id="imginput"
-//         type="file"
-//         style={{ display: 'none' }}
-//         onChange={(e) => {
-//           encodeFileToBase64(e.target.files[0]);
-//           http
-//             .post('/ocr');
-//         }}
-//       />
-//       <div className="preview">
-//         {imageSrc
-//         && <img src={imageSrc} alt="preview-img" />}
-
-//       </div>
-//       <div>
-//         {imageSrc && Result()}
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default IdenModal;
-
-// =======================
+// onClick으로 모달창 닫는 로직을 구현하면 된다.
 
 import React, { useState, useEffect } from 'react';
 import CloseBtn from '../../assets/CloseBtn.svg';
 import './index.css';
 import './FaceRecogModal.css';
+import './IdenModal.css';
+import Idenconfirm1 from '../../assets/Idenconfirm1.svg';
+import Idenconfirm2 from '../../assets/Idenconfirm2.svg';
 // import fastapi from '../../api/fastapi.js';
 import axios from 'axios';
-
-function Result() {
-  return (
-    <div>
-      <div>
-        <span>이름</span>
-        <span>이름값</span>
-        {/* <span>{이름값}</span> */}
-      </div>
-    </div>
-  );
-}
 
 function IdenModal() {
   const [imageSrc, setImageSrc] = useState('');
   const [imgfile, setFile] = useState('');
+  const [name, setName] = useState('');
+  const [gender, setGender] = useState('');
+  const [birthday, setBirthday] = useState('');
 
   // fastapi의 idening를 실행시키기 위한 코드
   async function sendImg() {
@@ -117,6 +33,9 @@ function IdenModal() {
     })
       .then((res) => {
         console.log(res.data);
+        setName(res.data.name);
+        setBirthday(res.data.birthday);
+        setGender(res.data.gender);
         console.log('fastapi로이미지를 보냈습니다.');
       })
       .catch((err) => {
@@ -163,11 +82,19 @@ function IdenModal() {
       <p className="flex">
         <img src={CloseBtn} className="w-8 h-8 ml-auto mt-2" alt="닫기" />
       </p>
-      <p className="text-3xl text-left ml-9 leading-relaxed">
-        본인
+      <br />
+      <br />
+      <div>
+        <p className="text-3xl text-left ml-9 leading-relaxed" style={{ marginLeft: '1rem' }}>
+          본인
+        </p>
+      </div>
+      <div>
+        <p className="text-3xl text-left ml-9 leading-relaxed" style={{ marginLeft: '1rem' }}>
+          확인
+        </p>
         <br />
-        확인
-      </p>
+      </div>
 
       <div>
         {/* <img src="/public/upload.png" alt="Upload" /> */}
@@ -183,10 +110,71 @@ function IdenModal() {
         style={{ display: 'none' }}
         onChange={handleFileInputChange}
       />
-      <div className="preview">
-        {imageSrc && <img src={imageSrc} alt="preview-img" />}
+      {/* <div>
+        <div>
+          <img src={Idenconfirm1} alt="Idenconfirm1" className="confirmbtn" />
+        </div>
+      </div> */}
+
+      <div className="preview" style={{ marginLeft: '2rem' }}>
+        {imageSrc && <img src={imageSrc} alt="preview-img" className="idenimage" />}
       </div>
-      <div>{imageSrc && <Result />}</div>
+      <br />
+      <div>{imageSrc && (<Result data={{ name, gender, birthday }} />)}</div>
+      <div>{imageSrc && <img src={Idenconfirm2} alt="Idenconfirm2" className="confirmbtn" />}</div>
+      <div>
+        {!imageSrc && <img src={Idenconfirm1} alt="Idenconfirm1" className="confirmbtn" />}
+
+      </div>
+      <div />
+
+    </div>
+  );
+}
+
+function Result(props) {
+  const { name, gender, birthday } = props.data;
+  const strbirth = String(birthday);
+  const year = strbirth.slice(0, 2);
+  const month = strbirth.slice(2, 4);
+  const day = strbirth.slice(4, 6);
+  return (
+
+    <div style={{ marginLeft: '3rem' }}>
+      <div className="parent">
+        <span className="keys">이름</span>
+        <img src="/public/Vector76.png" alt="#" className="vector76" />
+        <span>{ name }</span>
+        {/* 회원가입창에서 가져온 값과 일치할때만 체크 표시 보여주기? */}
+        <img src="/public/check.png" alt="#" className="check" />
+      </div>
+
+      <div className="parent">
+        <span className="keys">성별</span>
+        <img src="/public/Vector76.png" alt="#" className="vector76" />
+        <span>
+          {gender === 1 ? '남' : '여'}
+        </span>
+        <img src="/public/check.png" alt="#" className="check" />
+      </div>
+      <div className="parent">
+        <span className="keys">생년월일</span>
+        <img src="/public/Vector76.png" alt="#" className="vector76" />
+        {/* <span>{birthday}</span> */}
+        <span>
+          {year}
+          년
+          {' '}
+          {month}
+          월
+          {' '}
+          {day}
+          일
+        </span>
+
+        <img src="/public/check.png" alt="#" className="check" />
+      </div>
+
     </div>
   );
 }

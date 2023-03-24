@@ -1,0 +1,38 @@
+.keys {
+  display: inline-block;
+  /* margin-right : 2.5rem; */
+  box-sizing: border-box;
+  flex: 0.6;
+}
+
+.vector76 {
+  display: inline-block;
+  margin-right: 0.6rem;
+  
+  
+}
+
+.check {
+  display: 'inline-block';
+  margin-left: 1rem;
+}
+
+.parent {
+  display: flex;
+  align-items: center;
+}
+
+.idenimage {
+  width: 16rem;
+  height: 10rem;
+  /* object-fit: cover; */
+}
+
+.confirmbtn {
+  position: fixed;
+  bottom: 3rem;
+  width: 16rem;
+  left: 2rem;
+  
+  
+}
