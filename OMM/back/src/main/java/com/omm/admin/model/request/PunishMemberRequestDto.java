@@ -5,7 +5,6 @@ import lombok.*;
 
 @Getter
 @NoArgsConstructor
-@RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
 public class PunishMemberRequestDto {
@@ -17,5 +16,5 @@ public class PunishMemberRequestDto {
     String type;
 
     @JsonProperty(value = "value")
-    int period;
+    Long period;
 }

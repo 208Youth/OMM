@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class UniversityDto {
-    @JsonProperty(value = "university_id")
+    @JsonProperty(value = "id")
     private Long universityId;
     @JsonProperty(value = "name")
     private String name;
