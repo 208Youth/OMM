@@ -140,8 +140,10 @@ public class AdminService {
                     Member suspendTarget = memberRepository.findById(punishMemberRequestDto.getMemberId())
                             .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
                     LocalDate tempDate = suspendTarget.getSuspendDate();
-                    tempDate.plusDays(punishMemberRequestDto.getPeriod());
-                    suspendTarget.setSuspendDate(tempDate);
+                    if(tempDate == null){
+                        tempDate = LocalDate.now();
+                    }
+                    suspendTarget.setSuspendDate(tempDate.plusDays(punishMemberRequestDto.getPeriod()));
                     memberRepository.save(suspendTarget);
                     break;
                 // 계정 삭제 처리

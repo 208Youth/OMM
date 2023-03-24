@@ -16,5 +16,5 @@ public class PunishMemberRequestDto {
     String type;
 
     @JsonProperty(value = "value")
-    int period;
+    Long period;
 }
