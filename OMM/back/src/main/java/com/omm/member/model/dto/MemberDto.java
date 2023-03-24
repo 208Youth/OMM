@@ -7,7 +7,6 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
-@RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
 public class MemberDto {

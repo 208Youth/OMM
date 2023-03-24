@@ -42,13 +42,19 @@ public class MemberService {
      * @return
      */
     public boolean existNickname(String nickname) {
-        return memberRepository.existsByNickname(nickname);
+        try {
+            return memberRepository.existsByNickname(nickname);
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
+        }
     }
 
     public void createMember(String memberNickname) {
         try {
             Member member = Member.builder()
                     .nickname(memberNickname)
+//                    .isBlack(false)
+//                    .grade("role_user")
                     .build();
             memberRepository.save(member);
         } catch (Exception e) {
@@ -414,6 +420,7 @@ public class MemberService {
 
     /**
      * 유저 관심사 정보 리스트 가져오기
+     *
      * @param memberId 멤버 아이디
      * @return
      */
@@ -424,15 +431,15 @@ public class MemberService {
         try {
             List<InterestList> interestList = interestListRepository.findAllByMember(member);
             List<InterestDto> interestDtos = new ArrayList<>();
-            interestList.forEach((interest)->{
+            interestList.forEach((interest) -> {
                 interestDtos.add(
-                    InterestDto.builder()
-                            .interestListId(interest.getId())
-                            .name(interest.getInterest().getName())
-                            .build()
+                        InterestDto.builder()
+                                .interestListId(interest.getId())
+                                .name(interest.getInterest().getName())
+                                .build()
                 );
             });
-            
+
             GetInterestListResponseDto getInterestListResponseDto = GetInterestListResponseDto.builder()
                     .interestList(interestDtos).build();
             return getInterestListResponseDto;
@@ -443,13 +450,14 @@ public class MemberService {
 
     /**
      * 관심사 정보 삭제
+     *
      * @param interestListId 관심사 리스트 아이디
      */
     public void deleteInterest(Long interestListId) {
 
         try {
             InterestList interestList = interestListRepository.findById(interestListId)
-                    .orElseThrow(()-> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+                    .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
 
             interestListRepository.delete(interestList);
         } catch (Exception e) {
@@ -459,8 +467,9 @@ public class MemberService {
 
     /**
      * 유저 관심사 새 등록
+     *
      * @param currentMemberNickname 현재 로그인한 유저
-     * @param name 관심사 이름
+     * @param name                  관심사 이름
      * @return
      */
     public InterestDto addInterest(String currentMemberNickname, String name) {
@@ -472,10 +481,11 @@ public class MemberService {
             // 현재등록된 관심사 리스트를 검색한다
             List<InterestList> interestLists = interestListRepository.findAllByMember(member);
             // 6개가 찼다면 더이상 등록 불가
-            if(interestLists.size() == 6) throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_MAX_EXCEED);
+            if (interestLists.size() == 6)
+                throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_MAX_EXCEED);
 
             // 존재하지 않은 관심사면 새로 만들어준다
-            if(!interestRepository.existsByName(name)){
+            if (!interestRepository.existsByName(name)) {
                 Interest interest = Interest.builder()
                         .name(name).build();
                 interestRepository.save(interest);

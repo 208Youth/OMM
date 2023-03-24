@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 
@@ -15,6 +17,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@DynamicInsert
 @Table(name = "filtering")
 public class Filtering {
 
@@ -40,6 +43,7 @@ public class Filtering {
     private int heightMax;
 
     @Column(name = "range_min")
+    @ColumnDefault("0")
     private int rangeMin = 0;
 
     @Column(name = "range_max", nullable = false)
