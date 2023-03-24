@@ -30,7 +30,7 @@ public class AdminController {
     public ResponseEntity<?> createReport(@RequestBody CreateReportRequestDto createReportRequestDto) {
         // JWT 생성하고 현재 로그인 유저, 타겟 로그인유저 정보 알아와야 함
         String memberNickname = "김미미";
-        Long targetId = 5L;
+        Long targetId = 2L;
 
         // 결과에 따라
         if (adminService.createReport(createReportRequestDto, memberNickname, targetId)) {
@@ -70,12 +70,17 @@ public class AdminController {
     @PutMapping("/report/{report-id}")
     public ResponseEntity<?> processReport(@PathVariable("report-id") Long reportId) {
         adminService.processReport(reportId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>("신고 처리 완료",HttpStatus.OK);
     }
 
+    /**
+     * 특정 유저를 정지 혹은 탈퇴처리
+     * @param punishMemberRequestDto 요청 객체
+     * @return
+     */
     @PostMapping("/penalty")
     public ResponseEntity<?> punishMember(@RequestBody PunishMemberRequestDto punishMemberRequestDto) {
         adminService.punishMember(punishMemberRequestDto);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>("유저 처리 조치 완료",HttpStatus.OK);
     }
 }
