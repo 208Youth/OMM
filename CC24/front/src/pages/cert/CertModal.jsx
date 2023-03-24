@@ -1,40 +1,170 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useState } from 'react';
+import { ReactSearchAutocomplete } from 'react-search-autocomplete';
+import './CertModal.css';
+import CloseBtn from '../../assets/CloseBtn.svg';
 
-function CertModal({ cert, isClose }) {
+function CertModal({ cert, info, isClose }) {
   const requireSearch = ['대학교', '자격증', '회사'];
+  const [select, setSelect] = useState('');
+  const [certResult, setCertResult] = useState('');
+
+  const infos = [
+    {
+      id: 0,
+      name: '전북대학교',
+    },
+    {
+      id: 1,
+      name: '서울대학교',
+    },
+    {
+      id: 2,
+      name: '연세대학교',
+    },
+    {
+      id: 3,
+      name: '고려대학교ddddddddddddd',
+    },
+    {
+      id: 4,
+      name: 'KAIST',
+    },
+  ];
+  // Cert.jsx 에서 내려온 prop으로 infos 설정
+  // const infos = info.list
+
+  const handleOnSearch = (string, results) => {
+    console.log(string, results);
+  };
+
+  const handleOnHover = (result) => {
+    console.log(result);
+  };
+
+  const handleOnSelect = (item) => {
+    setSelect(item);
+    console.log(item);
+  };
+
+  const handleOnFocus = () => {
+    console.log('Focused');
+  };
+
+  const formatResult = (item) => (
+    <span style={{ display: 'block', textAlign: 'left' }}>{item.name}</span>
+  );
+
+  async function requestCert(api) {
+    let selectCert = '';
+    if (api === '대학교') {
+      selectCert = 'university';
+    } else if (api === '자격증') {
+      selectCert = 'certificate';
+    } else if (api === '회사') {
+      selectCert = 'job';
+    } else if (api === '소득') {
+      selectCert = 'income';
+    } else if (api === '부동산') {
+      selectCert = 'estate';
+    } else if (api === '건강검진서') {
+      selectCert = 'health';
+    }
+    await axios({
+      method: 'get',
+      url: `/api/cert/${selectCert}${select.id ? `/${select.id}` : ''}`,
+      data: {
+        name: '이름',
+        birth_date: '0000-00-00',
+      },
+      headers: {
+        // Authorization: token,
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        setCertResult(res);
+      })
+      .catch((err) => {
+        console.log(err);
+        setCertResult('됐다요');
+      });
+  }
+
   return (
     <div>
       {requireSearch.includes(cert) && (
-        <div>
-          <p onClick={() => isClose(true)} aria-hidden="true">
-            X
+        <div className="flex-col mx-auto">
+          <p className="flex justify-end">
+            <img
+              onClick={() => {
+                isClose(true);
+              }}
+              src={CloseBtn}
+              className="w-8 h-8"
+              alt="닫기"
+              aria-hidden="true"
+            />
           </p>
           <div>{`${cert} 인증`}</div>
           <div>
-            <div>
-              <label
-                htmlFor="name"
-                className="mt-6 block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                {cert}
-              </label>
-              <input
-                type="text"
-                id="name"
-                className="mt-6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder={`${cert} 검색`}
+            <div className="mt-6">
+              <ReactSearchAutocomplete
+                items={infos}
+                onSearch={handleOnSearch}
+                onHover={handleOnHover}
+                onSelect={handleOnSelect}
+                onFocus={handleOnFocus}
+                autoFocus
+                formatResult={formatResult}
               />
+            </div>
+            <div className="flex justify-between mt-3 items-center">
+              <div className="truncate ...">발급할 인증서 : {select.name}</div>
+              <button
+                className="btn-cert"
+                onClick={() => {
+                  requestCert(cert);
+                }}
+              >
+                요청
+              </button>
             </div>
           </div>
         </div>
       )}
       {!requireSearch.includes(cert) && (
-        <div>
-          <p onClick={() => isClose(true)} aria-hidden="true">
-            X
+        <div className="flex-col mx-auto">
+          <p className="flex justify-end">
+            <img
+              onClick={() => {
+                isClose(true);
+              }}
+              src={CloseBtn}
+              className="w-8 h-8"
+              alt="닫기"
+              aria-hidden="true"
+            />
           </p>
           <div>{cert === '건강검진서' ? '건강검진서' : `${cert} 인증`}</div>
-          <div>인증서 바로 불러오기</div>
+          <div>아이콘</div>
+          <div className="flex mt-3 w-full justify-center">
+            <button
+              className="btn"
+              onClick={() => {
+                requestCert(cert);
+              }}
+            >
+              인증서 요청
+            </button>
+          </div>
+        </div>
+      )}
+      {certResult && (
+        <div className="text-center my-20 text-xl text-[#4654A3]">
+          인증서가 발급되었습니다
+          <br />
+          메인에서 확인하세요!
         </div>
       )}
     </div>
