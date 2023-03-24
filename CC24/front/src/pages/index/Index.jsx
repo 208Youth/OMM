@@ -1,11 +1,11 @@
-import "./Index.css";
-import { Link } from "react-router-dom";
-import React from "react";
-import CC24Logo from "../../assets/CC24.svg";
+import './Index.css';
+import { Link } from 'react-router-dom';
+import React from 'react';
+import CC24Logo from '../../assets/CC24.svg';
 
 function Index() {
   return (
-    <div className="wrap-box">
+    <div className="wrap-box-index">
       <div className="logo-box">
         <img src={CC24Logo} className="" alt="CC24 logo" />
       </div>
