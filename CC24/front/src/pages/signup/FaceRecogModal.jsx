@@ -4,7 +4,7 @@ import CloseBtn from '../../assets/CloseBtn.svg';
 import FaceId from '../../assets/FaceId.svg';
 import './FaceRecogModal.css';
 
-function FaceRecogModal({ setFaceModal, name, setFaceComplete }) {
+function FaceRecogModal({ setFaceModal, setFaceComplete, name }) {
   const [completed, setBtn] = useState(false);
   const [imageSrc, setImageSrc] = useState('');
   const [imgfile, setFile] = useState(null);
@@ -30,8 +30,7 @@ function FaceRecogModal({ setFaceModal, name, setFaceComplete }) {
   };
 
   async function sendImg() {
-    setFaceComplete(true)
-    console.log(faceComplete)
+    setFaceComplete(true);
     // axios로 fastapi 에 이미지 보내기
     await axios({
       method: 'post',
@@ -47,11 +46,11 @@ function FaceRecogModal({ setFaceModal, name, setFaceComplete }) {
         console.log(res);
         console.log('이미지를 보냈습니다.');
         setFaceModal(false);
-        setFaceComplete(true)
+        setFaceComplete(true);
       })
       .catch((err) => {
         console.log(err);
-        setFaceComplete(true)
+        setFaceComplete(true);
       });
   }
 
@@ -72,7 +71,7 @@ function FaceRecogModal({ setFaceModal, name, setFaceComplete }) {
         <br />
         인증
       </p>
-      <h4 className='ml-3 mt-5'>마스크를 벗은 정면 사진을 올려주세요.</h4>
+      <h4 className="ml-3 mt-5">마스크를 벗은 정면 사진을 올려주세요.</h4>
       <label htmlFor="imginput">
         <img
           aria-hidden="true"

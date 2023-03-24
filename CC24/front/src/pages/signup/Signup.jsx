@@ -10,7 +10,7 @@ function Signup() {
   const [idenModal, setIdenModal] = useState(false);
   const [idenComplete, setIdenComplete] = useState(false);
   const [name, setName] = useState(null);
-  const [year, setYear] = useState(null);
+  const [year, setYear] = useState('');
   const [month, setMonth] = useState(null);
   const [day, setDay] = useState(null);
   const [gender, setGender] = useState(null);
@@ -83,11 +83,11 @@ function Signup() {
               setIdenComplete(true);
             }
           }}
-          name={name}
-          year={year}
-          month={month}
-          day={day}
-          gender={gender}
+          formName={name}
+          formYear={year.slice(2, 4)}
+          formMonth={month}
+          formDay={day}
+          formGender={gender}
         />
       </Modal>
       <div className="flex-col w-80 mx-auto">
