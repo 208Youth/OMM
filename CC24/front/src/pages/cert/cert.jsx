@@ -1,11 +1,32 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './Cert.css';
 import Modal from 'react-modal';
+import CC24Logo from '../../assets/CC24.svg';
 import CertModal from './CertModal';
 
 function Cert() {
   const [modal, setModal] = useState(false);
   const [cert, setCert] = useState('');
+  const [info, setInfo] = useState(null);
+
+  async function getList(select) {
+    await axios({
+      method: 'get',
+      url: `/api/cert/${select}`,
+      // headers: {
+      //   Authorization: token,
+      // },
+    })
+      .then((res) => {
+        setInfo(res);
+        setModal(true);
+      })
+      .catch((err) => {
+        console.log(err);
+        setModal(true);
+      });
+  }
 
   useEffect(() => {
     if (modal) {
@@ -17,7 +38,7 @@ function Cert() {
   return (
     <div className="flex">
       <div className="w-80 mx-auto">
-        <div className="cert-title">CC24</div>
+        <img src={CC24Logo} className="cert-title" alt="CC24 logo" />
         <Modal
           isOpen={modal}
           onRequestClose={() => setModal(false)}
@@ -27,6 +48,7 @@ function Cert() {
         >
           <CertModal
             cert={cert}
+            info={info}
             isClose={(res) => {
               if (res) {
                 setModal(false);
@@ -37,24 +59,24 @@ function Cert() {
         <div
           onClick={() => {
             setCert('대학교');
-            setModal(true);
+            getList('university');
           }}
           aria-hidden="true"
-          className="flex justify-between ml-8 py-1 border-b-2 border-b-gray-200"
+          className="flex justify-between ml-8 py-3 border-b-2 border-b-gray-200 hover:bg-gray-100"
         >
-          <div>대학교 인증</div>
-          <div className="cert-point"> &gt;</div>
+          <div className="text-xl hover:text-blue-900">대학교 인증</div>
+          <div className="cert-point text-xl hover:text-stone-900"> &gt;</div>
         </div>
         <div
           onClick={() => {
             setCert('회사');
-            setModal(true);
+            getList('job');
           }}
           aria-hidden="true"
-          className="flex justify-between ml-8 py-1 border-b-2 border-b-gray-200"
+          className="flex justify-between ml-8 py-3 border-b-2 border-b-gray-200 hover:bg-gray-100"
         >
-          <div>회사 인증</div>
-          <div className="cert-point"> &gt;</div>
+          <div className="text-xl hover:text-blue-900">회사 인증</div>
+          <div className="cert-point text-xl hover:text-stone-900"> &gt;</div>
         </div>
         <div
           onClick={() => {
@@ -62,10 +84,10 @@ function Cert() {
             setModal(true);
           }}
           aria-hidden="true"
-          className="flex justify-between ml-8 py-1 border-b-2 border-b-gray-200"
+          className="flex justify-between ml-8 py-3 border-b-2 border-b-gray-200 hover:bg-gray-100"
         >
-          <div>소득 인증</div>
-          <div className="cert-point"> &gt;</div>
+          <div className="text-xl hover:text-blue-900">소득 인증</div>
+          <div className="cert-point text-xl hover:text-stone-900"> &gt;</div>
         </div>
         <div
           onClick={() => {
@@ -73,10 +95,10 @@ function Cert() {
             setModal(true);
           }}
           aria-hidden="true"
-          className="flex justify-between ml-8 py-1 border-b-2 border-b-gray-200"
+          className="flex justify-between ml-8 py-3 border-b-2 border-b-gray-200 hover:bg-gray-100"
         >
-          <div>부동산 인증</div>
-          <div className="cert-point"> &gt;</div>
+          <div className="text-xl hover:text-blue-900">부동산 인증</div>
+          <div className="cert-point text-xl hover:text-stone-900"> &gt;</div>
         </div>
         <div
           onClick={() => {
@@ -84,21 +106,21 @@ function Cert() {
             setModal(true);
           }}
           aria-hidden="true"
-          className="flex justify-between ml-8 py-1 border-b-2 border-b-gray-200"
+          className="flex justify-between ml-8 py-3 border-b-2 border-b-gray-200 hover:bg-gray-100"
         >
-          <div>건강검진서</div>
-          <div className="cert-point"> &gt;</div>
+          <div className="text-xl hover:text-blue-900">건강검진서</div>
+          <div className="cert-point text-xl hover:text-stone-900"> &gt;</div>
         </div>
         <div
           onClick={() => {
             setCert('자격증');
-            setModal(true);
+            getList('certificate');
           }}
           aria-hidden="true"
-          className="flex justify-between ml-8 py-1 border-b-2 border-b-gray-200"
+          className="flex justify-between ml-8 py-3 border-b-2 border-b-gray-200 hover:bg-gray-100"
         >
-          <div>자격증 인증</div>
-          <div className="cert-point"> &gt;</div>
+          <div className="text-xl hover:text-blue-900">자격증 인증</div>
+          <div className="cert-point text-xl hover:text-stone-900"> &gt;</div>
         </div>
       </div>
     </div>
