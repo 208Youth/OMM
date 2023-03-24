@@ -10,13 +10,12 @@ function Signup() {
   const [idenModal, setIdenModal] = useState(false);
   const [idenComplete, setIdenComplete] = useState(false);
   const [name, setName] = useState(null);
-  const [year, setYear] = useState(null);
+  const [year, setYear] = useState('');
   const [month, setMonth] = useState(null);
   const [day, setDay] = useState(null);
   const [gender, setGender] = useState(null);
 
-  const signup = function (event) {
-    event.preventDefault();
+  const signup = function () {
     console.log(name);
     console.log(year);
     console.log(month);
@@ -84,11 +83,11 @@ function Signup() {
               setIdenComplete(true);
             }
           }}
-          name={name}
-          year={year}
-          month={month}
-          day={day}
-          gender={gender}
+          formName={name}
+          formYear={year.slice(2, 4)}
+          formMonth={month}
+          formDay={day}
+          formGender={gender}
         />
       </Modal>
       <div className="flex-col w-80 mx-auto">
@@ -165,8 +164,9 @@ function Signup() {
               성별
             </label>
             <div className="flex mb-6">
-              <div onClick={() => setGender('male')} className="flex items-center mr-4">
+              <div className="flex items-center mr-4">
                 <input
+                  onChange={(e) => setGender(e.target.value)}
                   id="inline-radio"
                   type="radio"
                   value=""
@@ -180,8 +180,9 @@ function Signup() {
                   남
                 </label>
               </div>
-              <div onClick={() => setGender('female')} className="flex items-center mr-4">
+              <div className="flex items-center mr-4">
                 <input
+                  onChange={(e) => setGender(e.target.value)}
                   id="inline-2-radio"
                   type="radio"
                   value=""
