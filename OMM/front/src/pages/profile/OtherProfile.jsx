@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 function OtherProfile() {
   return (
     <div>
-      <div>
+      <div className="container">
         back
       </div>
     </div>
