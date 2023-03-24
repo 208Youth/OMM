@@ -5,7 +5,6 @@ import lombok.*;
 
 @Getter
 @NoArgsConstructor
-@RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
 public class PunishMemberRequestDto {

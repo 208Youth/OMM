@@ -20,6 +20,6 @@ public class Interest {
     @Column(name = "interest_id")
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 }

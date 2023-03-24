@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class CertificateDto {
-    @JsonProperty(value = "certificate_id")
+    @JsonProperty(value = "id")
     Long certificateId;
 
     @JsonProperty(value = "name")

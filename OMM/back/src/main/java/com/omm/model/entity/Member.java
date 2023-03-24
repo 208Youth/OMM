@@ -1,7 +1,9 @@
 package com.omm.model.entity;
 
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -11,6 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@DynamicInsert
 @Table(name = "member")
 public class Member {
 
@@ -19,11 +22,13 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(name = "is_black", nullable = false)
-    private boolean isBlack;
+    @Column(name = "is_black")
+    @ColumnDefault("false")
+    private boolean isBlack = false;
 
-    @Column(name = "grade", nullable = false)
-    private String grade;
+    @Column(name = "grade")
+    @ColumnDefault("'role_user'")
+    private String grade = "role_user";
 
     @Column(name = "nickname", nullable = false, unique = true)
     private String nickname;

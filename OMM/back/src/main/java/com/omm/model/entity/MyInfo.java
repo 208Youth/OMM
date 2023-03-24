@@ -25,9 +25,6 @@ public class MyInfo {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @Column(name = "highschoool", nullable = false)
-    private String highschool;
-
     @Column(name = "lat")
     private float lat;
 
@@ -64,6 +61,6 @@ public class MyInfo {
     @Column(name = "pr")
     private String pr;
 
-    @Column(name = "age", nullable = false)
+    @Column(name = "age")
     private short age;
 }
