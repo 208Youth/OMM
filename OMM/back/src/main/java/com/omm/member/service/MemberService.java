@@ -2,20 +2,14 @@ package com.omm.member.service;
 
 import com.omm.exception.member.MemberExceptionCode;
 import com.omm.exception.member.MemberRuntimeException;
-import com.omm.member.model.request.InitMemberFilteringRequestDto;
-import com.omm.member.model.request.InitMemberInfoRequestDto;
-import com.omm.member.model.request.PutMemberInfoRequestDto;
-import com.omm.member.model.request.UploadImageRequestDto;
+import com.omm.member.model.dto.InterestDto;
+import com.omm.member.model.dto.MemberCertDto;
+import com.omm.member.model.request.*;
+import com.omm.member.model.response.GetInterestListResponseDto;
 import com.omm.member.model.response.GetMemberFilteringResponseDto;
 import com.omm.member.model.response.GetMemberInfoResponseDto;
-import com.omm.member.repository.FilteringRepository;
-import com.omm.member.repository.MemberImgRepository;
-import com.omm.member.repository.MemberRepository;
-import com.omm.member.repository.MyInfoRepository;
-import com.omm.model.entity.Filtering;
-import com.omm.model.entity.Member;
-import com.omm.model.entity.MemberImg;
-import com.omm.model.entity.MyInfo;
+import com.omm.member.repository.*;
+import com.omm.model.entity.*;
 import com.omm.model.entity.enums.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,6 +28,12 @@ public class MemberService {
     private final FilteringRepository filteringRepository;
 
     private final MemberImgRepository memberImgRepository;
+
+    private final MemberCertRepository memberCertRepository;
+
+    private final InterestRepository interestRepository;
+
+    private final InterestListRepository interestListRepository;
 
     /**
      * 닉네임 중복 체크 함수
@@ -220,6 +220,7 @@ public class MemberService {
 
     /**
      * 이미지 교체 방식
+     *
      * @param currentMemberNickname 현재 로그인 유저
      * @param uploadImageRequestDto 이미지 교체 요청 정보
      */
@@ -252,7 +253,8 @@ public class MemberService {
 
     /**
      * 유저 정보 수정 로직
-     * @param currentMemberNickname 현재 로그인 유저
+     *
+     * @param currentMemberNickname   현재 로그인 유저
      * @param putMemberInfoRequestDto 수정 유저 정보 객체
      */
     public void putMemberInfo(String currentMemberNickname, PutMemberInfoRequestDto putMemberInfoRequestDto) {
@@ -277,5 +279,230 @@ public class MemberService {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
         }
 
+    }
+
+    /**
+     * 멤버 필터링 정보 수정
+     *
+     * @param currentMemberNickname        현재 로그인 유저
+     * @param putMemberFilteringRequestDto 필터링 정보 객체
+     */
+    public void putMemberFiltering(String currentMemberNickname, PutMemberFilteringRequestDto putMemberFilteringRequestDto) {
+        Member member = memberRepository.findByNickname(currentMemberNickname)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        Filtering filtering = filteringRepository.findByMember(member)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_FILTERING_NOT_EXISTS));
+
+        try {
+            filtering.setAgeMin(putMemberFilteringRequestDto.getAgeMin());
+            filtering.setAgeMax(putMemberFilteringRequestDto.getAgeMax());
+            filtering.setHeightMin(putMemberFilteringRequestDto.getHeightMin());
+            filtering.setHeightMax(putMemberFilteringRequestDto.getHeightMax());
+            filtering.setRangeMin(putMemberFilteringRequestDto.getRangeMin());
+            filtering.setRangeMax(putMemberFilteringRequestDto.getRangeMax());
+            filtering.setContactStyle(FilterContactStyle.valueOf(putMemberFilteringRequestDto.getContactStyle()));
+            filtering.setDrinkingStyle(FilterDrinkingStyle.valueOf(putMemberFilteringRequestDto.getDrinkingStyle()));
+            filtering.setSmokingStyle(FilterSmokingStyle.valueOf(putMemberFilteringRequestDto.getSmokingStyle()));
+
+            filteringRepository.save(filtering);
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
+        }
+
+    }
+
+    /**
+     * 유저 위치 정보 수정
+     *
+     * @param currentMemberNickname       현재 로그인 유저 닉네임
+     * @param putMemberLocationRequestDto 요청 유저 수정 위치 정보
+     */
+    public void putMemberLocation(String currentMemberNickname, PutMemberLocationRequestDto putMemberLocationRequestDto) {
+        Member member = memberRepository.findByNickname(currentMemberNickname)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        MyInfo myInfo = myInfoRepository.findByMember(member)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+
+        try {
+            myInfo.setLat(putMemberLocationRequestDto.getLat());
+            myInfo.setLng(putMemberLocationRequestDto.getLng());
+
+            myInfoRepository.save(myInfo);
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
+        }
+
+    }
+
+    /**
+     * 유저 자기소개 수정
+     *
+     * @param currentMemberNickname 현재 로그인 유저 닉네임
+     * @param putMemberPrRequestDto 수정 자기소개 정보
+     */
+    public void putMemberPr(String currentMemberNickname, PutMemberPrRequestDto putMemberPrRequestDto) {
+        Member member = memberRepository.findByNickname(currentMemberNickname)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        MyInfo myInfo = myInfoRepository.findByMember(member)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+
+        try {
+            myInfo.setPr(putMemberPrRequestDto.getPr());
+            myInfoRepository.save(myInfo);
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
+        }
+    }
+
+    /**
+     * 유저 인증정보 가져오기
+     *
+     * @param currentMemberNickname 현재 로그인 유저 닉네임
+     * @return
+     */
+    public MemberCertDto getMemberCertificate(String currentMemberNickname) {
+        Member member = memberRepository.findByNickname(currentMemberNickname)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        MemberCert memberCert = memberCertRepository.findByMember(member)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+
+        try {
+            MemberCertDto memberCertDto = MemberCertDto.builder()
+                    .university(memberCert.isUniversity())
+                    .job(memberCert.isJob())
+                    .certificate(memberCert.isCertificate())
+                    .health(memberCert.isHealth())
+                    .estate(memberCert.isEstate())
+                    .income(memberCert.isIncome())
+                    .build();
+            return memberCertDto;
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
+        }
+    }
+
+    /**
+     * 멤버 인증 정보 수정
+     *
+     * @param currentMemberNickname 현재 로그인 회원 닉네임
+     * @param memberCertDto         유저 수정 인증 정보
+     */
+    public void putMemberCertificate(String currentMemberNickname, MemberCertDto memberCertDto) {
+        Member member = memberRepository.findByNickname(currentMemberNickname)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        MemberCert memberCert = memberCertRepository.findByMember(member)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+
+        try {
+            memberCert.setUniversity(memberCert.isUniversity());
+            memberCert.setJob(memberCert.isJob());
+            memberCert.setCertificate(memberCert.isCertificate());
+            memberCert.setHealth(memberCert.isHealth());
+            memberCert.setEstate(memberCert.isEstate());
+            memberCert.setIncome(memberCert.isIncome());
+            memberCertRepository.save(memberCert);
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
+        }
+
+    }
+
+    /**
+     * 유저 관심사 정보 리스트 가져오기
+     * @param memberId 멤버 아이디
+     * @return
+     */
+    public GetInterestListResponseDto getMemberInterestList(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        try {
+            List<InterestList> interestList = interestListRepository.findAllByMember(member);
+            List<InterestDto> interestDtos = new ArrayList<>();
+            interestList.forEach((interest)->{
+                interestDtos.add(
+                    InterestDto.builder()
+                            .interestListId(interest.getId())
+                            .name(interest.getInterest().getName())
+                            .build()
+                );
+            });
+            
+            GetInterestListResponseDto getInterestListResponseDto = GetInterestListResponseDto.builder()
+                    .interestList(interestDtos).build();
+            return getInterestListResponseDto;
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
+        }
+    }
+
+    /**
+     * 관심사 정보 삭제
+     * @param interestListId 관심사 리스트 아이디
+     */
+    public void deleteInterest(Long interestListId) {
+
+        try {
+            InterestList interestList = interestListRepository.findById(interestListId)
+                    .orElseThrow(()-> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+
+            interestListRepository.delete(interestList);
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INTEREST_DELETE_FAILED);
+        }
+    }
+
+    /**
+     * 유저 관심사 새 등록
+     * @param currentMemberNickname 현재 로그인한 유저
+     * @param name 관심사 이름
+     * @return
+     */
+    public InterestDto addInterest(String currentMemberNickname, String name) {
+        // 먼저 현재 유저를 찾는다
+        Member member = memberRepository.findByNickname(currentMemberNickname)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        try {
+            // 현재등록된 관심사 리스트를 검색한다
+            List<InterestList> interestLists = interestListRepository.findAllByMember(member);
+            // 6개가 찼다면 더이상 등록 불가
+            if(interestLists.size() == 6) throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_MAX_EXCEED);
+
+            // 존재하지 않은 관심사면 새로 만들어준다
+            if(!interestRepository.existsByName(name)){
+                Interest interest = Interest.builder()
+                        .name(name).build();
+                interestRepository.save(interest);
+            }
+
+            // 새 관심사 리스트를 생성하고 저장해준다
+            Interest tempInterest = interestRepository.findByName(name)
+                    .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+
+            InterestList interestList = InterestList.builder()
+                    .interest(tempInterest)
+                    .member(member)
+                    .build();
+
+            interestListRepository.save(interestList);
+
+            // 방금 저장한 관심사 리스트를 불러와서, 아이디값을 알아낸다. 이 값을 바탕으로 DTO를 생성해서 반환한다.
+            InterestList uploadedInterestList = interestListRepository.findByMemberAndInterest(member, tempInterest)
+                    .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+
+            InterestDto interestDto = InterestDto.builder()
+                    .interestListId(uploadedInterestList.getId())
+                    .name(name)
+                    .build();
+            return interestDto;
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
+        }
     }
 }

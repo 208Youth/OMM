@@ -8,18 +8,19 @@
   flex-direction: column;
 }
 
-.wrap-box {
-  width: 412px;
+.wrap-box-index {
+  width: 360px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 .logo-box {
-  width: 412px;
+  width: 360px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 100px;
+  padding-top: 30px;
   padding-bottom: 100px;
 }
 
