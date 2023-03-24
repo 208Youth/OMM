@@ -4,7 +4,6 @@ import Signup from './pages/signup/Signup.jsx';
 import IdenModal from './pages/signup/IdenModal.jsx';
 import Index from './pages/index/Index';
 import Login from './pages/login/login';
-import MyinfoSetModal from './pages/profile/MyinfoSetModal';
 import Cert from './pages/cert/Cert';
 import Main from './pages/main/main';
 
@@ -33,10 +32,7 @@ const router = createBrowserRouter([
     path: '/main',
     element: <Main />,
   },
-  {
-    path: '/MyinfoSetModal',
-    element: <MyinfoSetModal />,
-  },
+
 ]);
 
 export default router;
