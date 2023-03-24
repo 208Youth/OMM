@@ -1,5 +1,5 @@
 package com.omm.model.entity.enums;
 
 public enum InfoPet {
-    DOG, CAT, HAMSTER, LIZARD, ETC;
+    NOT, DOG, CAT, HAMSTER, LIZARD, ETC;
 }

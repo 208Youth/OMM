@@ -3,7 +3,6 @@ package com.omm.member.controller;
 import com.omm.member.model.dto.MemberCertDto;
 import com.omm.member.model.request.*;
 import com.omm.member.service.MemberService;
-import com.sun.org.apache.regexp.internal.RE;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -199,7 +198,7 @@ public class MemberController {
      * @param memberId 멤버 아이디
      * @return
      */
-    @GetMapping("/{member-id}/interest")
+    @GetMapping("/{member-id}/interest-list")
     public ResponseEntity<?> getMemberInterestList(@PathVariable("member-id") Long memberId) {
         return new ResponseEntity<>(memberService.getMemberInterestList(memberId), HttpStatus.OK);
     }
