@@ -54,24 +54,18 @@ function IdenModal({
         } else {
           setGenderCheck(false);
         }
-        // if (formMonth < 10) {
-        //   formMonth = '0' + formMonth
-        // }
-        // if (formDay < 10) {
-        //   formDay = '0' + formDay
-        // }
+        if (formMonth < 10) {
+          formMonth = '0' + formMonth
+        }
+        if (formDay < 10) {
+          formDay = '0' + formDay
+        }
         if (formYear + formMonth + formDay === birthday) {
           setBirthdayCheck(true);
         }
         console.log('fastapi로이미지를 보냈습니다.');
       })
       .catch((err) => {
-        if (formMonth < 10) {
-          formMonth = `0${formMonth}`;
-        }
-        if (formDay < 10) {
-          formDay = `0${formDay}`;
-        }
         console.log(formYear + formMonth + formDay);
         console.log(err);
         console.log('fastapi로 이미지를 보내는데 실패했습니다.');
@@ -127,7 +121,6 @@ function IdenModal({
       <br />
       <br />
       <div>
-        {formYear}
         <p className="text-3xl text-left ml-9 leading-relaxed" style={{ marginLeft: '1rem' }}>
           본인
         </p>
@@ -180,14 +173,14 @@ function Result(props) {
         <img src="/public/Vector76.png" alt="#" className="vector76" />
         <span>{name}</span>
         {/* 회원가입창에서 가져온 값과 일치할때만 체크 표시 보여주기? */}
-        <img src="/public/check.png" alt="#" className="check" />
+        <img src="/public/check.png" alt="#" className={nameCheck ? 'check' : 'check-none'} />
       </div>
 
       <div className="parent">
         <span className="keys">성별</span>
         <img src="/public/Vector76.png" alt="#" className="vector76" />
-        <span>{gender === (1 || 3) ? '남' : '여'}</span>
-        <img src="/public/check.png" alt="#" className="check" />
+        <span>{((gender == 1) || (gender == 3)) ? '남' : '여'}</span>
+        <img src="/public/check.png" alt="#" className={genderCheck ? 'check' : 'check-none'} />
       </div>
       <div className="parent">
         <span className="keys">생년월일</span>
@@ -198,7 +191,7 @@ function Result(props) {
         </span>
       </div>
 
-      <img src="/public/check.png" alt="#" className="check" />
+      <img src="/public/check.png" alt="#" className={birthdayCheck ? 'check' : 'check-none'} />
     </div>
   );
 }
