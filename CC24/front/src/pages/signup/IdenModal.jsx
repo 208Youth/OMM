@@ -44,10 +44,11 @@ function IdenModal({
         setName(res.data.name);
         setBirthday(res.data.birthday);
         setGender(res.data.gender);
+        console.log('성별' + formGender);
         if (name === formName) {
           setNameCheck(true);
         }
-        if (gender === (1 || 3) && formGender === 'male') {
+        if (((gender ==1) || (gender == 3)) && formGender === 'male') {
           setGenderCheck(true);
         } else if (gender === (2 || 4) && formGender === 'female') {
           setGenderCheck(true);
@@ -63,6 +64,7 @@ function IdenModal({
         if (formYear + formMonth + formDay === birthday) {
           setBirthdayCheck(true);
         }
+        console.log(genderCheck);
         console.log('fastapi로이미지를 보냈습니다.');
       })
       .catch((err) => {
@@ -150,7 +152,7 @@ function IdenModal({
         {imageSrc && <img src={imageSrc} alt="preview-img" className="idenimage" />}
       </div>
       <br />
-      <div>{imageSrc && <Result data={{ name, gender, birthday }} />}</div>
+      <div>{imageSrc && <Result data={{ name, gender, birthday, nameCheck, genderCheck, birthdayCheck }} />}</div>
       <div className="mx-auto text-center">
         <div>{imageSrc && <button className="btn-active">확인 완료</button>}</div>
         <div>{!imageSrc && <button className="btn-inactive">확인 완료</button>}</div>
@@ -160,8 +162,10 @@ function IdenModal({
   );
 }
 
-function Result(props) {
-  const { name, gender, birthday } = props.data;
+function Result({
+  data, 
+}) {
+  const { name, gender, birthday, nameCheck, genderCheck, birthdayCheck } = data;
   const strbirth = String(birthday);
   const year = strbirth.slice(0, 2);
   const month = strbirth.slice(2, 4);
