@@ -17,6 +17,7 @@ public enum ErrorCode {
     JWT_VERIFY_FAILED(BAD_REQUEST, "검증에 실패했습니다."),
     JWT_EXPIRED(BAD_REQUEST, "만료된 토큰입니다."),
     JWT_SIGN_NOT_MATCH(BAD_REQUEST, "서명 정보가 일치하지 않습니다."),
+    INVALID_CREDENTIAL_NAME(BAD_REQUEST, "인증서 이름이 유효하지 않습니다."),
 
     /* 500 INTERNAL_SERVER_ERROR : 서버 문제 발생 */
     DID_ERROR(INTERNAL_SERVER_ERROR, "did 처리 중 문제가 발생했습니다."),
