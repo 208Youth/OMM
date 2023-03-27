@@ -9,6 +9,7 @@ import MoreInfo3 from './pages/signup/MoreInfo3';
 // import Login from './pages/login/Login';
 import MyinfoSetModal from './pages/profile/MyinfoSetModal';
 import OtherProfile from './pages/profile/OtherProfile';
+import MyProfile from './pages/profile/MyProfile';
 import Main from './pages/main/Main';
 
 const router = createBrowserRouter([
@@ -48,6 +49,11 @@ const router = createBrowserRouter([
     path: '/moreinfo/3',
     element: <MoreInfo3 />,
   },
+  {
+    path: '/MyProfile',
+    element: <MyProfile />,
+  },
+
 ]);
 
 export default router;
