@@ -72,15 +72,19 @@ body {
 }
 
 .swiper_container {
+  width: 360px;
   height: 52rem;
   padding: 2rem 0;
   position: relative;
 }
 
 .swiper-slide {
-  width: 37rem;
-  height: 42rem;
+  flex-shrink: 0;
+  width: 80%;
+  height: 100%;
   position: relative;
+  transition-property: transform;
+  display: block;
 }
 
 @media (max-width: 500px) {
