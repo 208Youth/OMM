@@ -35,4 +35,10 @@ public class Member {
 
     @Column(name = "suspend_date")
     private LocalDate suspendDate;
+
+    @Column(name = "age", nullable = false)
+    private short age;
+
+    @Column(name = "gender", nullable = false)
+    private String gender;
 }
