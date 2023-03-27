@@ -9,6 +9,7 @@ import MoreInfo3 from './pages/signup/MoreInfo3';
 // import Login from './pages/login/Login';
 import MyinfoSetModal from './pages/profile/MyinfoSetModal';
 import OtherProfile from './pages/profile/OtherProfile';
+import Main from './pages/main/Main';
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
   {
     path: '/moreinfo/2',
     element: <MoreInfo2 />,
+  },
+  {
+    path: '/main',
+    element: <Main />,
   },
   {
     path: '/moreinfo/3',
