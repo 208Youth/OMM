@@ -3,6 +3,7 @@ import os
 import uuid
 from pydantic import BaseModel
 from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from identification import detect_text_uri, detect_text
@@ -74,3 +75,21 @@ async def detect(path: str):
     print(result)
 
     return result
+
+# 얼굴 정보 올리기
+@app.post("/photo")
+async def upload_photo(file: UploadFile):
+    UPLOAD_DIR = "./knowns"  # 이미지를 저장할 서버 경로
+    
+    content = await file.read()
+    filename = f"{file.filename}"  # 파일명 변경
+    with open(os.path.join(UPLOAD_DIR, filename), "wb") as fp:
+        fp.write(content)  # 서버 로컬 스토리지에 이미지 저장 (쓰기)
+
+    return {"filename": filename}
+
+# 얼굴 이미지 불러오기
+@app.get("/get/photo/{name}")
+async def get_photo(name: str):
+    file_path = f'./knowns/{name}.jpg'
+    return FileResponse(path=file_path, filename=name)
