@@ -63,4 +63,7 @@ public class MyInfo {
 
     @Column(name = "age")
     private short age;
+
+    @Column(name = "gender")
+    private boolean gender;
 }
