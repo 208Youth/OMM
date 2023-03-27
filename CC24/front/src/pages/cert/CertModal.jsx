@@ -8,31 +8,7 @@ function CertModal({ cert, info, isClose }) {
   const requireSearch = ['대학교', '자격증', '회사'];
   const [select, setSelect] = useState('');
   const [certResult, setCertResult] = useState('');
-
-  const infos = [
-    {
-      id: 0,
-      name: '전북대학교',
-    },
-    {
-      id: 1,
-      name: '서울대학교',
-    },
-    {
-      id: 2,
-      name: '연세대학교',
-    },
-    {
-      id: 3,
-      name: '고려대학교ddddddddddddd',
-    },
-    {
-      id: 4,
-      name: 'KAIST',
-    },
-  ];
-  // Cert.jsx 에서 내려온 prop으로 infos 설정
-  // const infos = info.list
+  const infos = info.data.list;
 
   const handleOnSearch = (string, results) => {
     console.log(string, results);
