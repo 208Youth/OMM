@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Modal from 'react-modal';
 import './MoreInfo.css';
 import Kakaomap from './Kakaomap';
@@ -11,6 +12,35 @@ function MoreInfo() {
     highschool: '',
     contact_style: '',
   });
+  const [show, setShow] = useState(false);
+  const [duplication, setDuplication] = useState(false);
+
+  async function checkNickname() {
+    await axios({
+      method: 'get',
+      url: '/api/member/nickname',
+      data: {
+        nickname: moreinfo.nickname,
+      },
+      // headers: {
+      //   Authorization: token,
+      // },
+    })
+      .then((res) => {
+        console.log(res);
+        setShow(true);
+        setDuplication(res);
+      })
+      .catch((err) => {
+        console.log(err);
+        setShow(true);
+        setDuplication(false);
+        setMoreInfo((prevInfo) => ({
+          ...prevInfo,
+          nickname: '',
+        }));
+      });
+  }
   // let subtitle;
   const [modalIsOpen, setIsOpen] = useState(false);
 
@@ -48,22 +78,40 @@ function MoreInfo() {
         >
           닉네임
         </label>
-        <input
-          onBlur={(e) => {
-            setMoreInfo((prevInfo) => ({
-              ...prevInfo,
-              nickname: e.target.value,
-            }));
-          }}
-          type="text"
-          id="nickname"
-          className="font-sans text-[#364C63] font-semibold tracking-wide bg-white border-2 border-[#f59fb277] focus:border-[#F094A7] placeholder-[#F59FB1] text-sm rounded-3xl block w-full p-2.5 drop-shadow-md"
-          placeholder="닉네임을 입력해주세요"
-        />
-        {/* <p className="mt-2 text-sm text-green-600 dark:text-green-500">
-            <span className="font-medium">Well done!</span> Some success
-            message.
-          </p> */}
+        <div className="flex flex-row">
+          <input
+            onBlur={(e) => {
+              setMoreInfo((prevInfo) => ({
+                ...prevInfo,
+                nickname: e.target.value,
+              }));
+            }}
+            type="text"
+            id="nickname"
+            className="w-56 font-sans text-[#364C63] font-semibold tracking-wide bg-white border-2 border-[#f59fb277] focus:border-[#F094A7] placeholder-[#F59FB1] text-sm rounded-3xl block p-2.5 drop-shadow-md"
+            placeholder="닉네임을 입력해주세요"
+          />
+          <button
+            onClick={() => {
+              if (moreinfo.nickname) {
+                checkNickname();
+              }
+            }}
+            className="w-20 ml-2 rounded-3xl bg-[#F59FB1] text-white font-sans font-semibold text-sm drop-shadow-md"
+          >
+            중복 확인
+          </button>
+        </div>
+        {show && duplication && (
+          <p className="mt-1 text-sm text-[#F59FB1] ml-2">
+            <span className="font-medium">사용할 수 있는 닉네임입니다.</span>
+          </p>
+        )}
+        {show && !duplication && (
+          <p className="mt-1 text-sm text-red-500 ml-2">
+            <span className="font-medium">사용할 수 없는 닉네임입니다.</span>
+          </p>
+        )}
       </div>
       <div className="mb-6 mx-8 flex">
         <span className="font-medium text-[#364C63] mr-5 self-center text-base">
