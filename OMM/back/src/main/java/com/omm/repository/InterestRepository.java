@@ -1,4 +1,4 @@
-package com.omm.member.repository;
+package com.omm.repository;
 
 import com.omm.model.entity.Interest;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -8,9 +8,9 @@ import com.omm.member.model.request.*;
 import com.omm.member.model.response.GetInterestListResponseDto;
 import com.omm.member.model.response.GetMemberFilteringResponseDto;
 import com.omm.member.model.response.GetMemberInfoResponseDto;
-import com.omm.member.repository.*;
 import com.omm.model.entity.*;
 import com.omm.model.entity.enums.*;
+import com.omm.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

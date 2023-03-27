@@ -1,4 +1,4 @@
-package com.omm.admin.repository;
+package com.omm.repository;
 
 import com.omm.model.entity.Report;
 import org.springframework.data.jpa.repository.JpaRepository;
