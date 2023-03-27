@@ -10,13 +10,6 @@ import com.cc24.model.dto.job.response.GetJobsResponseDto;
 import com.cc24.model.dto.AuthInfoDto;
 import com.cc24.model.dto.university.response.GetUniversitiesResponseDto;
 import com.cc24.service.CertService;
-import com.cc24.service.DidService;
-import com.cc24.util.error.ErrorCode;
-import com.metadium.did.MetadiumWallet;
-import com.metadium.did.exception.DidException;
-import com.metadium.vc.VerifiablePresentation;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jwt.SignedJWT;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +27,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CertController {
     private final CertService certService;
-    private final DidService didService;
 
     @GetMapping("/university")
     public ResponseEntity<?> getUniversityList() {
