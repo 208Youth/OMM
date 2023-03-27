@@ -246,6 +246,97 @@ function MoreInfo2() {
           </div>
         </div>
       </div>
+      <div className="mt-8 mb-20 mx-8">
+        <h3 className="text-[#364C63] block mb-2 text-base">
+          병역 관련사항을 선택해주세요.
+        </h3>
+        <div className="grid grid-rows-2 grid-flow-col">
+          <div>
+            <input
+              onClick={(e) => {
+                setMoreInfo((prevInfo) => ({
+                  ...prevInfo,
+                  military: e.target.value,
+                }));
+              }}
+              id="military1"
+              type="radio"
+              name="military"
+              value="NONE"
+              className="peer/military1"
+            />
+            <label
+              htmlFor="military1"
+              className="peer-checked/military1:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
+            >
+              해당사항 없음
+            </label>
+          </div>
+          <div>
+            <input
+              onClick={(e) => {
+                setMoreInfo((prevInfo) => ({
+                  ...prevInfo,
+                  military: e.target.value,
+                }));
+              }}
+              id="military3"
+              type="radio"
+              name="military"
+              value="COMPLETE"
+              className="peer/military3"
+            />
+            <label
+              htmlFor="military3"
+              className="peer-checked/military3:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
+            >
+              군필
+            </label>
+          </div>
+          <div>
+            <input
+              onClick={(e) => {
+                setMoreInfo((prevInfo) => ({
+                  ...prevInfo,
+                  military: e.target.value,
+                }));
+              }}
+              id="military5"
+              type="radio"
+              name="military"
+              value="EXEMPT"
+              className="peer/military5"
+            />
+            <label
+              htmlFor="military5"
+              className="peer-checked/military5:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
+            >
+              면제
+            </label>
+          </div>
+          <div>
+            <input
+              onClick={(e) => {
+                setMoreInfo((prevInfo) => ({
+                  ...prevInfo,
+                  military: e.target.value,
+                }));
+              }}
+              id="military2"
+              type="radio"
+              name="military"
+              value="YET"
+              className="peer/military2"
+            />
+            <label
+              htmlFor="military2"
+              className="peer-checked/military2:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
+            >
+              미필
+            </label>
+          </div>
+        </div>
+      </div>
       <div className="flex justify-between mx-8 text-[#364C63] text-lg">
         <div>&lt; </div>
         <div>&gt;</div>

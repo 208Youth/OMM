@@ -46,6 +46,7 @@ def detect_text(path):
     print(gender)
     for file in filenames:
         os.remove(os.path.join('./iden_img', file))
+        # 여기서 암호화 코드 넣기 
     return {'doc_type': doc_type, 'name': name, 'birthday': birthday, 'gender': gender}
 
 
