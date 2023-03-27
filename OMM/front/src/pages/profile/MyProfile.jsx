@@ -18,10 +18,12 @@ import certificate_yes from '../../assets/certificate_yes.svg';
 import certificate_no from '../../assets/certificate_no.svg';
 import location from '../../assets/location.svg';
 import Pslider from '../../components/Pslider';
+import Navbar from '../../components/nav-bar';
 
 // props를 통해 userid를 받고 claose 버튼을 눌러서 해당 userid의
 // 아니면 메인 페이지에 해당 컴포넌트를 아예 합쳐버릴까
-function MyProfile() {
+function MyProfile({profileNav}) {
+  profileNav = true
   const certinfo = {
     university: false,
     job: true,
@@ -173,7 +175,7 @@ function MyProfile() {
           </div>
 
         </div>
-
+        <Navbar profileNav={profileNav}/>
       </div>
     </div>
   );
