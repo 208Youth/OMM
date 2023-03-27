@@ -19,9 +19,6 @@ public class RecommendDto {
     @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("member_id")
-    private Member member;
-
     @JsonProperty("age")
     private short age;
 
@@ -40,6 +37,4 @@ public class RecommendDto {
     @JsonProperty("smoking_style")
     private InfoSmokingStyle smokingStyle;
 
-    @JsonProperty("liked")
-    private boolean liked;
 }

@@ -3,10 +3,7 @@ package com.omm.model.entity;
 import com.omm.model.entity.enums.FilterContactStyle;
 import com.omm.model.entity.enums.FilterDrinkingStyle;
 import com.omm.model.entity.enums.FilterSmokingStyle;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
