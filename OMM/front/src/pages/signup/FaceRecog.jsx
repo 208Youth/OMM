@@ -3,6 +3,7 @@ import { TinyFaceDetectorOptions } from 'face-api.js';
 import * as faceapi from 'face-api.js';
 import './FaceRecog.css';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const MODEL_URL = '/models';
 // 비디오 사이즈 설정
@@ -198,7 +199,21 @@ function FaceRecog() {
 
   return (
     <div>
+      <div className="wrap-page">
+      <div className="mx-auto text-center">
+        <img src="../../../public/heart-step-1.svg" alt="" />
+      </div>
+      <div className="flex-col w-80 mx-auto">
+        <p className="text-3xl my-4 text-center leading-relaxed mx-auto">
+          얼굴 등록
+        </p>
+        <p className="text-md my-4 text-center leading-relaxed mx-auto">
+          본인 인증시 사용할 얼굴을 등록해요
+        </p>
       <div ref={wrapRef} className="recog-wrap">
+        <img src="/FaceId.svg" onClick={() => {
+          startDetecting();
+        }}alt="" />
         <video
           ref={videoRef}
           autoPlay
@@ -208,18 +223,21 @@ function FaceRecog() {
           }}
           width={300}
           height={300}
-        />
+          />
       </div>
       {isStartDetect && notice && <div>{notice}</div>}
-      <button
-        id="startbtn"
-        type="button"
-        onClick={() => {
-          startDetecting();
-        }}
-      >
-        인증 시작
-      </button>
+      <div class="flex justify-between">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+              </svg>
+              <Link to="/FaceRecog">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                </svg>
+              </Link>
+            </div>
+      </div>
+      </div>
     </div>
   );
 }
