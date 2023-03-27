@@ -6,6 +6,8 @@ import Signup from './pages/signup/Signup';
 import MoreInfo from './pages/signup/MoreInfo';
 import MoreInfo2 from './pages/signup/MoreInfo2';
 import MoreInfo3 from './pages/signup/MoreInfo3';
+import MoreInfo4 from './pages/signup/MoreInfo4';
+import SignupComplete from './pages/signup/SignupComplete';
 // import Login from './pages/login/Login';
 import MyinfoSetModal from './pages/profile/MyinfoSetModal';
 import OtherProfile from './pages/profile/OtherProfile';
@@ -53,7 +55,14 @@ const router = createBrowserRouter([
     path: '/MyProfile',
     element: <MyProfile />,
   },
-
+  {
+    path: '/moreinfo/4',
+    element: <MoreInfo4 />,
+  },
+  {
+    path: '/signupcomplete',
+    element: <SignupComplete />,
+  },
 ]);
 
 export default router;
