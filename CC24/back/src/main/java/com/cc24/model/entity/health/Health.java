@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -23,5 +23,5 @@ public class Health extends BaseEntity {
     private String name;
 
     @Column(name = "date", nullable = false)
-    private Date date;
+    private LocalDate date;
 }

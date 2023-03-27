@@ -1,13 +1,14 @@
 package com.cc24.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import java.util.Date;
+
+import java.time.LocalDate;
 
 @Getter
+@AllArgsConstructor
 public class AuthInfoDto {
-    @JsonProperty(value = "name")
     String name;
-    @JsonProperty(value = "birth_date")
-    Date birthDate;
+    LocalDate birthDate;
+    String gender;
 }

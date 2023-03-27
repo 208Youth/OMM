@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import './Signup.css';
 import Modal from 'react-modal';
+import { useSelector, useDispatch } from 'react-redux';
 import FaceRecogModal from './FaceRecogModal';
 import IdenModal from './IdenModal';
+import { userInfo } from '../../store';
 
 function Signup() {
   const [faceModal, setFaceModal] = useState(false);
@@ -10,11 +12,22 @@ function Signup() {
   const [idenModal, setIdenModal] = useState(false);
   const [idenComplete, setIdenComplete] = useState(false);
   const [name, setName] = useState(null);
-  const [year, setYear] = useState('');
-  const [month, setMonth] = useState(null);
-  const [day, setDay] = useState(null);
+  const [year, setYear] = useState('1980');
+  const [month, setMonth] = useState('1');
+  const [day, setDay] = useState('1');
   const [gender, setGender] = useState(null);
-
+  const dispatch = useDispatch();
+  const sendInfo = () => {
+    const info = {
+      name,
+      year,
+      month,
+      day,
+      gender,
+    };
+    console.log(info);
+    dispatch(userInfo(info));
+  };
   const signup = function () {
     console.log(name);
     console.log(year);
@@ -83,11 +96,6 @@ function Signup() {
               setIdenComplete(true);
             }
           }}
-          formName={name}
-          formYear={year.slice(2, 4)}
-          formMonth={month}
-          formDay={day}
-          formGender={gender}
         />
       </Modal>
       <div className="flex-col w-80 mx-auto">
@@ -108,7 +116,7 @@ function Signup() {
               <input
                 type="text"
                 id="name"
-                className="mt-6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="mt-6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg hover:ring-blue-500 hover:border-blue-300 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="김미미"
                 onChange={(e) => setName(e.target.value)}
               />
@@ -166,7 +174,7 @@ function Signup() {
             <div className="flex mb-6">
               <div className="flex items-center mr-4">
                 <input
-                  onChange={(e) => setGender(e.target.value)}
+                  onClick={() => setGender('남')}
                   id="inline-radio"
                   type="radio"
                   value=""
@@ -182,7 +190,7 @@ function Signup() {
               </div>
               <div className="flex items-center mr-4">
                 <input
-                  onChange={(e) => setGender(e.target.value)}
+                  onClick={() => setGender('여')}
                   id="inline-2-radio"
                   type="radio"
                   value=""
@@ -247,6 +255,7 @@ function Signup() {
               <div className="col-end-7 col-span-2">
                 <div
                   onClick={() => {
+                    sendInfo();
                     setIdenModal(true);
                   }}
                   className="inline text-white bg-[#4654a3] hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"

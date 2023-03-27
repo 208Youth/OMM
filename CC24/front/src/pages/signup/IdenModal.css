@@ -19,28 +19,6 @@
   flex: 0.6;
 }
 
-.vector76 {
-  display: inline-block;
-  margin-right: 0.6rem;
-  
-  
-}
-
-.check {
-  display: 'inline-block';
-  margin-left: 1rem;
-}
-
-.check-none {
-  display: 'none';
-  margin-left: 1rem;
-}
-
-.parent {
-  display: flex;
-  align-items: center;
-}
-
 .idenimage {
   width: 16rem;
   height: 10rem;

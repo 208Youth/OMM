@@ -5,25 +5,14 @@ import Idenconfirm1 from '../../assets/Idenconfirm1.svg';
 import Idenconfirm2 from '../../assets/Idenconfirm2.svg';
 // import fastapi from '../../api/fastapi.js';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
-function IdenModal({
-  setIdenModal,
-  setIdenComplete,
-  formName,
-  formYear,
-  formMonth,
-  formDay,
-  formGender,
-}) {
+function IdenModal({ setIdenModal, setIdenComplete }) {
   const [imageSrc, setImageSrc] = useState('');
   const [imgfile, setFile] = useState('');
   const [name, setName] = useState('');
   const [gender, setGender] = useState('');
   const [birthday, setBirthday] = useState('');
-  const [completed, setBtn] = useState(false);
-  const [nameCheck, setNameCheck] = useState(false);
-  const [genderCheck, setGenderCheck] = useState(false);
-  const [birthdayCheck, setBirthdayCheck] = useState(false);
 
   // fastapi의 idening를 실행시키기 위한 코드
   async function sendImg() {
@@ -44,35 +33,9 @@ function IdenModal({
         setName(res.data.name);
         setBirthday(res.data.birthday);
         setGender(res.data.gender);
-        if (name === formName) {
-          setNameCheck(true);
-        }
-        if (gender === (1 || 3) && formGender === 'male') {
-          setGenderCheck(true);
-        } else if (gender === (2 || 4) && formGender === 'female') {
-          setGenderCheck(true);
-        } else {
-          setGenderCheck(false);
-        }
-        // if (formMonth < 10) {
-        //   formMonth = '0' + formMonth
-        // }
-        // if (formDay < 10) {
-        //   formDay = '0' + formDay
-        // }
-        if (formYear + formMonth + formDay === birthday) {
-          setBirthdayCheck(true);
-        }
         console.log('fastapi로이미지를 보냈습니다.');
       })
       .catch((err) => {
-        if (formMonth < 10) {
-          formMonth = `0${formMonth}`;
-        }
-        if (formDay < 10) {
-          formDay = `0${formDay}`;
-        }
-        console.log(formYear + formMonth + formDay);
         console.log(err);
         console.log('fastapi로 이미지를 보내는데 실패했습니다.');
       });
@@ -85,8 +48,6 @@ function IdenModal({
     return new Promise((resolve) => {
       reader.onload = () => {
         setImageSrc(reader.result);
-        setBtn(true);
-        setIdenComplete(true);
         resolve();
       };
     });
@@ -127,7 +88,6 @@ function IdenModal({
       <br />
       <br />
       <div>
-        {formYear}
         <p className="text-3xl text-left ml-9 leading-relaxed" style={{ marginLeft: '1rem' }}>
           본인
         </p>
@@ -157,48 +117,107 @@ function IdenModal({
         {imageSrc && <img src={imageSrc} alt="preview-img" className="idenimage" />}
       </div>
       <br />
-      <div>{imageSrc && <Result data={{ name, gender, birthday }} />}</div>
-      <div className="mx-auto text-center">
-        <div>{imageSrc && <button className="btn-active">확인 완료</button>}</div>
-        <div>{!imageSrc && <button className="btn-inactive">확인 완료</button>}</div>
+      <div>
+        {imageSrc && (
+          <Result
+            data={{
+              name,
+              gender,
+              birthday,
+            }}
+            setIdenModal={setIdenModal}
+            setIdenComplete={setIdenComplete}
+          />
+        )}
       </div>
-      <div />
     </div>
   );
 }
 
-function Result(props) {
-  const { name, gender, birthday } = props.data;
+function Result({ data, setIdenModal, setIdenComplete }) {
+  
+  let { name, gender, birthday } = data;
   const strbirth = String(birthday);
-  const year = strbirth.slice(0, 2);
-  const month = strbirth.slice(2, 4);
-  const day = strbirth.slice(4, 6);
+  let year = strbirth.slice(0, 2);
+  if (year >= 20) {
+    year = `19${year}`;
+  } else {
+    year = `20${year}`;
+  }
+  let month = strbirth.slice(2, 4);
+  if (month.slice(0, 1) == '0') {
+    month = month.slice(1, 2);
+  }
+  let day = strbirth.slice(4, 6);
+  if (day.slice(0, 1) == '0') {
+    day = day.slice(1, 2);
+  }
+  if (gender == '1' || gender == '3') {
+    gender = '남';
+  } else {
+    gender = '여';
+  }
+  const storeName = useSelector((state) => state.userInfo.name);
+  const storeYear = useSelector((state) => state.userInfo.year);
+  const storeMonth = useSelector((state) => state.userInfo.month);
+  const storeDay = useSelector((state) => state.userInfo.day);
+  const storeGender = useSelector((state) => state.userInfo.gender);
+  // 일치 여부 확인
+  let nameCheck = false;
+  let birthdayCheck = false;
+  let genderCheck = false;
+  if (name == storeName) {
+    nameCheck = true
+  }
+  if (gender == storeGender) {
+    genderCheck = true
+  }
+  if ((storeYear == year) && (storeMonth == month) && (storeDay == day)) {
+    birthdayCheck = true
+  }
+  // 모두 일치하면 확인 완료 버튼 활성화
+  let complete = false
+  if (nameCheck && genderCheck && birthdayCheck) {
+    complete = true
+  }
+
   return (
-    <div style={{ marginLeft: '3rem' }}>
-      <div className="parent">
-        <span className="keys">이름</span>
-        <img src="/public/Vector76.png" alt="#" className="vector76" />
-        <span>{name}</span>
-        {/* 회원가입창에서 가져온 값과 일치할때만 체크 표시 보여주기? */}
-        <img src="/public/check.png" alt="#" className="check" />
+    <div>
+      <div className="flex mx-5 justify-between">
+        <div>
+          <span className="keys">이름</span>
+          <img src="/public/Vector76.png" alt="#" className="inline ml-2" />
+        </div>
+        <div>
+          <span>{name}</span>
+          {nameCheck && <img src="/public/check.png" alt="#" className="ml-3 inline" />}
+        </div>
       </div>
 
-      <div className="parent">
-        <span className="keys">성별</span>
-        <img src="/public/Vector76.png" alt="#" className="vector76" />
-        <span>{gender === (1 || 3) ? '남' : '여'}</span>
-        <img src="/public/check.png" alt="#" className="check" />
+      <div className="flex mx-5 justify-between">
+        <div>
+          <span className="keys">성별</span>
+          <img src="/public/Vector76.png" alt="#" className="inline ml-2" />
+        </div>
+        <div>
+          <span>{gender}</span>
+          {genderCheck && <img src="/public/check.png" alt="#" className="ml-3 inline" />}
+        </div>
       </div>
-      <div className="parent">
-        <span className="keys">생년월일</span>
-        <img src="/public/Vector76.png" alt="#" className="vector76" />
-        {/* <span>{birthday}</span> */}
-        <span>
-          {year}년 {month}월 {day}일
-        </span>
+      <div className="flex mx-5 justify-between">
+        <div>
+          <span className="keys">생년월일</span>
+          <img src="/public/Vector76.png" alt="#" className="inline ml-2" />
+        </div>
+        <div>
+          <span>{year}년 {month}월 {day}일</span>
+          {birthdayCheck && <img src="/public/check.png" alt="#" className="ml-3 inline" />}
+        </div>
       </div>
-
-      <img src="/public/check.png" alt="#" className="check" />
+      <div className="mx-auto text-center">
+        <div>{complete && <button className="btn-active" onClick={() => {setIdenComplete(true); setIdenModal(false);}}>확인 완료</button>}</div>
+        <div>{!complete && <button className="btn-inactive">확인 완료</button>}</div>
+      </div>
     </div>
   );
 }
