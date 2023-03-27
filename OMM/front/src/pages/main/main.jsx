@@ -3,7 +3,8 @@ import Navbar from '../../components/nav-bar';
 import Pslider from '../../components/Pslider';
 import './Main.css'
 
-function Main() {
+function Main({mainNav}) {
+  mainNav = true
   return (
     <div className='flex flex-col'>
       <div className='w-16 h-16 transition duration-500 hover:scale-110 bg-red-100 rounded-full shadow-md justify-center mx-auto mt-10'>
@@ -12,7 +13,7 @@ function Main() {
       <div className="mt-20">
         <Pslider />
       </div>
-      <Navbar />
+      <Navbar mainNav={mainNav}/>
     </div>
   )
 }
