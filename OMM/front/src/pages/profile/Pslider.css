@@ -54,10 +54,6 @@ html {
   background: #f9f9f9;
 }
 
-body {
-  font-size: 1.6rem;
-  background: var(--bg);
-}
 
 .container {
   max-width: 124rem;
