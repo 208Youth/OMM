@@ -62,11 +62,7 @@ function MoreInfo() {
 
   return (
     <div className="bg-white w-[22.5rem] h-[48.75rem]">
-      <img
-        src="/ommheart.png"
-        alt=""
-        className="mx-auto pt-[100px] pb-6 w-[8rem]"
-      />
+      <img src="/heart-step-3.svg" alt="" className="mx-auto w-48 pt-16 pb-8" />
       <h1 className="text-center text-2xl text-[#364C63] mb-3">더 많은 정보</h1>
       <p className="text-center text-xs text-gray-400 font-sans">
         좋은 사람을 찾기 위해 추가 정보를 넣어주세요
@@ -85,30 +81,35 @@ function MoreInfo() {
                 ...prevInfo,
                 nickname: e.target.value,
               }));
+              checkNickname();
             }}
             type="text"
             id="nickname"
-            className="w-56 font-sans text-[#364C63] font-semibold tracking-wide bg-white border-2 border-[#f59fb277] focus:border-[#F094A7] placeholder-[#F59FB1] text-sm rounded-3xl block p-2.5 drop-shadow-md"
+            className="w-full font-sans text-[#364C63] font-semibold tracking-wide bg-white border-2 border-[#f59fb277] focus:border-[#F094A7] placeholder-[#f59fb277] text-sm rounded-3xl block p-2.5 drop-shadow-md"
             placeholder="닉네임을 입력해주세요"
           />
-          <button
+          {/* <button
             onClick={() => {
               if (moreinfo.nickname) {
                 checkNickname();
               }
             }}
-            className="w-20 ml-2 rounded-3xl bg-[#F59FB1] text-white font-sans font-semibold text-sm drop-shadow-md"
+            className={
+              moreinfo.nickname
+                ? 'w-20 ml-2 rounded-3xl bg-[#F59FB1] text-white font-sans font-semibold text-sm drop-shadow-md'
+                : 'w-20 ml-2 rounded-3xl bg-[#f59fb277] text-white font-sans font-semibold text-sm drop-shadow-md'
+            }
           >
             중복 확인
-          </button>
+          </button> */}
         </div>
         {show && duplication && (
-          <p className="mt-1 text-sm text-[#F59FB1] ml-2">
+          <p className="mt-1 text-sm text-[#F59FB1] ml-2 font-sans">
             <span className="font-medium">사용할 수 있는 닉네임입니다.</span>
           </p>
         )}
         {show && !duplication && (
-          <p className="mt-1 text-sm text-red-500 ml-2">
+          <p className="mt-1 text-sm text-red-500 ml-2 font-sans">
             <span className="font-medium">사용할 수 없는 닉네임입니다.</span>
           </p>
         )}
@@ -130,7 +131,7 @@ function MoreInfo() {
           }}
           type="text"
           placeholder="키"
-          className="w-20 h-10 font-sans font-semibold text-[#364C63] bg-white border-2 border-[#f59fb277] focus:border-[#F094A7] placeholder-[#F59FB1] text-sm text-center rounded-3xl block p-2.5 drop-shadow-md"
+          className="w-20 h-10 font-sans font-semibold text-[#364C63] bg-white border-2 border-[#f59fb277] focus:border-[#F094A7] placeholder-[#f59fb277] text-sm text-center rounded-3xl block p-2.5 drop-shadow-md"
         />
         <span className="self-center ml-4 text-[#364C63] font-sans font-semibold">
           cm
@@ -155,7 +156,7 @@ function MoreInfo() {
           onClick={() => {
             openModal();
           }}
-          className="w-20 h-10 rounded-3xl bg-[#F59FB1] text-white font-sans font-semibold text-sm drop-shadow-md"
+          className="w-20 h-10 rounded-3xl bg-[#F59FB1] text-white font-sans font-semibold text-sm drop-shadow-md hover:bg-white hover:border-[#F59FB1] hover:border-2 hover:text-[#F59FB1]"
         >
           확인
         </button>
@@ -173,7 +174,7 @@ function MoreInfo() {
           }}
           type="text"
           placeholder="싸피"
-          className="w-20 h-10 font-sans font-semibold text-[#364C63] bg-white border-2 border-[#f59fb277] focus:border-[#F094A7] placeholder-[#F59FB1] text-sm text-center rounded-3xl block p-2.5 drop-shadow-md"
+          className="w-20 h-10 font-sans font-semibold text-[#364C63] bg-white border-2 border-[#f59fb277] focus:border-[#F094A7] placeholder-[#f59fb277] text-sm text-center rounded-3xl block p-2.5 drop-shadow-md"
         />
         <span className="self-center ml-4 text-[#364C63] font-sans font-semibold">
           고등학교
@@ -293,7 +294,24 @@ function MoreInfo() {
       </div>
       <div className="flex justify-between mx-8 text-[#364C63] text-lg">
         <div>&lt; </div>
-        <div>&gt;</div>
+        <div
+          aria-hidden
+          onClick={() => {
+            if (
+              moreinfo.nickname &&
+              moreinfo.contact_style &&
+              moreinfo.height &&
+              moreinfo.highschool &&
+              moreinfo.location
+            ) {
+              console.log('다음페이지로 이동');
+            } else {
+              alert('정보를 입력해주세요');
+            }
+          }}
+        >
+          &gt;
+        </div>
       </div>
     </div>
   );
