@@ -13,6 +13,8 @@ import MyinfoSetModal from './pages/profile/MyinfoSetModal';
 import OtherProfile from './pages/profile/OtherProfile';
 import MyProfile from './pages/profile/MyProfile';
 import Main from './pages/main/Main';
+import Admin from './pages/admin/Admin';
+import Detail from './pages/admin/Detail';
 
 const router = createBrowserRouter([
   {
@@ -62,6 +64,14 @@ const router = createBrowserRouter([
   {
     path: '/signupcomplete',
     element: <SignupComplete />,
+  },
+  {
+    path: '/admin',
+    element: <Admin />,
+  },
+  {
+    path: '/admin/detail/:id',
+    element: <Detail />,
   },
 ]);
 
