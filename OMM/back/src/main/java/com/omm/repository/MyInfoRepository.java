@@ -26,7 +26,7 @@ public interface MyInfoRepository extends JpaRepository<MyInfo, Long> {
 //            "and myi.member != :#{#myInfo.member} and not exists (select 1 from Favor f where f.fromMember = :#{#myInfo.member} and f.toMember = myi.member )" +
 //            "limit 200 ")
 //    List<RecommendDto> filteredMembers(@Param("myInfo") MyInfo myInfo, @Param("filtering") Filtering filtering);
-
+//
 //    @Query(value = "select mem.id as id, mem.age as age, myi.height as height," +
 //            "(FUNCTION('acos', (FUNCTION('sin', :#{#myInfo.lat}) ) * (FUNCTION('sin', myi.lat)) + FUNCTION('cos', :#{#myInfo.lat}) * FUNCTION('cos', myi.lat) * FUNCTION('cos', myi.lng - :#{#myInfo.lng}))) * 6371 as distance," +
 //            "myi.contactStyle as contactStyle, myi.drinkingStyle as drinkingStyle, myi.smokingStyle as smokingStyle " +

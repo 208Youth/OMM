@@ -37,7 +37,7 @@ public class MyInfo {
     @Column(name = "height", nullable = false)
     private short height;
 
-    @Column(name = "contact_sytle", nullable = false)
+    @Column(name = "contact_style", nullable = false)
     @Enumerated(EnumType.STRING)
     private InfoContactStyle contactStyle;
 
