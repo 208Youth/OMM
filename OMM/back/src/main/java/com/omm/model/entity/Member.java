@@ -30,7 +30,7 @@ public class Member {
     @ColumnDefault("'role_user'")
     private String grade = "role_user";
 
-    @Column(name = "nickname", nullable = false, unique = true)
+    @Column(name = "nickname")
     private String nickname;
 
     @Column(name = "suspend_date")

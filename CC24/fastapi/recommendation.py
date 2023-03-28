@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Any
 import numpy as np
 from scipy.spatial.distance import euclidean
 from operator import itemgetter
