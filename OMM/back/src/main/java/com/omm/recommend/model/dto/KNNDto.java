@@ -13,21 +13,21 @@ import lombok.NoArgsConstructor;
 public class KNNDto {
 
     @JsonProperty("age")
-    private float age;
+    private double age;
 
     @JsonProperty("height")
-    private float height;
+    private double height;
 
     @JsonProperty("distance")
-    private float distance;
+    private double distance;
 
     @JsonProperty("contact_style")
-    private float contactStyle;
+    private double contactStyle;
 
     @JsonProperty("drinking_style")
-    private float drinkingStyle;
+    private double drinkingStyle;
 
     @JsonProperty("smoking_style")
-    private float smokingStyle;
+    private double smokingStyle;
 
 }
