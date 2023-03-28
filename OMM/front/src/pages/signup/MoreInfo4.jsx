@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function MoreInfo4() {
   const [moreinfo, setMoreInfo] = useState({
@@ -6,6 +7,40 @@ function MoreInfo4() {
     drinking_style: '',
     smoking_style: '',
   });
+
+  async function sendMyInfo() {
+    await axios({
+      method: 'post',
+      url: '/api/member/info',
+      data: '내 정보들 리덕스에서 가져와서 보낼거임',
+      // headers: {
+      //   Authorization: token,
+      // },
+    })
+      .then((res) => {
+        console.log(res.message);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  async function sendPreferInfo() {
+    await axios({
+      method: 'post',
+      url: '/api/member/filtering',
+      data: '선호 정보들 리덕스에서 가져와서 보낼거임',
+      // headers: {
+      //   Authorization: token,
+      // },
+    })
+      .then((res) => {
+        console.log(res.message);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   useEffect(() => {
     console.log(moreinfo);
@@ -307,7 +342,8 @@ function MoreInfo4() {
               moreinfo.drinking_style &&
               moreinfo.smoking_style
             ) {
-              console.log('다음페이지로 이동');
+              sendMyInfo();
+              sendPreferInfo();
             } else {
               alert('정보를 입력해주세요');
             }
