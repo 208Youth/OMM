@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import LocalStorageComponent from './LocalStorageComponent';
+import Password from './Password';
 
 function Login() {
   const [file, setFile] = useState(null);
@@ -123,6 +124,7 @@ function Login() {
             </svg>
             <span class="sr-only">Loading...</span>
         </div>
+        <Password />
     </div>
     </div>
   );
