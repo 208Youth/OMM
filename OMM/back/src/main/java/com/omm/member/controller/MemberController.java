@@ -15,22 +15,28 @@ public class MemberController {
 
     private final MemberService memberService;
 
+//    /**
+//     * 닉네임 중복 체크 함수
+//     *
+//     * @param checkNicknameRequestDto 닉네임 중복 체크 요청
+//     * @return
+//     */
+//    @GetMapping("/nickname")
+//    public ResponseEntity<?> checkNickname(@RequestBody CheckNicknameRequestDto checkNicknameRequestDto) {
+//        boolean exist = memberService.existNickname(checkNicknameRequestDto.getNickname());
+//        return new ResponseEntity<>(exist, HttpStatus.OK);
+//    }
+
     /**
-     * 닉네임 중복 체크 함수
-     *
-     * @param checkNicknameRequestDto 닉네임 중복 체크 요청
+     * 회원 신규 등록
+     * @param addMemberRequestDto 회원 등록 정보
      * @return
      */
-    @GetMapping("/nickname")
-    public ResponseEntity<?> checkNickname(@RequestBody CheckNicknameRequestDto checkNicknameRequestDto) {
-        boolean exist = memberService.existNickname(checkNicknameRequestDto.getNickname());
-        return new ResponseEntity<>(exist, HttpStatus.OK);
+    @PostMapping("/member")
+    public ResponseEntity<?> addMember(@RequestBody AddMemberRequestDto addMemberRequestDto){
+        memberService.addMember(addMemberRequestDto);
+        return new ResponseEntity<>("회원 가입 성공", HttpStatus.OK);
     }
-
-//    @PostMapping
-//    public ResponseEntity<?> uploadMemberImage(@RequestBody UploadImageRequestDto uploadImageRequestDto){
-//
-//    }
 
     /**
      * 회원 초기 등록 정보
@@ -40,8 +46,10 @@ public class MemberController {
      */
     @PostMapping("/info")
     public ResponseEntity<?> initMemberInfo(@RequestBody InitMemberInfoRequestDto initMemberInfoRequestDto) {
-        memberService.createMember(initMemberInfoRequestDto.getNickname());
-        memberService.initMemberInfo(initMemberInfoRequestDto);
+//        memberService.createMember(initMemberInfoRequestDto.getNickname());
+        String currentMemberDidAddress = "0xa9f7ceead33163a2f7ec3f3c4deae42a6e8907c2"; // 테스트 데이터의 1번 회원
+
+        memberService.initMemberInfo(currentMemberDidAddress, initMemberInfoRequestDto);
         return new ResponseEntity<>("회원 등록 성공", HttpStatus.OK);
     }
 
@@ -54,9 +62,9 @@ public class MemberController {
     @PostMapping("/filtering")
     public ResponseEntity<?> initMemberFiltering(@RequestBody InitMemberFilteringRequestDto initMemberFilteringRequestDto) {
         // 유저 생성
-        String currentMemberNickname = "김미미";
+        String currentMemberDidAddress = "0xa9f7ceead33163a2f7ec3f3c4deae42a6e8907c2"; // 테스트 데이터의 1번 회원
 
-        memberService.initMemberFiltering(currentMemberNickname, initMemberFilteringRequestDto);
+        memberService.initMemberFiltering(currentMemberDidAddress, initMemberFilteringRequestDto);
         return new ResponseEntity<>("선호 상대 정보 등록 성공", HttpStatus.OK);
     }
 
@@ -78,8 +86,8 @@ public class MemberController {
      */
     @GetMapping("/filtering")
     public ResponseEntity<?> getMemberFiltering() {
-        String currentMemberNickname = "김미미";
-        return new ResponseEntity<>(memberService.getMemberFiltering(currentMemberNickname), HttpStatus.OK);
+        String currentMemberDidAddress = "0xa9f7ceead33163a2f7ec3f3c4deae42a6e8907c2"; // 테스트 데이터의 1번 회원
+        return new ResponseEntity<>(memberService.getMemberFiltering(currentMemberDidAddress), HttpStatus.OK);
     }
 
     /**
@@ -90,9 +98,9 @@ public class MemberController {
      */
     @PostMapping("/img")
     public ResponseEntity<?> postMemberImages(@RequestBody UploadImageRequestDto uploadImageRequestDto) {
-        String currentMemberNickname = "김미미";
+        String currentMemberDidAddress = "0xa9f7ceead33163a2f7ec3f3c4deae42a6e8907c2"; // 테스트 데이터의 1번 회원
 
-        memberService.postMemberImages(currentMemberNickname, uploadImageRequestDto);
+        memberService.postMemberImages(currentMemberDidAddress, uploadImageRequestDto);
         return new ResponseEntity<>("사진 등록을 성공했습니다.", HttpStatus.OK);
     }
 
@@ -104,9 +112,9 @@ public class MemberController {
      */
     @PutMapping("/img")
     public ResponseEntity<?> putMemberImages(@RequestBody UploadImageRequestDto uploadImageRequestDto) {
-        String currentMemberNickname = "김미미";
+        String currentMemberDidAddress = "0xa9f7ceead33163a2f7ec3f3c4deae42a6e8907c2"; // 테스트 데이터의 1번 회원
 
-        memberService.putMemberImages(currentMemberNickname, uploadImageRequestDto);
+        memberService.putMemberImages(currentMemberDidAddress, uploadImageRequestDto);
         return new ResponseEntity<>("사진 교체에 성공했습니다.", HttpStatus.OK);
     }
 
@@ -118,9 +126,9 @@ public class MemberController {
      */
     @PutMapping("/info")
     public ResponseEntity<?> putMemberInfo(@RequestBody PutMemberInfoRequestDto putMemberInfoRequestDto) {
-        String currentMemberNickname = "김미미";
+        String currentMemberDidAddress = "0xa9f7ceead33163a2f7ec3f3c4deae42a6e8907c2"; // 테스트 데이터의 1번 회원
 
-        memberService.putMemberInfo(currentMemberNickname, putMemberInfoRequestDto);
+        memberService.putMemberInfo(currentMemberDidAddress, putMemberInfoRequestDto);
         return new ResponseEntity<>("유저 정보 수정에 성공했습니다.", HttpStatus.OK);
     }
 
@@ -132,9 +140,9 @@ public class MemberController {
      */
     @PutMapping("/filtering")
     public ResponseEntity<?> putMemberFiltering(@RequestBody PutMemberFilteringRequestDto putMemberFilteringRequestDto) {
-        String currentMemberNickname = "김미미";
+        String currentMemberDidAddress = "0xa9f7ceead33163a2f7ec3f3c4deae42a6e8907c2"; // 테스트 데이터의 1번 회원
 
-        memberService.putMemberFiltering(currentMemberNickname, putMemberFilteringRequestDto);
+        memberService.putMemberFiltering(currentMemberDidAddress, putMemberFilteringRequestDto);
         return new ResponseEntity<>("유저 필터링 정보 수정에 성공했습니다.", HttpStatus.OK);
     }
 
@@ -146,9 +154,9 @@ public class MemberController {
      */
     @PutMapping("/location")
     public ResponseEntity<?> putMemberLocation(@RequestBody PutMemberLocationRequestDto putMemberLocationRequestDto) {
-        String currentMemberNickname = "김미미";
+        String currentMemberDidAddress = "0xa9f7ceead33163a2f7ec3f3c4deae42a6e8907c2"; // 테스트 데이터의 1번 회원
 
-        memberService.putMemberLocation(currentMemberNickname, putMemberLocationRequestDto);
+        memberService.putMemberLocation(currentMemberDidAddress, putMemberLocationRequestDto);
         return new ResponseEntity<>("유저 위치 정보 수정에 성공했습니다.", HttpStatus.OK);
     }
 
@@ -160,9 +168,9 @@ public class MemberController {
      */
     @PutMapping("/pr")
     public ResponseEntity<?> putMemberPr(@RequestBody PutMemberPrRequestDto putMemberPrRequestDto) {
-        String currentMemberNickname = "김미미";
+        String currentMemberDidAddress = "0xa9f7ceead33163a2f7ec3f3c4deae42a6e8907c2"; // 테스트 데이터의 1번 회원
 
-        memberService.putMemberPr(currentMemberNickname, putMemberPrRequestDto);
+        memberService.putMemberPr(currentMemberDidAddress, putMemberPrRequestDto);
         return new ResponseEntity<>("유저 자기소개 수정에 성공했습니다.", HttpStatus.OK);
     }
 
@@ -173,8 +181,8 @@ public class MemberController {
      */
     @GetMapping("/certificate")
     public ResponseEntity<?> getMemberCertificate() {
-        String currentMemberNickname = "김미미";
-        return new ResponseEntity<>(memberService.getMemberCertificate(currentMemberNickname), HttpStatus.OK);
+        String currentMemberDidAddress = "0xa9f7ceead33163a2f7ec3f3c4deae42a6e8907c2"; // 테스트 데이터의 1번 회원
+        return new ResponseEntity<>(memberService.getMemberCertificate(currentMemberDidAddress), HttpStatus.OK);
     }
 
     /**
@@ -185,10 +193,10 @@ public class MemberController {
      */
     @PutMapping("/certificate")
     public ResponseEntity<?> putMemberCertificate(@RequestBody MemberCertDto memberCertDto) {
-        String currentMemberNickname = "김미미";
+        String currentMemberDidAddress = "0xa9f7ceead33163a2f7ec3f3c4deae42a6e8907c2"; // 테스트 데이터의 1번 회원
         //먼가의 로직 추가 필요
 
-        memberService.putMemberCertificate(currentMemberNickname, memberCertDto);
+        memberService.putMemberCertificate(currentMemberDidAddress, memberCertDto);
         return new ResponseEntity<>("유저 인증정보 수정에 성공했습니다.", HttpStatus.OK);
     }
 
@@ -222,8 +230,8 @@ public class MemberController {
      */
     @PostMapping("/interest")
     public ResponseEntity<?> addInterest(@RequestBody PostInterestRequestDto postInterestRequestDto) {
-        String currentMemberNickname = "김미미";
-        return new ResponseEntity<>(memberService.addInterest(currentMemberNickname, postInterestRequestDto.getName()), HttpStatus.OK);
+        String currentMemberDidAddress = "0xa9f7ceead33163a2f7ec3f3c4deae42a6e8907c2"; // 테스트 데이터의 1번 회원;
+        return new ResponseEntity<>(memberService.addInterest(currentMemberDidAddress, postInterestRequestDto.getName()), HttpStatus.OK);
     }
 
 }

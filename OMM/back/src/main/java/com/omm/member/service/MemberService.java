@@ -49,28 +49,47 @@ public class MemberService {
         }
     }
 
-    public void createMember(String memberNickname) {
-        try {
+    /**
+     * 회원 추가
+     * @param addMemberRequestDto
+     */
+    public void addMember(AddMemberRequestDto addMemberRequestDto) {
+        try{
             Member member = Member.builder()
-                    .nickname(memberNickname)
-//                    .isBlack(false)
-//                    .grade("role_user")
+                    .didAddress(addMemberRequestDto.getDidAddress())
+                    .age(addMemberRequestDto.getAge())
+                    .gender(addMemberRequestDto.getGender())
                     .build();
             memberRepository.save(member);
-        } catch (Exception e) {
+        }catch(Exception e){
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
         }
+
     }
+
+//    public void createMember(String memberNickname) {
+//        try {
+//            Member member = Member.builder()
+//                    .nickname(memberNickname)
+////                    .isBlack(false)
+////                    .grade("role_user")
+//                    .build();
+//            memberRepository.save(member);
+//        } catch (Exception e) {
+//            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
+//        }
+//    }
 
     /**
      * 초기 회원 정보 설정 함수
      *
+     * @param currentMemberDidAddress
      * @param initMemberInfoRequestDto 초기 회원 정보
      */
-    public void initMemberInfo(InitMemberInfoRequestDto initMemberInfoRequestDto) {
+    public void initMemberInfo(String currentMemberDidAddress, InitMemberInfoRequestDto initMemberInfoRequestDto) {
 
-        // 초기 유저 설정이 닉네임 기준으로 찾아서 해야 하는데, 이 시점에 닉네임이 있는지 확인해야 함.
-        Member member = memberRepository.findByNickname(initMemberInfoRequestDto.getNickname())
+
+        Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         try {
@@ -98,12 +117,12 @@ public class MemberService {
     /**
      * 멤버의 초기 필터링 정보 설정
      *
-     * @param currentMemberNickname         현재 유저 닉네임
+     * @param currentMemberDidAddress         현재 유저 did 주소
      * @param initMemberFilteringRequestDto 등록 정보
      */
-    public void initMemberFiltering(String currentMemberNickname, InitMemberFilteringRequestDto initMemberFilteringRequestDto) {
+    public void initMemberFiltering(String currentMemberDidAddress, InitMemberFilteringRequestDto initMemberFilteringRequestDto) {
 
-        Member member = memberRepository.findByNickname(currentMemberNickname)
+        Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         try {
@@ -171,11 +190,11 @@ public class MemberService {
     /**
      * 특정 유저의 (실질적으로는 현재 로그인 유저의) 필터링 정보 조회
      *
-     * @param currentMemberNickname 현재 멤버 닉네임
+     * @param currentMemberDidAddress 현재 멤버 did주소
      * @return
      */
-    public GetMemberFilteringResponseDto getMemberFiltering(String currentMemberNickname) {
-        Member member = memberRepository.findByNickname(currentMemberNickname)
+    public GetMemberFilteringResponseDto getMemberFiltering(String currentMemberDidAddress) {
+        Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         Filtering filtering = filteringRepository.findByMember(member)
@@ -202,11 +221,11 @@ public class MemberService {
     /**
      * 유저 이미지 업로드 함수
      *
-     * @param currentMemberNickname 현재 로그인 유저 닉네임
+     * @param currentMemberDidAddress 현재 로그인 유저 did 주소
      * @param uploadImageRequestDto 업로드 폼
      */
-    public void postMemberImages(String currentMemberNickname, UploadImageRequestDto uploadImageRequestDto) {
-        Member member = memberRepository.findByNickname(currentMemberNickname)
+    public void postMemberImages(String currentMemberDidAddress, UploadImageRequestDto uploadImageRequestDto) {
+        Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         try {
@@ -227,11 +246,11 @@ public class MemberService {
     /**
      * 이미지 교체 방식
      *
-     * @param currentMemberNickname 현재 로그인 유저
+     * @param currentMemberDidAddress 현재 로그인 유저
      * @param uploadImageRequestDto 이미지 교체 요청 정보
      */
-    public void putMemberImages(String currentMemberNickname, UploadImageRequestDto uploadImageRequestDto) {
-        Member member = memberRepository.findByNickname(currentMemberNickname)
+    public void putMemberImages(String currentMemberDidAddress, UploadImageRequestDto uploadImageRequestDto) {
+        Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         try {
@@ -260,11 +279,11 @@ public class MemberService {
     /**
      * 유저 정보 수정 로직
      *
-     * @param currentMemberNickname   현재 로그인 유저
+     * @param currentMemberDidAddress   현재 로그인 유저
      * @param putMemberInfoRequestDto 수정 유저 정보 객체
      */
-    public void putMemberInfo(String currentMemberNickname, PutMemberInfoRequestDto putMemberInfoRequestDto) {
-        Member member = memberRepository.findByNickname(currentMemberNickname)
+    public void putMemberInfo(String currentMemberDidAddress, PutMemberInfoRequestDto putMemberInfoRequestDto) {
+        Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         MyInfo myInfo = myInfoRepository.findByMember(member)
@@ -290,11 +309,11 @@ public class MemberService {
     /**
      * 멤버 필터링 정보 수정
      *
-     * @param currentMemberNickname        현재 로그인 유저
+     * @param currentMemberDidAddress        현재 로그인 유저
      * @param putMemberFilteringRequestDto 필터링 정보 객체
      */
-    public void putMemberFiltering(String currentMemberNickname, PutMemberFilteringRequestDto putMemberFilteringRequestDto) {
-        Member member = memberRepository.findByNickname(currentMemberNickname)
+    public void putMemberFiltering(String currentMemberDidAddress, PutMemberFilteringRequestDto putMemberFilteringRequestDto) {
+        Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         Filtering filtering = filteringRepository.findByMember(member)
@@ -321,11 +340,11 @@ public class MemberService {
     /**
      * 유저 위치 정보 수정
      *
-     * @param currentMemberNickname       현재 로그인 유저 닉네임
+     * @param currentMemberDidAddress       현재 로그인 유저
      * @param putMemberLocationRequestDto 요청 유저 수정 위치 정보
      */
-    public void putMemberLocation(String currentMemberNickname, PutMemberLocationRequestDto putMemberLocationRequestDto) {
-        Member member = memberRepository.findByNickname(currentMemberNickname)
+    public void putMemberLocation(String currentMemberDidAddress, PutMemberLocationRequestDto putMemberLocationRequestDto) {
+        Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         MyInfo myInfo = myInfoRepository.findByMember(member)
@@ -345,11 +364,11 @@ public class MemberService {
     /**
      * 유저 자기소개 수정
      *
-     * @param currentMemberNickname 현재 로그인 유저 닉네임
+     * @param currentMemberDidAddress 현재 로그인 유저 닉네임
      * @param putMemberPrRequestDto 수정 자기소개 정보
      */
-    public void putMemberPr(String currentMemberNickname, PutMemberPrRequestDto putMemberPrRequestDto) {
-        Member member = memberRepository.findByNickname(currentMemberNickname)
+    public void putMemberPr(String currentMemberDidAddress, PutMemberPrRequestDto putMemberPrRequestDto) {
+        Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         MyInfo myInfo = myInfoRepository.findByMember(member)
@@ -366,11 +385,11 @@ public class MemberService {
     /**
      * 유저 인증정보 가져오기
      *
-     * @param currentMemberNickname 현재 로그인 유저 닉네임
+     * @param currentMemberDidAddress 현재 로그인 유저
      * @return
      */
-    public MemberCertDto getMemberCertificate(String currentMemberNickname) {
-        Member member = memberRepository.findByNickname(currentMemberNickname)
+    public MemberCertDto getMemberCertificate(String currentMemberDidAddress) {
+        Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         MemberCert memberCert = memberCertRepository.findByMember(member)
@@ -394,11 +413,11 @@ public class MemberService {
     /**
      * 멤버 인증 정보 수정
      *
-     * @param currentMemberNickname 현재 로그인 회원 닉네임
+     * @param currentMemberDidAddress 현재 로그인 회원
      * @param memberCertDto         유저 수정 인증 정보
      */
-    public void putMemberCertificate(String currentMemberNickname, MemberCertDto memberCertDto) {
-        Member member = memberRepository.findByNickname(currentMemberNickname)
+    public void putMemberCertificate(String currentMemberDidAddress, MemberCertDto memberCertDto) {
+        Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         MemberCert memberCert = memberCertRepository.findByMember(member)
@@ -468,13 +487,13 @@ public class MemberService {
     /**
      * 유저 관심사 새 등록
      *
-     * @param currentMemberNickname 현재 로그인한 유저
+     * @param currentMemberDidAddress 현재 로그인한 유저
      * @param name                  관심사 이름
      * @return
      */
-    public InterestDto addInterest(String currentMemberNickname, String name) {
+    public InterestDto addInterest(String currentMemberDidAddress, String name) {
         // 먼저 현재 유저를 찾는다
-        Member member = memberRepository.findByNickname(currentMemberNickname)
+        Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         try {
@@ -515,4 +534,6 @@ public class MemberService {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
         }
     }
+
+
 }
