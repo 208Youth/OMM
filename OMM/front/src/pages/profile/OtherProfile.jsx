@@ -134,7 +134,7 @@ function OtherProfile() {
                 인증정보
               </div>
               <div>
-                <div className="my-2">
+                <div className="my-5 ml-5">
                   <div className="inline-block">
                     <img src={new_certinfo.health === true ? health_yes : health_no} alt="#" className="badges" />
                   </div>
