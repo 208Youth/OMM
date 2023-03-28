@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,16 +51,17 @@ public class RecommendService {
 
             // 유저가 지정한 필터링 조건에 맞는 사람 1차적 선별
             // 좋아요, 싫어요 보낸 유저 제외
-            List<RecommendDto> filteredList = myInfoRepository.findByFiltering1(myInfo, myFilter);
-            // 이 목록이 없을 경우, 필터링 상관 없이 좋아요나 싫어요를 보내지 않은 상대 최대 200개 선별
-            if (filteredList.isEmpty()) {
-                filteredList = myInfoRepository.findByFiltering2(myInfo, myFilter);
-            }
-
-            // 그래도 없다면, 그냥 유저를 최대 200개까지 전송
-            if (filteredList.isEmpty()) {
-                filteredList = myInfoRepository.findByFiltering3(myInfo, myFilter);
-            }
+            List<RecommendDto> filteredList = new ArrayList<>();
+//            List<RecommendDto> filteredList = myInfoRepository.filteredMembers(myInfo, myFilter);
+//            // 이 목록이 없을 경우, 필터링 상관 없이 좋아요나 싫어요를 보내지 않은 상대 최대 200개 선별
+//            if (filteredList.isEmpty()) {
+//                filteredList = myInfoRepository.findByFiltering2(myInfo, myFilter);
+//            }
+//
+//            // 그래도 없다면, 그냥 유저를 최대 200개까지 전송
+//            if (filteredList.isEmpty()) {
+//                filteredList = myInfoRepository.findByFiltering3(myInfo, myFilter);
+//            }
 
             // FastAPI 에 보낼 자료구조 생성
             Map<String, Double> myKNN = new HashMap<>();
