@@ -4,6 +4,8 @@ import axios from 'axios';
 import CloseBtn from '../../assets/CloseBtn.svg';
 import estate_yes from '../../assets/estate_yes.svg';
 import estate_no from '../../assets/estate_no.svg';
+import car_yes from '../../assets/car_yes.svg';
+import car_no from '../../assets/car_no.svg';
 import job_yes from '../../assets/job_yes.svg';
 import job_no from '../../assets/job_no.svg';
 import income_yes from '../../assets/income_yes.svg';
@@ -16,10 +18,12 @@ import certificate_yes from '../../assets/certificate_yes.svg';
 import certificate_no from '../../assets/certificate_no.svg';
 import location from '../../assets/location.svg';
 import Pslider from '../../components/Pslider';
+import Navbar from '../../components/nav-bar';
 
 // props를 통해 userid를 받고 claose 버튼을 눌러서 해당 userid의
 // 아니면 메인 페이지에 해당 컴포넌트를 아예 합쳐버릴까
-function OtherProfile() {
+function MyProfile({profileNav}) {
+  profileNav = true
   const certinfo = {
     university: false,
     job: true,
@@ -91,10 +95,10 @@ function OtherProfile() {
     <div>
 
       <div>
-        <div className="absolute top-20 left-0 w-full z-5">
+        <div>
           <Pslider />
         </div>
-        <div className="profileinfo">
+        <div className="myprofileinfo">
           <div className="infodetail">
 
             <div className="text-right">
@@ -171,10 +175,10 @@ function OtherProfile() {
           </div>
 
         </div>
-
+        <Navbar profileNav={profileNav}/>
       </div>
     </div>
   );
 }
 
-export default OtherProfile;
+export default MyProfile;
