@@ -8,7 +8,8 @@ function MoreInfo() {
   const [moreinfo, setMoreInfo] = useState({
     nickname: '',
     height: '',
-    location: '',
+    lat: '',
+    lng: '',
     highschool: '',
     contact_style: '',
   });
@@ -145,7 +146,16 @@ function MoreInfo() {
         overlayClassName="KakaomapOverlay"
         ariaHideApp={false}
       >
-        <Kakaomap setModal={closeModal} />
+        <Kakaomap
+          setModal={closeModal}
+          location={(res) => {
+            setMoreInfo((prev) => ({
+              ...prev,
+              lat: res.lat,
+              lng: res.lng,
+            }));
+          }}
+        />
       </Modal>
       <div className="mb-6 mx-8 flex">
         <h3 className="font-medium text-[#364C63] mr-5 self-center text-base">
@@ -160,6 +170,9 @@ function MoreInfo() {
         >
           확인
         </button>
+        {moreinfo.lat && moreinfo.lng && (
+          <i className="bi bi-check-circle-fill text-[#364C63] self-center ml-3" />
+        )}
       </div>
       <div className="mb-6 mx-8 flex">
         <span className="font-medium text-[#364C63] mr-5 self-center text-base">
