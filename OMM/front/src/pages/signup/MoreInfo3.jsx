@@ -4,12 +4,12 @@ import 'rc-slider/assets/index.css';
 
 function MoreInfo3() {
   const [moreinfo, setMoreInfo] = useState({
-    age_min: '20',
-    age_max: '25',
-    height_min: '160',
-    height_max: '180',
-    range_min: '3',
-    range_max: '80',
+    age_min: 20,
+    age_max: 25,
+    height_min: 160,
+    height_max: 180,
+    range_min: 3,
+    range_max: 80,
   });
 
   const changeRange = (e) => {
