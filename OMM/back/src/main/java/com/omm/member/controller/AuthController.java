@@ -31,7 +31,7 @@ public class AuthController {
      */
     @PostMapping("/authenticate")
     public ResponseEntity<TokenDto> authorize(@RequestBody LoginDto loginDto) {
-        return authenticate(loginDto.getHolderDid(), null);
+        return authenticate(loginDto.getHolderDid(), loginDto.getVpJwt());
     }
 
     /**
