@@ -75,3 +75,23 @@
 .thickhr {
   background-color: black;;
 }
+
+
+.MyinfoModal {
+  width: 360px;
+  height: 400px;
+  overflow: scroll;
+  overflow-x: hidden;
+  position: absolute;
+  
+  top: 10%;
+  left: 20%;
+  padding: 2rem;
+  border: 1px;
+  border-radius: 20px;
+  background-color: aliceblue;
+  box-shadow: 0.1rem 0.15rem 5px gray;
+  
+  /* text-align: center; */
+  
+}

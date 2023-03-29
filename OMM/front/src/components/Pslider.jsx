@@ -23,6 +23,7 @@ function Pslider({ imgs }) {
   return (
     <div>
       <Swiper
+
         effect="coverflow"
         grabCursor
         centeredSlides

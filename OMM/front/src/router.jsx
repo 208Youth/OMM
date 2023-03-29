@@ -17,6 +17,7 @@ import ChatList from './pages/alert/ChatList';
 import Admin from './pages/admin/Admin';
 import Detail from './pages/admin/Detail';
 import Main from './pages/main/Main';
+import ImageUploader from './pages/profile/ImageUploader';
 
 const router = createBrowserRouter([
   {
@@ -82,6 +83,10 @@ const router = createBrowserRouter([
   {
     path: '/admin/detail/:id',
     element: <Detail />,
+  },
+  {
+    path: '/ImageUploader',
+    element: <ImageUploader />,
   },
 ]);
 

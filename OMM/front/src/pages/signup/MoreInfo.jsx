@@ -311,11 +311,11 @@ function MoreInfo() {
           aria-hidden
           onClick={() => {
             if (
-              moreinfo.nickname &&
-              moreinfo.contact_style &&
-              moreinfo.height &&
-              moreinfo.highschool &&
-              moreinfo.location
+              moreinfo.nickname
+              && moreinfo.contact_style
+              && moreinfo.height
+              && moreinfo.highschool
+              && moreinfo.location
             ) {
               console.log('다음페이지로 이동');
             } else {
