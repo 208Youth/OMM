@@ -1,7 +1,7 @@
 package com.omm.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.Set;
+import com.omm.model.entity.enums.Authority;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
@@ -44,12 +44,9 @@ public class Member {
     @Column(name = "did_address", nullable = false, unique = true)
     private String didAddress;
 
-    @ManyToMany
-    @JoinTable(
-        name = "member_authority",
-        joinColumns = {@JoinColumn(name = "member_id", referencedColumnName = "member_id")},
-        inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")}
-    )
-    private Set<Authority> authorities;
+    @Column(name = "authority")
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'ROLE_USER'")
+    private Authority authority;
 
 }

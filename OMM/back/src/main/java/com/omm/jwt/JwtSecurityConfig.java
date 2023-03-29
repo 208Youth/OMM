@@ -12,6 +12,10 @@ public class JwtSecurityConfig extends
 
     private final TokenProvider tokenProvider;
 
+    /**
+     * JwtFilter를 등록한다.
+     * @param http
+     */
     @Override
     public void configure(HttpSecurity http) {
         http.addFilterBefore(
