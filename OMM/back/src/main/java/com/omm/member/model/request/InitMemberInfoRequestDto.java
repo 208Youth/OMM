@@ -15,8 +15,6 @@ public class InitMemberInfoRequestDto {
     @JsonProperty(value = "lng")
     private float lng;
 
-    @JsonProperty(value = "pr")
-    private String pr;
 
     @JsonProperty(value = "height")
     private short height;

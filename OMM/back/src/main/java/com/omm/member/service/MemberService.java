@@ -97,7 +97,6 @@ public class MemberService {
                     .member(member)
                     .lat(initMemberInfoRequestDto.getLat())
                     .lng(initMemberInfoRequestDto.getLng())
-                    .pr(initMemberInfoRequestDto.getPr())
                     .height(initMemberInfoRequestDto.getHeight())
                     .contactStyle(InfoContactStyle.valueOf(initMemberInfoRequestDto.getContactStyle()))
                     .drinkingStyle(InfoDrinkingStyle.valueOf(initMemberInfoRequestDto.getDrinkingStyle()))
