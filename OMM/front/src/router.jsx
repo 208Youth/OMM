@@ -24,7 +24,7 @@ const router = createBrowserRouter([
     element: <Index />,
   },
   {
-    path: '/faceRecog',
+    path: '/faceRecog/:page',
     element: <FaceRecog />,
   },
   {
