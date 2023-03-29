@@ -116,7 +116,7 @@ const issueVC = async (holderDid, credentialName, data) => {
 };
 
 // credential 발급
-router.get("/credential", async (req, res) => {
+router.post("/credential", async (req, res) => {
   const { holderDid, vpJwt, credentialName, id = null } = req.body;
 
   try {
@@ -156,17 +156,23 @@ router.get("/credential", async (req, res) => {
 });
 
 // presentation 검증, claim 반환
-router.get("/presentation", async (req, res) => {
+router.post("/presentation", async (req, res) => {
   const { holderDid, vpJwt } = req.body;
 
   try {
     await verifyHolderDid(holderDid);
     const verifiableCredential = await verifyVP(vpJwt, holderDid);
-    const subjects = [];
+
+    const subjects = {};
     for (const verifiedVC of verifiableCredential) {
       await verifyVC(verifiedVC, holderDid);
-      console.log(verifiedVC.credentialSubject.personalId);
-      subjects.push(verifiedVC.credentialSubject);
+      console.log(verifiedVC);
+      // json 꺼내기
+      for (const [key, value] of Object.entries(verifiedVC.credentialSubject)) {
+        if (key != "id") {
+          subjects[key] = value;
+        }
+      }
     }
     res.json({ subjects: subjects });
   } catch (error) {
