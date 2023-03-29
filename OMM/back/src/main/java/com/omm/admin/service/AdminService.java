@@ -32,18 +32,17 @@ public class AdminService {
      * 채팅방에서 새로운 신고 내역을 전송한다.
      *
      * @param createReportRequestDto 신고 내역 정보
-     * @param memberNickname         신고자 멤버 닉네임
-     * @param targetId               신고할 멤버 아이디
+     * @param currentMemberDidAddress         신고자 멤버
      * @return
      */
-    public boolean createReport(CreateReportRequestDto createReportRequestDto, String memberNickname, Long targetId) {
+    public boolean createReport(CreateReportRequestDto createReportRequestDto, String currentMemberDidAddress) {
 
         // 현재 등록중인 멤버를 찾는다.
-        Member member = memberRepository.findByNickname(memberNickname)
+        Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         // 신고당한 멤버를 찾는다.
-        Member target = memberRepository.findById(targetId)
+        Member target = memberRepository.findById(createReportRequestDto.getTargetId())
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         // report 를 생성한다.

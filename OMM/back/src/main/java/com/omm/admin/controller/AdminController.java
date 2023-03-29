@@ -7,6 +7,7 @@ import com.omm.admin.model.response.GetReportsResponseDto;
 import com.omm.admin.service.AdminService;
 import com.omm.exception.admin.ReportExceptionCode;
 import com.omm.exception.admin.ReportRuntimeException;
+import com.omm.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,11 +30,8 @@ public class AdminController {
     @PostMapping("/report")
     public ResponseEntity<?> createReport(@RequestBody CreateReportRequestDto createReportRequestDto) {
         // JWT 생성하고 현재 로그인 유저, 타겟 로그인유저 정보 알아와야 함
-        String memberNickname = "김미미";
-        Long targetId = 2L;
-
         // 결과에 따라
-        if (adminService.createReport(createReportRequestDto, memberNickname, targetId)) {
+        if (adminService.createReport(createReportRequestDto, SecurityUtil.getCurrentDidAddress().get())) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             throw new ReportRuntimeException(ReportExceptionCode.REPORT_POST_SAVE_EXCEPTION);
