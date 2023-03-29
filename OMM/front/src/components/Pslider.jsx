@@ -8,6 +8,7 @@ import 'swiper/css/navigation';
 
 import { EffectCoverflow, Pagination, Navigation } from 'swiper';
 
+import axios from 'axios';
 import slide_image_1 from './assets/images/img_1.jpg';
 import slide_image_2 from './assets/images/img_2.jpg';
 import slide_image_3 from './assets/images/img_3.jpg';
@@ -16,10 +17,11 @@ import slide_image_5 from './assets/images/img_5.jpg';
 import slide_image_6 from './assets/images/img_6.jpg';
 import slide_image_7 from './assets/images/img_7.jpg';
 
-function Pslider() {
+function Pslider({ imgs }) {
+  console.log(imgs);
+
   return (
     <div>
-
       <Swiper
 
         effect="coverflow"
@@ -42,6 +44,12 @@ function Pslider() {
         modules={[EffectCoverflow, Pagination, Navigation]}
         className="swiper_container"
       >
+        {/* 이미지 리스트 들어오는 코드 작성한 후에 아래 주석풀어주세요 */}
+        {/* {imgs.map((img, i) => {
+          <SwiperSlide key={i}>
+            <img src={img} alt="이미지" />
+          </SwiperSlide>;
+        })} */}
         <SwiperSlide>
           <img src={slide_image_1} alt="slide_image" />
         </SwiperSlide>
