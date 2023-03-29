@@ -5,6 +5,7 @@ import com.omm.model.entity.Member;
 import com.omm.repository.MemberRepository;
 import com.omm.util.error.ErrorCode;
 import java.util.Collections;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -15,14 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * 일반 유저를 위한 UserDetailService
+ */
 @Component("userDetailsService")
+@RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
-
-    public CustomUserDetailsService(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
 
     @Override
     @Transactional
@@ -38,8 +39,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
 
         List<GrantedAuthority> grantedAuthorities = Collections.singletonList(
-            new SimpleGrantedAuthority(member.getAuthority().getAuthorityName()));
+            new SimpleGrantedAuthority(member.getAuthority().name()));
 
         return new User(member.getDidAddress(), "", grantedAuthorities);
     }
+
 }
