@@ -1,11 +1,13 @@
 package com.omm.matching.repository;
 
 import com.omm.matching.model.entity.Notification;
+import com.omm.matching.service.NotificationSubscriberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
@@ -14,6 +16,8 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class MatchingRepository {
+    private final RedisMessageListenerContainer redisMessageListenerContainer;
+    private final NotificationSubscriberService subscriberService;
     private static final String TOPIC = "Topic";
     private final RedisTemplate redisTemplate;
     private ListOperations<Long, Notification> opsListNotification;
@@ -33,9 +37,9 @@ public class MatchingRepository {
         ChannelTopic channelTopic = opsHashTopic.get(TOPIC, receiverId);
         if(channelTopic == null) {
             String memberIdStr = receiverId.toString();
-            ChannelTopic newTopic = new ChannelTopic(memberIdStr);
-            opsHashTopic.put(TOPIC, receiverId, newTopic);
-            channelTopic = newTopic;
+            channelTopic = new ChannelTopic(memberIdStr);
+            opsHashTopic.put(TOPIC, receiverId, channelTopic);
+            redisMessageListenerContainer.addMessageListener(subscriberService, channelTopic);
         }
         return channelTopic;
     }
