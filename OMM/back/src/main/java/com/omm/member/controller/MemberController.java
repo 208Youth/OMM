@@ -1,7 +1,10 @@
 package com.omm.member.controller;
 
+import com.omm.member.model.dto.AuthDto;
 import com.omm.member.model.dto.MemberCertDto;
+import com.omm.member.model.dto.RegistDto;
 import com.omm.member.model.request.*;
+import com.omm.member.service.AuthService;
 import com.omm.member.service.MemberService;
 import com.omm.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberService memberService;
+    private final AuthService authService;
 
 //    /**
 //     * 닉네임 중복 체크 함수
@@ -30,12 +34,13 @@ public class MemberController {
 
     /**
      * 회원 신규 등록
-     * @param addMemberRequestDto 회원 등록 정보
+     * @param authDto 인증을 위해서 필요한 정보, did 주소와 vp jwt를 받는다.
      * @return
      */
-    @PostMapping("/member")
-    public ResponseEntity<?> addMember(@RequestBody AddMemberRequestDto addMemberRequestDto){
-        memberService.addMember(addMemberRequestDto);
+    @PostMapping
+    public ResponseEntity<?> addMember(@RequestBody AuthDto authDto){
+        RegistDto registDto = authService.registAuth(authDto);
+        memberService.addMember(registDto);
         return new ResponseEntity<>("회원 가입 성공", HttpStatus.OK);
     }
 

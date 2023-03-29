@@ -4,6 +4,7 @@ import com.omm.exception.member.MemberExceptionCode;
 import com.omm.exception.member.MemberRuntimeException;
 import com.omm.member.model.dto.InterestDto;
 import com.omm.member.model.dto.MemberCertDto;
+import com.omm.member.model.dto.RegistDto;
 import com.omm.member.model.request.*;
 import com.omm.member.model.response.GetInterestListResponseDto;
 import com.omm.member.model.response.GetMemberFilteringResponseDto;
@@ -36,14 +37,14 @@ public class MemberService {
     private final InterestListRepository interestListRepository;
 
     /**
-     * 닉네임 중복 체크 함수
+     * did address 중복 체크 함수
      *
-     * @param nickname 닉네임
+     * @param didAddress 닉네임
      * @return
      */
-    public boolean existNickname(String nickname) {
+    public boolean existDidAddress(String didAddress) {
         try {
-            return memberRepository.existsByNickname(nickname);
+            return memberRepository.existsByDidAddress(didAddress);
         } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
         }
@@ -51,17 +52,22 @@ public class MemberService {
 
     /**
      * 회원 추가
-     * @param addMemberRequestDto
+     * @param registDto
      */
-    public void addMember(AddMemberRequestDto addMemberRequestDto) {
-        try{
+    public void addMember(RegistDto registDto) {
+        try {
+            if (existDidAddress(registDto.getHolderDid())) {
+                throw new MemberRuntimeException(MemberExceptionCode.MEMBER_ALREADY_EXIST);
+            }
             Member member = Member.builder()
-                    .didAddress(addMemberRequestDto.getDidAddress())
-                    .age(addMemberRequestDto.getAge())
-                    .gender(addMemberRequestDto.getGender())
+                    .didAddress(registDto.getHolderDid())
+                    .age(registDto.getAge())
+                    .gender(registDto.getGender())
                     .build();
+            System.out.println(member.toString());
             memberRepository.save(member);
-        }catch(Exception e){
+            System.out.println(member.toString());
+        } catch(Exception e){
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
         }
 
