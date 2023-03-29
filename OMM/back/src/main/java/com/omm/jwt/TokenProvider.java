@@ -47,6 +47,11 @@ public class TokenProvider implements InitializingBean {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
+    /**
+     * 토큰을 생성한다.
+     * @param authentication
+     * @return
+     */
     public String createToken(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
@@ -63,6 +68,11 @@ public class TokenProvider implements InitializingBean {
             .compact();
     }
 
+    /**
+     * 토큰에서 인증 정보를 가져온다.
+     * @param token
+     * @return
+     */
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts
             .parserBuilder()
@@ -81,6 +91,11 @@ public class TokenProvider implements InitializingBean {
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 
+    /**
+     * 토큰의 유효성을 검증한다.
+     * @param token
+     * @return
+     */
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);

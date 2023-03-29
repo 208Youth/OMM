@@ -1,7 +1,7 @@
 package com.omm.chat.repository;
 
 import com.omm.chat.model.entity.ChatRoom;
-import com.omm.chat.service.SubscriberService;
+import com.omm.chat.service.ChatSubscriberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -17,7 +17,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ChatRepository {
     private final RedisMessageListenerContainer redisMessageListenerContainer;
-    private final SubscriberService subscriberService;
+    private final ChatSubscriberService subscriberService;
     private static final String ROOMS = "Rooms";
     private final RedisTemplate redisTemplate;
     private HashOperations<String, String, ChatRoom> opsHashChatRoom;

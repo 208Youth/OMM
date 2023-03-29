@@ -2,8 +2,10 @@ package com.omm.member.controller;
 
 import com.omm.jwt.JwtFilter;
 import com.omm.jwt.TokenProvider;
+import com.omm.member.model.dto.AdminLoginDto;
 import com.omm.member.model.dto.LoginDto;
 import com.omm.member.model.dto.TokenDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,20 +19,42 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping
+@RequiredArgsConstructor
 public class AuthController {
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    public AuthController(TokenProvider tokenProvider, AuthenticationManagerBuilder authenticationManagerBuilder) {
-        this.tokenProvider = tokenProvider;
-        this.authenticationManagerBuilder = authenticationManagerBuilder;
-    }
-
+    /**
+     * 일반 유저 로그인
+     * @param loginDto
+     * @return
+     */
     @PostMapping("/authenticate")
     public ResponseEntity<TokenDto> authorize(@RequestBody LoginDto loginDto) {
+        return authenticate(loginDto.getHolderDid(), loginDto.getVpJwt());
+    }
+
+    /**
+     * 관리자 유저 로그인
+     * @param loginDto
+     * @return
+     */
+    @PostMapping("/authenticate/admin")
+    public ResponseEntity<TokenDto> authorizeAdmin(@RequestBody AdminLoginDto loginDto) {
+        return authenticate(loginDto.getUsername(), loginDto.getPassword());
+    }
+
+    /**
+     * 로그인 과정에서 중복되는 작업
+     *
+     * @param username
+     * @param password
+     * @return
+     */
+    private ResponseEntity<TokenDto> authenticate(String username, String password) {
 
         UsernamePasswordAuthenticationToken authenticationToken =
-            new UsernamePasswordAuthenticationToken(loginDto.getHolderDid(), null); // holderDid 검증 후 넣기
+            new UsernamePasswordAuthenticationToken(username, password);
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
@@ -41,4 +65,5 @@ public class AuthController {
 
         return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
     }
+
 }

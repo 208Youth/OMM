@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class SubscriberService implements MessageListener {
+public class ChatSubscriberService implements MessageListener {
     private final RedisTemplate redisTemplate;
     private final ObjectMapper objectMapper;
     private final SimpMessageSendingOperations messageTemplate;
