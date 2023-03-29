@@ -1,6 +1,7 @@
 package com.omm.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.omm.model.entity.enums.Authority;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
@@ -43,8 +44,9 @@ public class Member {
     @Column(name = "did_address", nullable = false, unique = true)
     private String didAddress;
 
-    @ManyToOne
-    @JoinColumn(name = "authority_name")
+    @Column(name = "authority")
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'ROLE_USER'")
     private Authority authority;
 
 }
