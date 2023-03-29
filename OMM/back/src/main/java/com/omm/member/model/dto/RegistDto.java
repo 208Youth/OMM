@@ -9,9 +9,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginDto {
+public class RegistDto {
 
     private String holderDid;
-    private String vpJwt;
+    private short age;
+    private String gender;
+    // 얼굴 정보 추가
 
 }

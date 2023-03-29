@@ -3,7 +3,7 @@ package com.omm.member.controller;
 import com.omm.jwt.JwtFilter;
 import com.omm.jwt.TokenProvider;
 import com.omm.member.model.dto.AdminLoginDto;
-import com.omm.member.model.dto.LoginDto;
+import com.omm.member.model.dto.AuthDto;
 import com.omm.member.model.dto.TokenDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -26,12 +26,12 @@ public class AuthController {
 
     /**
      * 일반 유저 로그인
-     * @param loginDto
+     * @param authDto
      * @return
      */
     @PostMapping("/authenticate")
-    public ResponseEntity<TokenDto> authorize(@RequestBody LoginDto loginDto) {
-        return authenticate(loginDto.getHolderDid(), loginDto.getVpJwt());
+    public ResponseEntity<TokenDto> authorize(@RequestBody AuthDto authDto) {
+        return authenticate(authDto.getHolderDid(), authDto.getVpJwt());
     }
 
     /**

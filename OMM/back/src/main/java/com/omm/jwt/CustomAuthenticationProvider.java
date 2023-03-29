@@ -1,6 +1,7 @@
 package com.omm.jwt;
 
 import com.omm.exception.CustomException;
+import com.omm.member.model.dto.AuthDto;
 import com.omm.member.service.AuthService;
 import com.omm.member.service.CustomAdminDetailsService;
 import com.omm.member.service.CustomUserDetailsService;
@@ -48,8 +49,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             }
         } catch (CustomException e) {
             userDetails = customUserDetailsService.loadUserByUsername(username);
-            if (!authService.verifyVP(authentication.getPrincipal().toString(),
-                authentication.getCredentials().toString())) {
+            AuthDto authDto = AuthDto.builder()
+                .holderDid(authentication.getPrincipal().toString())
+                .vpJwt(authentication.getCredentials().toString())
+                .build();
+            if (!authService.loginAuth(authDto)) {
                 throw new CustomException(ErrorCode.FAIL_TO_LOGIN);
             }
         }

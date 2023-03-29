@@ -50,7 +50,7 @@ public class SecurityConfig {
 
             .and()
             .authorizeHttpRequests()
-            .antMatchers("/authenticate", "/authenticate/admin").permitAll() // 인증없이 접속할 경로 설정
+            .antMatchers("/authenticate", "/authenticate/admin", "/member").permitAll() // 인증없이 접속할 경로 설정
             .anyRequest().authenticated()
 
             .and()
