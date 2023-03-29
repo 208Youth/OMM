@@ -51,6 +51,20 @@ public class MatchingService {
     }
 
     /**
+     * 알림 목록 반환
+     * @return
+     */
+    public List<NotificationResponseDto> getNotifications() {
+        Member member = getSender();
+        List<NotificationResponseDto> notificationResponseDtos = new ArrayList<>();
+        List<Notification> notifications = matchingRepository.getNotifications(member.getId());
+        notifications.forEach(notification ->  {
+            notificationResponseDtos.add(getNotificationResponseDto(member, notification));
+        });
+        return notificationResponseDtos;
+    }
+
+    /**
      * 로그인한 사용자 객체 반환
      * @return
      */

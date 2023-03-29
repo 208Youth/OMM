@@ -9,6 +9,7 @@ import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -46,5 +47,14 @@ public class MatchingRepository {
      */
     public void createNotification(Long receiverId, Notification notification) {
         opsListNotification.leftPush(receiverId, notification);
+    }
+
+    /**
+     * 알림 목록 조회
+     * @param id
+     * @return
+     */
+    public List<Notification> getNotifications(Long id) {
+        return opsListNotification.range(id, 0, -1);
     }
 }
