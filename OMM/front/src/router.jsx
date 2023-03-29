@@ -12,9 +12,11 @@ import SignupComplete from './pages/signup/SignupComplete';
 import MyinfoSetModal from './pages/profile/MyinfoSetModal';
 import OtherProfile from './pages/profile/OtherProfile';
 import MyProfile from './pages/profile/MyProfile';
-import Main from './pages/main/Main';
+import Alert from './pages/alert/Alert';
+import ChatList from './pages/alert/ChatList';
 import Admin from './pages/admin/Admin';
 import Detail from './pages/admin/Detail';
+import Main from './pages/main/Main';
 
 const router = createBrowserRouter([
   {
@@ -64,6 +66,14 @@ const router = createBrowserRouter([
   {
     path: '/signupcomplete',
     element: <SignupComplete />,
+  },
+  {
+    path: '/notification',
+    element: <Alert />,
+  },
+  {
+    path: '/chattings',
+    element: <ChatList />,
   },
   {
     path: '/admin',
