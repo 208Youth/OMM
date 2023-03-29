@@ -11,10 +11,13 @@ import com.omm.repository.FilteringRepository;
 import com.omm.repository.MemberRepository;
 import com.omm.repository.MyInfoRepository;
 import com.omm.repository.RecommendDtoRepository;
+import com.omm.util.EnumToKNN;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -43,44 +46,58 @@ public class RecommendService {
 
             // 유저가 지정한 필터링 조건에 맞는 사람 1차적 선별
             // 좋아요, 싫어요 보낸 유저 제외
-            List<RecommendDto> filteredList = recommendDtoRepository.filteredMembers(myInfo, myFilter);
+            List<RecommendDto> filteredList = recommendDtoRepository.filteredMembers3(myInfo);
 
             System.out.println(filteredList.size());
             // 이 목록이 없을 경우, 필터링 상관 없이 좋아요나 싫어요를 보내지 않은 상대 최대 200개 선별
-//            if (filteredList.isEmpty()) {
-//                filteredList = myInfoRepository.findByFiltering2(myInfo, myFilter);
-//            }
-//
-//            // 그래도 없다면, 그냥 유저를 최대 200개까지 전송
-//            if (filteredList.isEmpty()) {
-//                filteredList = myInfoRepository.findByFiltering3(myInfo, myFilter);
-//            }
-//
-//             //FastAPI 에 보낼 자료구조 생성
-//            Map<String, Double> myKNN = new HashMap<>();
-//            myKNN.put("age", (myFilter.getAgeMax() * 1.0 - myFilter.getAgeMin()) / 2);
-//            myKNN.put("height", (myFilter.getHeightMax() * 1.0 - myFilter.getHeightMin()) / 2);
-//            myKNN.put("distance", 0.0);
-//            myKNN.put("contactStyle", EnumToKNN.filterContactToKNN(myFilter.getContactStyle()));
-//            myKNN.put("drinkingStyle", EnumToKNN.filterDrinkingToKNN(myFilter.getDrinkingStyle()));
-//            myKNN.put("smokingStyle", EnumToKNN.filterSmokingToKNN(myFilter.getSmokingStyle()));
-//
-//            Map<Long, Map<String, Double>> users = new HashMap<>();
-//            filteredList.forEach((filtMem)->{
-//                Map<String, Double> user = new HashMap<>();
-//                user.put("age", (double) filtMem.getAge());
-//                user.put("height", (double) filtMem.getHeight());
-//                user.put("distance", (double) filtMem.getDistance());
-//                user.put("contactStyle", EnumToKNN.infoContactToKNN(filtMem.getContactStyle()));
-//                user.put("drinkingStyle", EnumToKNN.infoDrinkingToKNN(filtMem.getDrinkingStyle()));
-//                user.put("smokingStyle", EnumToKNN.infoSmokingToKNN(filtMem.getSmokingStyle()));
-//                users.put(filtMem.getId(),user);
-//            });
-//
-//            Map<String, Object> requestBody = new HashMap<>();
-//            requestBody.put("myinfo", myKNN);
-//            requestBody.put("users", users);
-//
+            if (filteredList.isEmpty()) {
+                filteredList = recommendDtoRepository.filteredMembers2(myInfo);
+            }
+
+            // 그래도 없다면, 그냥 유저를 최대 200개까지 전송
+            if (filteredList.isEmpty()) {
+                filteredList = recommendDtoRepository.filteredMembers3(myInfo);
+            }
+
+             //FastAPI 에 보낼 자료구조 생성
+            Map<String, Double> myKNN = new HashMap<>();
+            myKNN.put("age", (myFilter.getAgeMax() * 1.0 + myFilter.getAgeMin()) / 2);
+            myKNN.put("height", (myFilter.getHeightMax() * 1.0 + myFilter.getHeightMin()) / 2);
+            myKNN.put("distance", 0.0);
+            myKNN.put("contactStyle", EnumToKNN.filterContactToKNN(myFilter.getContactStyle()));
+            myKNN.put("drinkingStyle", EnumToKNN.filterDrinkingToKNN(myFilter.getDrinkingStyle()));
+            myKNN.put("smokingStyle", EnumToKNN.filterSmokingToKNN(myFilter.getSmokingStyle()));
+
+            System.out.print("Mydata | ");
+            for ( String key : myKNN.keySet() ) {
+                System.out.print(key + " : " + myKNN.get(key) + " | ");
+            }
+            System.out.println();
+
+            Map<Long, Map<String, Double>> users = new HashMap<>();
+            filteredList.forEach((filtMem)->{
+                Map<String, Double> user = new HashMap<>();
+                user.put("age", (double) filtMem.getAge());
+                user.put("height", (double) filtMem.getHeight());
+                user.put("distance", filtMem.getDistance());
+                user.put("contactStyle", EnumToKNN.infoContactToKNN(filtMem.getContactStyle()));
+                user.put("drinkingStyle", EnumToKNN.infoDrinkingToKNN(filtMem.getDrinkingStyle()));
+                user.put("smokingStyle", EnumToKNN.infoSmokingToKNN(filtMem.getSmokingStyle()));
+
+                System.out.print("user | ");
+                for ( String key : user.keySet() ) {
+                    System.out.print(key + " : " + user.get(key) + " | ");
+                }
+                System.out.println();
+
+                users.put(filtMem.getMemberId(),user);
+
+            });
+
+            Map<String, Object> requestBody = new HashMap<>();
+            requestBody.put("myinfo", myKNN);
+            requestBody.put("users", users);
+
 //            // FastAPI로 전송
 //            String url = "http://localhost:8000/recommend"; // fastAPI url
 //            RestTemplate restTemplate = new RestTemplate();
@@ -88,19 +105,11 @@ public class RecommendService {
 //            headers.setContentType(MediaType.APPLICATION_JSON);
 //            ObjectMapper mapper = new ObjectMapper();
 //
-//            HttpEntity<String> request = new HttpEntity<String>(mapper.writeValueAsString(requestBody), headers);
+//            HttpEntity<String> request = new HttpEntity<>(mapper.writeValueAsString(requestBody), headers);
 //            ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
 //            String responseBody = response.getBody();
 //            System.out.println(responseBody);
-//             현재 멤버 가상 페르소나 설정
-//            KNNDto persona = KNNDto.builder()
-//                    .age((myFilter.getAgeMax() * 1.0 - myFilter.getAgeMin()) / 2)
-//                    .height((myFilter.getHeightMax() * 1.0 - myFilter.getHeightMin()) / 2)
-//                    .distance(0.0)
-//                    .contactStyle(EnumToKNN.filterContactToKNN(myFilter.getContactStyle()))
-//                    .drinkingStyle(EnumToKNN.filterDrinkingToKNN(myFilter.getDrinkingStyle()))
-//                    .smokingStyle(EnumToKNN.filterSmokingToKNN(myFilter.getSmokingStyle()))
-//                    .build();
+
 
         } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
