@@ -16,7 +16,7 @@ public class RecommendController {
 
     private final RecommendService recommendService;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<?> getRecommendList(){
         // 현재 유저의 정보를 얻어온다
         return new ResponseEntity<>(recommendService.getRecommendList(SecurityUtil.getCurrentDidAddress().get()), HttpStatus.OK);
