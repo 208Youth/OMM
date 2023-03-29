@@ -1,12 +1,11 @@
-import React, {useState} from 'react';
-import OTPInput, { ResendOTP } from "otp-input-react";
+import React, { useState } from 'react';
+import OTPInput, { ResendOTP } from 'otp-input-react';
 
 function Password() {
-  const [OTP, setOTP] = useState("");
+  const [OTP, setOTP] = useState('');
   return (
     <div>
-
-        <OTPInput
+      <OTPInput
         value={OTP}
         onChange={setOTP}
         autoFocus
@@ -14,9 +13,9 @@ function Password() {
         otpType="number"
         disabled={false}
         secure
-        />
-        <ResendOTP handelResendClick={() => console.log("Resend clicked")} />
-      </div>
+      />
+      <ResendOTP handelResendClick={() => console.log('Resend clicked')} />
+    </div>
   );
 }
-export default Password
+export default Password;

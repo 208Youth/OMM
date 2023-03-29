@@ -2,15 +2,21 @@ import React, { useEffect, useState } from 'react';
 import './Signup.css';
 import Modal from 'react-modal';
 import { useSelector, useDispatch } from 'react-redux';
+// import { EthrDID } from 'ethr-did';
+// import EthrDidResolver from 'ethr-did-resolver';
+// import { getResolver } from 'ethr-did-resolver';
 import FaceRecogModal from './FaceRecogModal';
 import IdenModal from './IdenModal';
+import PasswordModal from './PasswordModal';
 import { userInfo } from '../../store';
 
 function Signup() {
   const [faceModal, setFaceModal] = useState(false);
-  const [faceComplete, setFaceComplete] = useState(false);
+  const [faceComplete, setFaceComplete] = useState(true);
   const [idenModal, setIdenModal] = useState(false);
-  const [idenComplete, setIdenComplete] = useState(false);
+  const [idenComplete, setIdenComplete] = useState(true);
+  const [passwordModal, setPasswordModal] = useState(false);
+  const [passwordComplete, setPasswordComplete] = useState(true);
   const [name, setName] = useState(null);
   const [year, setYear] = useState('1980');
   const [month, setMonth] = useState('1');
@@ -29,11 +35,19 @@ function Signup() {
     dispatch(userInfo(info));
   };
   const signup = function () {
-    console.log(name);
-    console.log(year);
-    console.log(month);
-    console.log(day);
-    console.log(gender);
+    const Info = {
+      name,
+      year,
+      gender,
+    };
+    console.log(Info);
+    window.localStorage.setItem('Info', JSON.stringify(Info));
+    const keypair = EthrDID.createKeyPair();
+    console.log(keypair);
+    const chainNameOrId = 'goerli'; // you can use the network name for the most popular [test] networks.
+    const ethrDidOnGoerliNamed = new EthrDID({ ...keypair, chainNameOrId });
+    console.log(ethrDidOnGoerliNamed);
+    window.localStorage.setItem('DID', ethrDidOnGoerliNamed);
   };
 
   useEffect(() => {
@@ -94,6 +108,22 @@ function Signup() {
           setIdenComplete={(res) => {
             if (res) {
               setIdenComplete(true);
+            }
+          }}
+        />
+      </Modal>
+      <Modal
+        isOpen={passwordModal}
+        onRequestClose={() => setPasswordModal(false)}
+        ariaHideApp={false}
+        className="Modal"
+        overlayClassName="Overlay"
+      >
+        <PasswordModal
+          setPasswordModal={setPasswordModal}
+          setPasswordComplete={(res) => {
+            if (res) {
+              setPasswordComplete(true);
             }
           }}
         />
@@ -216,7 +246,7 @@ function Signup() {
                   }}
                   className=" inline text-white bg-[#4654a3] hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mt-1 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 >
-                  촬영
+                  첨부
                 </div>
                 <svg
                   className={faceComplete ? 'hidden' : 'checkmark'}
@@ -292,10 +322,60 @@ function Signup() {
                 </svg>
               </div>
             </div>
+            <div className="grid grid-cols-6 gap-4 my-6">
+              <div htmlFor="face" className="col-start-1 col-end-3 inline">
+                비밀번호
+              </div>
+              <div className="col-end-7 col-span-2">
+                <div
+                  onClick={() => {
+                    setPasswordModal(true);
+                  }}
+                  className="inline text-white bg-[#4654a3] hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  설정
+                </div>
+                <svg
+                  className={passwordComplete ? 'hidden' : 'checkmark'}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <svg
+                  className={passwordComplete ? 'checkmark' : 'hidden'}
+                  fill="#4654a3"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <path
+                    clipRule="evenodd"
+                    fillRule="evenodd"
+                    d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z"
+                  />
+                </svg>
+              </div>
+            </div>
             <div className="mx-auto text-center">
-              <button onClick={signup} type="submit" className="btn">
-                회원 가입
-              </button>
+              {!(faceComplete && idenComplete && passwordComplete) && (
+                <button disabled type="button" className="btn">
+                  회원 가입
+                </button>
+              )}
+              {faceComplete && idenComplete && passwordComplete && (
+                <button onClick={signup} type="button" className="btn">
+                  회원 가입
+                </button>
+              )}
             </div>
           </div>
         </form>

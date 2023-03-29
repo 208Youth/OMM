@@ -102,6 +102,8 @@ function FaceRecogModal({ setFaceModal, setFaceComplete, name }) {
         <button
           onClick={() => {
             sendImg();
+            setFaceComplete(true);
+            setFaceModal(false);
           }}
           className={completed ? 'btn-active' : 'btn-inactive'}
         >
