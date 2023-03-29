@@ -6,22 +6,22 @@ import React, { useState, useEffect } from 'react';
 import './Profile.css';
 import CloseBtn from '../../assets/CloseBtn.svg';
 
-function MyinfoSetModal({ setModal }) {
+function MyinfoSetModal2({ setModal }) {
   const [myinfo, setMyInfo] = useState({
-    height: '',
-    contact_stlye: '',
+    age_min: '',
+    age_max: '',
+    height_min: '',
+    height_max: '',
+    weight_min: '',
+    weight_max: '',
+    range_min: '',
+    range_max: '',
+    contact_style: '',
     drinking_stlye: '',
     smoking_stlye: '',
-    military: '',
-    pet: '',
 
   });
-  const [mbti, setMbti] = useState(['', '', '', '']);
-  const handleMbtiChange = (index, value) => {
-    const newMbti = [...mbti];
-    newMbti[index] = value;
-    setMbti(newMbti);
-  };
+
   // const data = {
   //   height, contact_stlye, drinking_stlye, smoking_stlye, military, pet, MBTI: mbti,
   // };
@@ -34,7 +34,7 @@ function MyinfoSetModal({ setModal }) {
   // };
   useEffect(() => {
     console.log(myinfo);
-    console.log(mbti);
+    // console.log(mbti);
   }, [myinfo]);
 
   return (
@@ -49,7 +49,7 @@ function MyinfoSetModal({ setModal }) {
         />
       </div>
       <div className="">
-        <h1>내 정보</h1>
+        <h1>선호하는 상대 정보</h1>
         <div className="">
           <div className="flex justify-between m-3">
             <span>키</span>
@@ -67,7 +67,7 @@ function MyinfoSetModal({ setModal }) {
                     onClick={(e) => {
                       setMyInfo((prevInfo) => ({
                         ...prevInfo,
-                        drinking_style: e.target.value,
+                        favor_drinking_style: e.target.value,
                       }));
                     }}
                     id={`drink${index + 1}`}
@@ -103,7 +103,7 @@ function MyinfoSetModal({ setModal }) {
                     onClick={(e) => {
                       setMyInfo((prevInfo) => ({
                         ...prevInfo,
-                        contact_stlye: e.target.value,
+                        favor_contact_stlye: e.target.value,
                       }));
                     }}
                     id={`contact${index + 1}`}
@@ -139,7 +139,7 @@ function MyinfoSetModal({ setModal }) {
                     onClick={(e) => {
                       setMyInfo((prevInfo) => ({
                         ...prevInfo,
-                        smoking_style: e.target.value,
+                        favor_smoking_style: e.target.value,
                       }));
                     }}
                     id={`smoke${index + 1}`}
@@ -162,99 +162,8 @@ function MyinfoSetModal({ setModal }) {
             </div>
           </div>
 
-          <div className="my-8 mx-8">
-            <h3 className="text-[#364C63] block mb-5 text-base">
-              병무사항
-            </h3>
-            <div className="grid grid-rows-3 grid-flow-col">
-              {['NONE', 'EXEMPT', 'COMPLETE', 'YET'].map((style, index) => (
-                <div key={index} className={index >= 0 ? 'ml-1' : ''}>
-                  <input
-                    onClick={(e) => {
-                      setMyInfo((prevInfo) => ({
-                        ...prevInfo,
-                        military: e.target.value,
-                      }));
-                    }}
-                    id={`military${index + 1}`}
-                    type="radio"
-                    name="military"
-                    value={style}
-                    className={`peer/military${index + 1}`}
-                  />
-                  <label
-                    htmlFor={`military${index + 1}`}
-                    className={`peer-checked/military${index + 1}:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1`}
-                  >
-                    {style === 'NONE' ? '해당없음'
-                      : style === 'EXEMPT' ? '면제'
-                        : style === 'COMPLETE' ? '군필'
-                          : style === 'YET' ? '미필'
-                            : ''}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="my-8 mx-8">
-            <h3 className="text-[#364C63] block mb-5 text-base">
-              MBTI
-            </h3>
-            <div className="grid grid-rows-2 grid-flow-col">
-              <button className="border border-black m-1 rounded" onClick={() => handleMbtiChange(0, 'I')}>I</button>
-              <button className="border border-black m-1 rounded" onClick={() => handleMbtiChange(0, 'E')}>E</button>
-              <button className="border border-black m-1 rounded" onClick={() => handleMbtiChange(1, 'N')}>N</button>
-              <button className="border border-black m-1 rounded" onClick={() => handleMbtiChange(1, 'S')}>S</button>
-              <button className="border border-black m-1 rounded" onClick={() => handleMbtiChange(2, 'T')}>T</button>
-              <button className="border border-black m-1 rounded" onClick={() => handleMbtiChange(2, 'F')}>F</button>
-              <button className="border border-black m-1 rounded" onClick={() => handleMbtiChange(3, 'J')}>J</button>
-              <button className="border border-black m-1 rounded" onClick={() => handleMbtiChange(3, 'P')}>P</button>
-              <div>
-                MBTI:
-                {' '}
-                {mbti.join('')}
-              </div>
-            </div>
-
-          </div>
-          <div className="my-8 mx-8">
-            <h3 className="text-[#364C63] block mb-5 text-base">
-              반려동물
-            </h3>
-            <div className="grid grid-rows-3 grid-flow-col">
-              {['NOT', 'DOG', 'CAT', 'HAMSTER', 'LIZARD', 'ETC'].map((style, index) => (
-                <div key={index} className={index >= 0 ? 'ml-1' : ''}>
-                  <input
-                    onClick={(e) => {
-                      setMyInfo((prevInfo) => ({
-                        ...prevInfo,
-                        drinking_style: e.target.value,
-                      }));
-                    }}
-                    id={`drink${index + 1}`}
-                    type="radio"
-                    name="drink"
-                    value={style}
-                    className={`peer/drink${index + 1}`}
-                  />
-                  <label
-                    htmlFor={`drink${index + 1}`}
-                    className={`peer-checked/drink${index + 1}:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1`}
-                  >
-                    {style === 'NOT' ? '없음'
-                      : style === 'DOG' ? '강아지'
-                        : style === 'CAT' ? '고양이'
-                          : style === 'HAMSTER' ? '햄스터'
-                            : style === 'LIZARD' ? '도마뱀'
-                              : style === 'ETC' ? '기타' : ''}
-                  </label>
-                </div>
-              ))}
-
-            </div>
-            <div className="text-center mt-3">
-              <button className="border border-black w-16 h-7 bg-white rounded-lg ">제출</button>
-            </div>
+          <div className="text-center mt-3">
+            <button className="border border-black w-16 h-7 bg-white rounded-lg ">제출</button>
           </div>
 
         </div>
@@ -265,4 +174,4 @@ function MyinfoSetModal({ setModal }) {
   );
 }
 
-export default MyinfoSetModal;
+export default MyinfoSetModal2;

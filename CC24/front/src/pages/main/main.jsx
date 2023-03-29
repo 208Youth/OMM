@@ -42,7 +42,7 @@ function Main() {
         </div> */}
       </div>
       <Carousel1 />
-      <Navbar className="fixed" />
+      <Navbar className="fixed" disabled={}/>
     </div>
   );
 }

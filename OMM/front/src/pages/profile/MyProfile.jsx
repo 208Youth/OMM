@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Pslider.css';
+// import './Profile.css';
+import Modal from 'react-modal';
 import axios from 'axios';
 import CloseBtn from '../../assets/CloseBtn.svg';
 import pencil from '../../assets/pencil.svg';
@@ -22,6 +24,8 @@ import location from '../../assets/location.svg';
 import Pslider from '../../components/Pslider';
 import Navbar from '../../components/nav-bar';
 import userarrow from '../../assets/userarrow.svg';
+import MyinfoSetModal from './MyinfoSetModal';
+import MyinfoSetModal2 from './MyinfoSetModal2';
 
 // props를 통해 userid를 받고 claose 버튼을 눌러서 해당 userid의
 // 아니면 메인 페이지에 해당 컴포넌트를 아예 합쳐버릴까
@@ -49,7 +53,20 @@ function MyProfile({ profileNav }) {
       name: '관심사 이름3',
     },
   ];
-
+  const [MymodalIsOpen, setMyIsOpen] = useState(false);
+  const [MymodalIsOpen2, setMyIsOpen2] = useState(true);
+  const openMyModal = () => {
+    setMyIsOpen(true);
+  };
+  const closeMyModal = () => {
+    setMyIsOpen(false);
+  };
+  const openMyModal2 = () => {
+    setMyIsOpen2(true);
+  };
+  const closeMyModal2 = () => {
+    setMyIsOpen2(false);
+  };
   const [new_certinfo, setCert] = useState(certinfo);
   const [new_interest, setInterest] = useState(null);
   // const [isHovered, setIsHovered] = useState(false);
@@ -103,8 +120,27 @@ function MyProfile({ profileNav }) {
   // 그 이후에는 호출되지 않습니다.
   return (
 
-    <div>
+    <div className="scroll-smooth">
+      <div className="z-10">
 
+        <Modal
+          className="MyinfoModal"
+          isOpen={MymodalIsOpen}
+          onRequestClose={closeMyModal}
+        >
+          <MyinfoSetModal setModal={closeMyModal} />
+        </Modal>
+      </div>
+      <div className="z-10">
+
+        <Modal
+          className="MyinfoModal"
+          isOpen={MymodalIsOpen2}
+          onRequestClose={closeMyModal2}
+        >
+          <MyinfoSetModal2 setModal={closeMyModal2} />
+        </Modal>
+      </div>
       <div>
         <div className="absolute top-20 left-0 w-full z-5">
           <Pslider />
@@ -170,7 +206,18 @@ function MyProfile({ profileNav }) {
                   <div>
                     <div className="flex items-center">
                       <span className="">180 cm</span>
-                      <div><img src={userarrow} alt="" className="w-3 ml-2" /></div>
+                      <div onClick={() => {
+                        openMyModal();
+                      }}
+                      >
+
+                        <img
+                          src={userarrow}
+                          alt=""
+                          className="w-3 ml-2"
+                        />
+
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -185,7 +232,13 @@ function MyProfile({ profileNav }) {
                   <div>
                     <div className="flex items-center">
                       <span className="">{}</span>
-                      <div><img src={userarrow} alt="" className="w-3 ml-2" /></div>
+                      <div onClick={() => {
+                        openMyModal();
+                      }}
+                      >
+                        <img src={userarrow} alt="" className="w-3 ml-2" />
+
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -199,7 +252,13 @@ function MyProfile({ profileNav }) {
                   <div>
                     <div className="flex items-center">
                       <span className="">{}</span>
-                      <div><img src={userarrow} alt="" className="w-3 ml-2" /></div>
+                      <div onClick={() => {
+                        openMyModal();
+                      }}
+                      >
+                        <img src={userarrow} alt="" className="w-3 ml-2" />
+
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -213,7 +272,13 @@ function MyProfile({ profileNav }) {
                   <div>
                     <div className="flex items-center">
                       <span className="">{}</span>
-                      <div><img src={userarrow} alt="" className="w-3 ml-2" /></div>
+                      <div onClick={() => {
+                        openMyModal();
+                      }}
+                      >
+                        <img src={userarrow} alt="" className="w-3 ml-2" />
+
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -227,7 +292,13 @@ function MyProfile({ profileNav }) {
                   <div>
                     <div className="flex items-center">
                       <span className="">{}</span>
-                      <div><img src={userarrow} alt="" className="w-3 ml-2" /></div>
+                      <div onClick={() => {
+                        openMyModal();
+                      }}
+                      >
+                        <img src={userarrow} alt="" className="w-3 ml-2" />
+
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -241,7 +312,13 @@ function MyProfile({ profileNav }) {
                   <div>
                     <div className="flex items-center">
                       <span className="">{}</span>
-                      <div><img src={userarrow} alt="" className="w-3 ml-2" /></div>
+                      <div onClick={() => {
+                        openMyModal();
+                      }}
+                      >
+                        <img src={userarrow} alt="" className="w-3 ml-2" />
+
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -269,7 +346,13 @@ function MyProfile({ profileNav }) {
                   <div>
                     <div className="flex items-center">
                       <span className="">{}</span>
-                      <div><img src={userarrow} alt="" className="w-3 ml-2" /></div>
+                      <div onClick={() => {
+                        openMyModal();
+                      }}
+                      >
+                        <img src={userarrow} alt="" className="w-3 ml-2" />
+
+                      </div>
                     </div>
                   </div>
                 </div>
