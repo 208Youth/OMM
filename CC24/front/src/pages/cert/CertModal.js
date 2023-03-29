@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import axios from 'axios';
 import React, { useState } from 'react';
 import { ReactSearchAutocomplete } from 'react-search-autocomplete';
@@ -31,35 +33,40 @@ function CertModal({ cert, info, isClose }) {
     <span style={{ display: 'block', textAlign: 'left' }}>{item.name}</span>
   );
 
+  const localData = JSON.parse(localStorage.getItem('DID'))
+
   async function requestCert(api) {
-    let selectCert = '';
+    let credentialName = '';
     if (api === '대학교') {
-      selectCert = 'university';
+      credentialName = 'UniversityCredential';
     } else if (api === '자격증') {
-      selectCert = 'certificate';
+      credentialName = 'certificate';
     } else if (api === '회사') {
-      selectCert = 'job';
+      credentialName = 'job';
     } else if (api === '소득') {
-      selectCert = 'income';
+      credentialName = 'income';
     } else if (api === '부동산') {
-      selectCert = 'estate';
+      credentialName = 'estate';
     } else if (api === '건강검진서') {
-      selectCert = 'health';
+      credentialName = 'health';
     }
     await axios({
-      method: 'get',
-      url: `/api/cert/${selectCert}${select.id ? `/${select.id}` : ''}`,
+      method: 'post',
+      url: `http://localhost:4424/did/credential`,
       data: {
-        name: '이름',
-        birth_date: '0000-00-00',
-      },
-      headers: {
-        // Authorization: token,
+        holderDid: `did:ethr:goerli:${localData.identifier}`,
+        vpJwt: "eyJhbGciOiJFUzI1NkstUiIsInR5cCI6IkpXVCJ9.eyJ2cCI6eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSJdLCJ0eXBlIjpbIlZlcmlmaWFibGVQcmVzZW50YXRpb24iXSwidmVyaWZpYWJsZUNyZWRlbnRpYWwiOlsiZXlKaGJHY2lPaUpGVXpJMU5rc3RVaUlzSW5SNWNDSTZJa3BYVkNKOS5leUpsZUhBaU9qRTJPREkzTlRjMU9USXNJblpqSWpwN0lrQmpiMjUwWlhoMElqcGJJbWgwZEhCek9pOHZkM2QzTG5jekxtOXlaeTh5TURFNEwyTnlaV1JsYm5ScFlXeHpMM1l4SWwwc0luUjVjR1VpT2xzaVZtVnlhV1pwWVdKc1pVTnlaV1JsYm5ScFlXd2lMQ0pRWlhKemIyNWhiRWxrUTNKbFpHVnVkR2xoYkNKZExDSmpjbVZrWlc1MGFXRnNVM1ZpYW1WamRDSTZleUp3WlhKemIyNWhiRWx1Wm04aU9uc2libUZ0WlNJNkl1cTVnT3ljcE91dnVDSXNJbUpwY25Sb1pHRjBaU0k2SWpFNU9Ua3RNVEV0TVRZaUxDSm5aVzVrWlhJaU9pSkdSVTFCVEVVaWZYMTlMQ0p6ZFdJaU9pSmthV1E2WlhSb2NqcG5iMlZ5YkdrNk1IZ3dNMlJtT0dVMU5HRXpNR1V6T1RBMlpESTBNMlEzTkRBeVl6VTVZamd5WWpWa09EVTBNakl6WW1FellXVTVOamxsWVRJelpESmpNVEppT0dSaE5EbGpOV1VpTENKcGMzTWlPaUprYVdRNlpYUm9janBuYjJWeWJHazZNSGd3TXpBM1pqUmtPRFUzTVdSa056WmpOakZqTUdJMVl6aGxaV1ppT0RBMU4yVTRORGxqWWpjd1pUSXdNV014WWpCa016TXhaV1U1Tnpaa09UVXpOMkkzTTJJaWZRLng5Qnd6bFpjSDhTd21NeXJDbzdVZFdpNUIzZW1WSldaZWJ0RHd6ZGlJNldsd1drSW9BVW56dC12SmxxVnZnOFo0amZNYTRnR3BZM3JWUnhiNlFCQjJBQSJdfSwiaXNzIjoiZGlkOmV0aHI6Z29lcmxpOjB4MDNkZjhlNTRhMzBlMzkwNmQyNDNkNzQwMmM1OWI4MmI1ZDg1NDIyM2JhM2FlOTY5ZWEyM2QyYzEyYjhkYTQ5YzVlIn0.aaQ-BH_yEonZanA95Afb2yRGHbNMLfpXwymvPYywWRr3Iq8fl8qmAWdT-97btV21jNNDgA1XBTccqZM5_rIa5wA",
+        credentialName: credentialName,
+        id: select.id
       },
     })
       .then((res) => {
         console.log(res);
         setCertResult(res);
+        const VC = {
+          credentialName: res.data.vpJwt
+        }
+        localStorage.setItem('VC',[])
       })
       .catch((err) => {
         console.log(err);

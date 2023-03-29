@@ -10,8 +10,10 @@ import FaceRecogModal from './FaceRecogModal';
 import IdenModal from './IdenModal';
 import PasswordModal from './PasswordModal';
 import { userInfo } from '../../store';
+import { useNavigate } from "react-router-dom";
 
 function Signup() {
+  const navigate = useNavigate();
   const [faceModal, setFaceModal] = useState(false);
   const [faceComplete, setFaceComplete] = useState(true);
   const [idenModal, setIdenModal] = useState(false);
@@ -24,6 +26,7 @@ function Signup() {
   const [day, setDay] = useState('1');
   const [gender, setGender] = useState(null);
   const dispatch = useDispatch();
+  
   const sendInfo = () => {
     const info = {
       name,
@@ -48,9 +51,10 @@ function Signup() {
     const chainNameOrId = 'goerli'; // you can use the network name for the most popular [test] networks.
     const ethrDidOnGoerliNamed = new EthrDID({ ...keypair, chainNameOrId });
     console.log(ethrDidOnGoerliNamed);
-    window.localStorage.setItem('DID', JSON.stringify(ethrDidOnGoerliNamed));
+    window.localStorage.setItem('DID', JSON.stringify(keypair));
     const localData = JSON.parse(localStorage.getItem('DID'));
     console.log(localData.did);
+    navigate("/main")
   };
 
   useEffect(() => {
