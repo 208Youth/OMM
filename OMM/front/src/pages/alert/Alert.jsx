@@ -5,16 +5,15 @@ import Navbar from '../../components/nav-bar';
 import AlertMsg from '../../components/AlertMsg';
 
 function Alert() {
-  const ws = new SockJS('http://localhost:5000/api/matching');
-  const stompClient = Stomp.over(ws);
-
   const connect = () => {
     /*
-      페이지 렌더링 후 실행되는 connect()
-      /chat/rooms 라는 경로를 구독하겠다
-      구독한 채널에서 Publish된 메세지가 왔을 때
-      처리 (recvRoom())
+    페이지 렌더링 후 실행되는 connect()
+    /chat/rooms 라는 경로를 구독하겠다
+    구독한 채널에서 Publish된 메세지가 왔을 때
+    처리 (recvRoom())
     */
+    const ws = new SockJS('http://localhost:5000/api/matching');
+    const stompClient = Stomp.over(ws);
     stompClient.connect(
       {},
       (frame) => {
@@ -42,8 +41,8 @@ function Alert() {
   }, []);
 
   return (
-    <div className="text-[#364C63] w-fit mx-auto">
-      <div className="text-2xl mx-6 my-8">
+    <div className="text-[#364C63] w-fit h-[48.75rem] mx-auto">
+      <div className="text-2xl mx-6 py-8">
         <span>&lt;</span>
         <span className="ml-3 font-sans font-bold">Notification</span>
       </div>
