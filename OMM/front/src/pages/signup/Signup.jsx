@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Signup.css';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function Signup() {
   const [name, setName] = useState(null);
@@ -9,7 +9,15 @@ function Signup() {
   const [day, setDay] = useState(null);
   const [gender, setGender] = useState(null);
 
-  const signup = function () {
+  const navigate = useNavigate();
+
+  const goFaceRecog = () => {
+    navigate('/faceRecog/signup', {
+      state: { page: 'signup' },
+    });
+  };
+
+  const signup = () => {
     console.log(name);
     console.log(year);
     console.log(month);
@@ -35,10 +43,18 @@ function Signup() {
         <img src="../../../public/heart-step-0.svg" alt="" />
       </div>
       <div className="flex-col w-80 mx-auto">
-        <p className="text-3xl my-4 text-center leading-relaxed mx-auto" onClick={signup}>
+        <p
+          className="text-3xl my-4 text-center leading-relaxed mx-auto"
+          onClick={signup}
+          aria-hidden="true"
+        >
           회원가입
         </p>
-        <p className="text-md my-4 text-center leading-relaxed mx-auto" onClick={signup}>
+        <p
+          className="text-md my-4 text-center leading-relaxed mx-auto"
+          onClick={signup}
+          aria-hidden="true"
+        >
           신분증과 비교할 정보를 입력해 주세요.
         </p>
         <form>
@@ -142,15 +158,16 @@ function Signup() {
                 </label>
               </div>
             </div>
-            <div class="flex justify-between">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-              </svg>
-              <Link to="/FaceRecog">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                </svg>
-              </Link>
+            <div className="flex justify-between mx-8 text-[#364C63] text-lg">
+              <div>&lt; </div>
+              <div
+                aria-hidden
+                onClick={() => {
+                  goFaceRecog();
+                }}
+              >
+                &gt;
+              </div>
             </div>
           </div>
         </form>

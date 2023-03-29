@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.3",
+    "@stomp/stompjs": "^7.0.0",
     "axios": "^1.3.4",
     "bootstrap-icons": "^1.10.3",
     "face-api.js": "^0.22.2",
@@ -18,12 +19,16 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-kakao-maps-sdk": "^1.1.7",
+    "react-dropzone": "^14.2.3",
     "react-modal": "^3.16.1",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.9.0",
     "redux-persist": "^6.0.0",
     "sass": "^1.60.0",
-    "swiper": "^9.1.1"
+    "sockjs-client": "^1.6.1",
+    "stompjs": "^2.3.3",
+    "swiper": "^9.1.1",
+    "websocket": "^1.0.34"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",
