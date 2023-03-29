@@ -1,33 +1,35 @@
 import React, { useRef } from 'react';
 // import SockJS from 'sockjs-client';
-// import Stomp from 'stompjs';
+import SockJS from 'sockjs-client/dist/sockjs';
+import Stomp from 'stompjs';
 import './nav-bar.scss';
 import { Link } from 'react-router-dom';
 
 function Navbar({ profileNav, mainNav, notiNav }) {
-  // const ws = new SockJS('http://localhost:5173/notification');
-  // const stompClient = Stomp.over(ws);
+  const ws = new SockJS('http://localhost:5000/api/matching');
+  const stompClient = Stomp.over(ws);
 
-  // const sendMatch = () => {
-  //   // redux 에서 첫번째사람 지우는 함수 작성
-  //   // match 알림 보내기
-  //   stompClient.connect({}, (frame) => {
-  //     stompClient.send(
-  //       '/api/pub/matching/noti',
-  //       {},
-  //       JSON.stringify({ receiverId: '좋아요보낸 상대 ID' }),
-  //     );
-  //     // stompClient.disconnect();
-  //   });
-  // };
+  const sendMatch = () => {
+    // redux 에서 첫번째사람 지우는 함수 작성
+    // match 알림 보내기
+    stompClient.connect({}, (frame) => {
+      stompClient.send(
+        '/api/pub/matching/noti',
+        {},
+        JSON.stringify({ receiverId: 1 }),
+      );
+      // stompClient.disconnect();
+    });
+  };
+
   return (
     <div className="flex justify-center">
       <nav className="menu">
-        <Link href="#" class="menu-item">
+        <Link href="#" className="menu-item">
           <i className="bi bi-search-heart transition duration-300 hover:scale-125" />
           <i className="bi bi-search-heart-fill scale-125" />
         </Link>
-        <Link href="#" class="menu-item">
+        <Link href="#" className="menu-item">
           <i className="bi bi-chat-heart transition duration-300 hover:scale-125" />
           <i className="bi bi-chat-heart-fill scale-125" />
         </Link>
@@ -50,7 +52,7 @@ function Navbar({ profileNav, mainNav, notiNav }) {
               src="/ommheart.png"
               alt=""
               onClick={() => {
-                // sendMatch();
+                sendMatch();
               }}
               aria-hidden="true"
             />
@@ -59,14 +61,14 @@ function Navbar({ profileNav, mainNav, notiNav }) {
         <div className="menu-item">
           {notiNav && <i className="bi bi-bell-fill scale-125" />}
           {!notiNav && (
-            <Link to="/notification" class="menu-item">
+            <Link to="/notification" className="menu-item">
               <i className="bi bi-bell transition duration-300 hover:scale-125" />
             </Link>
           )}
         </div>
         <div className="menu-item">
           {!profileNav && (
-            <Link to="/Myprofile" class="menu-item">
+            <Link to="/Myprofile" className="menu-item">
               <i className="bi bi-person transition duration-300 hover:scale-125" />
             </Link>
           )}
