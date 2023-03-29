@@ -20,7 +20,7 @@ public class ChatWebSocketConfig implements WebSocketMessageBrokerConfigurer {
      */
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.setApplicationDestinationPrefixes("/pub");
+        registry.setApplicationDestinationPrefixes(path + "/pub");
         registry.enableSimpleBroker("/sub");
     }
 
@@ -30,7 +30,7 @@ public class ChatWebSocketConfig implements WebSocketMessageBrokerConfigurer {
      */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint(path + "/chat").setAllowedOriginPatterns("*").withSockJS();
-        registry.addEndpoint(path + "/matching").setAllowedOriginPatterns("*").withSockJS();
+        registry.addEndpoint("/chat").setAllowedOriginPatterns("*").withSockJS();
+        registry.addEndpoint("/matching").setAllowedOriginPatterns("*").withSockJS();
     }
 }
