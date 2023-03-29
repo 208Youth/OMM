@@ -57,4 +57,13 @@ public class MatchingRepository {
     public List<Notification> getNotifications(Long id) {
         return opsListNotification.range(id, 0, -1);
     }
+
+    /**
+     * 알림 삭제
+     * @param receiverId
+     * @param notification
+     */
+    public void deleteNotification(Long receiverId, Notification notification) {
+        opsListNotification.remove(receiverId, 1, notification);
+    }
 }

@@ -1,6 +1,7 @@
 package com.omm.matching.controller;
 
 import com.omm.matching.model.dto.request.CreateNotificationRequestDto;
+import com.omm.matching.model.dto.request.DeleteNotificationRequestDto;
 import com.omm.matching.model.dto.response.NotificationResponseDto;
 import com.omm.matching.model.entity.Notification;
 import com.omm.matching.service.MatchingService;
@@ -10,6 +11,7 @@ import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,5 +43,16 @@ public class MatchingController {
     public ResponseEntity<?> getNotifications() {
         List<NotificationResponseDto> notifications = matchingService.getNotifications();
         return new ResponseEntity<>(notifications, HttpStatus.OK);
+    }
+
+    /**
+     * 알림 삭제
+     * @param deleteNotificationRequestDto
+     * @return
+     */
+    @DeleteMapping("/matching/noti")
+    public ResponseEntity<?> deleteNotification(@RequestBody DeleteNotificationRequestDto deleteNotificationRequestDto) {
+        matchingService.deleteNotification(deleteNotificationRequestDto);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

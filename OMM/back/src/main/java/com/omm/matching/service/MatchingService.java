@@ -1,6 +1,7 @@
 package com.omm.matching.service;
 
 import com.omm.exception.CustomException;
+import com.omm.matching.model.dto.request.DeleteNotificationRequestDto;
 import com.omm.matching.model.dto.response.NotificationResponseDto;
 import com.omm.matching.model.entity.Notification;
 import com.omm.matching.repository.MatchingRepository;
@@ -62,6 +63,20 @@ public class MatchingService {
             notificationResponseDtos.add(getNotificationResponseDto(member, notification));
         });
         return notificationResponseDtos;
+    }
+
+    /**
+     * 알림 삭제
+     * @param deleteNotificationRequestDto
+     */
+    public void deleteNotification(DeleteNotificationRequestDto deleteNotificationRequestDto) {
+        Notification notification = Notification.builder()
+                .id(deleteNotificationRequestDto.getId())
+                .senderId(deleteNotificationRequestDto.getSenderId())
+                .createdTime(deleteNotificationRequestDto.getCreatedTime())
+                .build();
+        Member member = getSender();
+        matchingRepository.deleteNotification(member.getId(), notification);
     }
 
     /**
