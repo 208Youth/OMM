@@ -1,8 +1,25 @@
-import React from 'react';
+import React, { useRef } from 'react';
+// import SockJS from 'sockjs-client';
+// import Stomp from 'stompjs';
 import './nav-bar.scss';
 import { Link } from 'react-router-dom';
 
 function Navbar({ profileNav, mainNav, notiNav }) {
+  // const ws = new SockJS('http://localhost:5173/notification');
+  // const stompClient = Stomp.over(ws);
+
+  // const sendMatch = () => {
+  //   // redux 에서 첫번째사람 지우는 함수 작성
+  //   // match 알림 보내기
+  //   stompClient.connect({}, (frame) => {
+  //     stompClient.send(
+  //       '/api/pub/matching/noti',
+  //       {},
+  //       JSON.stringify({ receiverId: '좋아요보낸 상대 ID' }),
+  //     );
+  //     // stompClient.disconnect();
+  //   });
+  // };
   return (
     <div className="flex justify-center">
       <nav className="menu">
@@ -32,6 +49,10 @@ function Navbar({ profileNav, mainNav, notiNav }) {
               className="w-10 h-10 mx-auto my-auto"
               src="/ommheart.png"
               alt=""
+              onClick={() => {
+                // sendMatch();
+              }}
+              aria-hidden="true"
             />
           </div>
         )}
