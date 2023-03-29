@@ -2,7 +2,7 @@ import React from 'react';
 import './nav-bar.scss';
 import { Link } from 'react-router-dom';
 
-function Navbar({ profileNav, mainNav }) {
+function Navbar({ profileNav, mainNav, notiNav }) {
   return (
     <div className="flex justify-center">
       <nav className="menu">
@@ -35,10 +35,14 @@ function Navbar({ profileNav, mainNav }) {
             />
           </div>
         )}
-        <Link href="#" class="menu-item">
-          <i className="bi bi-bell transition duration-300 hover:scale-125" />
-          <i className="bi bi-bell-fill scale-125" />
-        </Link>
+        <div className="menu-item">
+          {notiNav && <i className="bi bi-bell-fill scale-125" />}
+          {!notiNav && (
+            <Link to="/notification" class="menu-item">
+              <i className="bi bi-bell transition duration-300 hover:scale-125" />
+            </Link>
+          )}
+        </div>
         <div className="menu-item">
           {!profileNav && (
             <Link to="/Myprofile" class="menu-item">
