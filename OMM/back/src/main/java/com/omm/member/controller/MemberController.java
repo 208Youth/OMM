@@ -3,6 +3,7 @@ package com.omm.member.controller;
 import com.omm.member.model.dto.MemberCertDto;
 import com.omm.member.model.request.*;
 import com.omm.member.service.MemberService;
+import com.omm.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,10 +47,7 @@ public class MemberController {
      */
     @PostMapping("/info")
     public ResponseEntity<?> initMemberInfo(@RequestBody InitMemberInfoRequestDto initMemberInfoRequestDto) {
-//        memberService.createMember(initMemberInfoRequestDto.getNickname());
-        String currentMemberDidAddress = "0xa9f7ceead33163a2f7ec3f3c4deae42a6e8907c2"; // 테스트 데이터의 1번 회원
-
-        memberService.initMemberInfo(currentMemberDidAddress, initMemberInfoRequestDto);
+        memberService.initMemberInfo(SecurityUtil.getCurrentDidAddress().get(), initMemberInfoRequestDto);
         return new ResponseEntity<>("회원 등록 성공", HttpStatus.OK);
     }
 
@@ -62,9 +60,8 @@ public class MemberController {
     @PostMapping("/filtering")
     public ResponseEntity<?> initMemberFiltering(@RequestBody InitMemberFilteringRequestDto initMemberFilteringRequestDto) {
         // 유저 생성
-        String currentMemberDidAddress = "0xa9f7ceead33163a2f7ec3f3c4deae42a6e8907c2"; // 테스트 데이터의 1번 회원
 
-        memberService.initMemberFiltering(currentMemberDidAddress, initMemberFilteringRequestDto);
+        memberService.initMemberFiltering(SecurityUtil.getCurrentDidAddress().get(), initMemberFilteringRequestDto);
         return new ResponseEntity<>("선호 상대 정보 등록 성공", HttpStatus.OK);
     }
 
@@ -86,8 +83,7 @@ public class MemberController {
      */
     @GetMapping("/filtering")
     public ResponseEntity<?> getMemberFiltering() {
-        String currentMemberDidAddress = "0xa9f7ceead33163a2f7ec3f3c4deae42a6e8907c2"; // 테스트 데이터의 1번 회원
-        return new ResponseEntity<>(memberService.getMemberFiltering(currentMemberDidAddress), HttpStatus.OK);
+        return new ResponseEntity<>(memberService.getMemberFiltering(SecurityUtil.getCurrentDidAddress().get()), HttpStatus.OK);
     }
 
     /**
@@ -98,9 +94,7 @@ public class MemberController {
      */
     @PostMapping("/img")
     public ResponseEntity<?> postMemberImages(@RequestBody UploadImageRequestDto uploadImageRequestDto) {
-        String currentMemberDidAddress = "0xa9f7ceead33163a2f7ec3f3c4deae42a6e8907c2"; // 테스트 데이터의 1번 회원
-
-        memberService.postMemberImages(currentMemberDidAddress, uploadImageRequestDto);
+        memberService.postMemberImages(SecurityUtil.getCurrentDidAddress().get(), uploadImageRequestDto);
         return new ResponseEntity<>("사진 등록을 성공했습니다.", HttpStatus.OK);
     }
 
@@ -112,9 +106,7 @@ public class MemberController {
      */
     @PutMapping("/img")
     public ResponseEntity<?> putMemberImages(@RequestBody UploadImageRequestDto uploadImageRequestDto) {
-        String currentMemberDidAddress = "0xa9f7ceead33163a2f7ec3f3c4deae42a6e8907c2"; // 테스트 데이터의 1번 회원
-
-        memberService.putMemberImages(currentMemberDidAddress, uploadImageRequestDto);
+        memberService.putMemberImages(SecurityUtil.getCurrentDidAddress().get(), uploadImageRequestDto);
         return new ResponseEntity<>("사진 교체에 성공했습니다.", HttpStatus.OK);
     }
 
@@ -126,9 +118,7 @@ public class MemberController {
      */
     @PutMapping("/info")
     public ResponseEntity<?> putMemberInfo(@RequestBody PutMemberInfoRequestDto putMemberInfoRequestDto) {
-        String currentMemberDidAddress = "0xa9f7ceead33163a2f7ec3f3c4deae42a6e8907c2"; // 테스트 데이터의 1번 회원
-
-        memberService.putMemberInfo(currentMemberDidAddress, putMemberInfoRequestDto);
+        memberService.putMemberInfo(SecurityUtil.getCurrentDidAddress().get(), putMemberInfoRequestDto);
         return new ResponseEntity<>("유저 정보 수정에 성공했습니다.", HttpStatus.OK);
     }
 
@@ -140,9 +130,7 @@ public class MemberController {
      */
     @PutMapping("/filtering")
     public ResponseEntity<?> putMemberFiltering(@RequestBody PutMemberFilteringRequestDto putMemberFilteringRequestDto) {
-        String currentMemberDidAddress = "0xa9f7ceead33163a2f7ec3f3c4deae42a6e8907c2"; // 테스트 데이터의 1번 회원
-
-        memberService.putMemberFiltering(currentMemberDidAddress, putMemberFilteringRequestDto);
+        memberService.putMemberFiltering(SecurityUtil.getCurrentDidAddress().get(), putMemberFilteringRequestDto);
         return new ResponseEntity<>("유저 필터링 정보 수정에 성공했습니다.", HttpStatus.OK);
     }
 
@@ -154,9 +142,7 @@ public class MemberController {
      */
     @PutMapping("/location")
     public ResponseEntity<?> putMemberLocation(@RequestBody PutMemberLocationRequestDto putMemberLocationRequestDto) {
-        String currentMemberDidAddress = "0xa9f7ceead33163a2f7ec3f3c4deae42a6e8907c2"; // 테스트 데이터의 1번 회원
-
-        memberService.putMemberLocation(currentMemberDidAddress, putMemberLocationRequestDto);
+        memberService.putMemberLocation(SecurityUtil.getCurrentDidAddress().get(), putMemberLocationRequestDto);
         return new ResponseEntity<>("유저 위치 정보 수정에 성공했습니다.", HttpStatus.OK);
     }
 
@@ -168,9 +154,7 @@ public class MemberController {
      */
     @PutMapping("/pr")
     public ResponseEntity<?> putMemberPr(@RequestBody PutMemberPrRequestDto putMemberPrRequestDto) {
-        String currentMemberDidAddress = "0xa9f7ceead33163a2f7ec3f3c4deae42a6e8907c2"; // 테스트 데이터의 1번 회원
-
-        memberService.putMemberPr(currentMemberDidAddress, putMemberPrRequestDto);
+        memberService.putMemberPr(SecurityUtil.getCurrentDidAddress().get(), putMemberPrRequestDto);
         return new ResponseEntity<>("유저 자기소개 수정에 성공했습니다.", HttpStatus.OK);
     }
 
@@ -181,8 +165,7 @@ public class MemberController {
      */
     @GetMapping("/certificate")
     public ResponseEntity<?> getMemberCertificate() {
-        String currentMemberDidAddress = "0xa9f7ceead33163a2f7ec3f3c4deae42a6e8907c2"; // 테스트 데이터의 1번 회원
-        return new ResponseEntity<>(memberService.getMemberCertificate(currentMemberDidAddress), HttpStatus.OK);
+        return new ResponseEntity<>(memberService.getMemberCertificate(SecurityUtil.getCurrentDidAddress().get()), HttpStatus.OK);
     }
 
     /**
@@ -193,10 +176,8 @@ public class MemberController {
      */
     @PutMapping("/certificate")
     public ResponseEntity<?> putMemberCertificate(@RequestBody MemberCertDto memberCertDto) {
-        String currentMemberDidAddress = "0xa9f7ceead33163a2f7ec3f3c4deae42a6e8907c2"; // 테스트 데이터의 1번 회원
-        //먼가의 로직 추가 필요
-
-        memberService.putMemberCertificate(currentMemberDidAddress, memberCertDto);
+        // 인증서 가져오는 정보... 프론트에서 가져오는게 맞을까
+        memberService.putMemberCertificate(SecurityUtil.getCurrentDidAddress().get(), memberCertDto);
         return new ResponseEntity<>("유저 인증정보 수정에 성공했습니다.", HttpStatus.OK);
     }
 
@@ -230,8 +211,7 @@ public class MemberController {
      */
     @PostMapping("/interest")
     public ResponseEntity<?> addInterest(@RequestBody PostInterestRequestDto postInterestRequestDto) {
-        String currentMemberDidAddress = "0xa9f7ceead33163a2f7ec3f3c4deae42a6e8907c2"; // 테스트 데이터의 1번 회원;
-        return new ResponseEntity<>(memberService.addInterest(currentMemberDidAddress, postInterestRequestDto.getName()), HttpStatus.OK);
+        return new ResponseEntity<>(memberService.addInterest(SecurityUtil.getCurrentDidAddress().get(), postInterestRequestDto.getName()), HttpStatus.OK);
     }
 
 }

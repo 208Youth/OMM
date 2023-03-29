@@ -1,6 +1,7 @@
 package com.omm.recommend.controller;
 
 import com.omm.recommend.service.RecommendService;
+import com.omm.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,6 @@ public class RecommendController {
     @GetMapping("/")
     public ResponseEntity<?> getRecommendList(){
         // 현재 유저의 정보를 얻어온다
-        String currentUserNickname = "김미미";
-        return new ResponseEntity<>(recommendService.getRecommendList(currentUserNickname), HttpStatus.OK);
+        return new ResponseEntity<>(recommendService.getRecommendList(SecurityUtil.getCurrentDidAddress().get()), HttpStatus.OK);
     }
 }

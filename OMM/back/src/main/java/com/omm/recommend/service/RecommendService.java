@@ -36,10 +36,10 @@ public class RecommendService {
 
     private final FilteringRepository filteringRepository;
 
-    public List<GetRecommendListResponseDto> getRecommendList(String currentUserNickname) {
+    public List<GetRecommendListResponseDto> getRecommendList(String currentMemberDidAddress) {
 
         try {
-            Member member = memberRepository.findByNickname(currentUserNickname)
+            Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
                     .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
             MyInfo myInfo = myInfoRepository.findByMember(member)
