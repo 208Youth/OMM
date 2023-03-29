@@ -3,7 +3,7 @@ import { TinyFaceDetectorOptions } from 'face-api.js';
 import * as faceapi from 'face-api.js';
 import './FaceRecog.css';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 
 const MODEL_URL = '/models';
 // 비디오 사이즈 설정
@@ -23,6 +23,11 @@ function FaceRecog() {
   const [modelsLoaded, setModelsLoaded] = useState(false);
   const [notice, setNotice] = useState('');
   const [recog, setRecog] = useState(false);
+  const [whatpage, setPage] = useState('');
+
+  const location = useLocation();
+  const fromPage = location.state.page;
+  console.log(fromPage);
 
   // axios 로 fastapi 에 사진 요청보내기
   // 이미지 받아오기
@@ -141,8 +146,8 @@ function FaceRecog() {
 
   const startDetecting = async () => {
     // model load
-    const btn = document.querySelector('#startbtn');
-    btn.style.display = 'none';
+    // const btn = document.querySelector('#startbtn');
+    // btn.style.display = 'none';
     const loadModels = async () => {
       Promise.all([
         faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
@@ -162,6 +167,7 @@ function FaceRecog() {
   };
 
   useEffect(() => {
+    setPage(fromPage);
     Promise.all([
       faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
       faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
@@ -199,44 +205,71 @@ function FaceRecog() {
 
   return (
     <div>
-      <div className="wrap-page">
-      <div className="mx-auto text-center">
-        <img src="../../../public/heart-step-1.svg" alt="" />
-      </div>
-      <div className="flex-col w-80 mx-auto">
-        <p className="text-3xl my-4 text-center leading-relaxed mx-auto">
-          얼굴 등록
-        </p>
-        <p className="text-md my-4 text-center leading-relaxed mx-auto">
-          본인 인증시 사용할 얼굴을 등록해요
-        </p>
-      <div ref={wrapRef} className="recog-wrap">
-        <img src="/FaceId.svg" onClick={() => {
-          startDetecting();
-        }}alt="" />
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          onPlay={() => {
-            onPlay();
-          }}
-          width={300}
-          height={300}
+      <div
+        className={
+          whatpage === 'chat'
+            ? 'w-[22.5rem] h-[48.75rem]'
+            : 'bg-white w-[22.5rem] h-[48.75rem]'
+        }
+      >
+        <div className="mx-auto text-center">
+          <img
+            src={whatpage === 'chat' ? '/ommheart.png' : '/heart-step-1.svg'}
+            alt=""
+            className={
+              whatpage === 'chat'
+                ? 'mx-auto w-40 pt-24 pb-6'
+                : 'mx-auto w-48 pt-16 pb-10'
+            }
           />
-      </div>
-      {isStartDetect && notice && <div>{notice}</div>}
-      <div class="flex justify-between">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-              </svg>
-              <Link to="/FaceRecog">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                </svg>
-              </Link>
+        </div>
+        <h1 className="text-center text-2xl text-[#364C63] mb-3">본인 확인</h1>
+        <p
+          className={
+            whatpage === 'chat'
+              ? 'text-center text-xs text-white font-sans'
+              : 'text-center text-xs text-gray-400 font-sans'
+          }
+        >
+          본인이 맞는지 얼굴을 확인해요
+        </p>
+        <div className="flex-col w-80 mx-auto">
+          <div ref={wrapRef} className="h-fit">
+            {!isStartDetect && (
+              <img
+                src="/FaceId.svg"
+                className="w-64 mt-10 mx-auto"
+                onClick={() => {
+                  startDetecting();
+                }}
+                alt=""
+                aria-hidden
+              />
+            )}
+            <video
+              ref={videoRef}
+              autoPlay
+              muted
+              onPlay={() => {
+                onPlay();
+              }}
+              width={300}
+              height={300}
+              className="w-64 mx-auto my-10 rounded-3xl"
+            />
+          </div>
+          {isStartDetect && notice && (
+            <div className="text-center text-[#364C63]">{notice}</div>
+          )}
+          {whatpage !== 'chat' && (
+            <div className="flex justify-between mx-8 text-[#364C63] text-lg">
+              <div>&lt; </div>
+              <div aria-hidden onClick={() => {}}>
+                &gt;
+              </div>
             </div>
-      </div>
+          )}
+        </div>
       </div>
     </div>
   );
