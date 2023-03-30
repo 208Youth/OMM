@@ -1,8 +1,11 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
-const port = 3000;
+const port = 4424;
 const dotenv = require("dotenv");
 
+app.use("/api/node", express.static("public"));
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 dotenv.config();
@@ -11,7 +14,7 @@ dotenv.config();
 // app.use(routes);
 
 const credentialRouter = require("./routes/did.js");
-app.use("/api/did", credentialRouter);
+app.use("/api/node/did", credentialRouter);
 
 app.listen(port, () => {
   console.log(`http://localhost:${port}`);

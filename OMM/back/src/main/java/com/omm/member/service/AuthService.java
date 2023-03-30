@@ -6,7 +6,7 @@ import com.omm.member.model.dto.AuthDto;
 import com.omm.member.model.dto.RegistDto;
 import com.omm.member.model.dto.SubjectsDto;
 import com.omm.util.error.ErrorCode;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -55,8 +55,8 @@ public class AuthService {
 
         return RegistDto.builder()
             .holderDid(authDto.getHolderDid())
-            .age((short) (new Date().getYear() -
-                Integer.parseInt(personalInfo.get("birthdate").substring(0, 3)) + 1))
+            .age((short) (Calendar.getInstance().get(Calendar.YEAR) -
+                Integer.parseInt(personalInfo.get("birthdate").substring(0, 4)) + 1))
             .gender(personalInfo.get("gender"))
             .build();
 

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './Pslider.css';
 // import './Profile.css';
+import { Tooltip } from 'react-tooltip';
+import 'react-tooltip/dist/react-tooltip.css';
 import Modal from 'react-modal';
 import axios from 'axios';
 import CloseBtn from '../../assets/CloseBtn.svg';
@@ -25,8 +27,8 @@ import Pslider from '../../components/Pslider';
 import Navbar from '../../components/nav-bar';
 import userarrow from '../../assets/userarrow.svg';
 import MyinfoSetModal from './MyinfoSetModal';
+import MyinfoSetModal3 from './MyinfoSetModal3';
 import MyinfoSetModal2 from './MyinfoSetModal2';
-
 // props를 통해 userid를 받고 claose 버튼을 눌러서 해당 userid의
 // 아니면 메인 페이지에 해당 컴포넌트를 아예 합쳐버릴까
 function MyProfile({ profileNav }) {
@@ -54,7 +56,8 @@ function MyProfile({ profileNav }) {
     },
   ];
   const [MymodalIsOpen, setMyIsOpen] = useState(false);
-  const [MymodalIsOpen2, setMyIsOpen2] = useState(true);
+  const [MymodalIsOpen2, setMyIsOpen2] = useState(false);
+  const [MymodalIsOpen3, setMyIsOpen3] = useState(true);
   const openMyModal = () => {
     setMyIsOpen(true);
   };
@@ -66,6 +69,12 @@ function MyProfile({ profileNav }) {
   };
   const closeMyModal2 = () => {
     setMyIsOpen2(false);
+  };
+  const openMyModal3 = () => {
+    setMyIsOpen3(true);
+  };
+  const closeMyModal3 = () => {
+    setMyIsOpen3(false);
   };
   const [new_certinfo, setCert] = useState(certinfo);
   const [new_interest, setInterest] = useState(null);
@@ -121,7 +130,7 @@ function MyProfile({ profileNav }) {
   return (
 
     <div className="scroll-smooth">
-      <div className="z-10">
+      <div className="text-center">
 
         <Modal
           className="MyinfoModal"
@@ -131,7 +140,7 @@ function MyProfile({ profileNav }) {
           <MyinfoSetModal setModal={closeMyModal} />
         </Modal>
       </div>
-      <div className="z-10">
+      <div className="text-center">
 
         <Modal
           className="MyinfoModal"
@@ -139,6 +148,15 @@ function MyProfile({ profileNav }) {
           onRequestClose={closeMyModal2}
         >
           <MyinfoSetModal2 setModal={closeMyModal2} />
+        </Modal>
+      </div>
+      <div className="text-center">
+        <Modal
+          className="MyinfoModal3"
+          isOpen={MymodalIsOpen3}
+          onRequestClose={closeMyModal3}
+        >
+          <MyinfoSetModal3 setModal={closeMyModal3} />
         </Modal>
       </div>
       <div>
@@ -248,6 +266,7 @@ function MyProfile({ profileNav }) {
                     <span>
                       고등학교
                     </span>
+
                   </div>
                   <div>
                     <div className="flex items-center">
@@ -329,7 +348,10 @@ function MyProfile({ profileNav }) {
                       관심사
                     </span>
                   </div>
-                  <div>
+                  <div onClick={() => {
+                    openMyModal3();
+                  }}
+                  >
                     <div className="flex items-center">
                       <span className="">{}</span>
                       <div><img src={userarrow} alt="" className="w-3 ml-2" /></div>
@@ -459,6 +481,7 @@ function MyProfile({ profileNav }) {
                 <div className="">
                   <span>
                     흡연여부
+
                   </span>
                 </div>
                 <div>
@@ -473,6 +496,7 @@ function MyProfile({ profileNav }) {
               <hr className="" />
               <div className="flex justify-between">
                 <span className="text-xl m-3 ">
+
                   인증정보
                 </span>
                 <div className="flex items-center m-2">
@@ -485,24 +509,63 @@ function MyProfile({ profileNav }) {
               </div>
 
               <div>
+
                 <div className="my-5 ml-5">
                   <div className="inline-block">
-                    <img src={new_certinfo.health === true ? health_yes : health_no} alt="#" className="badges" />
+                    <Tooltip id="my-tooltip" />
+                    <img
+                      src={new_certinfo.health === true ? health_yes : health_no}
+                      alt="#"
+                      className="badges"
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={`건강데이터넣을것임 ${new_certinfo.health}`}
+                    />
+
                   </div>
                   <div className="inline-block">
-                    <img src={new_certinfo.university === true ? university_yes : university_no} alt="#" className="badges" />
+                    <img
+                      src={new_certinfo.university === true ? university_yes : university_no}
+                      alt="#"
+                      className="badges"
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={` ${''}`}
+                    />
                   </div>
                   <div className="inline-block">
-                    <img src={new_certinfo.job === true ? job_yes : job_no} alt="#" className="badges" />
+                    <img
+                      src={new_certinfo.job === true ? job_yes : job_no}
+                      alt="#"
+                      className="badges"
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={` ${''}`}
+                    />
                   </div>
                   <div className="inline-block">
-                    <img src={new_certinfo.certificate === true ? certificate_yes : certificate_no} alt="#" className="badges" />
+                    <img
+                      src={new_certinfo.certificate === true ? certificate_yes : certificate_no}
+                      alt="#"
+                      className="badges"
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={` ${''}`}
+                    />
                   </div>
                   <div className="inline-block">
-                    <img src={new_certinfo.estate === true ? estate_yes : estate_no} alt="#" className="badges" />
+                    <img
+                      src={new_certinfo.estate === true ? estate_yes : estate_no}
+                      alt="#"
+                      className="badges"
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={` ${''}`}
+                    />
                   </div>
                   <div className="inline-block">
-                    <img src={new_certinfo.income === true ? income_yes : income_no} alt="#" className="badges" />
+                    <img
+                      src={new_certinfo.income === true ? income_yes : income_no}
+                      alt="#"
+                      className="badges"
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={` ${''}`}
+                    />
                   </div>
                 </div>
               </div>

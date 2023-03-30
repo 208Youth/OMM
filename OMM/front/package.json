@@ -23,6 +23,8 @@
     "react-modal": "^3.16.1",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.9.0",
+    "react-tooltip": "^5.10.4",
+    "redux-persist": "^6.0.0",
     "redux-persist": "^6.0.0",
     "sass": "^1.60.0",
     "sockjs-client": "^1.6.1",

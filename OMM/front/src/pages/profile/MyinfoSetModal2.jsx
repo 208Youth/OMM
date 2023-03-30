@@ -1,13 +1,15 @@
 // import { def } from '@vue/shared';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import Slider from 'rc-slider';
 // import '../../index.css';
 // import CloseBtn from '../../assets/CloseBtn.svg';
+
 import './Profile.css';
 import CloseBtn from '../../assets/CloseBtn.svg';
 
 function MyinfoSetModal2({ setModal }) {
-  const [myinfo, setMyInfo] = useState({
+  const [myinfo, setMoreInfo] = useState({
     age_min: '',
     age_max: '',
     height_min: '',
@@ -21,12 +23,51 @@ function MyinfoSetModal2({ setModal }) {
     smoking_stlye: '',
 
   });
+  const changeRange = (e) => {
+    let min = e[0];
+    let max = e[1];
+    if (min === 1) {
+      min = 3;
+    } else if (min === 50) {
+      min = '10';
+    } else if (min === 100) {
+      min = '20';
+    } else if (min === 150) {
+      min = '80';
+    } else if (min === 200) {
+      min = '100';
+    } else if (min === 300) {
+      min = '200';
+    } else if (min === 400) {
+      min = '300';
+    }
+    if (max === 1) {
+      max = 3;
+    } else if (max === 50) {
+      max = '10';
+    } else if (max === 100) {
+      max = '20';
+    } else if (max === 150) {
+      max = '80';
+    } else if (max === 200) {
+      max = '100';
+    } else if (max === 300) {
+      max = '200';
+    } else if (max === 400) {
+      max = '300';
+    }
+    setMoreInfo((prevInfo) => ({
+      ...prevInfo,
+      range_min: min,
+      range_max: max,
+    }));
+  };
 
   // const data = {
   //   height, contact_stlye, drinking_stlye, smoking_stlye, military, pet, MBTI: mbti,
   // };
   // const Changeinfo = () => {
-  //   axios.put('/api/member/info', data).then((response) => {
+  //   axios.put('/api/member/filtering', data).then((response) => {
   //     console.log('Success:', response);
   //   }).catch((error) => {
   //     console.log('Error:', error);
@@ -56,6 +97,78 @@ function MyinfoSetModal2({ setModal }) {
             <span>키값</span>
 
           </div>
+          <div className="mx-10">
+            <Slider
+              range
+              min={20}
+              max={45}
+              defaultValue={[20, 25]}
+              marks={{
+                20: 20,
+                25: 25,
+                30: 30,
+                35: 35,
+                40: 40,
+                45: '45세',
+              }}
+              step={5}
+              onChange={(e) => {
+                setMoreInfo((prevInfo) => ({
+                  ...prevInfo,
+                  age_min: e[0],
+                  age_max: e[1],
+                }));
+              }}
+            />
+          </div>
+          <div>
+            <div className="m-10">
+              <Slider
+                range
+                min={150}
+                max={200}
+                defaultValue={[160, 180]}
+                marks={{
+                  150: 150,
+                  160: 160,
+                  170: 170,
+                  180: 180,
+                  190: 190,
+                  200: '200 cm',
+                }}
+                step={5}
+                onChange={(e) => {
+                  setMoreInfo((prevInfo) => ({
+                    ...prevInfo,
+                    height_min: e[0],
+                    height_max: e[1],
+                  }));
+                }}
+              />
+            </div>
+          </div>
+          <div className="mx-10 mb-24">
+            <Slider
+              range
+              min={3}
+              max={500}
+              defaultValue={[3, 80]}
+              marks={{
+                1: 3,
+                50: 10,
+                100: 20,
+                150: 80,
+                200: 100,
+                300: 200,
+                400: 300,
+                500: '500 km',
+              }}
+              step={null}
+              onChange={(e) => {
+                changeRange(e);
+              }}
+            />
+          </div>
           <div className="my-8 mx-8">
             <h3 className="text-[#364C63] block mb-5 text-base">
               음주 스타일
@@ -65,7 +178,7 @@ function MyinfoSetModal2({ setModal }) {
                 <div key={index} className={index >= 0 ? 'ml-1' : ''}>
                   <input
                     onClick={(e) => {
-                      setMyInfo((prevInfo) => ({
+                      setMoreInfo((prevInfo) => ({
                         ...prevInfo,
                         favor_drinking_style: e.target.value,
                       }));
@@ -101,7 +214,7 @@ function MyinfoSetModal2({ setModal }) {
                 <div key={index} className={index >= 0 ? 'ml-1' : ''}>
                   <input
                     onClick={(e) => {
-                      setMyInfo((prevInfo) => ({
+                      setMoreInfo((prevInfo) => ({
                         ...prevInfo,
                         favor_contact_stlye: e.target.value,
                       }));
@@ -137,7 +250,7 @@ function MyinfoSetModal2({ setModal }) {
                 <div key={index} className={index >= 0 ? 'ml-1' : ''}>
                   <input
                     onClick={(e) => {
-                      setMyInfo((prevInfo) => ({
+                      setMoreInfo((prevInfo) => ({
                         ...prevInfo,
                         favor_smoking_style: e.target.value,
                       }));
@@ -163,7 +276,7 @@ function MyinfoSetModal2({ setModal }) {
           </div>
 
           <div className="text-center mt-3">
-            <button className="border border-black w-16 h-7 bg-white rounded-lg ">제출</button>
+            <button className="border border-black w-16 h-7 bg-white rounded-lg ">완료</button>
           </div>
 
         </div>

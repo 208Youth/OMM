@@ -20,3 +20,18 @@
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.317);
 }
+
+.disappear {
+  animation: fade-out 1s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+
+  }
+  to {
+    opacity: 0;
+  }
+}

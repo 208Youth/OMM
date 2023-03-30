@@ -1,8 +1,8 @@
+/* eslint-disable */
+
 import React, { useState, useEffect } from 'react';
 import CloseBtn from '../../assets/CloseBtn.svg';
 import './IdenModal.css';
-import Idenconfirm1 from '../../assets/Idenconfirm1.svg';
-import Idenconfirm2 from '../../assets/Idenconfirm2.svg';
 // import fastapi from '../../api/fastapi.js';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
@@ -33,7 +33,7 @@ function IdenModal({ setIdenModal, setIdenComplete }) {
         setName(res.data.name);
         setBirthday(res.data.birthday);
         setGender(res.data.gender);
-        console.log('fastapi로이미지를 보냈습니다.');
+        console.log('fastapi로 이미지를 보냈습니다.');
       })
       .catch((err) => {
         console.log(err);
@@ -135,7 +135,6 @@ function IdenModal({ setIdenModal, setIdenComplete }) {
 }
 
 function Result({ data, setIdenModal, setIdenComplete }) {
-  
   let { name, gender, birthday } = data;
   const strbirth = String(birthday);
   let year = strbirth.slice(0, 2);
@@ -157,28 +156,28 @@ function Result({ data, setIdenModal, setIdenComplete }) {
   } else {
     gender = '여';
   }
-  const storeName = useSelector((state) => state.userInfo.name);
-  const storeYear = useSelector((state) => state.userInfo.year);
-  const storeMonth = useSelector((state) => state.userInfo.month);
-  const storeDay = useSelector((state) => state.userInfo.day);
-  const storeGender = useSelector((state) => state.userInfo.gender);
+  const storeName = useSelector(state => state.user.name);
+  const storeYear = useSelector(state => state.user.year);
+  const storeMonth = useSelector(state => state.user.month);
+  const storeDay = useSelector(state => state.user.day);
+  const storeGender = useSelector(state => state.user.gender);
   // 일치 여부 확인
   let nameCheck = false;
   let birthdayCheck = false;
   let genderCheck = false;
   if (name == storeName) {
-    nameCheck = true
+    nameCheck = true;
   }
   if (gender == storeGender) {
-    genderCheck = true
+    genderCheck = true;
   }
-  if ((storeYear == year) && (storeMonth == month) && (storeDay == day)) {
-    birthdayCheck = true
+  if (storeYear == year && storeMonth == month && storeDay == day) {
+    birthdayCheck = true;
   }
   // 모두 일치하면 확인 완료 버튼 활성화
-  let complete = false
+  let complete = false;
   if (nameCheck && genderCheck && birthdayCheck) {
-    complete = true
+    complete = true;
   }
 
   return (
@@ -210,12 +209,26 @@ function Result({ data, setIdenModal, setIdenComplete }) {
           <img src="/public/Vector76.png" alt="#" className="inline ml-2" />
         </div>
         <div>
-          <span>{year}년 {month}월 {day}일</span>
+          <span>
+            {year}년 {month}월 {day}일
+          </span>
           {birthdayCheck && <img src="/public/check.png" alt="#" className="ml-3 inline" />}
         </div>
       </div>
       <div className="mx-auto text-center">
-        <div>{complete && <button className="btn-active" onClick={() => {setIdenComplete(true); setIdenModal(false);}}>확인 완료</button>}</div>
+        <div>
+          {complete && (
+            <button
+              className="btn-active"
+              onClick={() => {
+                setIdenComplete(true);
+                setIdenModal(false);
+              }}
+            >
+              확인 완료
+            </button>
+          )}
+        </div>
         <div>{!complete && <button className="btn-inactive">확인 완료</button>}</div>
       </div>
     </div>

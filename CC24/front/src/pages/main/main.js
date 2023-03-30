@@ -1,42 +1,46 @@
+/* eslint-disable */
 import './Main.css';
 import React from 'react';
 import Navbar from '../../components/Navbar';
+import { useSelector } from 'react-redux';
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/effect-cards";
+import { EffectCards } from "swiper";
 
 function Main() {
-  // const cards = [
-  //   {
-  //     key: 1,
-  //     content: (
-  //       <Cards imagen="https://updates.theme-fusion.com/wp-content/uploads/2017/12/convertplus_thumbnail.jpg" />
-  //     ),
-  //   },
-  //   {
-  //     key: 2,
-  //     content: (
-  //       <Cards imagen="https://updates.theme-fusion.com/wp-content/uploads/2017/12/convertplus_thumbnail.jpg" />
-  //     ),
-  //   },
-  //   {
-  //     key: 3,
-  //     content: (
-  //       <Cards imagen="https://updates.theme-fusion.com/wp-content/uploads/2017/12/acf_pro.png" />
-  //     ),
-  //   },
-  // ];
+  const certList = useSelector((state) => state.user.cert);
+  console.log(certList);
   return (
     <div className="flex px-10">
       <div className="flex-col w-80 mx-auto">
         <p className="text-3xl text-left mb-4 leading-relaxed">Main</p>
-        {/* <div className="">
-          <Carousel
-            cards={cards}
-            height="500px"
-            width="30%"
-            margin="0 auto"
-            offset={2}
-            showArrows={true}
-          />
-        </div> */}
+        <Swiper
+        effect={"cards"}
+        grabCursor={true}
+        modules={[EffectCards]}
+        className="mySwiper"
+        >
+        {certList.map((cert) => (
+          <SwiperSlide >
+            <div className="flex items-center pl-3">
+            <input
+              id="vue-checkbox"
+              type="checkbox"
+              value= {Object.keys(cert)}
+              onClick={(e) => {check(e.target.value)}}
+            />
+            <label
+              htmlFor="vue-checkbox"
+              className="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >
+              {Object.keys(cert)} - {Object.values(cert)}
+            </label>
+          </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+
       </div>
       <Navbar className="fixed" />
     </div>

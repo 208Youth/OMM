@@ -1,6 +1,8 @@
 // import { def } from '@vue/shared';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import React, { useState, useEffect } from 'react';
 // import '../../index.css';
 // import CloseBtn from '../../assets/CloseBtn.svg';
 import './Profile.css';
@@ -22,6 +24,7 @@ function MyinfoSetModal({ setModal }) {
     newMbti[index] = value;
     setMbti(newMbti);
   };
+
   // const data = {
   //   height, contact_stlye, drinking_stlye, smoking_stlye, military, pet, MBTI: mbti,
   // };
@@ -253,7 +256,7 @@ function MyinfoSetModal({ setModal }) {
 
             </div>
             <div className="text-center mt-3">
-              <button className="border border-black w-16 h-7 bg-white rounded-lg ">제출</button>
+              <button className="border border-black w-16 h-7 bg-white rounded-lg ">완료</button>
             </div>
           </div>
 

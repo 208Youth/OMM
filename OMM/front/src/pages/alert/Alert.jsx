@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import SockJS from 'sockjs-client/dist/sockjs';
 import Stomp from 'stompjs';
+import axios from 'axios';
 import Navbar from '../../components/nav-bar';
 import AlertMsg from '../../components/AlertMsg';
 
 function Alert() {
+  const [alertlist, setAlertList] = useState();
   const connect = () => {
     /*
     페이지 렌더링 후 실행되는 connect()
@@ -12,7 +14,7 @@ function Alert() {
     구독한 채널에서 Publish된 메세지가 왔을 때
     처리 (recvRoom())
     */
-    const ws = new SockJS('http://localhost:5000/api/matching');
+    const ws = new SockJS('/api/matching');
     const stompClient = Stomp.over(ws);
     stompClient.connect(
       {},
@@ -36,12 +38,26 @@ function Alert() {
     );
   };
 
+  async function getAlerts() {
+    await axios({
+      method: 'get',
+      url: '/api/matching/noti',
+      // headers: {
+      //   Authorization: token,
+      // },
+    }).then((res) => {
+      console.log(res.list);
+      setAlertList(res.list);
+    });
+  }
+
   useEffect(() => {
     connect();
+    getAlerts();
   }, []);
 
   return (
-    <div className="text-[#364C63] w-fit h-[48.75rem] mx-auto">
+    <div className="text-[#364C63] w-[22.5rem] h-[48.75rem] mx-auto">
       <div className="text-2xl mx-6 py-8">
         <span>&lt;</span>
         <span className="ml-3 font-sans font-bold">Notification</span>
@@ -49,7 +65,7 @@ function Alert() {
       <div className="mx-6 text-lg mb-3">
         오늘
         <div className="mt-3">
-          <AlertMsg />
+          {alertlist && alertlist.map((msg) => <AlertMsg msg={msg} />)}
           <AlertMsg />
         </div>
       </div>
