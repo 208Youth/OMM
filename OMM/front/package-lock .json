@@ -21,7 +21,6 @@
         "react-modal": "^3.16.1",
         "react-redux": "^8.0.5",
         "react-router-dom": "^6.9.0",
-        "react-tooltip": "^5.10.4",
         "redux-persist": "^6.0.0",
         "sass": "^1.60.0",
         "sockjs-client": "^1.6.1",
@@ -834,19 +833,6 @@
         "node": "^12.22.0 || ^14.17.0 || >=16.0.0"
       }
     },
-    "node_modules/@floating-ui/core": {
-      "version": "1.2.5",
-      "resolved": "https://registry.npmjs.org/@floating-ui/core/-/core-1.2.5.tgz",
-      "integrity": "sha512-qrcbyfnRVziRlB6IYwjCopYhO7Vud750JlJyuljruIXcPxr22y8zdckcJGsuOdnQ639uVD1tTXddrcH3t3QYIQ=="
-    },
-    "node_modules/@floating-ui/dom": {
-      "version": "1.2.5",
-      "resolved": "https://registry.npmjs.org/@floating-ui/dom/-/dom-1.2.5.tgz",
-      "integrity": "sha512-+sAUfpQ3Frz+VCbPCqj+cZzvEESy3fjSeT/pDWkYCWOBXYNNKZfuVsHuv8/JO2zze8+Eb/Q7a6hZVgzS81fLbQ==",
-      "dependencies": {
-        "@floating-ui/core": "^1.2.4"
-      }
-    },
     "node_modules/@humanwhocodes/config-array": {
       "version": "0.11.8",
       "resolved": "https://registry.npmjs.org/@humanwhocodes/config-array/-/config-array-0.11.8.tgz",
@@ -1304,6 +1290,14 @@
       "version": "0.4.0",
       "resolved": "https://registry.npmjs.org/asynckit/-/asynckit-0.4.0.tgz",
       "integrity": "sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q=="
+    },
+    "node_modules/attr-accept": {
+      "version": "2.2.2",
+      "resolved": "https://registry.npmjs.org/attr-accept/-/attr-accept-2.2.2.tgz",
+      "integrity": "sha512-7prDjvt9HmqiZ0cl5CRjtS84sEyhsHP2coDkaZKRKVfCDo9s7iw7ChVmar78Gu9pC4SoR/28wFu/G5JJhTnqEg==",
+      "engines": {
+        "node": ">=4"
+      }
     },
     "node_modules/available-typed-arrays": {
       "version": "1.0.5",
@@ -2547,6 +2541,22 @@
         "node": "^10.12.0 || >=12.0.0"
       }
     },
+    "node_modules/file-selector": {
+      "version": "0.6.0",
+      "resolved": "https://registry.npmjs.org/file-selector/-/file-selector-0.6.0.tgz",
+      "integrity": "sha512-QlZ5yJC0VxHxQQsQhXvBaC7VRJ2uaxTf+Tfpu4Z/OcVQJVpZO+DGU0rkoVW5ce2SccxugvpBJoMvUs59iILYdw==",
+      "dependencies": {
+        "tslib": "^2.4.0"
+      },
+      "engines": {
+        "node": ">= 12"
+      }
+    },
+    "node_modules/file-selector/node_modules/tslib": {
+      "version": "2.5.0",
+      "resolved": "https://registry.npmjs.org/tslib/-/tslib-2.5.0.tgz",
+      "integrity": "sha512-336iVw3rtn2BUK7ORdIAHTyxHGRIHVReokCR3XjbckJMK7ms8FysBfhLR8IXnAgy7T0PTPNBWKiH514FOW/WSg=="
+    },
     "node_modules/fill-range": {
       "version": "7.0.1",
       "resolved": "https://registry.npmjs.org/fill-range/-/fill-range-7.0.1.tgz",
@@ -2639,6 +2649,19 @@
       "resolved": "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz",
       "integrity": "sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==",
       "dev": true
+    },
+    "node_modules/fsevents": {
+      "version": "2.3.2",
+      "resolved": "https://registry.npmjs.org/fsevents/-/fsevents-2.3.2.tgz",
+      "integrity": "sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==",
+      "hasInstallScript": true,
+      "optional": true,
+      "os": [
+        "darwin"
+      ],
+      "engines": {
+        "node": "^8.16.0 || ^10.6.0 || >=11.0.0"
+      }
     },
     "node_modules/function-bind": {
       "version": "1.1.1",
@@ -4093,6 +4116,7 @@
       "peerDependencies": {
         "react": "^18.2.0"
       }
+    }
     },
     "node_modules/react-is": {
       "version": "16.13.1",
@@ -4214,19 +4238,6 @@
       "peerDependencies": {
         "react": ">=16.8",
         "react-dom": ">=16.8"
-      }
-    },
-    "node_modules/react-tooltip": {
-      "version": "5.10.4",
-      "resolved": "https://registry.npmjs.org/react-tooltip/-/react-tooltip-5.10.4.tgz",
-      "integrity": "sha512-QUBX6k3+qjOyAy64ntV/NkwzZqaghjcEpZ6Q5pqVbYUYS8kGcmIgXznRc2syQDlffCtzeWJGGMz93JYKjGo2Pw==",
-      "dependencies": {
-        "@floating-ui/dom": "^1.0.0",
-        "classnames": "^2.3.0"
-      },
-      "peerDependencies": {
-        "react": ">=16.14.0",
-        "react-dom": ">=16.14.0"
       }
     },
     "node_modules/read-cache": {
