@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
-import Signup from './pages/signup/Signup.js';
-import IdenModal from './pages/signup/IdenModal.js';
+import Signup from './pages/signup/Signup';
+import IdenModal from './pages/signup/IdenModal';
 import Index from './pages/index/Index';
 import Login from './pages/login/login';
 import Cert from './pages/cert/Cert';

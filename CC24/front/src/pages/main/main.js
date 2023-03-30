@@ -1,42 +1,19 @@
+/* eslint-disable */
 import './Main.css';
 import React from 'react';
 import Navbar from '../../components/Navbar';
 
 function Main() {
-  // const cards = [
-  //   {
-  //     key: 1,
-  //     content: (
-  //       <Cards imagen="https://updates.theme-fusion.com/wp-content/uploads/2017/12/convertplus_thumbnail.jpg" />
-  //     ),
-  //   },
-  //   {
-  //     key: 2,
-  //     content: (
-  //       <Cards imagen="https://updates.theme-fusion.com/wp-content/uploads/2017/12/convertplus_thumbnail.jpg" />
-  //     ),
-  //   },
-  //   {
-  //     key: 3,
-  //     content: (
-  //       <Cards imagen="https://updates.theme-fusion.com/wp-content/uploads/2017/12/acf_pro.png" />
-  //     ),
-  //   },
-  // ];
+  localStorage.setItem('array', [1])
+  const test = localStorage.getItem('array')
+  console.log(test);
+  const tests = () => {
+    test.push(1)
+  }
   return (
-    <div className="flex px-10">
+    <div className="flex px-10" onClick={tests}>
       <div className="flex-col w-80 mx-auto">
         <p className="text-3xl text-left mb-4 leading-relaxed">Main</p>
-        {/* <div className="">
-          <Carousel
-            cards={cards}
-            height="500px"
-            width="30%"
-            margin="0 auto"
-            offset={2}
-            showArrows={true}
-          />
-        </div> */}
       </div>
       <Navbar className="fixed" />
     </div>

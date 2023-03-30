@@ -1,13 +1,15 @@
+/* eslint-disable */
+
 import { configureStore, createSlice } from '@reduxjs/toolkit';
 
 const userSlice = createSlice({
   name: 'userSlice',
   initialState: {
-    name: '',
-    year: '',
-    month: '',
-    day: '',
-    gender: '',
+    name: String,
+    year: Number,
+    month: Number,
+    day: Number,
+    gender: String,
   },
   reducers: {
     userInfo: (state, action) => {
