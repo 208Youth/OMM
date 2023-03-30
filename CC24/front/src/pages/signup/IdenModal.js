@@ -156,11 +156,11 @@ function Result({ data, setIdenModal, setIdenComplete }) {
   } else {
     gender = '여';
   }
-  const storeName = useSelector((state) => state.userInfo.name);
-  const storeYear = useSelector((state) => state.userInfo.year);
-  const storeMonth = useSelector((state) => state.userInfo.month);
-  const storeDay = useSelector((state) => state.userInfo.day);
-  const storeGender = useSelector((state) => state.userInfo.gender);
+  const storeName = useSelector(state => state.user.name);
+  const storeYear = useSelector(state => state.user.year);
+  const storeMonth = useSelector(state => state.user.month);
+  const storeDay = useSelector(state => state.user.day);
+  const storeGender = useSelector(state => state.user.gender);
   // 일치 여부 확인
   let nameCheck = false;
   let birthdayCheck = false;
