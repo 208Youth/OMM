@@ -1,6 +1,8 @@
 package com.omm.repository;
 
+import com.omm.member.model.dto.LikedMemberDto;
 import com.omm.model.entity.Filtering;
+import com.omm.model.entity.Member;
 import com.omm.model.entity.MyInfo;
 import com.omm.model.entity.RecommendDto;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -46,4 +48,6 @@ public interface RecommendDtoRepository extends JpaRepository <RecommendDto, Lon
     List<RecommendDto> filteredMembers3(@Param("myInfo")MyInfo myInfo);
 
 
+//    @Query(value = "select new com.omm.member.model.dto")
+//    List<LikedMemberDto> getLikedMembers(@Param("memberId") Long memberId);
 }

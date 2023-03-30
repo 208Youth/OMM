@@ -1,16 +1,17 @@
 /* eslint-disable */
 
-import { configureStore, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
+const initialState = {
+  name: '',
+  year: '',
+  month: '',
+  day: '',
+  gender: '',
+};
 const userSlice = createSlice({
-  name: 'userSlice',
-  initialState: {
-    name: String,
-    year: Number,
-    month: Number,
-    day: Number,
-    gender: String,
-  },
+  name: 'user',
+  initialState,
   reducers: {
     userInfo: (state, action) => {
       state.name = action.payload.name;
@@ -22,11 +23,7 @@ const userSlice = createSlice({
   },
 });
 
-export const store = configureStore({
-  reducer: {
-    userInfo: userSlice.reducer,
-  },
-});
+// reducer 사용시 import { userInfo } from '../../store/userSlice'; 이렇게 사용
 
-export default store;
 export const { userInfo } = userSlice.actions;
+export default userSlice;

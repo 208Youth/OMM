@@ -16,9 +16,16 @@ import Alert from './pages/alert/Alert';
 import ChatList from './pages/alert/ChatList';
 import Admin from './pages/admin/Admin';
 import Detail from './pages/admin/Detail';
+<<<<<<< HEAD
 import Main from './pages/main/Main';
 import Chatwindow from './pages/chatting/Chatwindow';
+=======
+import Main from './pages/main/main';
+>>>>>>> 4e4eb25d46ff6de78686e723fe159f2e60858de4
 import ImageUploader from './pages/profile/ImageUploader';
+import Login from './pages/login/login';
+import LikeList from './pages/like/LikeList';
+import ReportModal from './pages/chat/ReportModal';
 
 const router = createBrowserRouter([
   {
@@ -92,6 +99,18 @@ const router = createBrowserRouter([
   {
     path: '/ImageUploader',
     element: <ImageUploader />,
+  },
+  {
+    path: '/login',
+    element: <Login />,
+  },
+  {
+    path: '/likes',
+    element: <LikeList />,
+  },
+  {
+    path: '/report',
+    element: <ReportModal />,
   },
 ]);
 

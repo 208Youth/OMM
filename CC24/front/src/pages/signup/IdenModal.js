@@ -33,7 +33,7 @@ function IdenModal({ setIdenModal, setIdenComplete }) {
         setName(res.data.name);
         setBirthday(res.data.birthday);
         setGender(res.data.gender);
-        console.log('fastapi로이미지를 보냈습니다.');
+        console.log('fastapi로 이미지를 보냈습니다.');
       })
       .catch((err) => {
         console.log(err);

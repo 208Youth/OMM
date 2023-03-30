@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
-// import SockJS from 'sockjs-client';
-import SockJS from 'sockjs-client/dist/sockjs';
+import SockJS from 'sockjs-client';
+// import SockJS from 'sockjs-client/dist/sockjs';
 import Stomp from 'stompjs';
 import './nav-bar.scss';
 import { Link } from 'react-router-dom';

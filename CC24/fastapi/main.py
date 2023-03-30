@@ -1,4 +1,4 @@
-from typing import Any, Dict, Union
+from typing import Union
 import os
 import uuid
 from pydantic import BaseModel
@@ -9,9 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from identification import detect_text_uri, detect_text
 from identification import plus2
 
-from recommendation import knncalc
-
-app = FastAPI()
+app = FastAPI(root_path="/api/fast")
 
 origins = [
 
@@ -98,8 +96,3 @@ async def upload_photo(file: UploadFile):
 async def get_photo(name: str):
     file_path = f'./knowns/{name}.jpg'
     return FileResponse(path=file_path, filename=name)
-
-
-@app.post("/recommend")
-async def recommendation(data: Dict[str, Any]):
-    return knncalc(data)
