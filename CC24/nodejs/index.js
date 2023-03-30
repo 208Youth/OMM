@@ -13,7 +13,7 @@ dotenv.config();
 // app.use(routes);
 
 const credentialRouter = require('./routes/did.js');
-app.use('/api/did', credentialRouter);
+app.use('/node/did', credentialRouter);
 
 app.listen(port, () => {
   console.log(`http://localhost:${port}`);

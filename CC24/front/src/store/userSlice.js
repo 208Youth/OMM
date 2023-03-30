@@ -1,17 +1,18 @@
 /* eslint-disable */
 
-import { configureStore, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
+const initialState = {
+  name: '',
+  year: '',
+  month: '',
+  day: '',
+  gender: '',
+  cert: [],
+};
 const userSlice = createSlice({
-  name: 'userSlice',
-  initialState: {
-    name: '',
-    year: '',
-    month: '',
-    day: '',
-    gender: '',
-    cert: [],
-  },
+  name: 'user',
+  initialState,
   reducers: {
     userInfo: (state, action) => {
       state.name = action.payload.name;
@@ -29,12 +30,5 @@ const userSlice = createSlice({
   },
 });
 
-export const store = configureStore({
-  reducer: {
-    userInfo: userSlice.reducer,
-    certInfo: userSlice.reducer,
-  },
-});
-
-export default store;
 export const { userInfo, certInfo } = userSlice.actions;
+export default userSlice;
