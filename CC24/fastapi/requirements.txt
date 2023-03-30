@@ -33,3 +33,4 @@ uvicorn==0.21.1
 watchfiles==0.18.1
 websockets==10.4
 zipp==3.15.0
+python-multipart==0.0.6
