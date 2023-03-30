@@ -5,11 +5,12 @@ import { configureStore, createSlice } from '@reduxjs/toolkit';
 const userSlice = createSlice({
   name: 'userSlice',
   initialState: {
-    name: String,
-    year: Number,
-    month: Number,
-    day: Number,
-    gender: String,
+    name: '',
+    year: '',
+    month: '',
+    day: '',
+    gender: '',
+    cert: [],
   },
   reducers: {
     userInfo: (state, action) => {
@@ -19,14 +20,21 @@ const userSlice = createSlice({
       state.day = action.payload.day;
       state.gender = action.payload.gender;
     },
+    certInfo: (state, action) => {
+      const certList = state.cert;
+      state.cert = [...certList, action.payload]
+      console.log(action.payload);
+      console.log(state.cert);
+    }
   },
 });
 
 export const store = configureStore({
   reducer: {
     userInfo: userSlice.reducer,
+    certInfo: userSlice.reducer,
   },
 });
 
 export default store;
-export const { userInfo } = userSlice.actions;
+export const { userInfo, certInfo } = userSlice.actions;

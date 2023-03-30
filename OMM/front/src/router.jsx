@@ -18,6 +18,7 @@ import Admin from './pages/admin/Admin';
 import Detail from './pages/admin/Detail';
 import Main from './pages/main/Main';
 import ImageUploader from './pages/profile/ImageUploader';
+import Login from './pages/login/Login';
 
 const router = createBrowserRouter([
   {
@@ -87,6 +88,10 @@ const router = createBrowserRouter([
   {
     path: '/ImageUploader',
     element: <ImageUploader />,
+  },
+  {
+    path: '/login',
+    element: <Login />,
   },
 ]);
 
