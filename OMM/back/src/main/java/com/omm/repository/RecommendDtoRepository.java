@@ -48,6 +48,10 @@ public interface RecommendDtoRepository extends JpaRepository <RecommendDto, Lon
     List<RecommendDto> filteredMembers3(@Param("myInfo")MyInfo myInfo);
 
 
-//    @Query(value = "select new com.omm.member.model.dto")
+//    @Query(value = "select new com.omm.member.model.dto.LikedMemberDto( m.id, m.nickname, m.age, " +
+//            "(select mi.imageContent from MemberImg mi where mi.member.id = m.id limit 1)) " +
+//            "from Member m left outer join Favor f on f.fromMember.id = :memberId " +
+//            "where f.toMember.id = m.id and f.value = true")
 //    List<LikedMemberDto> getLikedMembers(@Param("memberId") Long memberId);
+
 }

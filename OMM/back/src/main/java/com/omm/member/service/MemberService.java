@@ -405,11 +405,17 @@ public class MemberService {
         try {
             MemberCertDto memberCertDto = MemberCertDto.builder()
                     .university(memberCert.isUniversity())
+                    .universityName(memberCert.getUniversityName())
                     .job(memberCert.isJob())
+                    .jobNames(memberCert.getJobNames())
                     .certificate(memberCert.isCertificate())
+                    .certificateNames(memberCert.getCertificateNames())
                     .health(memberCert.isHealth())
+                    .healthInfo(memberCert.getHealthInfo())
                     .estate(memberCert.isEstate())
+                    .estateAmount(memberCert.getEstateAmount())
                     .income(memberCert.isIncome())
+                    .incomeAmount(memberCert.getIncomeAmount())
                     .build();
             return memberCertDto;
         } catch (Exception e) {
@@ -545,23 +551,29 @@ public class MemberService {
 
     public GetLikedMembersResponseDto getLikedMembers(String currentMemberDidAddress) {
 
-//        Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
-//                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
-//
-//        MemberImg memberImg = memberImgRepository.findFirstByMember(member);
-//
-//        try {
-//            LikedMemberDto likedMemberDto = LikedMemberDto.builder()
-//                    .memberId(member.getId())
-//                    .imageMain(memberImg.getImageContent())
-//                    .nickname(member.getNickname())
-//                    .age(member.getAge())
-//                    .build();
-//
-//        } catch (Exception e) {
-//
-//        }
+        Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
-        return null;
+        List<Member> likedMembers = memberRepository.getMembersByFavoredInfo(member.getId());
+
+
+        try {
+            List<LikedMemberDto> list = new ArrayList<>();
+
+            likedMembers.forEach((likedmember)->{
+                LikedMemberDto likedMemberDto = LikedMemberDto.builder()
+                        .memberId(likedmember.getId())
+                        .nickname(likedmember.getNickname())
+                        .age(likedmember.getAge())
+                        .imageMain(memberImgRepository.findFirstByMember(likedmember).getImageContent())
+                        .build();
+                list.add(likedMemberDto);
+            });
+
+            return new GetLikedMembersResponseDto(list);
+
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
+        }
     }
 }
