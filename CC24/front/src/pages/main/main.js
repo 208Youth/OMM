@@ -5,8 +5,7 @@ import Navbar from '../../components/Navbar';
 import { useSelector } from 'react-redux';
 
 function Main() {
-  const certList = useSelector((state) => {return state.certInfo.cert});
-  console.log(certList);
+  const certList = useSelector(state => state.user.cert);
   return (
     <div className="flex px-10">
       <div className="flex-col w-80 mx-auto">

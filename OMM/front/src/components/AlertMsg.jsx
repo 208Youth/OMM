@@ -1,14 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Modal from 'react-modal';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import Img from '../assets/testprofile.png';
 import './AlertMsg.css';
 
-function AlertMsg() {
+function AlertMsg({ msg }) {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [successmessage, setMessage] = useState();
 
   const navigate = useNavigate();
+  const alertmsg = useRef();
+
+  const deleteMatch = () => {
+    alertmsg.current.className += ' disappear';
+    // alertmsg.current.style.display = 'none';
+  };
 
   const successMatch = () => {
     setIsOpen(true);
@@ -22,13 +28,27 @@ function AlertMsg() {
     }, 2000);
   };
   return (
-    <div className="w-[312px] h-[4.7rem] flex p-3 bg-white bg-opacity-60 text-xs rounded-lg mb-1">
+    <div
+      ref={alertmsg}
+      className="w-[312px] h-[4.7rem] flex p-3 bg-white bg-opacity-60 text-xs rounded-lg mb-1"
+    >
       <div className="w-10 h-10 self-center rounded-full">
+        {/* <img src={msg.sender.imageContent} alt="사진" /> */}
         <img src={Img} alt="사진" />
       </div>
-      <div className="self-center w-40 ml-3">보영 님이 당신에게 옴</div>
+      <div className="self-center w-40 ml-3">
+        {/* {msg.sender.nickname} 님이 당신에게 옴 */}
+        보영 님이 당신에게 옴
+      </div>
       <div className="w-8 h-8 self-center mr-3 mt-1">
-        <img src="/reverseheart.png" alt="" />
+        <img
+          src="/reverseheart.png"
+          alt=""
+          aria-hidden
+          onClick={() => {
+            deleteMatch();
+          }}
+        />
       </div>
       <div className="w-8 h-8 self-center mt-2">
         <img
