@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './Pslider.css';
 // import './Profile.css';
+import { Tooltip } from 'react-tooltip';
+import 'react-tooltip/dist/react-tooltip.css';
 import Modal from 'react-modal';
 import axios from 'axios';
 import CloseBtn from '../../assets/CloseBtn.svg';
@@ -479,6 +481,7 @@ function MyProfile({ profileNav }) {
                 <div className="">
                   <span>
                     흡연여부
+
                   </span>
                 </div>
                 <div>
@@ -493,6 +496,7 @@ function MyProfile({ profileNav }) {
               <hr className="" />
               <div className="flex justify-between">
                 <span className="text-xl m-3 ">
+
                   인증정보
                 </span>
                 <div className="flex items-center m-2">
@@ -505,24 +509,63 @@ function MyProfile({ profileNav }) {
               </div>
 
               <div>
+
                 <div className="my-5 ml-5">
                   <div className="inline-block">
-                    <img src={new_certinfo.health === true ? health_yes : health_no} alt="#" className="badges" />
+                    <Tooltip id="my-tooltip" />
+                    <img
+                      src={new_certinfo.health === true ? health_yes : health_no}
+                      alt="#"
+                      className="badges"
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={`건강데이터넣을것임 ${new_certinfo.health}`}
+                    />
+
                   </div>
                   <div className="inline-block">
-                    <img src={new_certinfo.university === true ? university_yes : university_no} alt="#" className="badges" />
+                    <img
+                      src={new_certinfo.university === true ? university_yes : university_no}
+                      alt="#"
+                      className="badges"
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={` ${''}`}
+                    />
                   </div>
                   <div className="inline-block">
-                    <img src={new_certinfo.job === true ? job_yes : job_no} alt="#" className="badges" />
+                    <img
+                      src={new_certinfo.job === true ? job_yes : job_no}
+                      alt="#"
+                      className="badges"
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={` ${''}`}
+                    />
                   </div>
                   <div className="inline-block">
-                    <img src={new_certinfo.certificate === true ? certificate_yes : certificate_no} alt="#" className="badges" />
+                    <img
+                      src={new_certinfo.certificate === true ? certificate_yes : certificate_no}
+                      alt="#"
+                      className="badges"
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={` ${''}`}
+                    />
                   </div>
                   <div className="inline-block">
-                    <img src={new_certinfo.estate === true ? estate_yes : estate_no} alt="#" className="badges" />
+                    <img
+                      src={new_certinfo.estate === true ? estate_yes : estate_no}
+                      alt="#"
+                      className="badges"
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={` ${''}`}
+                    />
                   </div>
                   <div className="inline-block">
-                    <img src={new_certinfo.income === true ? income_yes : income_no} alt="#" className="badges" />
+                    <img
+                      src={new_certinfo.income === true ? income_yes : income_no}
+                      alt="#"
+                      className="badges"
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={` ${''}`}
+                    />
                   </div>
                 </div>
               </div>
