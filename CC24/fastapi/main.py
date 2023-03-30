@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from identification import detect_text_uri, detect_text
 from identification import plus2
 
-app = FastAPI()
+app = FastAPI(root_path="/api/fast")
 
 origins = [
 
