@@ -26,6 +26,7 @@ import ImageUploader from './pages/profile/ImageUploader';
 import Login from './pages/login/login';
 import LikeList from './pages/like/LikeList';
 import ReportModal from './pages/chat/ReportModal';
+import ImageUploader from './pages/profile/ImageUploader';
 
 const router = createBrowserRouter([
   {
@@ -111,6 +112,10 @@ const router = createBrowserRouter([
   {
     path: '/report',
     element: <ReportModal />,
+  },
+  {
+    path: '/ImageUploader',
+    element: <ImageUploader />,
   },
 ]);
 
