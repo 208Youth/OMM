@@ -405,11 +405,17 @@ public class MemberService {
         try {
             MemberCertDto memberCertDto = MemberCertDto.builder()
                     .university(memberCert.isUniversity())
+                    .universityName(memberCert.getUniversityName())
                     .job(memberCert.isJob())
+                    .jobNames(memberCert.getJobNames())
                     .certificate(memberCert.isCertificate())
+                    .certificateNames(memberCert.getCertificateNames())
                     .health(memberCert.isHealth())
+                    .healthInfo(memberCert.getHealthInfo())
                     .estate(memberCert.isEstate())
+                    .estateAmount(memberCert.getEstateAmount())
                     .income(memberCert.isIncome())
+                    .incomeAmount(memberCert.getIncomeAmount())
                     .build();
             return memberCertDto;
         } catch (Exception e) {
