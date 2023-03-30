@@ -5,11 +5,14 @@ import Stomp from 'stompjs';
 import './nav-bar.scss';
 import { Link } from 'react-router-dom';
 
-function Navbar({ profileNav, mainNav, notiNav }) {
-  const ws = new SockJS('http://localhost:5000/api/matching');
-  const stompClient = Stomp.over(ws);
+function Navbar({ profileNav, mainNav, notiNav, chatlistNav }) {
+  // let ws = new SockJS('http://localhost:5000/api/matching', null, {
+  //   transports: ['websocket', 'xhr-streaming', 'xhr-polling'],
+  // });
 
   const sendMatch = () => {
+    const ws = new SockJS('http://localhost:5000/api/matching');
+    const stompClient = Stomp.over(ws);
     // redux 에서 첫번째사람 지우는 함수 작성
     // match 알림 보내기
     stompClient.connect({}, (frame) => {
@@ -25,14 +28,21 @@ function Navbar({ profileNav, mainNav, notiNav }) {
   return (
     <div className="flex justify-center">
       <nav className="menu">
-        <Link href="#" className="menu-item">
+        <Link to="#" className="menu-item">
           <i className="bi bi-search-heart transition duration-300 hover:scale-125" />
           <i className="bi bi-search-heart-fill scale-125" />
         </Link>
-        <Link href="#" className="menu-item">
-          <i className="bi bi-chat-heart transition duration-300 hover:scale-125" />
-          <i className="bi bi-chat-heart-fill scale-125" />
-        </Link>
+        <div className="menu-item">
+          {!chatlistNav && (
+            <Link
+              to="/chattings"
+              className="transition duration-300 hover:scale-125"
+            >
+              <i className="bi bi-chat-heart" />
+            </Link>
+          )}
+          {chatlistNav && <i className="bi bi-chat-heart-fill scale-125" />}
+        </div>
         {!mainNav && (
           <Link
             to="/main"
