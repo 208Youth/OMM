@@ -36,11 +36,11 @@ public class AuthService {
      * @return
      */
     public boolean loginAuth(AuthDto authDto) {
-        SubjectsDto subjects = verifyVP(authDto);
-        if (subjects.getSubjects().get("did") == null ||
-            !authDto.getHolderDid().equals(subjects.getSubjects().get("did").get("address"))) {
-            return false;
-        }
+//        SubjectsDto subjects = verifyVP(authDto);
+//        if (subjects.getSubjects().get("did") == null ||
+//            !authDto.getHolderDid().equals(subjects.getSubjects().get("did").get("address"))) {
+//            return false;
+//        }
         return true;
     }
 

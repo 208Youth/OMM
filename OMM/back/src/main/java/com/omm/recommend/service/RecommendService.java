@@ -3,15 +3,11 @@ package com.omm.recommend.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.omm.exception.member.MemberExceptionCode;
 import com.omm.exception.member.MemberRuntimeException;
-import com.omm.model.entity.Filtering;
-import com.omm.model.entity.Member;
-import com.omm.model.entity.MyInfo;
-import com.omm.model.entity.RecommendDto;
+import com.omm.model.entity.*;
+import com.omm.recommend.model.request.SendFavorRequestDto;
 import com.omm.recommend.model.response.GetRecommendListResponseDto;
-import com.omm.repository.FilteringRepository;
-import com.omm.repository.MemberRepository;
-import com.omm.repository.MyInfoRepository;
-import com.omm.repository.RecommendDtoRepository;
+import com.omm.recommend.model.response.GetRecommendedMemberDetailResponseDto;
+import com.omm.repository.*;
 import com.omm.util.EnumToKNN;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -21,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.sql.Blob;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +35,12 @@ public class RecommendService {
 
     private final RecommendDtoRepository recommendDtoRepository;
 
+    private final FavorRepository favorRepository;
+
+    private final InterestListRepository interestListRepository;
+
+    private final MemberImgRepository memberImgRepository;
+
     public GetRecommendListResponseDto getRecommendList(String currentMemberDidAddress) {
 
 
@@ -52,7 +56,7 @@ public class RecommendService {
 
             // 유저가 지정한 필터링 조건에 맞는 사람 1차적 선별
             // 좋아요, 싫어요 보낸 유저 제외
-            List<RecommendDto> filteredList = recommendDtoRepository.filteredMembers3(myInfo);
+            List<RecommendDto> filteredList = recommendDtoRepository.filteredMembers(myInfo, myFilter);
 
 //            System.out.println(filteredList.size());
             // 이 목록이 없을 경우, 필터링 상관 없이 좋아요나 싫어요를 보내지 않은 상대 최대 200개 선별
@@ -65,7 +69,7 @@ public class RecommendService {
                 filteredList = recommendDtoRepository.filteredMembers3(myInfo);
             }
 
-             //FastAPI 에 보낼 자료구조 생성
+            //FastAPI 에 보낼 자료구조 생성
             Map<String, Double> myKNN = new HashMap<>();
             myKNN.put("age", (myFilter.getAgeMax() * 1.0 + myFilter.getAgeMin()) / 2);
             myKNN.put("height", (myFilter.getHeightMax() * 1.0 + myFilter.getHeightMin()) / 2);
@@ -81,7 +85,7 @@ public class RecommendService {
 //            System.out.println();
 
             Map<Long, Map<String, Double>> users = new HashMap<>();
-            filteredList.forEach((filtMem)->{
+            filteredList.forEach((filtMem) -> {
                 Map<String, Double> user = new HashMap<>();
                 user.put("age", (double) filtMem.getAge());
                 user.put("height", (double) filtMem.getHeight());
@@ -96,7 +100,7 @@ public class RecommendService {
 //                }
 //                System.out.println();
 
-                users.put(filtMem.getMemberId(),user);
+                users.put(filtMem.getMemberId(), user);
 
             });
 
@@ -125,5 +129,72 @@ public class RecommendService {
         } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
         }
+    }
+
+    public boolean sendFavor(String currentMemberDidAddress, SendFavorRequestDto sendFavorRequestDto) {
+        Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        Member target = memberRepository.findById(sendFavorRequestDto.getSenderId())
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+        try {
+            Favor favor = null;
+
+            if(favorRepository.existsByFromMemberAndToMember(member, target)){
+                favor = favorRepository.findByFromMemberAndToMember(member,target);
+                favor.setValue(sendFavorRequestDto.isFavor());
+            } else {
+                favor = Favor.builder()
+                        .fromMember(member)
+                        .toMember(target)
+                        .value(sendFavorRequestDto.isFavor())
+                        .build();
+            }
+            favorRepository.save(favor);
+            return sendFavorRequestDto.isFavor();
+
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
+        }
+
+    }
+
+    public GetRecommendedMemberDetailResponseDto getRecommendedMemberDetail(Long memberId) {
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        MyInfo myInfo = myInfoRepository.findByMember(member)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        List<MemberImg> memberImgList = memberImgRepository.findAllById(memberId);
+
+        List<InterestList> interestList = interestListRepository.findAllByMember(member);
+
+        try {
+            List<Blob> images = new ArrayList<>();
+            memberImgList.forEach((memberImg -> {
+                images.add(memberImg.getImageContent());
+            }));
+
+            List<String> interests = new ArrayList<>();
+            interestList.forEach((interest -> {
+                interests.add(interest.getInterest().getName());
+            }));
+
+            GetRecommendedMemberDetailResponseDto getRecommendedMemberDetailResponseDto = GetRecommendedMemberDetailResponseDto.builder()
+                    .memberId(member.getId())
+                    .nickname(member.getNickname())
+                    .pr(myInfo.getPr())
+                    .age(member.getAge())
+                    .imageList(images)
+                    .interestList(interests)
+                    .build();
+
+            return getRecommendedMemberDetailResponseDto;
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
+        }
+
     }
 }

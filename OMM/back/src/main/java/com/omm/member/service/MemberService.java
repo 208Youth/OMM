@@ -3,10 +3,12 @@ package com.omm.member.service;
 import com.omm.exception.member.MemberExceptionCode;
 import com.omm.exception.member.MemberRuntimeException;
 import com.omm.member.model.dto.InterestDto;
+import com.omm.member.model.dto.LikedMemberDto;
 import com.omm.member.model.dto.MemberCertDto;
 import com.omm.member.model.dto.RegistDto;
 import com.omm.member.model.request.*;
 import com.omm.member.model.response.GetInterestListResponseDto;
+import com.omm.member.model.response.GetLikedMembersResponseDto;
 import com.omm.member.model.response.GetMemberFilteringResponseDto;
 import com.omm.member.model.response.GetMemberInfoResponseDto;
 import com.omm.model.entity.*;
@@ -541,4 +543,25 @@ public class MemberService {
     }
 
 
+    public GetLikedMembersResponseDto getLikedMembers(String currentMemberDidAddress) {
+
+//        Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
+//                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+//
+//        MemberImg memberImg = memberImgRepository.findFirstByMember(member);
+//
+//        try {
+//            LikedMemberDto likedMemberDto = LikedMemberDto.builder()
+//                    .memberId(member.getId())
+//                    .imageMain(memberImg.getImageContent())
+//                    .nickname(member.getNickname())
+//                    .age(member.getAge())
+//                    .build();
+//
+//        } catch (Exception e) {
+//
+//        }
+
+        return null;
+    }
 }
