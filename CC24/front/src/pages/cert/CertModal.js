@@ -15,7 +15,7 @@ function CertModal({ cert, info, isClose }) {
   const infos = info.data.list;
   const [certProgress, setCertProgress] = useState(false);
   const dispatch = useDispatch();
-  const certList = useSelector(state => state.user.cert);
+  const certList = useSelector((state) => state.user.cert);
   console.log(certList);
 
   const handleOnSearch = (string, results) => {
