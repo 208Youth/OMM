@@ -4,6 +4,7 @@ import com.omm.member.model.dto.AuthDto;
 import com.omm.member.model.dto.MemberCertDto;
 import com.omm.member.model.dto.RegistDto;
 import com.omm.member.model.request.*;
+import com.omm.member.model.response.GetLikedMembersResponseDto;
 import com.omm.member.service.AuthService;
 import com.omm.member.service.MemberService;
 import com.omm.util.SecurityUtil;
@@ -219,4 +220,8 @@ public class MemberController {
         return new ResponseEntity<>(memberService.addInterest(SecurityUtil.getCurrentDidAddress().get(), postInterestRequestDto.getName()), HttpStatus.OK);
     }
 
+    @GetMapping("/liked")
+    public ResponseEntity<?> getLikedMembers(){
+        return new ResponseEntity<>(memberService.getLikedMembers(SecurityUtil.getCurrentDidAddress().get()), HttpStatus.OK);
+    }
 }
