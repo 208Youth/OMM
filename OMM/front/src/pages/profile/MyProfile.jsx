@@ -25,8 +25,8 @@ import Pslider from '../../components/Pslider';
 import Navbar from '../../components/nav-bar';
 import userarrow from '../../assets/userarrow.svg';
 import MyinfoSetModal from './MyinfoSetModal';
+import MyinfoSetModal3 from './MyinfoSetModal3';
 import MyinfoSetModal2 from './MyinfoSetModal2';
-
 // props를 통해 userid를 받고 claose 버튼을 눌러서 해당 userid의
 // 아니면 메인 페이지에 해당 컴포넌트를 아예 합쳐버릴까
 function MyProfile({ profileNav }) {
@@ -54,7 +54,8 @@ function MyProfile({ profileNav }) {
     },
   ];
   const [MymodalIsOpen, setMyIsOpen] = useState(false);
-  const [MymodalIsOpen2, setMyIsOpen2] = useState(true);
+  const [MymodalIsOpen2, setMyIsOpen2] = useState(false);
+  const [MymodalIsOpen3, setMyIsOpen3] = useState(true);
   const openMyModal = () => {
     setMyIsOpen(true);
   };
@@ -66,6 +67,12 @@ function MyProfile({ profileNav }) {
   };
   const closeMyModal2 = () => {
     setMyIsOpen2(false);
+  };
+  const openMyModal3 = () => {
+    setMyIsOpen3(true);
+  };
+  const closeMyModal3 = () => {
+    setMyIsOpen3(false);
   };
   const [new_certinfo, setCert] = useState(certinfo);
   const [new_interest, setInterest] = useState(null);
@@ -121,7 +128,7 @@ function MyProfile({ profileNav }) {
   return (
 
     <div className="scroll-smooth">
-      <div className="z-10">
+      <div className="text-center">
 
         <Modal
           className="MyinfoModal"
@@ -131,7 +138,7 @@ function MyProfile({ profileNav }) {
           <MyinfoSetModal setModal={closeMyModal} />
         </Modal>
       </div>
-      <div className="z-10">
+      <div className="text-center">
 
         <Modal
           className="MyinfoModal"
@@ -139,6 +146,15 @@ function MyProfile({ profileNav }) {
           onRequestClose={closeMyModal2}
         >
           <MyinfoSetModal2 setModal={closeMyModal2} />
+        </Modal>
+      </div>
+      <div className="text-center">
+        <Modal
+          className="MyinfoModal3"
+          isOpen={MymodalIsOpen3}
+          onRequestClose={closeMyModal3}
+        >
+          <MyinfoSetModal3 setModal={closeMyModal3} />
         </Modal>
       </div>
       <div>
@@ -248,6 +264,7 @@ function MyProfile({ profileNav }) {
                     <span>
                       고등학교
                     </span>
+
                   </div>
                   <div>
                     <div className="flex items-center">
@@ -329,7 +346,10 @@ function MyProfile({ profileNav }) {
                       관심사
                     </span>
                   </div>
-                  <div>
+                  <div onClick={() => {
+                    openMyModal3();
+                  }}
+                  >
                     <div className="flex items-center">
                       <span className="">{}</span>
                       <div><img src={userarrow} alt="" className="w-3 ml-2" /></div>

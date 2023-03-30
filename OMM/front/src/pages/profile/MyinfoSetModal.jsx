@@ -22,6 +22,7 @@ function MyinfoSetModal({ setModal }) {
     newMbti[index] = value;
     setMbti(newMbti);
   };
+
   // const data = {
   //   height, contact_stlye, drinking_stlye, smoking_stlye, military, pet, MBTI: mbti,
   // };
@@ -253,7 +254,7 @@ function MyinfoSetModal({ setModal }) {
 
             </div>
             <div className="text-center mt-3">
-              <button className="border border-black w-16 h-7 bg-white rounded-lg ">제출</button>
+              <button className="border border-black w-16 h-7 bg-white rounded-lg ">완료</button>
             </div>
           </div>
 
