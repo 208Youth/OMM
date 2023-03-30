@@ -1,6 +1,7 @@
 package com.omm.recommend.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.omm.exception.member.MemberExceptionCode;
 import com.omm.exception.member.MemberRuntimeException;
 import com.omm.model.entity.*;
@@ -9,7 +10,9 @@ import com.omm.recommend.model.response.GetRecommendListResponseDto;
 import com.omm.recommend.model.response.GetRecommendedMemberDetailResponseDto;
 import com.omm.repository.*;
 import com.omm.util.EnumToKNN;
+import com.omm.util.UrlInfo;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -40,6 +43,8 @@ public class RecommendService {
     private final InterestListRepository interestListRepository;
 
     private final MemberImgRepository memberImgRepository;
+
+    private final RestTemplate restTemplate;
 
     public GetRecommendListResponseDto getRecommendList(String currentMemberDidAddress) {
 
@@ -109,13 +114,13 @@ public class RecommendService {
             requestBody.put("users", users);
 
             // FastAPI로 전송
-            String url = "http://localhost:8000/recommend"; // fastAPI url
-            RestTemplate restTemplate = new RestTemplate();
+            String url = UrlInfo.getFastUrl() +"/recommend"; // fastAPI url
+
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            ObjectMapper mapper = new ObjectMapper();
+            Gson gson = new Gson();
 
-            HttpEntity<String> request = new HttpEntity<>(mapper.writeValueAsString(requestBody), headers);
+            HttpEntity<String> request = new HttpEntity<>(gson.toJson(requestBody), headers);
             ResponseEntity<GetRecommendListResponseDto> response = restTemplate.postForEntity(url, request, GetRecommendListResponseDto.class);
             GetRecommendListResponseDto responseBody = response.getBody();
 
