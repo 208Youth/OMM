@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Modal from 'react-modal';
 import Password from './Password';
+import Agree from './Agree';
 
 function Login() {
   const [passwordModal, setPasswordModal] = useState(true);
@@ -9,6 +10,7 @@ function Login() {
   console.log(passwordComplete);
   return (
     <div>
+      <Agree />
       <Modal
         isOpen={passwordModal}
         // onRequestClose={() => setPasswordModal(false)}

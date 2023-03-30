@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import './Signup.css';
 import Modal from 'react-modal';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { EthrDID } from 'ethr-did';
 // import EthrDidResolver from 'ethr-did-resolver';
 // import { getResolver } from 'ethr-did-resolver';
@@ -27,6 +27,7 @@ function Signup() {
   const [gender, setGender] = useState(null);
   const dispatch = useDispatch();
   
+  
   const sendInfo = () => {
     const info = {
       name,
@@ -44,14 +45,12 @@ function Signup() {
       year,
       gender,
     };
-    console.log(Info);
     window.localStorage.setItem('Info', JSON.stringify(Info));
     const keypair = EthrDID.createKeyPair();
-    console.log(keypair);
     const chainNameOrId = 'goerli'; // you can use the network name for the most popular [test] networks.
     const ethrDidOnGoerliNamed = new EthrDID({ ...keypair, chainNameOrId });
-    console.log(ethrDidOnGoerliNamed);
-    window.localStorage.setItem('DID', JSON.stringify(keypair));
+    window.localStorage.setItem('keypair', JSON.stringify(keypair));
+    window.localStorage.setItem('DID', JSON.stringify(ethrDidOnGoerliNamed));
     const localData = JSON.parse(localStorage.getItem('DID'));
     console.log(localData.did);
     navigate("/main")
