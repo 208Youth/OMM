@@ -17,6 +17,7 @@ import ChatList from './pages/alert/ChatList';
 import Admin from './pages/admin/Admin';
 import Detail from './pages/admin/Detail';
 import Main from './pages/main/Main';
+import Chatwindow from './pages/chatting/Chatwindow';
 import ImageUploader from './pages/profile/ImageUploader';
 
 const router = createBrowserRouter([
@@ -75,6 +76,10 @@ const router = createBrowserRouter([
   {
     path: '/chattings',
     element: <ChatList />,
+  },
+  {
+    path: '/Chatwindow',
+    element: <Chatwindow />,
   },
   {
     path: '/admin',
