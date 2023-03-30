@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ReactSearchAutocomplete } from 'react-search-autocomplete';
 import './CertModal.css';
 import CloseBtn from '../../assets/CloseBtn.svg';
@@ -12,11 +12,17 @@ function CertModal({ cert, info, isClose }) {
   const requireSearch = ['대학교', '자격증', '회사'];
   const [select, setSelect] = useState('');
   const [certResult, setCertResult] = useState('');
-  const infos = info.data.list;
+  const [infos, setInfos] = useState([]);
   const [certProgress, setCertProgress] = useState(false);
   const dispatch = useDispatch();
   const certList = useSelector((state) => state.user.cert);
   console.log(certList);
+
+  useEffect(() => {
+    if (info) {
+      setInfos(info.data.list)
+    }
+  }, [])
 
   const handleOnSearch = (string, results) => {
     console.log(string, results);
@@ -76,6 +82,17 @@ function CertModal({ cert, info, isClose }) {
         VCs.push(credential);
         localStorage.setItem('VC', JSON.stringify(VCs));
         let cert = {};
+        // if (api == '소득') {
+        //   cert[api] = select.income
+        // } else if (api == '부동산') {
+        //   cert[api] = select.estate
+        // } else if (api == '건강검진서') {
+        //   cert[api] = {
+        //     health : health,
+        //     date : date,
+        //   }
+        // } else {
+        // }
         cert[api] = select.name;
         dispatch(certInfo(cert));
         console.log(cert);
@@ -84,7 +101,7 @@ function CertModal({ cert, info, isClose }) {
       .catch((err) => {
         setCertProgress(false);
         console.log('왜안되');
-        console.log(err);
+        console.log(err.message);
         setCertResult('됐다요');
       });
   }

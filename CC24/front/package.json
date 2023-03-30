@@ -24,6 +24,7 @@
     "react-search-autocomplete": "^8.3.2",
     "redux-persist": "^6.0.0",
     "sass": "^1.59.3",
+    "swiper": "^9.1.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
