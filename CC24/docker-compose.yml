@@ -1,0 +1,47 @@
+# 필요한 것들 볼륨 설정
+
+version: "3.7"
+
+services:
+  spring:
+    container_name: spring
+    build:
+      context: ./spring
+      dockerfile: Dockerfile
+    ports:
+      - 3324:3324
+    networks:
+      - cc24
+  node:
+    container_name: node
+    env_file:
+      - ./nodejs/.env
+    build:
+      context: ./nodejs
+      dockerfile: Dockerfile
+    ports:
+      - 4424:4424
+    networks:
+      - cc24
+  fast:
+    container_name: fast
+    build:
+      context: ./fastapi
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
+    networks:
+      - cc24
+  front:
+    container_name: front
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - cc24
+networks:
+  cc24:
+    driver: bridge
