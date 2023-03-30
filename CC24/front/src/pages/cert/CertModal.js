@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { ReactSearchAutocomplete } from 'react-search-autocomplete';
 import './CertModal.css';
 import CloseBtn from '../../assets/CloseBtn.svg';
-import { certInfo } from '../../store';
+import { certInfo } from '../../store/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 function CertModal({ cert, info, isClose }) {
@@ -15,7 +15,8 @@ function CertModal({ cert, info, isClose }) {
   const infos = info.data.list;
   const [certProgress, setCertProgress] = useState(false);
   const dispatch = useDispatch();
-  const certList = useSelector((state) => {return state.certInfo.cert});
+  const certList = useSelector(state => state.user.cert);
+  console.log(certList);
 
   const handleOnSearch = (string, results) => {
     console.log(string, results);
@@ -38,8 +39,6 @@ function CertModal({ cert, info, isClose }) {
     <span style={{ display: 'block', textAlign: 'left' }}>{item.name}</span>
   );
 
-  const localData = JSON.parse(localStorage.getItem('DID'));
-
   async function requestCert(api) {
     let credentialName = '';
     if (api === '대학교') {
@@ -57,7 +56,7 @@ function CertModal({ cert, info, isClose }) {
     }
     await axios({
       method: 'post',
-      url: 'http://localhost:4424/api/did/credential',
+      url: 'http://localhost:4424/node/did/credential',
       data: {
         // holderDid: `did:ethr:goerli:${localData.identifier}`,
         holderDid:
@@ -78,7 +77,7 @@ function CertModal({ cert, info, isClose }) {
         localStorage.setItem('VC', JSON.stringify(VCs));
         let cert = {};
         cert[api] = select.name;
-        dispatch(certInfo(cert))
+        dispatch(certInfo(cert));
         console.log(cert);
         console.log(certList);
       })

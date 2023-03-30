@@ -9,8 +9,8 @@ import { EthrDID } from 'ethr-did';
 import FaceRecogModal from './FaceRecogModal';
 import IdenModal from './IdenModal';
 import PasswordModal from './PasswordModal';
-import { userInfo } from '../../store';
-import { useNavigate } from "react-router-dom";
+import { userInfo } from '../../store/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 function Signup() {
   const navigate = useNavigate();
@@ -26,8 +26,7 @@ function Signup() {
   const [day, setDay] = useState('1');
   const [gender, setGender] = useState(null);
   const dispatch = useDispatch();
-  
-  
+
   const sendInfo = () => {
     const info = {
       name,
@@ -53,7 +52,7 @@ function Signup() {
     window.localStorage.setItem('DID', JSON.stringify(ethrDidOnGoerliNamed));
     const localData = JSON.parse(localStorage.getItem('DID'));
     console.log(localData.did);
-    navigate("/main")
+    navigate('/main');
   };
 
   useEffect(() => {
