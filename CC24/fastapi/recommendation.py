@@ -2,9 +2,11 @@ from typing import List, Dict, Any
 import numpy as np
 from scipy.spatial.distance import euclidean
 from operator import itemgetter
+import json
 
-async def recommend(data: Dict[str, Any]):
-    my_info = np.array(list(data["myInfo"].values()))
+
+def knncalc(data: Dict[str, Any]):
+    my_info = np.array(list(data["myinfo"].values()))
     users = {}
     for key in data["users"].keys():
         users[key] = np.array(list(data["users"][key].values()))
@@ -18,5 +20,10 @@ async def recommend(data: Dict[str, Any]):
     # 결과 반환
     result = []
     for i in sorted_distances:
-        result.append(i[0])
-    return result
+        result.append(int(i[0]))
+
+    response = {
+        "userList": result
+    }
+
+    return response
