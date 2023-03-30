@@ -29,7 +29,7 @@ public class MatchingController {
      * @param createNotificationRequestDto
      */
     @MessageMapping("/matching/noti")
-    public void createNotification(@RequestBody CreateNotificationRequestDto createNotificationRequestDto) {
+    public void createNotification(CreateNotificationRequestDto createNotificationRequestDto) {
         Notification notification = matchingService.createNotification(createNotificationRequestDto.getReceiverId());
         ChannelTopic topic = matchingService.getNotificationTopic(createNotificationRequestDto.getReceiverId());
         publisherService.publishNotification(topic, notification);
@@ -51,7 +51,7 @@ public class MatchingController {
      * @return
      */
     @DeleteMapping("/matching/noti")
-    public ResponseEntity<?> deleteNotification(@RequestBody DeleteNotificationRequestDto deleteNotificationRequestDto) {
+    public ResponseEntity<?> deleteNotification(DeleteNotificationRequestDto deleteNotificationRequestDto) {
         matchingService.deleteNotification(deleteNotificationRequestDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
