@@ -1,5 +1,3 @@
-# 필요한 것들 볼륨 설정
-
 version: "3.7"
 
 services:
@@ -37,6 +35,8 @@ services:
     build:
       context: ./front
       dockerfile: Dockerfile
+    volumes:
+      - /etc/letsencrypt/:/etc/letsencrypt/
     ports:
       - 80:80
       - 443:443
@@ -44,4 +44,5 @@ services:
       - cc24
 networks:
   cc24:
-    driver: bridge
+    external:
+      name: cc24
