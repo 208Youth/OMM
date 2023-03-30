@@ -1,8 +1,8 @@
+/* eslint-disable */
+
 import React, { useState, useEffect } from 'react';
 import CloseBtn from '../../assets/CloseBtn.svg';
 import './IdenModal.css';
-import Idenconfirm1 from '../../assets/Idenconfirm1.svg';
-import Idenconfirm2 from '../../assets/Idenconfirm2.svg';
 // import fastapi from '../../api/fastapi.js';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
@@ -135,7 +135,6 @@ function IdenModal({ setIdenModal, setIdenComplete }) {
 }
 
 function Result({ data, setIdenModal, setIdenComplete }) {
-  
   let { name, gender, birthday } = data;
   const strbirth = String(birthday);
   let year = strbirth.slice(0, 2);
@@ -167,18 +166,18 @@ function Result({ data, setIdenModal, setIdenComplete }) {
   let birthdayCheck = false;
   let genderCheck = false;
   if (name == storeName) {
-    nameCheck = true
+    nameCheck = true;
   }
   if (gender == storeGender) {
-    genderCheck = true
+    genderCheck = true;
   }
-  if ((storeYear == year) && (storeMonth == month) && (storeDay == day)) {
-    birthdayCheck = true
+  if (storeYear == year && storeMonth == month && storeDay == day) {
+    birthdayCheck = true;
   }
   // 모두 일치하면 확인 완료 버튼 활성화
-  let complete = false
+  let complete = false;
   if (nameCheck && genderCheck && birthdayCheck) {
-    complete = true
+    complete = true;
   }
 
   return (
@@ -210,12 +209,26 @@ function Result({ data, setIdenModal, setIdenComplete }) {
           <img src="/public/Vector76.png" alt="#" className="inline ml-2" />
         </div>
         <div>
-          <span>{year}년 {month}월 {day}일</span>
+          <span>
+            {year}년 {month}월 {day}일
+          </span>
           {birthdayCheck && <img src="/public/check.png" alt="#" className="ml-3 inline" />}
         </div>
       </div>
       <div className="mx-auto text-center">
-        <div>{complete && <button className="btn-active" onClick={() => {setIdenComplete(true); setIdenModal(false);}}>확인 완료</button>}</div>
+        <div>
+          {complete && (
+            <button
+              className="btn-active"
+              onClick={() => {
+                setIdenComplete(true);
+                setIdenModal(false);
+              }}
+            >
+              확인 완료
+            </button>
+          )}
+        </div>
         <div>{!complete && <button className="btn-inactive">확인 완료</button>}</div>
       </div>
     </div>

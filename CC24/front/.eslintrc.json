@@ -19,6 +19,16 @@
     ],
     "rules": {
         "linebreak-style": 0,
-        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+        "react/prop-types": "off",
+        "react/button-has-type": "off",
+        "jsx-a11y/label-has-associated-control": [
+            2,
+            {
+                "labelAttributes": ["htmlFor"]
+            }
+        ],
+        "no-console": "off",
+        "prefer-const": "off"
     }
 }
