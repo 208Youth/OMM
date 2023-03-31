@@ -7,10 +7,10 @@ import com.omm.matching.model.entity.Notification;
 import com.omm.matching.service.MatchingService;
 import com.omm.matching.service.NotificationPublisherService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,10 +29,11 @@ public class MatchingController {
      * @param createNotificationRequestDto
      */
     @MessageMapping("/matching/noti")
-    public void createNotification(CreateNotificationRequestDto createNotificationRequestDto) {
-        Notification notification = matchingService.createNotification(createNotificationRequestDto.getReceiverId());
-        ChannelTopic topic = matchingService.getNotificationTopic(createNotificationRequestDto.getReceiverId());
-        publisherService.publishNotification(topic, notification);
+    public void createNotification(StompHeaderAccessor accessor, CreateNotificationRequestDto createNotificationRequestDto) {
+        String user = accessor.getUser().getName();
+        Notification notification = matchingService.createNotification(createNotificationRequestDto.getReceiverId(), user);
+        String receiverAddr = matchingService.getReceiverAddr(createNotificationRequestDto.getReceiverId());
+        publisherService.publishNotification(receiverAddr, notification);
     }
 
     /**
@@ -51,7 +52,7 @@ public class MatchingController {
      * @return
      */
     @DeleteMapping("/matching/noti")
-    public ResponseEntity<?> deleteNotification(DeleteNotificationRequestDto deleteNotificationRequestDto) {
+    public ResponseEntity<?> deleteNotification(@RequestBody DeleteNotificationRequestDto deleteNotificationRequestDto) {
         matchingService.deleteNotification(deleteNotificationRequestDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
