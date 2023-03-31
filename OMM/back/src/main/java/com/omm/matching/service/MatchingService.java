@@ -30,8 +30,8 @@ public class MatchingService {
      * @param receiverId
      * @return
      */
-    public ChannelTopic getNotificationTopic(Long receiverId) {
-        return matchingRepository.getNotificationTopic(receiverId);
+    public String getReceiverAddr(Long receiverId) {
+        return matchingRepository.getReceiverAddr(receiverId);
     }
 
     /**
@@ -39,12 +39,12 @@ public class MatchingService {
      * @param receiverId
      * @return
      */
-    public Notification createNotification(Long receiverId) {
+    public Notification createNotification(Long receiverId, String user) {
         String id = UUID.randomUUID().toString();
         LocalDateTime createdTime = LocalDateTime.now();
         Notification notification = Notification.builder()
                 .id(id)
-                .senderId(getSender().getId())
+                .senderId(getSender(user).getId())
                 .createdTime(createdTime)
                 .build();
         matchingRepository.createNotification(receiverId, notification);
@@ -88,6 +88,12 @@ public class MatchingService {
             throw new CustomException(ErrorCode.INVALID_AUTH_TOKEN);
         });
         return memberRepository.findByDidAddress(didAddress).orElseThrow(() -> {
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        });
+    }
+
+    public Member getSender(String user) {
+        return memberRepository.findByDidAddress(user).orElseThrow(() -> {
             throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         });
     }
