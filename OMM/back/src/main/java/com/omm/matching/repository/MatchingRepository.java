@@ -1,13 +1,13 @@
 package com.omm.matching.repository;
 
+import com.omm.exception.CustomException;
 import com.omm.matching.model.entity.Notification;
-import com.omm.matching.service.NotificationSubscriberService;
+import com.omm.model.entity.Member;
+import com.omm.repository.MemberRepository;
+import com.omm.util.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.listener.ChannelTopic;
-import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
@@ -16,16 +16,12 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class MatchingRepository {
-    private final RedisMessageListenerContainer redisMessageListenerContainer;
-    private final NotificationSubscriberService subscriberService;
-    private static final String TOPIC = "Topic";
     private final RedisTemplate redisTemplate;
-    private ListOperations<Long, Notification> opsListNotification;
-    private HashOperations<String, Long, ChannelTopic> opsHashTopic;
+    private ListOperations<String, Notification> opsListNotification;
+    private final MemberRepository memberRepository;
     @PostConstruct
     private void init() {
         opsListNotification = redisTemplate.opsForList();
-        opsHashTopic = redisTemplate.opsForHash();
     }
 
     /**
@@ -46,7 +42,7 @@ public class MatchingRepository {
      * @param notification
      */
     public void createNotification(Long receiverId, Notification notification) {
-        opsListNotification.leftPush(receiverId, notification);
+        opsListNotification.leftPush(String.valueOf(receiverId), notification);
     }
 
     /**
@@ -55,7 +51,7 @@ public class MatchingRepository {
      * @return
      */
     public List<Notification> getNotifications(Long id) {
-        return opsListNotification.range(id, 0, -1);
+        return opsListNotification.range(String.valueOf(id), 0, -1);
     }
 
     /**
@@ -64,6 +60,6 @@ public class MatchingRepository {
      * @param notification
      */
     public void deleteNotification(Long receiverId, Notification notification) {
-        opsListNotification.remove(receiverId, 1, notification);
+        opsListNotification.remove(String.valueOf(receiverId), 1, notification);
     }
 }

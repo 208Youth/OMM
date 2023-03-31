@@ -7,10 +7,10 @@ import com.omm.matching.model.entity.Notification;
 import com.omm.matching.service.MatchingService;
 import com.omm.matching.service.NotificationPublisherService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -52,7 +52,7 @@ public class MatchingController {
      * @return
      */
     @DeleteMapping("/matching/noti")
-    public ResponseEntity<?> deleteNotification(DeleteNotificationRequestDto deleteNotificationRequestDto) {
+    public ResponseEntity<?> deleteNotification(@RequestBody DeleteNotificationRequestDto deleteNotificationRequestDto) {
         matchingService.deleteNotification(deleteNotificationRequestDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
