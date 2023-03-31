@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
-import send_small_btn from '../../assets/send_small_btn.svg';
+import Modal from 'react-modal';
+import BottomModal from './BottomModal';
+import ReportModal from './ReportModal';
 
 function ChatWindow() {
   const [roomId, setRoomId] = useState(localStorage.getItem('wschat.roomId'));
@@ -10,7 +12,38 @@ function ChatWindow() {
   const [room, setRoom] = useState({});
   const [message, setMessage] = useState('');
   // 임시로 메시지를 저장
-  const [messages, setMessages] = useState([{ senderId: 1, content: '자나요?', isRead: true }, { senderId: 1, content: '술 마실래요', isRead: true }, { senderId: 2, content: '저 입이 없어서 술 못마셔요 ㅜㅜ', isRead: true }, { senderId: 1, content: '아 네', isRead: false }, { senderId: 1, content: '카톡 할래요?', isRead: false }, { senderId: 2, content: '저 와이파이가 안되서 카톡 못해요 ㅠㅠ', isRead: false }]);
+  const [messages, setMessages] = useState([
+    { senderId: 1, content: '자나요?', isRead: true },
+    { senderId: 1, content: '술 마실래요', isRead: true },
+    { senderId: 2, content: '저 입이 없어서 술 못마셔요 ㅜㅜ', isRead: true },
+    { senderId: 1, content: '아 네', isRead: false },
+    { senderId: 1, content: '카톡 할래요?', isRead: false },
+    {
+      senderId: 2,
+      content: '저 와이파이가 안되서 카톡 못해요 ㅠㅠ',
+      isRead: false,
+    },
+  ]);
+
+  const [modalIsOpen, setIsOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
+  const openReportModal = () => {
+    setReportOpen(true);
+  };
+
+  const closeReportModal = () => {
+    setReportOpen(false);
+  };
+
   const ws = new SockJS('http://localhost:8080/api/chat');
   const stompClient = Stomp.over(ws);
   // 임시값으로 쁘띠재용을 받는다.
@@ -18,16 +51,22 @@ function ChatWindow() {
 
   const findRoom = () => {
     console.log('개신기한 호이스팅');
-    axios.get(`http://localhost:8080/api/chat/room/${roomId}`).then((response) => {
-      setRoom(response.data);
-    });
+    axios
+      .get(`http://localhost:8080/api/chat/room/${roomId}`)
+      .then((response) => {
+        setRoom(response.data);
+      });
   };
 
   const sendMessage = () => {
     // const ws = new SockJS('http://localhost:8080/api/chat');
     // const stompClient = Stomp.over(ws);
     stompClient.connect({}, (frame) => {
-      stompClient.send('/api/pub/chat/message', {}, JSON.stringify({ roomId, senderId: sender, content: message }));
+      stompClient.send(
+        '/api/pub/chat/message',
+        {},
+        JSON.stringify({ roomId, senderId: sender, content: message }),
+      );
       setMessage('');
       stompClient.disconnect();
     });
@@ -38,24 +77,28 @@ function ChatWindow() {
     console.log('아래는 메시지');
     console.log(message);
     console.log(messages.length);
-    stompClient.connect({}, (frame) => {
-      stompClient.subscribe('/sub/chat/entrance', (readDto) => {
-        const readIndex = JSON.parse(readDto.body);
-        recvReadDto(readIndex);
-      });
+    stompClient.connect(
+      {},
+      (frame) => {
+        stompClient.subscribe('/sub/chat/entrance', (readDto) => {
+          const readIndex = JSON.parse(readDto.body);
+          recvReadDto(readIndex);
+        });
 
-      stompClient.subscribe(`/sub/chat/room/${roomId}`, (message) => {
-        const recv = JSON.parse(message.body);
-        recvMessage(recv);
-      });
-    }, (error) => {
-      // if(reconnect++ < 5) {
-      //   setTimeout(function() {
-      //     console.log("connection reconnect");
-      //     connect();
-      //   },10*1000);
-      // }
-    });
+        stompClient.subscribe(`/sub/chat/room/${roomId}`, (message) => {
+          const recv = JSON.parse(message.body);
+          recvMessage(recv);
+        });
+      },
+      (error) => {
+        // if(reconnect++ < 5) {
+        //   setTimeout(function() {
+        //     console.log("connection reconnect");
+        //     connect();
+        //   },10*1000);
+        // }
+      },
+    );
   };
 
   const recvReadDto = (readIndex) => {
@@ -74,7 +117,8 @@ function ChatWindow() {
 
   useEffect(() => {
     findRoom();
-    axios.get(`http://localhost:8080/api/chat/room/${roomId}` + '/messages')
+    axios
+      .get(`http://localhost:8080/api/chat/room/${roomId}` + '/messages')
       .then(({ data }) => {
         console.log('아래는 data 정보');
         console.log({ data });
@@ -95,28 +139,33 @@ function ChatWindow() {
         <span className="ml-3 font-sans font-bold">{user2ID}</span>
       </div>
       <div className="w-[312px] h-[4.7rem] flex bg-white bg-opacity-10 text-xs rounded-lg mb-1">
-
         <div id="chatdetail">
-          <div>
-            {/* 만약 보낸사람이 내가 아니라면 */}
-
-          </div>
+          <div>{/* 만약 보낸사람이 내가 아니라면 */}</div>
           <div id="Chat">
             <div>
               {}
               <div>{room.id}</div>
               <ul>
                 {messages.map((msg, index) => (
-                  <li key={index} className={`my-2 ${msg.senderId === 1 ? 'text-left' : 'text-right'}`}>
+                  <li
+                    key={index}
+                    className={`my-2 ${
+                      msg.senderId === 1 ? 'text-left' : 'text-right'
+                    }`}
+                  >
                     {msg.senderId === 1 ? (
                       <>
                         <span className="">{msg.senderId}</span>
                         <span className="text-sm mr-2">{msg.content}</span>
-                        <span className="text-xs">{msg.isRead ? '읽음' : '안읽음'}</span>
+                        <span className="text-xs">
+                          {msg.isRead ? '읽음' : '안읽음'}
+                        </span>
                       </>
                     ) : (
                       <>
-                        <span className="text-xs">{msg.isRead ? '읽음' : '안읽음'}</span>
+                        <span className="text-xs">
+                          {msg.isRead ? '읽음' : '안읽음'}
+                        </span>
                         <span className="text-sm mr-2">{msg.content}</span>
                         <span className="">{msg.senderId}</span>
                       </>
@@ -124,19 +173,82 @@ function ChatWindow() {
                   </li>
                 ))}
               </ul>
-              <div className="flex">
-                <input type="text" className="rounded " value={message} onChange={(e) => setMessage(e.target.value)} />
+              <div className="flex fixed bottom-0 ml-1">
+                <button
+                  onClick={() => {
+                    openModal();
+                  }}
+                  className="flex justify-center items-center h-12 w-12 relative bg-[#F2EAF2] rounded-full m-1 hover:border"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.25rem"
+                    height="1.25rem"
+                    fill="currentColor"
+                    className="bi bi-plus-lg text-[#364C63]"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"
+                    />
+                  </svg>
+                </button>
+                <input
+                  type="text"
+                  className="rounded-md bg-[#F2EAF2] w-60 h-11 self-center"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                />
                 {/* <button onClick={sendMessage}>Send</button> */}
 
-                <button className="flex justify-center items-center h-5 w-5 relative bg-white rounded-full m-1 hover:border" onClick={sendMessage}>
-                  <img src={send_small_btn} className="absolute w-3 inset-y-1 right-0.5" alt="" />
+                <button
+                  className="flex justify-center items-center h-12 w-12 relative bg-[#F2EAF2] rounded-full m-1 hover:border"
+                  onClick={sendMessage}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.25rem"
+                    height="1.25rem"
+                    fill="currentColor"
+                    className="bi bi-send-fill text-[#364C63]"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
+                  </svg>
                 </button>
-
               </div>
-
             </div>
+            <Modal
+              isOpen={modalIsOpen}
+              onRequestClose={closeModal}
+              className="BottomModal"
+              overlayClassName="KakaomapOverlay"
+              ariaHideApp={false}
+            >
+              <BottomModal
+                setModal={() => {
+                  closeModal();
+                }}
+                setReportModal={() => {
+                  openReportModal();
+                }}
+              />
+            </Modal>
           </div>
-
+          <Modal
+            isOpen={reportOpen}
+            onRequestClose={closeReportModal}
+            className="KakaomapModal"
+            overlayClassName="KakaomapOverlay"
+            ariaHideApp={false}
+          >
+            <ReportModal
+              setReportModal={() => {
+                closeReportModal();
+              }}
+            />
+          </Modal>
         </div>
       </div>
     </div>

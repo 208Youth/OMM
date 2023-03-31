@@ -1,23 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './ChatModal.css';
 import CloseBtn from '../../assets/CloseBtn.svg';
 import UploadIcon from '../../assets/fileuploadicon.png';
 
 function ReportModal({ setReportModal }) {
   const [imgfile, setFile] = useState(null);
   const [imageSrc, setImageSrc] = useState('');
+  const [report, setReport] = useState({
+    target_id: '',
+    reason: '',
+    image: '',
+    state: false,
+    category: '',
+  });
 
   const encodeFileToBase64 = (fileBlob) => {
-    // 파일명 변경(회원이름 가져올것)
-    let editFile = null;
-    editFile = new File([fileBlob], '{name}.jpg', { type: fileBlob.type });
-    // 파일명 변경된 파일을 저장
-    setFile(editFile);
+    setFile(fileBlob);
+    setReport((prev) => ({
+      ...prev,
+      image: fileBlob,
+    }));
     // 업로드한 이미지 보여주기
     const reader = new FileReader();
     reader.readAsDataURL(fileBlob);
     const uploadicon = document.getElementById('uploadicon');
-    uploadicon.className = 'hidden';
+    uploadicon.className = 'hidden mb-2';
     return new Promise((resolve) => {
       reader.onload = () => {
         setImageSrc(reader.result);
@@ -26,13 +34,11 @@ function ReportModal({ setReportModal }) {
     });
   };
 
-  async function sendImg() {
+  async function sendReport() {
     await axios({
       method: 'post',
-      url: '',
-      data: {
-        file: imgfile,
-      },
+      url: '/api/admin/report',
+      data: report,
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -46,6 +52,17 @@ function ReportModal({ setReportModal }) {
       });
   }
 
+  useEffect(() => {
+    setReport((prev) => ({
+      ...prev,
+      target_id: '부모에서 받아온 상대방 id',
+    }));
+  }, []);
+
+  useEffect(() => {
+    console.log(report);
+  }, [report]);
+
   return (
     <div>
       <p className="flex justify-end">
@@ -57,21 +74,35 @@ function ReportModal({ setReportModal }) {
           aria-hidden="true"
         />
       </p>
-      <div className="font-medium text-[#364C63] mb-3">신고 사유</div>
-      <select
-        id="reasons"
-        className="mx-auto bg-gray-50 border border-gray-300 text-[#364C63] text-sm font-semibold font-sans mb-6 rounded-3xl border-[#364c6375] placeholder-[#364C63] placeholder-opacity-75 focus:border-[#364C63] block w-80 p-2.5"
+      <label
+        htmlFor="category"
+        className="block text-sm font-medium text-[#364C63] mb-3"
       >
-        <option value="SEXUAL_HARASS" className="text-[#364C63] w-full">
+        신고 사유
+      </label>
+      <select
+        id="category"
+        onClick={(e) => {
+          setReport((prev) => ({
+            ...prev,
+            category: e.target.value,
+          }));
+        }}
+        className="mx-auto block w-full p-2 mb-6 text-sm font-sans text-[#364C63] border border-gray-300 rounded-lg bg-gray-50 focus:ring-[#364C63] focus:border-[#364C63]"
+      >
+        <option value="SEXUAL_HARASS" className="font-sans">
           성희롱
         </option>
-        <option value="HATE" className="w-full">
-          비매너
+        <option value="US" className="font-sans text-[#364C63]">
+          United States
         </option>
-        <option value="FR" className="w-full">
+        <option value="CA" className="font-sans text-[#364C63]">
+          Canada
+        </option>
+        <option value="FR" className="font-sans text-[#364C63]">
           France
         </option>
-        <option value="DE" className="w-full">
+        <option value="DE" className="font-sans text-[#364C63]">
           Germany
         </option>
       </select>
@@ -89,7 +120,7 @@ function ReportModal({ setReportModal }) {
         type="file"
         accept="image/*"
         required
-        multiple
+        // multiple
         style={{ display: 'none' }}
         onChange={(e) => {
           encodeFileToBase64(e.target.files[0]);
@@ -108,11 +139,17 @@ function ReportModal({ setReportModal }) {
         rows="4"
         className="block p-2.5 w-full font-sans text-sm text-[#364C63] bg-gray-50 rounded-lg border border-gray-300 focus:border-[#364C63]"
         placeholder="신고사유를 자세히 알려주세요."
+        onBlur={(e) => {
+          setReport((prev) => ({
+            ...prev,
+            reason: e.target.value,
+          }));
+        }}
       />
       <button
         type="button"
         onClick={() => {
-          sendImg();
+          sendReport();
           setReportModal(false);
         }}
         className="bg-[#364C63] text-white hover:bg-white hover:text-[#364C63] hover:border-[#364C63] hover:border-2 w-full mt-5 h-10 rounded-3xl drop-shadow-md font-sans font-semibold"
