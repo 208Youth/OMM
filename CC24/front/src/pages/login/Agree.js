@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { EthrDID } from 'ethr-did';
 import ommapi from '../../api/ommapi';
 
-function Agree({setIsLogined}) {
+function Agree({setIsLoading}) {
   const [checkedList, setCheckedList] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
   const did = JSON.parse(localStorage.getItem('DID')).did;
@@ -36,10 +36,12 @@ function Agree({setIsLogined}) {
   };
   const toOMM = async () => {
     if (isChecked) {
+      setIsLoading(true)
       await ommapi
         .post(`${type}`, data)
         .then((res) => {
           console.log(res);
+          setIsLoading(false)
         })
         .catch((err) => {
           console.log(err);
