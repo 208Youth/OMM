@@ -34,8 +34,8 @@ public class Report {
     private String reason;
 
     @Lob
-    @JoinColumn(name = "image")
-    private Blob image;
+    @JoinColumn(name = "image", columnDefinition = "Blob")
+    private byte[] image;
 
     @JoinColumn(name = "state", nullable = false)
     private boolean state;
