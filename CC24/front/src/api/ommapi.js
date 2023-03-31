@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export default axios.create({
-  baseURL: 'http://127.0.0.1:8000/api/fast',
+  baseURL: 'http://127.0.0.1:5000/api/',
   headers: {
     'Content-Type': 'multipart/form-data',
     'Access-Control-Allow-Origin': '*',

@@ -2,6 +2,7 @@ package com.omm.member.service;
 
 import com.google.gson.Gson;
 import com.omm.exception.CustomException;
+import com.omm.jwt.TokenProvider;
 import com.omm.member.model.dto.AuthDto;
 import com.omm.member.model.dto.RegistDto;
 import com.omm.member.model.dto.SubjectsDto;
@@ -17,6 +18,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -28,6 +32,10 @@ public class AuthService {
     private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
     private final RestTemplate restTemplate;
+
+    private final TokenProvider tokenProvider;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+
 
     /**
      * 로그인 인증 (DID 주소와 VP 일치 확인)
@@ -93,6 +101,16 @@ public class AuthService {
             throw new CustomException(ErrorCode.INVALID_VP);
         }
 
+    }
+
+    public String authenticate(String username, String password){
+
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(username, password);
+
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        return tokenProvider.createToken(authentication);
     }
 
 }

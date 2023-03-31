@@ -14,11 +14,11 @@ function Index() {
           <button className="btn">회원가입</button>
         </Link>
       </div>
-      <div>
+      {/* <div>
         <Link to="/login">
           <button className="btn">로그인</button>
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 }
