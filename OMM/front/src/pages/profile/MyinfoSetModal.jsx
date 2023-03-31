@@ -1,8 +1,6 @@
 // import { def } from '@vue/shared';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import React, { useState, useEffect } from 'react';
 // import '../../index.css';
 // import CloseBtn from '../../assets/CloseBtn.svg';
 import './Profile.css';
