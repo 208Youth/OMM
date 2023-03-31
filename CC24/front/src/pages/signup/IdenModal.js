@@ -185,34 +185,34 @@ function Result({ data, setIdenModal, setIdenComplete }) {
       <div className="flex mx-5 justify-between">
         <div>
           <span className="keys">이름</span>
-          <img src="/public/Vector76.png" alt="#" className="inline ml-2" />
+          <img src="../../../Vector76.png" alt="#" className="inline ml-2" />
         </div>
         <div>
           <span>{name}</span>
-          {nameCheck && <img src="/public/check.png" alt="#" className="ml-3 inline" />}
+          {nameCheck && <img src="../../../check.png" alt="#" className="ml-3 inline" />}
         </div>
       </div>
 
       <div className="flex mx-5 justify-between">
         <div>
           <span className="keys">성별</span>
-          <img src="/public/Vector76.png" alt="#" className="inline ml-2" />
+          <img src="../../../Vector76.png" alt="#" className="inline ml-2" />
         </div>
         <div>
           <span>{gender}</span>
-          {genderCheck && <img src="/public/check.png" alt="#" className="ml-3 inline" />}
+          {genderCheck && <img src="../../../check.png" alt="#" className="ml-3 inline" />}
         </div>
       </div>
       <div className="flex mx-5 justify-between">
         <div>
           <span className="keys">생년월일</span>
-          <img src="/public/Vector76.png" alt="#" className="inline ml-2" />
+          <img src="../../../Vector76.png" alt="#" className="inline ml-2" />
         </div>
         <div>
           <span>
             {year}년 {month}월 {day}일
           </span>
-          {birthdayCheck && <img src="/public/check.png" alt="#" className="ml-3 inline" />}
+          {birthdayCheck && <img src="../../../check.png" alt="#" className="ml-3 inline" />}
         </div>
       </div>
       <div className="mx-auto text-center">
