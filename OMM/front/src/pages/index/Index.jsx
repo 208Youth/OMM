@@ -6,26 +6,28 @@ import http from '../../api/http';
 function Index() {
   async function signup() {
     const type = 'SIGNUP';
-    await http
-      .get(`${type}`)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // await http
+    //   .get(`sign/${type}`)
+    //   .then((res) => {
+    //     console.log(res);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+    window.location.href = `http://localhost:3000/login?type=${type}`;
   }
 
   async function login() {
     const type = 'SIGNIN';
-    await http
-      .get(`${type}`)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // await http
+    //   .get(`sign/${type}`)
+    //   .then((res) => {
+    //     console.log(res);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+    window.location.href = `http://localhost:3000/login?type=${type}`;
   }
 
   return (

@@ -33,16 +33,20 @@ public class RedirectController {
 //    }
 
     @GetMapping("/{type}")
-    public RedirectView moveToCC24Sign(@PathVariable String type) {
+    public ResponseEntity<Void> moveToCC24Sign(@PathVariable String type) {
+        System.out.println(type);
+        String toUrl = "http://localhost:3000/login?type=";
 
-
-        if (type.equals("SIGNIN")) {
-            return new RedirectView("https://localhost:3000/login?type=SIGNIN");
-        } else if (type.equals("SIGNUP")) {
-            return new RedirectView("https://localhost:3000/login?type=SIGNUP");
+        if (type.equals("SIGNIN") || type.equals("SIGNUP")) {
+            toUrl += type;
         } else {
             throw new CustomException(ErrorCode.CANNOT_AUTHORIZE_MEMBER);
         }
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(URI.create(toUrl));
+
+        return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY);
     }
 
     @GetMapping("/certificate/{type}")
@@ -51,7 +55,7 @@ public class RedirectController {
         switch (type) {
             case "UniversityCredential": case "CertificateCredential": case "JobCredential":
             case "IncomeCredential": case "EstateCredential":  case "HealthCredential":
-                return new RedirectView("https://localhost:3000/certificate?type="+ type);
+                return new RedirectView("http://localhost:3000/certificate?type="+ type);
             default:
                 throw new CustomException(ErrorCode.CANNOT_AUTHORIZE_MEMBER);
         }
