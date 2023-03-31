@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-
+import React, { useState } from 'react';
+// import { useEffect } from 'react'
+// import axios from 'axios';
+// import { useSelector } from 'react-redux';
 import Navbar from '../../components/nav-bar';
 import Pslider from '../../components/Pslider';
 import './Main.css';
-import { useSelector } from 'react-redux';
 
 function Main() {
   // const [userlist, setUserList] = useState();
