@@ -14,7 +14,17 @@ function Main() {
   return (
     <div className="flex px-10">
       <div className="flex-col w-80 mx-auto">
-        <p className="text-3xl text-left mb-4 leading-relaxed">Main</p>
+      <div>
+        <p className="text-3xl text-left ml-9 mt-20 leading-relaxed" style={{ marginLeft: '1rem' }}>
+          인증서
+        </p>
+      </div>
+      <div>
+        <p className="text-3xl text-left ml-9 leading-relaxed" style={{ marginLeft: '1rem' }}>
+          리스트
+        </p>
+        <br />
+      </div>
         <Swiper
         effect={"cards"}
         grabCursor={true}
@@ -23,20 +33,9 @@ function Main() {
         >
         {certList.map((cert) => (
           <SwiperSlide >
-            <div className="flex items-center pl-3">
-            <input
-              id="vue-checkbox"
-              type="checkbox"
-              value= {Object.keys(cert)}
-              onClick={(e) => {check(e.target.value)}}
-            />
-            <label
-              htmlFor="vue-checkbox"
-              className="w-full py-3 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-            >
+            <p className="text-3xl text-left leading-relaxed">
               {Object.keys(cert)} - {Object.values(cert)}
-            </label>
-          </div>
+            </p>
           </SwiperSlide>
         ))}
       </Swiper>
