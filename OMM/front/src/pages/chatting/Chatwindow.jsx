@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
+import send_small_btn from '../../assets/send_small_btn.svg';
 
 function ChatWindow() {
   const [roomId, setRoomId] = useState(localStorage.getItem('wschat.roomId'));
@@ -123,9 +124,14 @@ function ChatWindow() {
                   </li>
                 ))}
               </ul>
-              <div>
-                <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} />
-                <button onClick={sendMessage}>Send</button>
+              <div className="flex">
+                <input type="text" className="rounded " value={message} onChange={(e) => setMessage(e.target.value)} />
+                {/* <button onClick={sendMessage}>Send</button> */}
+
+                <button className="flex justify-center items-center h-5 w-5 relative bg-white rounded-full m-1 hover:border" onClick={sendMessage}>
+                  <img src={send_small_btn} className="absolute w-3 inset-y-1 right-0.5" alt="" />
+                </button>
+
               </div>
 
             </div>
