@@ -3,9 +3,12 @@ package com.omm.member.controller;
 import com.omm.exception.CustomException;
 import com.omm.jwt.JwtFilter;
 import com.omm.member.model.dto.AuthDto;
+import com.omm.member.model.dto.RegistDto;
 import com.omm.member.model.dto.TokenDto;
 import com.omm.member.service.AuthService;
+import com.omm.member.service.MemberService;
 import com.omm.util.error.ErrorCode;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +18,17 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 
-@Controller
+@RestController
+@RequiredArgsConstructor
 @RequestMapping("/sign")
 public class RedirectController {
 
-    private AuthService authService;
+    private final AuthService authService;
+
+    private final MemberService memberService;
+
 //    @RequestMapping("/test2")
 //    public ModelAndView test2(HttpServletRequest request) {
 //        // ...
@@ -33,8 +41,7 @@ public class RedirectController {
 //    }
 
     @GetMapping("/{type}")
-    public ResponseEntity<Void> moveToCC24Sign(@PathVariable String type) {
-        System.out.println(type);
+    public ResponseEntity<Object> moveToCC24Sign(@PathVariable String type) throws URISyntaxException {
         String toUrl = "http://localhost:3000/login?type=";
 
         if (type.equals("SIGNIN") || type.equals("SIGNUP")) {
@@ -42,9 +49,12 @@ public class RedirectController {
         } else {
             throw new CustomException(ErrorCode.CANNOT_AUTHORIZE_MEMBER);
         }
+        System.out.println(toUrl);
 
+        URI redirectUri = new URI("http://localhost:3000/");
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(URI.create(toUrl));
+//        httpHeaders.setLocation(URI.create(toUrl));
+        httpHeaders.setLocation(redirectUri);
 
         return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY);
     }
@@ -62,11 +72,43 @@ public class RedirectController {
     }
 
     @PostMapping("/{type}")
-    public ResponseEntity<Void> doSign(@RequestBody AuthDto authDto) {
+    public ResponseEntity<?> doSign(@PathVariable("type")String type , @RequestBody AuthDto authDto) throws URISyntaxException {
+        System.out.println("hellohello");
+        System.out.println(type);
+        System.out.println(authDto.getHolderDid());
+        System.out.println(authDto.getVpJwt());
+
+        System.out.println(memberService.existDidAddress(authDto.getHolderDid()));
+        URI target = null;
+
+        // 로그인, 회원가입에 따라 분기
+        switch (type){
+            case "SIGNUP":
+                if(!memberService.existDidAddress(authDto.getHolderDid())){
+                    RegistDto registDto = authService.registAuth(authDto);
+                    memberService.addMember(registDto);
+                    target = new URI("http://localhost:5173/api/main");
+                } else{
+                    return new ResponseEntity<>("로그인하세요.", HttpStatus.BAD_REQUEST);
+                }
+                break;
+            case "SIGNIN":
+                if(memberService.existDidAddress(authDto.getHolderDid())){
+                    target = new URI("http://localhost:5173/api/main");
+                }else{
+                    return new ResponseEntity<>("회원가입하세요.", HttpStatus.BAD_REQUEST);
+                }
+                break;
+            default:
+                throw new CustomException(ErrorCode.CANNOT_AUTHORIZE_MEMBER);
+        }
+
+        System.out.println(target);
+
         String jwt = authService.authenticate(authDto.getHolderDid(), authDto.getVpJwt());
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(URI.create("http://localhost:5173/api/main"));
+        httpHeaders.setLocation(target);
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
         return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY);
