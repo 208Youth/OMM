@@ -5,10 +5,12 @@ import { useSelector } from 'react-redux';
 import { EthrDID } from 'ethr-did';
 import ommapi from '../../api/ommapi';
 
-function Agree() {
+function Agree({setIsLogined}) {
   const [checkedList, setCheckedList] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
   const did = JSON.parse(localStorage.getItem('DID')).did;
+  const searchParams = new URLSearchParams(window.location.search);
+  const type = searchParams.get('type');
 
   const checkedItemHandler = (value: string, isChecked: boolean) => {
     if (isChecked) {
