@@ -7,23 +7,40 @@ import './IdenModal.css';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 
-function IdenModal({ setIdenModal, setIdenComplete }) {
+function IdenModal({ setIdenModal, setIdenComplete, inputname, inputyear, inputmonth, inputgender}) {
   const [imageSrc, setImageSrc] = useState('');
   const [imgfile, setFile] = useState('');
   const [name, setName] = useState('');
   const [gender, setGender] = useState('');
   const [birthday, setBirthday] = useState('');
+  
 
   // fastapi의 idening를 실행시키기 위한 코드
   async function sendImg() {
-    console.log(imgfile);
+
+
+    const formData = new FormData();
+    // formData.append('pay', JSON.stringify(pay));
+    formData.append('inputname', inputname)
+    formData.append('inputyear', inputyear)
+    formData.append('inputmonth', inputmonth)
+    formData.append('inputgender', inputgender)
+    formData.append('file', imgfile);
+    // for (let key of formData.keys()) {
+    //   console.log(key, formData.get(key))
+    // }
+    
+    console.log(formData)
     await axios({
       method: 'post',
       url: 'http://127.0.0.1:8000/idenimg',
-      data: {
-        // 데이터의 파일부분에 문제가 있는 것 같다.
-        file: imgfile,
-      },
+      data: formData ,
+      // {
+      //   // 데이터의 파일부분에 문제가 있는 것 같다.
+      //   // formData
+      //   // ...formData
+      //   // file:imgfile
+      // },
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -38,6 +55,9 @@ function IdenModal({ setIdenModal, setIdenComplete }) {
       .catch((err) => {
         console.log(err);
         console.log('fastapi로 이미지를 보내는데 실패했습니다.');
+            for (let key of formData.keys()) {
+      console.log(key, formData.get(key))
+    }
       });
   }
   const encodeFileToBase64 = (fileBlob) => {

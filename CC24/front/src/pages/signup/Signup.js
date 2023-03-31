@@ -108,13 +108,17 @@ function Signup() {
         className="Modal"
         overlayClassName="Overlay"
       >
-        <IdenModal
+        <IdenModal 
           setIdenModal={setIdenModal}
           setIdenComplete={(res) => {
             if (res) {
               setIdenComplete(true);
             }
           }}
+          inputname={name}
+          inputyear={year}
+          inputmonth={month}
+          inputgender={gender}
         />
       </Modal>
       <Modal
