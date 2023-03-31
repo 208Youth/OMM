@@ -21,7 +21,6 @@ import Chatwindow from './pages/chatting/Chatwindow';
 import ImageUploader from './pages/profile/ImageUploader';
 import Login from './pages/login/login';
 import LikeList from './pages/like/LikeList';
-import ReportModal from './pages/chat/ReportModal';
 
 const router = createBrowserRouter([
   {
@@ -103,10 +102,6 @@ const router = createBrowserRouter([
   {
     path: '/likes',
     element: <LikeList />,
-  },
-  {
-    path: '/report',
-    element: <ReportModal />,
   },
   {
     path: '/ImageUploader',
