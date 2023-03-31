@@ -12,7 +12,8 @@ client = vision.ImageAnnotatorClient()
 # Gets a list of filenames in the "book_img" directory
 
 # 1 로컬사진을 분석하는 코드
-def detect_text(path):
+def detect_text(path, inputname, inputyear, inputmonth, inputgender):
+# def detect_text(path,):
     filenames = os.listdir('./iden_img')
 
     filename = filenames[0]
@@ -40,14 +41,18 @@ def detect_text(path):
     name = (texts[0].description)[6:9]
     birthday = (texts[0].description)[15:21]
     gender = (texts[0].description)[22:23]
+ 
     print(doc_type)
     print(name)
     print(birthday)
     print(gender)
+    print(inputname)
+    print(inputmonth)
     for file in filenames:
         os.remove(os.path.join('./iden_img', file))
         # 여기서 암호화 코드 넣기 
-    return {'doc_type': doc_type, 'name': name, 'birthday': birthday, 'gender': gender}
+    return {'doc_type': doc_type, 'name': name, 'birthday': birthday, 'gender': gender,  'inputname': inputname, 'inputyear': inputyear, 'inputmonth': inputmonth, 'inputgender': inputgender}
+    # return {'doc_type': doc_type, 'name': name, 'birthday': birthday, 'gender': gender}
 
 
 # 1.1 로컬상의 사진 분석

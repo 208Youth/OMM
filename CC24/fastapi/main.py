@@ -2,7 +2,7 @@ from typing import Union
 import os
 import uuid
 from pydantic import BaseModel
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -10,7 +10,7 @@ from identification import detect_text_uri, detect_text
 from identification import plus2
 
 app = FastAPI(root_path="/api/fast")
-
+# app = FastAPI()
 origins = [
 
     "*"  # private 영역에서 사용한다면 *로 모든 접근을 허용할 수 있다.
@@ -28,11 +28,17 @@ app.add_middleware(
 class Content(BaseModel):
     content: str
 
+# class Inputdata(BaseModel):
+#     inputname: str
+#     inputyear: int
+#     inputmonth: int
+
 
 @app.post("/idenimg")
-async def upload_photo(file: UploadFile):
+# async def upload_photo(file: UploadFile, pay: Inputdata):
+async def upload_photo(inputname: str = Form(...), inputyear: int = Form(...), inputmonth: int = Form(...), inputgender: str = Form(...), file: UploadFile = Form(...)):
+# async def upload_photo(file: UploadFile = Form(...)):
     UPLOAD_DIR = "./iden_img"  # 이미지를 저장할 서버 경로
-
     content = await file.read()
     filename = f"{str(uuid.uuid4())}.jpg"  # uuid로 유니크한 파일명으로 변경
     with open(os.path.join(UPLOAD_DIR, filename), "wb") as fp:
@@ -40,7 +46,8 @@ async def upload_photo(file: UploadFile):
 
     # return {"filename": filename}
     # return {"filename": file.filename}
-    return detect_text('./iden_img')
+    # return detect_text('./iden_img')
+    return detect_text('./iden_img', inputname, inputyear, inputmonth, inputgender)
 
 
 @app.get('/')
