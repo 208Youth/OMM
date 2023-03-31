@@ -18,12 +18,10 @@ import Admin from './pages/admin/Admin';
 import Detail from './pages/admin/Detail';
 import Main from './pages/main/Main';
 import Chatwindow from './pages/chatting/Chatwindow';
-import Main from './pages/main/main';
 import ImageUploader from './pages/profile/ImageUploader';
 import Login from './pages/login/login';
 import LikeList from './pages/like/LikeList';
 import ReportModal from './pages/chat/ReportModal';
-import ImageUploader from './pages/profile/ImageUploader';
 
 const router = createBrowserRouter([
   {
