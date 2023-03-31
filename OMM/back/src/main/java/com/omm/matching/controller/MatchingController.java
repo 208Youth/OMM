@@ -29,10 +29,11 @@ public class MatchingController {
      * @param createNotificationRequestDto
      */
     @MessageMapping("/matching/noti")
-    public void createNotification(CreateNotificationRequestDto createNotificationRequestDto) {
-        Notification notification = matchingService.createNotification(createNotificationRequestDto.getReceiverId());
-        ChannelTopic topic = matchingService.getNotificationTopic(createNotificationRequestDto.getReceiverId());
-        publisherService.publishNotification(topic, notification);
+    public void createNotification(StompHeaderAccessor accessor, CreateNotificationRequestDto createNotificationRequestDto) {
+        String user = accessor.getUser().getName();
+        Notification notification = matchingService.createNotification(createNotificationRequestDto.getReceiverId(), user);
+        String receiverAddr = matchingService.getReceiverAddr(createNotificationRequestDto.getReceiverId());
+        publisherService.publishNotification(receiverAddr, notification);
     }
 
     /**

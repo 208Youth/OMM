@@ -29,19 +29,15 @@ public class MatchingRepository {
     }
 
     /**
-     * Topic 조회
+     * receiver did address 조회
      * @param receiverId
      * @return
      */
-    public ChannelTopic getNotificationTopic(Long receiverId) {
-        ChannelTopic channelTopic = opsHashTopic.get(TOPIC, receiverId);
-        if(channelTopic == null) {
-            String memberIdStr = receiverId.toString();
-            channelTopic = new ChannelTopic(memberIdStr);
-            opsHashTopic.put(TOPIC, receiverId, channelTopic);
-            redisMessageListenerContainer.addMessageListener(subscriberService, channelTopic);
-        }
-        return channelTopic;
+    public String getReceiverAddr(Long receiverId) {
+        Member member = memberRepository.findById(receiverId).orElseThrow(() -> {
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        });
+        return member.getDidAddress();
     }
 
     /**
