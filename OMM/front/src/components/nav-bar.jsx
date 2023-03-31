@@ -5,7 +5,7 @@ import Stomp from 'stompjs';
 import './nav-bar.scss';
 import { Link } from 'react-router-dom';
 
-function Navbar({ profileNav, mainNav, notiNav, chatlistNav }) {
+function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav }) {
   // let ws = new SockJS('http://localhost:5000/api/matching', null, {
   //   transports: ['websocket', 'xhr-streaming', 'xhr-polling'],
   // });
@@ -28,10 +28,14 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav }) {
   return (
     <div className="flex justify-center">
       <nav className="menu">
-        <Link to="#" className="menu-item">
-          <i className="bi bi-search-heart transition duration-300 hover:scale-125" />
-          <i className="bi bi-search-heart-fill scale-125" />
-        </Link>
+        <div className="menu-item">
+          {!likesNav && (
+            <Link to="/likes" className="menu-item">
+              <i className="bi bi-search-heart transition duration-300 hover:scale-125" />
+            </Link>
+          )}
+          {likesNav && <i className="bi bi-search-heart-fill" />}
+        </div>
         <div className="menu-item">
           {!chatlistNav && (
             <Link
@@ -41,7 +45,7 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav }) {
               <i className="bi bi-chat-heart" />
             </Link>
           )}
-          {chatlistNav && <i className="bi bi-chat-heart-fill scale-125" />}
+          {chatlistNav && <i className="bi bi-chat-heart-fill" />}
         </div>
         {!mainNav && (
           <Link
@@ -69,7 +73,7 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav }) {
           </div>
         )}
         <div className="menu-item">
-          {notiNav && <i className="bi bi-bell-fill scale-125" />}
+          {notiNav && <i className="bi bi-bell-fill" />}
           {!notiNav && (
             <Link to="/notification" className="menu-item">
               <i className="bi bi-bell transition duration-300 hover:scale-125" />
@@ -82,7 +86,7 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav }) {
               <i className="bi bi-person transition duration-300 hover:scale-125" />
             </Link>
           )}
-          {profileNav && <i className="bi bi-person-fill scale-125" />}
+          {profileNav && <i className="bi bi-person-fill" />}
         </div>
       </nav>
     </div>
