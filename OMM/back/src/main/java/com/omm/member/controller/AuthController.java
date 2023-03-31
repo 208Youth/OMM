@@ -5,6 +5,7 @@ import com.omm.jwt.TokenProvider;
 import com.omm.member.model.dto.AdminLoginDto;
 import com.omm.member.model.dto.AuthDto;
 import com.omm.member.model.dto.TokenDto;
+import com.omm.member.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final AuthService authService;
 
     /**
      * 일반 유저 로그인
@@ -53,12 +55,7 @@ public class AuthController {
      */
     private ResponseEntity<TokenDto> authenticate(String username, String password) {
 
-        UsernamePasswordAuthenticationToken authenticationToken =
-            new UsernamePasswordAuthenticationToken(username, password);
-
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
-        String jwt = tokenProvider.createToken(authentication);
+        String jwt = authService.authenticate(username,password);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
