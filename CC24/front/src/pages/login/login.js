@@ -10,8 +10,9 @@ function Login() {
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(window.location.search);
   const type = searchParams.get('type');
+  console.log(type);
   const did = JSON.parse(localStorage.getItem('DID')).did;
-  const [isLogined, setIsLogined] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const data = {
     type: 'SIGNIN',
     holderDid: did,
@@ -22,10 +23,12 @@ function Login() {
     navigate('/signup');
   }
   const ommLogin = async () => {
+    setIsLoading(true)
     await ommapi
       .post(`${type}`, data)
       .then((res) => {
         console.log(res);
+        setIsLoading(false)
       })
       .catch((err) => {
         console.log(err);
@@ -38,14 +41,15 @@ function Login() {
   return (
     <div>
       <div className="flex-col w-80 mx-auto">
-        <p className="text-3xl mt-10 text-center mb-4 leading-relaxed">로그인 중 ...</p>
       </div>
       <div class="text-center">
-        { isLogined && <div class="static" role="status">
-          <img class="absolute top-[175px] left-[335px]" src="../../../ommheart.png"></img>
+        { isLoading && <div class="static" role="status">
+          <p className="text-3xl mt-10 text-center mb-4 leading-relaxed">로그인 중 ...</p>
+          <div className="flex justify-center">
+          <img class="z-40 absolute animate-bounce top-[175px]" src="../../../ommheart.png"></img>
           <svg
             aria-hidden="true"
-            class="inline w-[300px] h-[300px] mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+            class="z-30 inline w-[300px] h-[300px] mr-2 text-gray-200 animate-spin dark:text-gray-300 fill-[#F59FB1]"
             viewBox="0 0 100 101"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -60,8 +64,9 @@ function Login() {
               />
           </svg>
           <span class="sr-only">Loading...</span>
+          </div>
         </div>}
-      {type == 'SIGNUP' && <Agree />}
+      {type == 'SIGNUP' && <Agree setIsLoading={setIsLoading}/>}
       </div>
       <Modal
         isOpen={passwordModal}
@@ -75,7 +80,7 @@ function Login() {
           setPasswordComplete={(res) => {
             if (res) {
               setPasswordComplete(true);
-              
+              if (type == 'SIGNIN')
               ommLogin();
             }
           }}
