@@ -7,6 +7,7 @@ import com.omm.member.model.dto.RegistDto;
 import com.omm.member.model.dto.TokenDto;
 import com.omm.member.service.AuthService;
 import com.omm.member.service.MemberService;
+import com.omm.util.UrlInfo;
 import com.omm.util.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -32,23 +33,24 @@ public class RedirectController {
 
     private final MemberService memberService;
 
+    private final UrlInfo urlInfo;
+
     @GetMapping("/{type}")
     public String moveToCC24Sign(@PathVariable String type) throws IOException {
-        String toUrl = "http://localhost:3000/login?type=";
+        String toUrl = urlInfo.getCc24Front() + "/login?type=";
 
         if (type.equals("SIGNIN") || type.equals("SIGNUP")) {
             toUrl += type;
         } else {
             throw new CustomException(ErrorCode.CANNOT_AUTHORIZE_MEMBER);
         }
-
         return toUrl;
     }
 
 
     @GetMapping("/certificate/{type}")
     public String moveToCC24Certificate(@PathVariable String type) {
-        return "http://localhost:3000/certificate";
+        return urlInfo.getCc24Front() + "/certificate";
 //        switch (type) {
 //            case "UniversityCredential":
 //            case "CertificateCredential":
@@ -73,39 +75,32 @@ public class RedirectController {
         System.out.println(memberService.existDidAddress(authDto.getHolderDid()));
         URI target = null;
 
+        String did = authDto.getHolderDid();
+        String jwt = authService.authenticate(authDto.getHolderDid(), authDto.getVpJwt());
+
         // 로그인, 회원가입에 따라 분기
         switch (type) {
             case "SIGNUP":
                 if (!memberService.existDidAddress(authDto.getHolderDid())) {
                     RegistDto registDto = authService.registAuth(authDto);
                     memberService.addMember(registDto);
-                    target = new URI("http://localhost:5173/main");
+                    return urlInfo.getOmmFront() + "/main?did="+did+"&jwt="+jwt;
                 } else {
 //                    return new ResponseEntity<>("로그인하세요.", HttpStatus.BAD_REQUEST);
                     return "#";
                 }
-                break;
             case "SIGNIN":
                 if (memberService.existDidAddress(authDto.getHolderDid())) {
-                    target = new URI("http://localhost:5173/main");
+                    return urlInfo.getOmmFront() + "/main?did="+did+"&jwt="+jwt;
                 } else {
 //                    return new ResponseEntity<>("회원가입하세요.", HttpStatus.BAD_REQUEST);
                     return "#";
                 }
-                break;
             default:
                 throw new CustomException(ErrorCode.CANNOT_AUTHORIZE_MEMBER);
         }
-
-        System.out.println(target);
-
-        String did = authDto.getHolderDid();
-        String jwt = authService.authenticate(authDto.getHolderDid(), authDto.getVpJwt());
-
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-
-        return "http://localhost:5173/main?did="+did+"&jwt="+jwt;
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
     }
 
     @PostMapping("/certificate/{type}")
@@ -122,7 +117,7 @@ public class RedirectController {
 //            default:
 //                throw new CustomException(ErrorCode.CANNOT_AUTHORIZE_MEMBER);
 //        }
-        return "http://localhost:5173/myprofile";
+        return urlInfo.getOmmFront() + "/myprofile";
     }
 
 }

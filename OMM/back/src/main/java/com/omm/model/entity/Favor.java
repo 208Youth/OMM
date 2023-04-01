@@ -20,11 +20,11 @@ public class Favor {
     @Column(name = "favor_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "from_id", nullable = false)
     private Member fromMember;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "to_id", nullable = false)
     private Member toMember;
 

@@ -23,7 +23,7 @@ public class Filtering {
     @Column(name = "filtering_id")
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
