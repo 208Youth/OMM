@@ -10,7 +10,6 @@ import com.omm.repository.MemberRepository;
 import com.omm.util.SecurityUtil;
 import com.omm.util.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -22,25 +21,15 @@ public class ChatService {
     private final MemberRepository memberRepository;
 
     /**
-     * Rooms Topic 반환
-     * @return
-     */
-    public ChannelTopic getRoomTopic() {
-        return chatRepository.getRoomTopic();
-    }
-
-    /**
      * 채팅방 생성
      * @param createRoomRequestDto
      * @return
      */
-    public ChatRoom createRoom(CreateRoomRequestDto createRoomRequestDto) {
+    public ChatRoom createRoom(CreateRoomRequestDto createRoomRequestDto, String user) {
         Long senderId = createRoomRequestDto.getSenderId();
         Set<Long> userIds = new HashSet<>();
-        /*
-            TODO: 현재 memberId로 수정
-         */
-        userIds.add(1000L);
+        Member myInfo = getMember(user);
+        userIds.add(myInfo.getId());
         userIds.add(senderId);
         ChatRoom chatRoom = new ChatRoom(userIds);
         chatRepository.createRoom(chatRoom);
@@ -71,6 +60,12 @@ public class ChatService {
         String didAddress = SecurityUtil.getCurrentDidAddress().get();
         return memberRepository.findByDidAddress(didAddress).orElseThrow(() -> {
             throw new CustomException(ErrorCode.CANNOT_AUTHORIZE_MEMBER);
+        });
+    }
+
+    public Member getMember(String user) {
+        return memberRepository.findByDidAddress(user).orElseThrow(() -> {
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         });
     }
 }
