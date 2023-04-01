@@ -43,8 +43,22 @@ public class RedirectController {
 //        return mav;
 //    }
 
+//    @GetMapping("/{type}")
+//    public void moveToCC24Sign(@PathVariable String type, HttpServletResponse response) throws IOException {
+//        String toUrl = "http://localhost:3000/login?type=";
+//
+//        if (type.equals("SIGNIN") || type.equals("SIGNUP")) {
+//            toUrl += type;
+//        } else {
+//            throw new CustomException(ErrorCode.CANNOT_AUTHORIZE_MEMBER);
+//        }
+//        System.out.println(toUrl);
+//
+//        response.sendRedirect(toUrl);
+//    }
+
     @GetMapping("/{type}")
-    public void moveToCC24Sign(@PathVariable String type, HttpServletResponse response) throws IOException {
+    public String moveToCC24Sign(@PathVariable String type) throws IOException {
         String toUrl = "http://localhost:3000/login?type=";
 
         if (type.equals("SIGNIN") || type.equals("SIGNUP")) {
@@ -52,12 +66,8 @@ public class RedirectController {
         } else {
             throw new CustomException(ErrorCode.CANNOT_AUTHORIZE_MEMBER);
         }
-        System.out.println(toUrl);
 
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.setLocation(URI.create(toUrl));
-
-        response.sendRedirect(toUrl);
+        return toUrl;
     }
 
 //
@@ -104,7 +114,7 @@ public class RedirectController {
     }
 
     @PostMapping("/{type}")
-    public ResponseEntity<?> doSign(@PathVariable("type") String type, @RequestBody AuthDto authDto) throws URISyntaxException {
+    public String doSign(@PathVariable("type") String type, @RequestBody AuthDto authDto) throws URISyntaxException {
         System.out.println("hellohello");
         System.out.println(type);
         System.out.println(authDto.getHolderDid());
@@ -121,14 +131,16 @@ public class RedirectController {
                     memberService.addMember(registDto);
                     target = new URI("http://localhost:5173/main");
                 } else {
-                    return new ResponseEntity<>("로그인하세요.", HttpStatus.BAD_REQUEST);
+//                    return new ResponseEntity<>("로그인하세요.", HttpStatus.BAD_REQUEST);
+                    return "#";
                 }
                 break;
             case "SIGNIN":
                 if (memberService.existDidAddress(authDto.getHolderDid())) {
                     target = new URI("http://localhost:5173/main");
                 } else {
-                    return new ResponseEntity<>("회원가입하세요.", HttpStatus.BAD_REQUEST);
+//                    return new ResponseEntity<>("회원가입하세요.", HttpStatus.BAD_REQUEST);
+                    return "#";
                 }
                 break;
             default:
@@ -144,8 +156,9 @@ public class RedirectController {
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
 //        return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY);
-        return ResponseEntity.status(HttpStatus.SEE_OTHER)
-                .headers(httpHeaders).location(URI.create("http://localhost:5173/main")).build();
+//        return ResponseEntity.status(HttpStatus.SEE_OTHER)
+//                .headers(httpHeaders).location(URI.create("http://localhost:5173/main")).build();
+        return "http://localhost:5173/main";
     }
 
     @PostMapping("/certificate/{type}")
