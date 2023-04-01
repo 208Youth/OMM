@@ -6,6 +6,7 @@ import com.omm.matching.model.dto.response.NotificationResponseDto;
 import com.omm.matching.model.entity.Notification;
 import com.omm.matching.service.MatchingService;
 import com.omm.matching.service.NotificationPublisherService;
+import com.omm.model.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +34,9 @@ public class MatchingController {
         String user = accessor.getUser().getName();
         Notification notification = matchingService.createNotification(createNotificationRequestDto.getReceiverId(), user);
         String receiverAddr = matchingService.getReceiverAddr(createNotificationRequestDto.getReceiverId());
-        publisherService.publishNotification(receiverAddr, notification);
+        Member sender = matchingService.getSender(user);
+        NotificationResponseDto notificationResponseDto = matchingService.getNotificationResponseDto(sender, notification);
+        publisherService.publishNotification(receiverAddr, notificationResponseDto);
     }
 
     /**
