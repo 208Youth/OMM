@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { useEffect } from 'react'
-import axios from '../../api/http';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import axios from '../../api/http';
 import Navbar from '../../components/nav-bar';
 import Pslider from '../../components/Pslider';
 import './Main.css';
@@ -28,7 +27,7 @@ function Main() {
         console.log(res.data.userList);
         setUserList(res.data.userList);
         console.log(userlist);
-        dispatch(lists(res.data.userList))
+        dispatch(lists(res.data.userList));
         console.log(firstperson);
       })
       .catch((err) => {

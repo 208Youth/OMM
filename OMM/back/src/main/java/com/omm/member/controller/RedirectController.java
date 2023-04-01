@@ -6,6 +6,7 @@ import com.omm.member.model.dto.AuthDto;
 import com.omm.member.model.dto.RegistDto;
 import com.omm.member.model.dto.TokenDto;
 import com.omm.member.service.AuthService;
+import com.omm.member.service.GetCredentialService;
 import com.omm.member.service.MemberService;
 import com.omm.util.UrlInfo;
 import com.omm.util.error.ErrorCode;
@@ -34,6 +35,8 @@ public class RedirectController {
     private final MemberService memberService;
 
     private final UrlInfo urlInfo;
+
+    private final GetCredentialService getCredentialService;
 
     @GetMapping("/{type}")
     public String moveToCC24Sign(@PathVariable String type) throws IOException {
@@ -104,19 +107,8 @@ public class RedirectController {
     }
 
     @PostMapping("/certificate/{type}")
-    public String getCertificate(@RequestBody AuthDto authDto) {
-
-//        switch (type) {
-//            case "UniversityCredential":
-//            case "CertificateCredential":
-//            case "JobCredential":
-//            case "IncomeCredential":
-//            case "EstateCredential":
-//            case "HealthCredential":
-//                return "http://localhost:3000/certificate?type=" + type;
-//            default:
-//                throw new CustomException(ErrorCode.CANNOT_AUTHORIZE_MEMBER);
-//        }
+    public String getCertificate(@PathVariable("type") String type, @RequestBody AuthDto authDto) {
+        getCredentialService.getCertificate(type, authDto);
         return urlInfo.getOmmFront() + "/myprofile";
     }
 
