@@ -34,7 +34,7 @@ router.post("/", async (req, res) => {
     const options = {
       hostname: "localhost",
       port: 3324,
-      path: "/api/cert",
+      path: "/api/spring/cert",
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -42,6 +42,7 @@ router.post("/", async (req, res) => {
       },
     };
     const response = await http.sendHttpRequest(data, options);
+    console.log(response);
     const vcJwt = await did.issueVC(
       holderDid,
       credentialName,

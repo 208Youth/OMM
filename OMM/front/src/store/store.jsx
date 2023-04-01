@@ -7,17 +7,19 @@ import { persistReducer } from 'redux-persist';
 
 import userSlice from './userSlice';
 import chatSlice from './chatSlice';
+import recSlice from './recSlice';
 
 // useSelector 사용시  const ... = useSelector(state => state.user); 이렇게 호출
 
 const reducers = combineReducers({
   user: userSlice.reducer,
-  chat: chatSlice.reducer
+  chat: chatSlice.reducer,
+  rec: recSlice.reducer,
 })
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['user', 'chat'],
+  whitelist: ['user', 'chat', 'rec'],
 };
 const persistedReducer = persistReducer(persistConfig, reducers);
 const store = configureStore({

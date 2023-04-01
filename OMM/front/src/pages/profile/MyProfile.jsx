@@ -96,6 +96,9 @@ function MyProfile({ profileNav }) {
       .then((response) => setInterest(response.data.interestList))
       .catch((error) => console.error(error));
   };
+  const toCert = () => {
+    window.location.href = `http://localhost:3000/certificate`
+  }
   useEffect(() => {
     FreshCert();
     FreshInterest();
@@ -499,7 +502,7 @@ function MyProfile({ profileNav }) {
 
                   인증정보
                 </span>
-                <div className="flex items-center m-2">
+                <div onClick={toCert} className="flex items-center m-2">
                   <span className="">
                     설정하기
                   </span>

@@ -24,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         config.addAllowedMethod("*");           // 모든 post, get, put, delete, patch 요청을 허용하겠다.
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", config);
+        source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
 
