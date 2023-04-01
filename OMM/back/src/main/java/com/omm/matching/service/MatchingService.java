@@ -1,5 +1,6 @@
 package com.omm.matching.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.omm.exception.CustomException;
 import com.omm.matching.model.dto.request.DeleteNotificationRequestDto;
 import com.omm.matching.model.dto.response.NotificationResponseDto;
@@ -24,6 +25,7 @@ public class MatchingService {
     private final MatchingRepository matchingRepository;
     private final MemberRepository memberRepository;
     private final MemberImgRepository memberImgRepository;
+    private final ObjectMapper objectMapper;
 
     /**
      * Topic 반환
@@ -59,9 +61,10 @@ public class MatchingService {
         Member member = getSender();
         List<NotificationResponseDto> notificationResponseDtos = new ArrayList<>();
         List<Notification> notifications = matchingRepository.getNotifications(member.getId());
-        notifications.forEach(notification ->  {
+        for(Object notificationObject : notifications) {
+            Notification notification = objectMapper.convertValue(notificationObject, Notification.class);
             notificationResponseDtos.add(getNotificationResponseDto(member, notification));
-        });
+        }
         return notificationResponseDtos;
     }
 
