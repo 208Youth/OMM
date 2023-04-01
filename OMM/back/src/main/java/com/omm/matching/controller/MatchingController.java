@@ -2,6 +2,7 @@ package com.omm.matching.controller;
 
 import com.omm.matching.model.dto.request.CreateNotificationRequestDto;
 import com.omm.matching.model.dto.request.DeleteNotificationRequestDto;
+import com.omm.matching.model.dto.response.GetNotificationsResponseDto;
 import com.omm.matching.model.dto.response.NotificationResponseDto;
 import com.omm.matching.model.entity.Notification;
 import com.omm.matching.service.MatchingService;
@@ -46,7 +47,7 @@ public class MatchingController {
     @GetMapping("/matching/noti")
     public ResponseEntity<?> getNotifications() {
         List<NotificationResponseDto> notifications = matchingService.getNotifications();
-        return new ResponseEntity<>(notifications, HttpStatus.OK);
+        return new ResponseEntity<>(new GetNotificationsResponseDto(notifications), HttpStatus.OK);
     }
 
     /**

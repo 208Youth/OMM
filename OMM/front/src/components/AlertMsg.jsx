@@ -1,44 +1,45 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import Modal from 'react-modal';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { chatInfo } from '../store/chatSlice';
 import Img from '../assets/testprofile.png';
-import './AlertMsg.css';
 
-function AlertMsg({ msg }) {
+function AlertMsg({ msg, deletemsg }) {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [successmessage, setMessage] = useState();
 
   const navigate = useNavigate();
-  const alertmsg = useRef();
+  const dispatch = useDispatch();
 
-  const deleteMatch = () => {
-    alertmsg.current.className += ' disappear';
+  const deleteMatch = (msginfo) => {
+    deletemsg(msginfo);
     // alertmsg.current.style.display = 'none';
   };
 
-  const successMatch = () => {
+  const successMatch = (msginfo) => {
     setIsOpen(true);
     setMessage('매칭 성공!');
     setTimeout(() => {
       setIsOpen(false);
       setMessage('');
+      dispatch(chatInfo(msginfo.senderId));
       navigate('/faceRecog/chat', {
         state: { page: 'chat' },
       });
     }, 2000);
   };
   return (
-    <div
-      ref={alertmsg}
-      className="w-[312px] h-[4.7rem] flex p-3 bg-white bg-opacity-60 text-xs rounded-lg mb-1"
-    >
+    <div className="w-[312px] h-[4.7rem] flex p-3 bg-white bg-opacity-60 text-xs rounded-lg mb-1">
       <div className="w-10 h-10 self-center rounded-full">
         {/* <img src={msg.sender.imageContent} alt="사진" /> */}
         <img src={Img} alt="사진" />
       </div>
-      <div className="self-center w-40 ml-3">
-        {/* {msg.sender.nickname} 님이 당신에게 옴 */}
-        보영 님이 당신에게 옴
+      <div className="self-center w-40 ml-3 font-sans">
+        <span className="font-sans font-bold text-ellipsis overflow-hidden ...">
+          da;sdfj;alsdkfjaskld fjka;fj asl;djf;akjdfjkasf
+        </span>
+        님이 당신에게 옴
       </div>
       <div className="w-8 h-8 self-center mr-3 mt-1">
         <img
@@ -46,7 +47,12 @@ function AlertMsg({ msg }) {
           alt=""
           aria-hidden
           onClick={() => {
-            deleteMatch();
+            const dmsg = {
+              id: msg.id,
+              senderId: msg.sender.memberId,
+              createdTime: msg.createdTime,
+            };
+            deleteMatch(dmsg);
           }}
         />
       </div>
@@ -56,7 +62,13 @@ function AlertMsg({ msg }) {
           alt=""
           aria-hidden
           onClick={() => {
-            successMatch();
+            const dmsg = {
+              id: msg.id,
+              senderId: msg.sender.memberId,
+              createdTime: msg.createdTime,
+            };
+            successMatch(dmsg);
+            deleteMatch(dmsg);
           }}
         />
       </div>
