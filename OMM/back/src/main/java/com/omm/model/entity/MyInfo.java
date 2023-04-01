@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 
@@ -13,6 +15,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@DynamicInsert
 @Table(name = "myinfo")
 public class MyInfo {
 
@@ -34,7 +37,7 @@ public class MyInfo {
     @Column(name = "height", nullable = false)
     private short height;
 
-    @Column(name = "contact_sytle", nullable = false)
+    @Column(name = "contact_style", nullable = false)
     @Enumerated(EnumType.STRING)
     private InfoContactStyle contactStyle;
 
@@ -50,8 +53,9 @@ public class MyInfo {
     @Enumerated(EnumType.STRING)
     private InfoMilitary military;
 
-    @Column(name = "pet", nullable = false)
+    @Column(name = "pet")
     @Enumerated(EnumType.STRING)
+    @ColumnDefault("'NOT'")
     private InfoPet pet;
 
     @Column(name = "mbti")
@@ -59,8 +63,6 @@ public class MyInfo {
     private InfoMBTI mbti;
 
     @Column(name = "pr")
+    @ColumnDefault("''")
     private String pr;
-
-    @Column(name = "age")
-    private short age;
 }

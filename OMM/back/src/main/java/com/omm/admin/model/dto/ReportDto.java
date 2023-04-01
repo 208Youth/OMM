@@ -28,7 +28,7 @@ public class ReportDto {
     private String reason;
 
     @JsonProperty(value = "image")
-    private Blob image;
+    private byte[] image;
 
     @JsonProperty(value = "state")
     private boolean state;

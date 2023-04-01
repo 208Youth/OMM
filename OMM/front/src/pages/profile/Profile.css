@@ -1,8 +1,114 @@
 
-.container {
-  background-color: aliceblue;
-  width: 300px;
-  height: 700px;
+
+/* 
+.profileimages {
+  width: 280px;
+  height: 300px;
   border-radius: 30px;
-  display: flex;
+  border: 1px solid red;
+  margin-left: auto;
+  margin-right: auto;
+
+} */
+
+.profileinfo {
+
+  position:relative;
+  margin:  300px auto;
+  width: 240px;
+  height: 500px;
+  border-radius: 30px;
+  background-color: aliceblue;
+  border:  1px solid;
+  text-align: left;
+  box-sizing: border-box;
+  z-index: 4;
+  
+}
+
+.myprofileinfo {
+
+  position: relative;;
+  top: 500px;
+
+  margin: 0px auto;
+  width: 240px;
+  height: 1000px;
+  border-radius: 30px;
+  background-color: aliceblue;
+  /* border:  1px solid blue; */
+  text-align: left;
+  box-sizing: border-box;
+  /* z-index: 4; */
+  
+}
+
+
+.infodetail {
+  margin: 1.3rem;
+}
+
+.badges {
+  width: 50px;
+  height: 50px;
+  margin: 5px;
+}
+
+.imagesetting {
+  width: 40px;
+  position: relative;
+  left: 260px;
+  top: -140px;
+  z-index: 5;
+  transition: transform 0.5s ease;
+}
+
+.imagesetting:hover {
+  width: 40px;
+  position: relative;
+  left: 260px;
+  top: -140px;
+  z-index: 5;
+  transition: transform 0.5s ease;
+}
+
+.thickhr {
+  background-color: black;;
+}
+
+
+.MyinfoModal {
+  width: 360px;
+  height: 400px;
+  overflow: scroll;
+  overflow-x: hidden;
+  position: absolute;
+  
+  top: 10%;
+  
+  left: 20%;
+  padding: 2rem;
+  border: 1px;
+  border-radius: 20px;
+  background-color: white;
+  box-shadow: 0.1rem 0.15rem 5px gray;
+  
+  /* text-align: center; */
+  
+}
+
+.MyinfoModal3 {
+  width: 300px;
+  height: 280px;
+  
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 2rem;
+  border: 1px;
+  border-radius: 20px;
+  background-color: rgb(233, 215, 233);
+  box-shadow: 0.1rem 0.15rem 5px gray;
+  
 }

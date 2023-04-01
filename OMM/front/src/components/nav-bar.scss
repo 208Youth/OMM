@@ -1,0 +1,99 @@
+*,
+*:after,
+*:before {
+	box-sizing: border-box;
+}
+
+// Codepen spesific styling - only to center the elements in the pen preview and viewport
+// .container {
+// 	z-index:0;
+// 	position: absolute;
+// 	width:360px;
+// 	height:95%;
+// 	top: 0;
+// 	left: 0;
+// 	right: 0;
+// 	bottom: 0;
+// 	width: 100%;
+// 	display: flex;
+// 	justify-content: center;
+//   align-items: end;
+//   background-color: rgb(0,0,0,0);
+// }
+// End Codepen spesific styling
+
+.menu {
+	position: fixed;
+	bottom: 0;
+	z-index: 6;
+	display: flex;
+	height: 4.5rem;
+	width: 22.5rem;
+	border-radius: 40px;
+	overflow: hidden;
+	background-color: #fff;
+	box-shadow: 0 0 1px 0 rgba(#342ead, 0.25), 0 15px 30px 0 rgba(#342ead, 0.1);
+}
+
+.menu-item {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	flex-grow: 1;
+	text-decoration: none;
+	&:focus,
+	&:hover {
+		outline: none;
+		.material-icons {
+			font-family: "Material Icons";
+			color: #342ead;
+		}
+
+		.menu-item-label {
+			color: #342ead;
+		}
+	}
+}
+
+.bi-search-heart {
+	font-size: 22px;
+	line-height: 22px;
+}
+
+.bi-search-heart-fill {
+	font-size: 22px;
+	line-height: 22px;
+}
+
+.bi-chat-heart {
+	font-size: 22px;
+	line-height: 22px;
+}
+
+.bi-chat-heart-fill {
+	font-size: 22px;
+	line-height: 22px;
+}
+
+.bi-bell {
+	font-size: 22px;
+	line-height: 22px;
+}
+
+.bi-bell-fill {
+	font-size: 22px;
+	line-height: 22px;
+}
+
+.bi-person {
+	font-size: 22px;
+	line-height: 22px;
+}
+
+.bi-person-fill {
+	font-size: 22px;
+	line-height: 22px;
+}
+
+

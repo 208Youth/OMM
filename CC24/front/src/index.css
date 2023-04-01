@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @font-face {
   font-family: 'ELAND_Choice_M';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts-20-12@1.0/ELAND_Choice_M.woff') format('woff');
@@ -11,5 +10,11 @@
 }
 
 * {
-  font-family: 'ELAND_Choice_M';
+  margin: 0;
+  font-family: 'ELAND_Choice_M'
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
 }

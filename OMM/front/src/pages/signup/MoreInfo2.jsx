@@ -14,16 +14,16 @@ function MoreInfo2() {
   return (
     <div className="bg-white w-[22.5rem] h-[48.75rem]">
       <img
-        src="/ommheart.png"
+        src="/heart-step-4.svg"
         alt=""
-        className="mx-auto pt-[100px] pb-6 w-[8rem]"
+        className="mx-auto w-48 pt-16 pb-10"
       />
       <h1 className="text-center text-2xl text-[#364C63] mb-3">더 많은 정보</h1>
       <p className="text-center text-xs text-gray-400 font-sans">
         좋은 사람을 찾기 위해 추가 정보를 넣어주세요
       </p>
-      <div className="mt-8 mb-3 mx-8">
-        <h3 className="text-[#364C63] block mb-2 text-base">
+      <div className="my-8 mx-8">
+        <h3 className="text-[#364C63] block mb-5 text-base">
           평소에 어느 정도 술을 마시나요?
         </h3>
         <div className="grid grid-rows-3 grid-flow-col">
@@ -155,8 +155,8 @@ function MoreInfo2() {
           </div>
         </div>
       </div>
-      <div className="mt-8 mb-3 mx-8">
-        <h3 className="text-[#364C63] block mb-2 text-base">
+      <div className="my-8 mx-8">
+        <h3 className="text-[#364C63] block mb-5 text-base">
           흡연은 하시나요?
         </h3>
         <div className="grid grid-rows-2 grid-flow-col">
@@ -246,9 +246,115 @@ function MoreInfo2() {
           </div>
         </div>
       </div>
+      <div className="mt-8 mb-14 mx-8">
+        <h3 className="text-[#364C63] block mb-5 text-base">
+          병역 관련사항을 선택해주세요.
+        </h3>
+        <div className="grid grid-rows-2 grid-flow-col">
+          <div>
+            <input
+              onClick={(e) => {
+                setMoreInfo((prevInfo) => ({
+                  ...prevInfo,
+                  military: e.target.value,
+                }));
+              }}
+              id="military1"
+              type="radio"
+              name="military"
+              value="NONE"
+              className="peer/military1"
+            />
+            <label
+              htmlFor="military1"
+              className="peer-checked/military1:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
+            >
+              해당사항 없음
+            </label>
+          </div>
+          <div>
+            <input
+              onClick={(e) => {
+                setMoreInfo((prevInfo) => ({
+                  ...prevInfo,
+                  military: e.target.value,
+                }));
+              }}
+              id="military3"
+              type="radio"
+              name="military"
+              value="COMPLETE"
+              className="peer/military3"
+            />
+            <label
+              htmlFor="military3"
+              className="peer-checked/military3:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
+            >
+              군필
+            </label>
+          </div>
+          <div>
+            <input
+              onClick={(e) => {
+                setMoreInfo((prevInfo) => ({
+                  ...prevInfo,
+                  military: e.target.value,
+                }));
+              }}
+              id="military5"
+              type="radio"
+              name="military"
+              value="EXEMPT"
+              className="peer/military5"
+            />
+            <label
+              htmlFor="military5"
+              className="peer-checked/military5:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
+            >
+              면제
+            </label>
+          </div>
+          <div>
+            <input
+              onClick={(e) => {
+                setMoreInfo((prevInfo) => ({
+                  ...prevInfo,
+                  military: e.target.value,
+                }));
+              }}
+              id="military2"
+              type="radio"
+              name="military"
+              value="YET"
+              className="peer/military2"
+            />
+            <label
+              htmlFor="military2"
+              className="peer-checked/military2:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
+            >
+              미필
+            </label>
+          </div>
+        </div>
+      </div>
       <div className="flex justify-between mx-8 text-[#364C63] text-lg">
         <div>&lt; </div>
-        <div>&gt;</div>
+        <div
+          aria-hidden
+          onClick={() => {
+            if (
+              moreinfo.drinking_style &&
+              moreinfo.smoking_style &&
+              moreinfo.military
+            ) {
+              console.log('다음페이지로 이동');
+            } else {
+              alert('정보를 입력해주세요');
+            }
+          }}
+        >
+          &gt;
+        </div>
       </div>
     </div>
   );
