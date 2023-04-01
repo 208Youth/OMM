@@ -3,13 +3,26 @@ import axios from 'axios';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import chat from '../../api/chat';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import Stomp from 'stompjs';
+import SockJS from 'sockjs-client';
+import chat from '../../api/chat';
 
 function ChatingRoomClone() {
   const [roomId, setRoomId] = useState(localStorage.getItem('wschat.roomId'));
   const [sender, setSender] = useState(localStorage.getItem('wschat.sender'));
   const [room, setRoom] = useState({});
   const [message, setMessage] = useState('');
+function ChatingRoomClone() {
+  const [roomId, setRoomId] = useState(localStorage.getItem('wschat.roomId'));
+  const [sender, setSender] = useState(localStorage.getItem('wschat.sender'));
+  const [room, setRoom] = useState({});
+  const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
+
+  const ws = new SockJS('http://localhost:8080/api/chat');
+  const stompClient = Stomp.over(ws);
 
   const ws = new SockJS('http://localhost:8080/api/chat');
   const stompClient = Stomp.over(ws);
@@ -39,6 +52,15 @@ function ChatingRoomClone() {
     });
   };
 
+  const sendMessage = () => {
+    const ws = new SockJS('http://localhost:8080/api/chat');
+    const stompClient = Stomp.over(ws);
+    stompClient.connect({}, (frame) => {
+      stompClient.send('/api/pub/chat/message', {}, JSON.stringify({ roomId, senderId: sender, content: message }));
+      setMessage('');
+      stompClient.disconnect();
+    });
+  };
   const sendMessage = () => {
     const ws = new SockJS('http://localhost:8080/api/chat');
     const stompClient = Stomp.over(ws);

@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+/* eslint-disable */
+import React, { useState, useEffect } from 'react';
+// import axios from 'axios';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import ChatingRoomClone from './ChatingRoomClone';
@@ -14,17 +15,16 @@ function ChatingRobbyClone() {
 
   const findAllRoom = () => {
     chat.get('/rooms')
-    .then((response) => {
-      console.log('findallRoom 함수 실행됨', response);
-      setChatRooms(response.data);
-    });
-    }
-    // axios.get('http://localhost:8080/api/chat/rooms')
-    //   .then((response) => {
-    //     console.log('findallRoom 함수 실행됨', response);
-    //     setChatRooms(response.data);
-    //   });
+      .then((response) => {
+        console.log('findallRoom 함수 실행됨', response);
+        setChatRooms(response.data);
+      });
   };
+  // axios.get('http://localhost:8080/api/chat/rooms')
+  //   .then((response) => {
+  //     console.log('findallRoom 함수 실행됨', response);
+  //     setChatRooms(response.data);
+  //   });
 
   const recvRoom = (recv) => {
     console.log(recv);
@@ -32,6 +32,8 @@ function ChatingRobbyClone() {
       recv,
       ...chatRooms,
     ]);
+    console.log('위는 recv, 아래는 chatrooms');
+    console.log(chatRooms);
   };
 
   const connect = () => {
@@ -59,6 +61,7 @@ function ChatingRobbyClone() {
       // }
     });
   };
+
   useEffect(() => {
     console.log('안먹히는 유스이펙트');
     connect();
