@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import http from '@/api/http';
 import './ChatModal.css';
 import CloseBtn from '../../assets/CloseBtn.svg';
 import UploadIcon from '../../assets/fileuploadicon.png';
@@ -8,11 +8,11 @@ function ReportModal({ setReportModal }) {
   const [imgfile, setFile] = useState(null);
   const [imageSrc, setImageSrc] = useState('');
   const [report, setReport] = useState({
-    target_id: '',
+    target_id: 0,
     reason: '',
     image: '',
     state: false,
-    category: '',
+    category: 'SEXUAL_HARASS',
   });
 
   const encodeFileToBase64 = (fileBlob) => {
@@ -35,14 +35,19 @@ function ReportModal({ setReportModal }) {
   };
 
   async function sendReport() {
-    await axios({
-      method: 'post',
-      url: '/api/admin/report',
-      data: report,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
+    const formData = new FormData();
+    formData.append('target_id', report.target_id);
+    formData.append('reason', report.reason);
+    formData.append('image', new Uint8Array(imgfile));
+    formData.append('state', report.state);
+    formData.append('category', report.category);
+
+    await http
+      .post('/admin/report', formData, {
+        headers: {
+          Authorization: import.meta.env.VITE_TOKEN, // TODO: 임시 토큰 부여
+        },
+      })
       .then((res) => {
         console.log(res);
         setReportModal(false);
@@ -55,7 +60,7 @@ function ReportModal({ setReportModal }) {
   useEffect(() => {
     setReport((prev) => ({
       ...prev,
-      target_id: '부모에서 받아온 상대방 id',
+      target_id: 1,
     }));
   }, []);
 
@@ -93,17 +98,17 @@ function ReportModal({ setReportModal }) {
         <option value="SEXUAL_HARASS" className="font-sans">
           성희롱
         </option>
-        <option value="US" className="font-sans text-[#364C63]">
-          United States
+        <option value="PROMOTION" className="font-sans text-[#364C63]">
+          홍보, 광고
         </option>
-        <option value="CA" className="font-sans text-[#364C63]">
-          Canada
+        <option value="THREATEN" className="font-sans text-[#364C63]">
+          위협
         </option>
-        <option value="FR" className="font-sans text-[#364C63]">
-          France
+        <option value="HATE" className="font-sans text-[#364C63]">
+          혐오
         </option>
-        <option value="DE" className="font-sans text-[#364C63]">
-          Germany
+        <option value="ETC" className="font-sans text-[#364C63]">
+          기타
         </option>
       </select>
       <label htmlFor="imginput">

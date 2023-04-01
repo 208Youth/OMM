@@ -50,7 +50,7 @@ public class RecommendService {
 
     public GetRecommendListResponseDto getRecommendList(String currentMemberDidAddress) {
 
-//        System.out.println(currentMemberDidAddress);
+        System.out.println(currentMemberDidAddress);
         try {
             Member member = memberRepository.findByDidAddress("did:ethr:goerli:0x03df8e54a30e3906d243d7402c59b82b5d854223ba3ae969ea23d2c12b8da49c5e")
                     .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
