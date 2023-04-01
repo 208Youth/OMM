@@ -69,9 +69,8 @@ const verifyVC = async (verifiedVC, holderDid) => {
 const getPersonalId = async (verifiableCredential, holderDid) => {
   for (const verifiedVC of verifiableCredential) {
     await verifyVC(verifiedVC, holderDid);
-    console.log(verifiedVC.credentialSubject);
-    if (verifiedVC.credentialSubject.personalInfo) {
-      return verifiedVC.credentialSubject.personalInfo;
+    if (verifiedVC.credentialSubject.personalId) {
+      return verifiedVC.credentialSubject.personalId;
     }
   }
 };
