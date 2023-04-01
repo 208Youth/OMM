@@ -36,7 +36,7 @@ function FaceRecogModal({ setFaceModal, setFaceComplete, name }) {
     // axios로 fastapi 에 이미지 보내기
     await axios({
       method: 'post',
-      url: 'http://127.0.0.1:8000/photo',
+      url: 'http://127.0.0.1:8000/api/fast/photo',
       data: {
         file: imgfile,
       },

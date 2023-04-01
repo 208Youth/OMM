@@ -5,7 +5,8 @@ import CloseBtn from '../../assets/CloseBtn.svg';
 import './IdenModal.css';
 // import fastapi from '../../api/fastapi.js';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { idInfo } from '../../store/userSlice';
 
 function IdenModal({ setIdenModal, setIdenComplete, inputday, inputname, inputyear, inputmonth, inputgender}) {
   const [imageSrc, setImageSrc] = useState('');
@@ -13,6 +14,7 @@ function IdenModal({ setIdenModal, setIdenComplete, inputday, inputname, inputye
   const [name, setName] = useState('');
   const [gender, setGender] = useState('');
   const [birthday, setBirthday] = useState('');
+  const dispatch = useDispatch();
   
 
   // fastapi의 idening를 실행시키기 위한 코드
@@ -50,9 +52,10 @@ function IdenModal({ setIdenModal, setIdenComplete, inputday, inputname, inputye
       .then((res) => {
         console.log('fastapi로 이미지를 보냈습니다.');
         console.log(res.data);
-        setName(res.data.name);
-        setBirthday(res.data.birthday);
-        setGender(res.data.gender);
+        setName(res.data.personalId.name);
+        setBirthday(res.data.personalId.birthdate);
+        setGender(res.data.personalId.gender);
+        dispatch(idInfo(res.data));
       })
       .catch((err) => {
         console.log(imgfile);
@@ -161,21 +164,16 @@ function IdenModal({ setIdenModal, setIdenComplete, inputday, inputname, inputye
 function Result({ data, setIdenModal, setIdenComplete }) {
   let { name, gender, birthday } = data;
   const strbirth = String(birthday);
-  let year = strbirth.slice(0, 2);
-  if (year >= 20) {
-    year = `19${year}`;
-  } else {
-    year = `20${year}`;
-  }
-  let month = strbirth.slice(2, 4);
+  let year = strbirth.slice(0, 4);
+  let month = strbirth.slice(5, 7);
   if (month.slice(0, 1) == '0') {
     month = month.slice(1, 2);
   }
-  let day = strbirth.slice(4, 6);
+  let day = strbirth.slice(9, 11);
   if (day.slice(0, 1) == '0') {
     day = day.slice(1, 2);
   }
-  if (gender == '1' || gender == '3') {
+  if (gender == 'MALE') {
     gender = '남';
   } else {
     gender = '여';

@@ -7,6 +7,8 @@ import './CertModal.css';
 import CloseBtn from '../../assets/CloseBtn.svg';
 import { certInfo } from '../../store/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { EthrDID } from 'ethr-did';
+import { createVerifiablePresentationJwt } from 'did-jwt-vc';
 
 function CertModal({ cert, info, isClose }) {
   const requireSearch = ['대학교', '자격증', '회사'];
@@ -15,9 +17,34 @@ function CertModal({ cert, info, isClose }) {
   const [infos, setInfos] = useState([]);
   const [certProgress, setCertProgress] = useState(false);
   const dispatch = useDispatch();
-  const certList = useSelector((state) => state.user.cert);
-  const [certs, setCert] = useState([]);
+  const did = JSON.parse(localStorage.getItem('DID')).did;
+  console.log(did);
+  const vc = useSelector((state) => state.user.idenvc);
+  const iden = JSON.parse(localStorage.getItem('keypair')).identifier;
+  const pk = JSON.parse(localStorage.getItem('keypair')).privateKey;
+  const ethrDidOnGoerliNamed = new EthrDID({
+    identifier: iden,
+    privateKey: pk,
+    chainNameOrId: 'goerli',
+  });
+  const vpPayload = {
+    vp: {
+      '@context': ['https://www.w3.org/2018/credentials/v1'],
+      type: ['VerifiablePresentation', 'PersonalIdPresentation'],
+      verifiableCredential: vc,
+    },
+  };
 
+  const [vpJwt, setVpJwt] = useState('');
+  async function getVP() {
+    const res = await createVerifiablePresentationJwt(vpPayload, ethrDidOnGoerliNamed);
+    setVpJwt(res)
+  }
+  
+  useEffect(() => {
+    getVP();
+  });
+  
   useEffect(() => {
     if (info) {
       setInfos(info.data.list)
@@ -65,10 +92,12 @@ function CertModal({ cert, info, isClose }) {
       url: 'http://localhost:4424/api/node/credential',
       data: {
         // holderDid: `did:ethr:goerli:${localData.identifier}`,
-        holderDid:
-          'did:ethr:goerli:0x03df8e54a30e3906d243d7402c59b82b5d854223ba3ae969ea23d2c12b8da49c5e',
-        vpJwt:
-          'eyJhbGciOiJFUzI1NkstUiIsInR5cCI6IkpXVCJ9.eyJ2cCI6eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSJdLCJ0eXBlIjpbIlZlcmlmaWFibGVQcmVzZW50YXRpb24iXSwidmVyaWZpYWJsZUNyZWRlbnRpYWwiOlsiZXlKaGJHY2lPaUpGVXpJMU5rc3RVaUlzSW5SNWNDSTZJa3BYVkNKOS5leUpsZUhBaU9qRTJPREkzTlRjMU9USXNJblpqSWpwN0lrQmpiMjUwWlhoMElqcGJJbWgwZEhCek9pOHZkM2QzTG5jekxtOXlaeTh5TURFNEwyTnlaV1JsYm5ScFlXeHpMM1l4SWwwc0luUjVjR1VpT2xzaVZtVnlhV1pwWVdKc1pVTnlaV1JsYm5ScFlXd2lMQ0pRWlhKemIyNWhiRWxrUTNKbFpHVnVkR2xoYkNKZExDSmpjbVZrWlc1MGFXRnNVM1ZpYW1WamRDSTZleUp3WlhKemIyNWhiRWx1Wm04aU9uc2libUZ0WlNJNkl1cTVnT3ljcE91dnVDSXNJbUpwY25Sb1pHRjBaU0k2SWpFNU9Ua3RNVEV0TVRZaUxDSm5aVzVrWlhJaU9pSkdSVTFCVEVVaWZYMTlMQ0p6ZFdJaU9pSmthV1E2WlhSb2NqcG5iMlZ5YkdrNk1IZ3dNMlJtT0dVMU5HRXpNR1V6T1RBMlpESTBNMlEzTkRBeVl6VTVZamd5WWpWa09EVTBNakl6WW1FellXVTVOamxsWVRJelpESmpNVEppT0dSaE5EbGpOV1VpTENKcGMzTWlPaUprYVdRNlpYUm9janBuYjJWeWJHazZNSGd3TXpBM1pqUmtPRFUzTVdSa056WmpOakZqTUdJMVl6aGxaV1ppT0RBMU4yVTRORGxqWWpjd1pUSXdNV014WWpCa016TXhaV1U1Tnpaa09UVXpOMkkzTTJJaWZRLng5Qnd6bFpjSDhTd21NeXJDbzdVZFdpNUIzZW1WSldaZWJ0RHd6ZGlJNldsd1drSW9BVW56dC12SmxxVnZnOFo0amZNYTRnR3BZM3JWUnhiNlFCQjJBQSJdfSwiaXNzIjoiZGlkOmV0aHI6Z29lcmxpOjB4MDNkZjhlNTRhMzBlMzkwNmQyNDNkNzQwMmM1OWI4MmI1ZDg1NDIyM2JhM2FlOTY5ZWEyM2QyYzEyYjhkYTQ5YzVlIn0.aaQ-BH_yEonZanA95Afb2yRGHbNMLfpXwymvPYywWRr3Iq8fl8qmAWdT-97btV21jNNDgA1XBTccqZM5_rIa5wA',
+        // holderDid:
+        //   'did:ethr:goerli:0x02f1c90ddd63371ae175e31542a70dc4343a79215c155a04158d54ff17ee38d669',
+        // vpJwt:
+        //   'eyJhbGciOiJFUzI1NkstUiIsInR5cCI6IkpXVCJ9.eyJ2cCI6eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSJdLCJ0eXBlIjpbIlZlcmlmaWFibGVQcmVzZW50YXRpb24iLCJQZXJzb25hbElkUHJlc2VudGF0aW9uIl0sInZlcmlmaWFibGVDcmVkZW50aWFsIjpbImV5SmhiR2NpT2lKRlV6STFOa3N0VWlJc0luUjVjQ0k2SWtwWFZDSjkuZXlKbGVIQWlPakUyT0RJNU5UWXpNak1zSW5aaklqcDdJa0JqYjI1MFpYaDBJanBiSW1oMGRIQnpPaTh2ZDNkM0xuY3pMbTl5Wnk4eU1ERTRMMk55WldSbGJuUnBZV3h6TDNZeElsMHNJblI1Y0dVaU9sc2lWbVZ5YVdacFlXSnNaVU55WldSbGJuUnBZV3dpTENKUVpYSnpiMjVoYkVsa1EzSmxaR1Z1ZEdsaGJDSmRMQ0pqY21Wa1pXNTBhV0ZzVTNWaWFtVmpkQ0k2ZXlKd1pYSnpiMjVoYkVsa0lqcDdJbTVoYldVaU9pTHNtNURzc1lUcm9Ma2lMQ0ppYVhKMGFHUmhkR1VpT2lJeE9UazJMVEV5TFRBMUlpd2laMlZ1WkdWeUlqb2lSa1ZOUVV4RkluMTlmU3dpYzNWaUlqb2laR2xrT21WMGFISTZaMjlsY214cE9qQjRNREptTVdNNU1HUmtaRFl6TXpjeFlXVXhOelZsTXpFMU5ESmhOekJrWXpRek5ETmhOemt5TVRWak1UVTFZVEEwTVRVNFpEVTBabVl4TjJWbE16aGtOalk1SWl3aWFYTnpJam9pWkdsa09tVjBhSEk2WjI5bGNteHBPakI0TURNd04yWTBaRGcxTnpGa1pEYzJZell4WXpCaU5XTTRaV1ZtWWpnd05UZGxPRFE1WTJJM01HVXlNREZqTVdJd1pETXpNV1ZsT1RjMlpEazFNemRpTnpOaUluMC53NDgtRXRJbWFzb2JVUXdXa0kyQTg2YVp4enVtSlp1ZzVXYTdiaHFzcVQ1RG04S1BmMHB2SkRvN0RlX0R1OVRUTjAxNU56a2txQ3JnOV9rMHlpS2ZxZ0EiXX0sImlzcyI6ImRpZDpldGhyOmdvZXJsaToweDAyZjFjOTBkZGQ2MzM3MWFlMTc1ZTMxNTQyYTcwZGM0MzQzYTc5MjE1YzE1NWEwNDE1OGQ1NGZmMTdlZTM4ZDY2OSJ9.h0xB7GfurIi4kEzXJVxVv04UJfrJlGl5vQLv5qTC_U4loXBVK2u3ftPCuScKX_ERqUEoepd9Qr2nZy8OKdDH5QA',
+        holderDid: did,
+        vpJwt: vpJwt,
         credentialName: credentialName,
         id: select.id,
       },
