@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const did = require("../module/did");
+const did = require("./module/did");
 
 // Verify VP, Return claims
 router.post("/", async (req, res) => {
