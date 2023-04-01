@@ -1,29 +1,89 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import SockJS from 'sockjs-client';
 // import SockJS from 'sockjs-client/dist/sockjs';
 import Stomp from 'stompjs';
 import './nav-bar.scss';
 import { Link } from 'react-router-dom';
+import axios from '../api/http';
 
 function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav }) {
-  // let ws = new SockJS('http://localhost:5000/api/matching', null, {
-  //   transports: ['websocket', 'xhr-streaming', 'xhr-polling'],
-  // });
+  let stompClient;
+  const headers = {
+    Authorization: import.meta.env.VITE_TOKEN,
+  };
+
+  const mainconnect = () => {
+    const ws = new SockJS('http://localhost:5000/api/matching');
+    stompClient = Stomp.over(ws);
+    stompClient.connect(
+      headers,
+      (frame) => {
+        console.log('연결성공');
+      },
+      (error) => {
+        // 연결이 끊어졌을 때 재연결 시도 부분
+        // 필요할 때 쓰면 될 듯.
+        // if(reconnect++ < 5) {
+        //   setTimeout(function() {
+        //     console.log("connection reconnect");
+        //     connect();
+        //   },10*1000);
+        // }
+      },
+    );
+  };
+  const chatlistconnect = () => {
+    const ws = new SockJS('http://localhost:5000/api/chat');
+    stompClient = Stomp.over(ws);
+    stompClient.connect(
+      headers,
+      (frame) => {
+        console.log('연결성공');
+      },
+      (error) => {
+        // 연결이 끊어졌을 때 재연결 시도 부분
+        // 필요할 때 쓰면 될 듯.
+        // if(reconnect++ < 5) {
+        //   setTimeout(function() {
+        //     console.log("connection reconnect");
+        //     connect();
+        //   },10*1000);
+        // }
+      },
+    );
+  };
 
   const sendMatch = () => {
-    const ws = new SockJS('http://localhost:5000/api/matching');
-    const stompClient = Stomp.over(ws);
     // redux 에서 첫번째사람 지우는 함수 작성
     // match 알림 보내기
-    stompClient.connect({}, (frame) => {
-      stompClient.send(
-        '/api/pub/matching/noti',
-        {},
-        JSON.stringify({ receiverId: 1 }),
-      );
-      // stompClient.disconnect();
-    });
+    console.log(stompClient);
+    stompClient.send(
+      '/pub/matching/noti',
+      headers,
+      JSON.stringify({ receiverId: 1 }),
+    );
+    console.log(stompClient);
+    // stompClient.disconnect();
   };
+  // const sendMatch = async () => {
+  //   await axios
+  //     .get('member/1')
+  //     .then((response) => {
+  //       console.log(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log('에러 발생');
+  //       console.log(error);
+  //     });
+  // };
+
+  useEffect(() => {
+    if (mainNav) {
+      mainconnect();
+    } else if (chatlistNav) {
+      chatlistconnect();
+    }
+  });
 
   return (
     <div className="flex justify-center">
