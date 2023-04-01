@@ -32,31 +32,6 @@ public class RedirectController {
 
     private final MemberService memberService;
 
-//    @RequestMapping("/test2")
-//    public ModelAndView test2(HttpServletRequest request) {
-//        // ...
-//        ModelAndView mav = new ModelAndView();
-//        mav.addObject("a", a);
-//        mav.addObject("b", b);
-//        mav.addObject("c", 99);
-//        mav.setViewName("test/test2"); // 뷰 이름 설정
-//        return mav;
-//    }
-
-//    @GetMapping("/{type}")
-//    public void moveToCC24Sign(@PathVariable String type, HttpServletResponse response) throws IOException {
-//        String toUrl = "http://localhost:3000/login?type=";
-//
-//        if (type.equals("SIGNIN") || type.equals("SIGNUP")) {
-//            toUrl += type;
-//        } else {
-//            throw new CustomException(ErrorCode.CANNOT_AUTHORIZE_MEMBER);
-//        }
-//        System.out.println(toUrl);
-//
-//        response.sendRedirect(toUrl);
-//    }
-
     @GetMapping("/{type}")
     public String moveToCC24Sign(@PathVariable String type) throws IOException {
         String toUrl = "http://localhost:3000/login?type=";
@@ -70,48 +45,23 @@ public class RedirectController {
         return toUrl;
     }
 
-//
-//    @GetMapping("/{type}")
-//    public ResponseEntity<Object> moveToCC24Sign(@PathVariable String type) throws URISyntaxException {
-////    public ModelAndView moveToCC24Sign(@PathVariable String type) throws URISyntaxException {
-//        String toUrl = "http://localhost:3000/login?type=";
-//
-//        if (type.equals("SIGNIN") || type.equals("SIGNUP")) {
-//            toUrl += type;
-//        } else {
-//            throw new CustomException(ErrorCode.CANNOT_AUTHORIZE_MEMBER);
-//        }
-//        System.out.println(toUrl);
-//
-//        URI redirectUri = new URI("http://localhost:3000/");
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.setLocation(URI.create(toUrl));
-////        httpHeaders.setLocation(redirectUri);
-//
-//        return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
-////        URI redirectUri = new URI("http://www.naver.com");
-////        HttpHeaders httpHeaders = new HttpHeaders();
-////        httpHeaders.setLocation(redirectUri);
-////        return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
-////        String projectUrl = "redirect:http://localhost:3000/login?type=SIGNIN";
-////        return new ModelAndView("redirect:" + projectUrl);
-//    }
 
     @GetMapping("/certificate/{type}")
-    public RedirectView moveToCC24Certificate(@PathVariable String type) {
-
-        switch (type) {
-            case "UniversityCredential":
-            case "CertificateCredential":
-            case "JobCredential":
-            case "IncomeCredential":
-            case "EstateCredential":
-            case "HealthCredential":
-                return new RedirectView("http://localhost:3000/certificate?type=" + type);
-            default:
-                throw new CustomException(ErrorCode.CANNOT_AUTHORIZE_MEMBER);
-        }
+    public String moveToCC24Certificate(@PathVariable String type) {
+        return "http://localhost:3000/certificate";
+//        switch (type) {
+//            case "UniversityCredential":
+//            case "CertificateCredential":
+//            case "JobCredential":
+//            case "IncomeCredential":
+//            case "EstateCredential":
+//            case "HealthCredential":
+//                return "http://localhost:3000/certificate?type=" + type;
+//            default:
+//                throw new CustomException(ErrorCode.CANNOT_AUTHORIZE_MEMBER);
+//        }
     }
+
 
     @PostMapping("/{type}")
     public String doSign(@PathVariable("type") String type, @RequestBody AuthDto authDto) throws URISyntaxException {
@@ -149,21 +99,30 @@ public class RedirectController {
 
         System.out.println(target);
 
+        String did = authDto.getHolderDid();
         String jwt = authService.authenticate(authDto.getHolderDid(), authDto.getVpJwt());
 
         HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.setLocation(target);
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
-//        return new ResponseEntity<>(httpHeaders, HttpStatus.MOVED_PERMANENTLY);
-//        return ResponseEntity.status(HttpStatus.SEE_OTHER)
-//                .headers(httpHeaders).location(URI.create("http://localhost:5173/main")).build();
-        return "http://localhost:5173/main";
+        return "http://localhost:5173/main?did="+did+"&jwt="+jwt;
     }
 
     @PostMapping("/certificate/{type}")
-    public ResponseEntity<?> getCertificate() {
-        return null;
+    public String getCertificate(@RequestBody AuthDto authDto) {
+
+//        switch (type) {
+//            case "UniversityCredential":
+//            case "CertificateCredential":
+//            case "JobCredential":
+//            case "IncomeCredential":
+//            case "EstateCredential":
+//            case "HealthCredential":
+//                return "http://localhost:3000/certificate?type=" + type;
+//            default:
+//                throw new CustomException(ErrorCode.CANNOT_AUTHORIZE_MEMBER);
+//        }
+        return "http://localhost:5173/myprofile";
     }
 
 }
