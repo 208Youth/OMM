@@ -115,6 +115,7 @@ function Signup() {
               setIdenComplete(true);
             }
           }}
+          inputday={day}
           inputname={name}
           inputyear={year}
           inputmonth={month}
