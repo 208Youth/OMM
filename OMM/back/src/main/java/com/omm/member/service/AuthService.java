@@ -88,7 +88,7 @@ public class AuthService {
 
         HttpEntity<String> requestEntity = new HttpEntity<>(gsonObj.toJson(requestBody), headers);
 
-        String url = "http://localhost:3000/api/did/presentation";
+        String url = "http://localhost:4424/api/node/presentation";
         HttpMethod httpMethod = HttpMethod.POST;
 
         try {
