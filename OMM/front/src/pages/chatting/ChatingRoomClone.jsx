@@ -1,28 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import Stomp from 'stompjs';
-import SockJS from 'sockjs-client';
-import chat from '../../api/chat';
+/* eslint-disable */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import chat from '../../api/chat';
 
-function ChatingRoomClone() {
-  const [roomId, setRoomId] = useState(localStorage.getItem('wschat.roomId'));
-  const [sender, setSender] = useState(localStorage.getItem('wschat.sender'));
-  const [room, setRoom] = useState({});
-  const [message, setMessage] = useState('');
 function ChatingRoomClone() {
   const [roomId, setRoomId] = useState(localStorage.getItem('wschat.roomId'));
   const [sender, setSender] = useState(localStorage.getItem('wschat.sender'));
   const [room, setRoom] = useState({});
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
-
-  const ws = new SockJS('http://localhost:8080/api/chat');
-  const stompClient = Stomp.over(ws);
 
   const ws = new SockJS('http://localhost:8080/api/chat');
   const stompClient = Stomp.over(ws);
@@ -53,18 +41,7 @@ function ChatingRoomClone() {
   };
 
   const sendMessage = () => {
-    const ws = new SockJS('http://localhost:8080/api/chat');
-    const stompClient = Stomp.over(ws);
-    stompClient.connect({}, (frame) => {
-      stompClient.send('/api/pub/chat/message', {}, JSON.stringify({ roomId, senderId: sender, content: message }));
-      setMessage('');
-      stompClient.disconnect();
-    });
-  };
-  const sendMessage = () => {
-    const ws = new SockJS('http://localhost:8080/api/chat');
-    const stompClient = Stomp.over(ws);
-    stompClient.connect({}, (frame) => {
+    stompClient.connect({}, () => {
       stompClient.send('/api/pub/chat/message', {}, JSON.stringify({ roomId, senderId: sender, content: message }));
       setMessage('');
       stompClient.disconnect();
@@ -74,17 +51,16 @@ function ChatingRoomClone() {
   const recvMessage = (recv) => {
     console.log('받음?');
     console.log(recv);
-    setMessages((messages) => [
+    setMessages(() => [
       ...messages,
       recv,
     ]);
   };
 
   const connect = () => {
-    const reconnect = 0;
     console.log('connect실행');
     console.log(messages.length);
-    stompClient.connect({}, (frame) => {
+    stompClient.connect({}, () => {
       console.log('stompClient connect');
       stompClient.subscribe('/sub/chat/entrance', (readDto) => {
         // axios.get(`http://localhost:8080/api/chat/room/${roomId}` + '/messages')
@@ -114,13 +90,6 @@ function ChatingRoomClone() {
         const recv = JSON.parse(message.body);
         recvMessage(recv);
       });
-    }, (error) => {
-      // if(reconnect++ < 5) {
-      //   setTimeout(function() {
-      //     console.log("connection reconnect");
-      //     connect();
-      //   },10*1000);
-      // }
     });
   };
 
