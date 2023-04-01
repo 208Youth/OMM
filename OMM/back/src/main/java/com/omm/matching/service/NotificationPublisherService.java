@@ -1,5 +1,6 @@
 package com.omm.matching.service;
 
+import com.omm.matching.model.dto.response.NotificationResponseDto;
 import com.omm.matching.model.entity.Notification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -15,7 +16,7 @@ public class NotificationPublisherService {
      * @param receiverAddr
      * @param notification
      */
-    public void publishNotification(String receiverAddr, Notification notification) {
+    public void publishNotification(String receiverAddr, NotificationResponseDto notification) {
         messagingTemplate.convertAndSend("/sub/matching/noti/" + receiverAddr, notification);
     }
 }
