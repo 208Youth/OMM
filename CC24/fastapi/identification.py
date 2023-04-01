@@ -28,6 +28,14 @@ def detect_text(path, inputday, inputname, inputyear, inputmonth, inputgender):
     #     if filename.endswith(image_extensions):
     #         image_files.append(filename)
     
+    # image_extensions = ('.jpg', '.jpeg', '.png', '.bmp')  # 이미지 파일 확장자 리스트
+    # filenames = os.listdir('./iden_img')  # 디렉토리 내 모든 파일 리스트
+
+    # image_files = []  # 이미지 파일 리스트
+    # for filename in filenames:
+    #     if filename.endswith(image_extensions):
+    #         image_files.append(filename)
+    
     filenames = os.listdir('./iden_img')
 
     filename = filenames[-1]

@@ -64,6 +64,7 @@ async def upload_photo(inputname: str = Form(...), inputday: int = Form(...), in
 
 
 
+
 @app.get('/')
 def index():
     # return detect_text_uri('https://ifh.cc/g/yfWH3y.jpg')
