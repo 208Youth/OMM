@@ -46,6 +46,7 @@ public class ChatPublisherService {
             int otherIndex = getOtherIndex(i);
             Member otherInfo = members[otherIndex];
             Member myInfo = members[i];
+            other.put("otherId", otherInfo.getId());
             other.put("nickname", otherInfo.getNickname());
             other.put("image", getImg(otherInfo.getId()));
             other.put("notReadIndex", chatRoom.getLastReadIndex().get(otherInfo.getId()));

@@ -89,6 +89,7 @@ public class ChatService {
         Member otherInfo = getMember(otherId);
         Map<String, Object> other = new HashMap<>();
 
+        other.put("otherId", otherInfo.getId());
         other.put("nickname", otherInfo.getNickname());
         other.put("image", getImg(otherInfo.getId()));
         other.put("notReadIndex", chatRoom.getLastReadIndex().get(otherInfo.getId()));
