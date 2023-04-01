@@ -32,4 +32,8 @@ public class ChatRoom implements Serializable {
         this.msgs = 0L;
         this.content = START_MSG;
     }
+
+    public boolean isMyRoom(Long id) {
+        return this.userIds.contains(id);
+    }
 }
