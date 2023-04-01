@@ -6,6 +6,7 @@ import com.omm.jwt.TokenProvider;
 import com.omm.member.model.dto.AuthDto;
 import com.omm.member.model.dto.RegistDto;
 import com.omm.member.model.dto.SubjectsDto;
+import com.omm.util.UrlInfo;
 import com.omm.util.error.ErrorCode;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -35,6 +36,8 @@ public class AuthService {
 
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+
+    private final UrlInfo urlInfo;
 
 
     /**
@@ -88,7 +91,7 @@ public class AuthService {
 
         HttpEntity<String> requestEntity = new HttpEntity<>(gsonObj.toJson(requestBody), headers);
 
-        String url = "http://localhost:4424/api/node/presentation";
+        String url = urlInfo.getNodeapi() +  "/api/node/presentation";
         HttpMethod httpMethod = HttpMethod.POST;
 
         try {

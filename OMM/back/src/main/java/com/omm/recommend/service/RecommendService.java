@@ -46,13 +46,13 @@ public class RecommendService {
 
     private final RestTemplate restTemplate;
 
-//    private final UrlInfo urlInfo;
+    private final UrlInfo urlInfo;
 
     public GetRecommendListResponseDto getRecommendList(String currentMemberDidAddress) {
 
         System.out.println(currentMemberDidAddress);
         try {
-            Member member = memberRepository.findByDidAddress("did:ethr:goerli:0x03df8e54a30e3906d243d7402c59b82b5d854223ba3ae969ea23d2c12b8da49c5e")
+            Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
                     .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
             MyInfo myInfo = myInfoRepository.findByMember(member)
@@ -116,7 +116,7 @@ public class RecommendService {
             requestBody.put("users", users);
 
             // FastAPI로 전송
-            String url = "http://localhost:8000/recommend"; // fastAPI url
+            String url = urlInfo.getFastapi() +"/recommend"; // fastAPI url
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);

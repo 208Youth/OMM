@@ -1,3 +1,6 @@
+insert into authority (authority_name) values('ROLE_USER');
+
+insert into member (age, did_address, gender, nickname) values (25, 'did:ethr:goerli:0x03df8e54a30e3906d243d7402c59b82b5d854223ba3ae969ea23d2c12b8da49c5e', 'FEMALE', 'yoonmihy');
 insert into member (age, did_address, gender, nickname) values (24, '0x6c05e98df60826cfb6cc58e1b5bc07bf3e89a0c0', 'FEMALE', 'nkarby0');
 insert into member (age, did_address, gender, nickname) values (29, '0x7786ce5e8413e6ac73bf4c7283b20f574640dc14', 'MALE', 'everacruysse1');
 insert into member (age, did_address, gender, nickname) values (26, '0x06a803893b35165aac2fbc0a823c409357e8ee6d', 'FEMALE', 'lkidstone2');
