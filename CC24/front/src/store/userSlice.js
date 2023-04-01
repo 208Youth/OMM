@@ -8,7 +8,7 @@ const initialState = {
   month: '',
   day: '',
   gender: '',
-  cert: new Set(),
+  cert: [],
 };
 const userSlice = createSlice({
   name: 'user',
