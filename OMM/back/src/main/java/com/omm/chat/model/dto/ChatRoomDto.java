@@ -1,12 +1,10 @@
 package com.omm.chat.model.dto;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.Set;
 
 @NoArgsConstructor
 @Data
