@@ -6,6 +6,8 @@ import com.omm.chat.model.entity.ChatRoom;
 import com.omm.chat.repository.ChatRepository;
 import com.omm.exception.CustomException;
 import com.omm.model.entity.Member;
+import com.omm.model.entity.MemberImg;
+import com.omm.repository.MemberImgRepository;
 import com.omm.repository.MemberRepository;
 import com.omm.util.SecurityUtil;
 import com.omm.util.error.ErrorCode;
@@ -19,6 +21,7 @@ import java.util.*;
 public class ChatService {
     private final ChatRepository chatRepository;
     private final MemberRepository memberRepository;
+    private final MemberImgRepository memberImgRepository;
 
     /**
      * 채팅방 생성
@@ -43,16 +46,16 @@ public class ChatService {
         for(Map.Entry<String, ChatRoom> entrySet : rooms.entrySet()) {
             ChatRoom room = entrySet.getValue();
             if(room.isMyRoom(myInfo.getId())) {
-                myRooms.add(ChatRoomDto.builder()
-                                .id(room.getId())
-                                .content(room.getContent())
-                                .msgs(room.getMsgs())
-                                .lastReadIndex(room.getLastReadIndex())
-                                .userIds(room.getUserIds())
-                                .build());
+                ChatRoomDto chatRoomDto = new ChatRoomDto();
+                chatRoomDto.setId(room.getId());
+                chatRoomDto.setContent(room.getContent());
+                chatRoomDto.setMsgs(room.getMsgs());
+                chatRoomDto.setMyNotReadIndex(room.getLastReadIndex().get(myInfo.getId()));
+                chatRoomDto.setLastMsgTime(room.getLastMsgTime());
+                chatRoomDto.setOther(getOtherInfo(room.getUserIds(), myInfo, room));
+                myRooms.add(chatRoomDto);
             }
         }
-
         return myRooms;
     }
 
@@ -63,9 +66,33 @@ public class ChatService {
         });
     }
 
+    public Member getMember(Long id) {
+        return memberRepository.findById(id).orElseThrow(() -> {
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        });
+    }
+
     public Member getMember(String user) {
         return memberRepository.findByDidAddress(user).orElseThrow(() -> {
             throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         });
+    }
+
+    public MemberImg getImg(Long id) {
+        List<MemberImg> memberImgs = memberImgRepository.findAllById(id);
+        return memberImgs.isEmpty() ? null : memberImgs.get(0);
+    }
+
+    public Map<String, Object> getOtherInfo(Set<Long> userIds, Member myInfo, ChatRoom chatRoom) {
+        Long[] ids = userIds.toArray(new Long[2]);
+        Long otherId = myInfo.getId() == ids[0] ? ids[1] : ids[0];
+        Member otherInfo = getMember(otherId);
+        Map<String, Object> other = new HashMap<>();
+
+        other.put("nickname", otherInfo.getNickname());
+        other.put("image", getImg(otherInfo.getId()));
+        other.put("notReadIndex", chatRoom.getLastReadIndex().get(otherInfo.getId()));
+
+        return other;
     }
 }

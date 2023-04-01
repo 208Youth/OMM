@@ -4,15 +4,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
 
-@Builder
+@NoArgsConstructor
 @Data
 public class ChatRoomDto {
     private String id;
-    private Set<Long> userIds;
-    private Map<Long, Long> lastReadIndex;
     private Long msgs;
+    private LocalDateTime lastMsgTime;
     private String content;
+    private Map<String, Object> other;
+    private Long myNotReadIndex;
 }
