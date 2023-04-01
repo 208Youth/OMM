@@ -85,7 +85,7 @@ public class ChatService {
 
     public Map<String, Object> getOtherInfo(Set<Long> userIds, Member myInfo, ChatRoom chatRoom) {
         Long[] ids = userIds.toArray(new Long[2]);
-        Long otherId = myInfo.getId() == ids[0] ? ids[1] : ids[0];
+        Long otherId = myInfo.getId().longValue() == ids[0] ? ids[1] : ids[0];
         Member otherInfo = getMember(otherId);
         Map<String, Object> other = new HashMap<>();
 
