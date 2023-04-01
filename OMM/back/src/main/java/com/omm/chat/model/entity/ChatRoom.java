@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -18,6 +19,7 @@ public class ChatRoom implements Serializable {
     private Set<Long> userIds;
     private Map<Long, Long> lastReadIndex;
     private Long msgs;
+    private LocalDateTime lastMsgTime;
     private String content;
 
     private static final String START_MSG = "채팅을 시작해주세요!";
@@ -30,6 +32,7 @@ public class ChatRoom implements Serializable {
             lastReadIndex.put(userId, 0L);
         });
         this.msgs = 0L;
+        this.lastMsgTime = LocalDateTime.now();
         this.content = START_MSG;
     }
 
