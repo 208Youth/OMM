@@ -65,14 +65,13 @@ def detect_text(path, inputday, inputname, inputyear, inputmonth, inputgender):
     else:
         inputgender = 'MALE'
     
-    print(doc_type)
-    print(name)
-    print(birthday)
-    print(gender)
-    print(inputgender)
-    print(inputname)
-    print(inputmonth)
-    # 아래줄 내용 반드시 지우기
+    # print(doc_type)
+    # print(name)
+    # print(birthday)
+    # print(gender)
+    # print(inputgender)
+    # print(inputname)
+    # print(inputmonth)
 
     if len(filenames) > 0:
         last_file = os.path.join('./iden_img', filenames[-1])  # 마지막 파일의 경로
@@ -92,13 +91,11 @@ def detect_text(path, inputday, inputname, inputyear, inputmonth, inputgender):
             "gender": gender
         }
 
-        print(personalId)
-        json_string = json.dumps(personalId)
-        print(json_string.encode())
+        json_string = json.dumps(personalId, separators=(",", ":"), ensure_ascii=False)
+        # print(json_string)
         hashed = hmac.new("1234".encode(), json_string.encode(), hashlib.sha256)
-        signature = base64.urlsafe_b64encode(hashed.digest()).decode()
-        print(signature)
-
+        signature = base64.urlsafe_b64encode(hashed.digest()).decode().rstrip('=')
+        # print(signature)
         return {'personalId': personalId, 'signature': signature}
     else:
         print('message: 인증 정보가 일치하지 않습니다.')
