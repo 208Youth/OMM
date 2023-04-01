@@ -18,6 +18,8 @@ import Admin from './pages/admin/Admin';
 import Detail from './pages/admin/Detail';
 import Main from './pages/main/Main';
 import Chatwindow from './pages/chatting/Chatwindow';
+// import ChatingRoomClone from './pages/chatting/ChatingRoomClone';
+import ChatingRobbyClone from './pages/chatting/ChatingRobbyClone';
 import ImageUploader from './pages/profile/ImageUploader';
 import Login from './pages/login/login';
 import LikeList from './pages/like/LikeList';
@@ -107,6 +109,14 @@ const router = createBrowserRouter([
     path: '/ImageUploader',
     element: <ImageUploader />,
   },
+  {
+    path: '/ChatingRobbyClone',
+    element: <ChatingRobbyClone />,
+  },
+  // {
+  //   path: '/ChatingRoomClone',
+  //   element: <ChatingRoomClone />,
+  // },
 ]);
 
 export default router;

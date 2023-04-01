@@ -2,10 +2,12 @@ package com.omm.matching.controller;
 
 import com.omm.matching.model.dto.request.CreateNotificationRequestDto;
 import com.omm.matching.model.dto.request.DeleteNotificationRequestDto;
+import com.omm.matching.model.dto.response.GetNotificationsResponseDto;
 import com.omm.matching.model.dto.response.NotificationResponseDto;
 import com.omm.matching.model.entity.Notification;
 import com.omm.matching.service.MatchingService;
 import com.omm.matching.service.NotificationPublisherService;
+import com.omm.model.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +35,9 @@ public class MatchingController {
         String user = accessor.getUser().getName();
         Notification notification = matchingService.createNotification(createNotificationRequestDto.getReceiverId(), user);
         String receiverAddr = matchingService.getReceiverAddr(createNotificationRequestDto.getReceiverId());
-        publisherService.publishNotification(receiverAddr, notification);
+        Member sender = matchingService.getSender(user);
+        NotificationResponseDto notificationResponseDto = matchingService.getNotificationResponseDto(sender, notification);
+        publisherService.publishNotification(receiverAddr, notificationResponseDto);
     }
 
     /**
@@ -43,7 +47,7 @@ public class MatchingController {
     @GetMapping("/matching/noti")
     public ResponseEntity<?> getNotifications() {
         List<NotificationResponseDto> notifications = matchingService.getNotifications();
-        return new ResponseEntity<>(notifications, HttpStatus.OK);
+        return new ResponseEntity<>(new GetNotificationsResponseDto(notifications), HttpStatus.OK);
     }
 
     /**
