@@ -9,6 +9,8 @@ const initialState = {
   day: '',
   gender: '',
   cert: [],
+  id: [],
+  idenvc: '',
 };
 const userSlice = createSlice({
   name: 'user',
@@ -26,9 +28,18 @@ const userSlice = createSlice({
       state.cert = [...certList, action.payload]
       console.log(action.payload);
       console.log(state.cert);
-    }
+    },
+    idInfo: (state, action) => {
+      state.id = action.payload
+      console.log(state.id);
+    },
+    idenVC: (state, action) => {
+      state.idenvc = action.payload
+      console.log(state.idenvc);
+    },
+
   },
 });
 
-export const { userInfo, certInfo } = userSlice.actions;
+export const { userInfo, certInfo, idInfo, idenVC } = userSlice.actions;
 export default userSlice;

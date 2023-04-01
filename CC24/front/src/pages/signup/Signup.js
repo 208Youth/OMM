@@ -9,23 +9,25 @@ import { EthrDID } from 'ethr-did';
 import FaceRecogModal from './FaceRecogModal';
 import IdenModal from './IdenModal';
 import PasswordModal from './PasswordModal';
-import { userInfo } from '../../store/userSlice';
+import { userInfo, idenVC } from '../../store/userSlice';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function Signup() {
   const navigate = useNavigate();
   const [faceModal, setFaceModal] = useState(false);
-  const [faceComplete, setFaceComplete] = useState(true);
+  const [faceComplete, setFaceComplete] = useState(false);
   const [idenModal, setIdenModal] = useState(false);
-  const [idenComplete, setIdenComplete] = useState(true);
+  const [idenComplete, setIdenComplete] = useState(false);
   const [passwordModal, setPasswordModal] = useState(false);
-  const [passwordComplete, setPasswordComplete] = useState(true);
+  const [passwordComplete, setPasswordComplete] = useState(false);
   const [name, setName] = useState(null);
   const [year, setYear] = useState('1980');
   const [month, setMonth] = useState('1');
   const [day, setDay] = useState('1');
   const [gender, setGender] = useState(null);
   const dispatch = useDispatch();
+  const id = useSelector((state) => state.user.id);
 
   const sendInfo = () => {
     const info = {
@@ -38,7 +40,7 @@ function Signup() {
     console.log(info);
     dispatch(userInfo(info));
   };
-  const signup = function () {
+  const signup = async function () {
     const Info = {
       name,
       year,
@@ -52,6 +54,26 @@ function Signup() {
     window.localStorage.setItem('DID', JSON.stringify(ethrDidOnGoerliNamed));
     const localData = JSON.parse(localStorage.getItem('DID'));
     console.log(localData.did);
+    await axios({
+      method: 'post',
+      url: 'http://localhost:4424/api/node/credential/personal-id',
+      data: {
+        "personalId": {
+          "name": id.personalId.name, 
+          "birthdate": id.personalId.birthdate,
+          "gender": id.personalId.gender
+        },
+      "signature" : id.signature,
+      },
+
+    })
+      .then((res) => {
+        console.log(res);
+        dispatch(idenVC(res.data.vcJwt));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     navigate('/main');
   };
 

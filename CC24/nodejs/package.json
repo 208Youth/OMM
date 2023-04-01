@@ -12,7 +12,6 @@
   "dependencies": {
     "cors": "^2.8.5",
     "crypto-js": "^4.1.1",
-    "dateformat": "^5.0.3",
     "did-jwt-vc": "^3.1.2",
     "did-resolver": "^4.1.0",
     "dotenv": "^16.0.3",

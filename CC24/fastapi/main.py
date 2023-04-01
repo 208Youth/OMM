@@ -101,7 +101,7 @@ async def detect(path: str):
 # 얼굴 정보 올리기
 
 
-@app.post("/photo")
+@app.post("/api/fast/photo")
 async def upload_photo(file: UploadFile):
     UPLOAD_DIR = "./knowns"  # 이미지를 저장할 서버 경로
 

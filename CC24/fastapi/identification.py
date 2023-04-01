@@ -55,20 +55,20 @@ def detect_text(path, inputday, inputname, inputyear, inputmonth, inputgender):
     name = (texts[0].description)[6:9]
     birthday = (texts[0].description)[15:21]
     gender = (texts[0].description)[22:23]
-    if (gender == 1 or 3):
+    if (gender == 1 or gender == 3):
         gender ='MALE'
     else:
-        gender
+        gender = 'FEMALE'
 
     if inputgender == '여':
         inputgender = 'FEMALE'
     else:
         inputgender = 'MALE'
     
-    # print(doc_type)
-    # print(name)
-    # print(birthday)
-    # print(gender)
+    print(doc_type)
+    print(name)
+    print(birthday)
+    print(gender)
     # print(inputgender)
     # print(inputname)
     # print(inputmonth)
@@ -96,7 +96,7 @@ def detect_text(path, inputday, inputname, inputyear, inputmonth, inputgender):
         hashed = hmac.new("1234".encode(), json_string.encode(), hashlib.sha256)
         signature = base64.urlsafe_b64encode(hashed.digest()).decode().rstrip('=')
         # print(signature)
-        return {'personalId': personalId, 'signature': signature}
+        return {'personalId': personalId, 'signature': signature, 'valid': True}
     else:
         print('message: 인증 정보가 일치하지 않습니다.')
         return {'message': "인증 정보가 일치하지 않습니다.", 'valid': False}
