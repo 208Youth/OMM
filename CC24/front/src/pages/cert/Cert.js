@@ -4,6 +4,7 @@ import axios from '../../api/cc24api';
 import './Cert.css';
 import CC24Logo from '../../assets/CC24.svg';
 import CertModal from './CertModal';
+import Navbar from '../../components/Navbar';
 
 function Cert() {
   const [modal, setModal] = useState(false);
@@ -123,6 +124,7 @@ function Cert() {
           <div className="text-xl hover:text-blue-900">자격증 인증</div>
           <div className="cert-point text-xl hover:text-stone-900"> &gt;</div>
         </div>
+        <Navbar className="fixed" />
       </div>
     </div>
   );

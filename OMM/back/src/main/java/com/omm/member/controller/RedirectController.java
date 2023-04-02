@@ -88,7 +88,7 @@ public class RedirectController {
                     memberService.addMember(registDto);
                     memberService.addMemberCert(registDto.getHolderDid());
                     String jwt = authService.authenticate(authDto.getHolderDid(), authDto.getVpJwt());
-                    return urlInfo.getOmmFront() + "/main?did="+did+"&jwt="+jwt;
+                    return urlInfo.getOmmFront() + "/moreinfo?jwt="+jwt;
                 } else {
 //                    return new ResponseEntity<>("로그인하세요.", HttpStatus.BAD_REQUEST);
                     return "#";

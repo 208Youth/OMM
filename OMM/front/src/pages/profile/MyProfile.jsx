@@ -29,6 +29,7 @@ import userarrow from '../../assets/userarrow.svg';
 import MyinfoSetModal from './MyinfoSetModal';
 import MyinfoSetModal3 from './MyinfoSetModal3';
 import MyinfoSetModal2 from './MyinfoSetModal2';
+import http from '@/api/http';
 // props를 통해 userid를 받고 claose 버튼을 눌러서 해당 userid의
 // 아니면 메인 페이지에 해당 컴포넌트를 아예 합쳐버릴까
 function MyProfile({ profileNav }) {
@@ -96,9 +97,6 @@ function MyProfile({ profileNav }) {
       .then((response) => setInterest(response.data.interestList))
       .catch((error) => console.error(error));
   };
-  const toCert = () => {
-    window.location.href = `http://localhost:3000/certificate`
-  }
   useEffect(() => {
     FreshCert();
     FreshInterest();
@@ -118,7 +116,21 @@ function MyProfile({ profileNav }) {
       </div>
     );
   }
-
+  async function toCert() {
+    await http
+      .get('/sign/certificate', {
+        headers: {
+          Authorization: import.meta.env.VITE_TOKEN, // TODO: 임시 토큰 부여
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        window.location.href=res.data
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
   // useEffect(() => {
   //   axios.get('')
   //     .then((response) => setInterest(response.data.interestList))
