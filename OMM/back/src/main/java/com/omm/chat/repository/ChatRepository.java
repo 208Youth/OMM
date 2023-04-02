@@ -29,6 +29,10 @@ public class ChatRepository {
         opsHashChatRoom.put(ROOMS, chatRoom.getId(), chatRoom);
     }
 
+    public ChatRoom getRoom(String roomId) {
+        return opsHashChatRoom.get(ROOMS, roomId);
+    }
+
     public Map<String, ChatRoom> getRooms() {
         return opsHashChatRoom.entries(ROOMS);
     }
