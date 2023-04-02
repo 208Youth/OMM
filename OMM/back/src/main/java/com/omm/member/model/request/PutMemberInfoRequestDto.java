@@ -6,6 +6,9 @@ import lombok.Getter;
 @Getter
 public class PutMemberInfoRequestDto {
 
+    @JsonProperty(value = "nickname")
+    private String nickname;
+
     @JsonProperty(value = "height")
     private short height;
 

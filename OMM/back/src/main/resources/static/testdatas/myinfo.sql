@@ -498,3 +498,4 @@ insert into myinfo (contact_style, drinking_style, height, lat, lng, mbti, milit
 insert into myinfo (contact_style, drinking_style, height, lat, lng, mbti, military, pet, smoking_style, member_id) values ('PREFER_CALL', 'EVERYDAY', 178, 37.037, 127.681, 'ENFP', 'EXEMPT', 'DOG', 'OFTEN', 498);
 insert into myinfo (contact_style, drinking_style, height, lat, lng, mbti, military, pet, smoking_style, member_id) values ('PREFER_OFFLINE', 'STOPPING', 170, 35.077, 126.305, 'ISTJ', 'COMPLETE', 'CAT', 'OFTEN', 499);
 insert into myinfo (contact_style, drinking_style, height, lat, lng, mbti, military, pet, smoking_style, member_id) values ('PREFER_MSG', 'EVERYDAY', 176, 35.353, 128.7, 'ENTJ', 'YET', 'LIZARD', 'OFTEN', 500);
+insert into myinfo (contact_style, drinking_style, height, lat, lng, mbti, military, pet, smoking_style, member_id) values ('PREFER_MSG', 'EVERYDAY', 176, 35.353, 128.7, 'ENTJ', 'YET', 'LIZARD', 'OFTEN', 501);

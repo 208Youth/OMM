@@ -2,9 +2,9 @@ package com.omm.member.controller;
 
 import com.omm.member.model.dto.AuthDto;
 import com.omm.member.model.dto.MemberCertDto;
+import com.omm.member.model.dto.MemberFilteringDto;
 import com.omm.member.model.dto.RegistDto;
 import com.omm.member.model.request.*;
-import com.omm.member.model.response.GetLikedMembersResponseDto;
 import com.omm.member.service.AuthService;
 import com.omm.member.service.MemberService;
 import com.omm.util.SecurityUtil;
@@ -60,14 +60,12 @@ public class MemberController {
     /**
      * 유저 초기 정보 설정
      *
-     * @param initMemberFilteringRequestDto 유저 초기 정보 객체
+     * @param memberFilteringDto 유저 초기 정보 객체
      * @return
      */
     @PostMapping("/filtering")
-    public ResponseEntity<?> initMemberFiltering(@RequestBody InitMemberFilteringRequestDto initMemberFilteringRequestDto) {
-        // 유저 생성
-
-        memberService.initMemberFiltering(SecurityUtil.getCurrentDidAddress().get(), initMemberFilteringRequestDto);
+    public ResponseEntity<?> initMemberFiltering(@RequestBody MemberFilteringDto memberFilteringDto) {
+        memberService.initMemberFiltering(SecurityUtil.getCurrentDidAddress().get(), memberFilteringDto);
         return new ResponseEntity<>("선호 상대 정보 등록 성공", HttpStatus.OK);
     }
 
@@ -131,12 +129,12 @@ public class MemberController {
     /**
      * 유저 필터링 정보 수정
      *
-     * @param putMemberFilteringRequestDto 요청된 수정 필터링 정보
+     * @param memberFilteringDto 요청된 수정 필터링 정보
      * @return
      */
     @PutMapping("/filtering")
-    public ResponseEntity<?> putMemberFiltering(@RequestBody PutMemberFilteringRequestDto putMemberFilteringRequestDto) {
-        memberService.putMemberFiltering(SecurityUtil.getCurrentDidAddress().get(), putMemberFilteringRequestDto);
+    public ResponseEntity<?> putMemberFiltering(@RequestBody MemberFilteringDto memberFilteringDto) {
+        memberService.putMemberFiltering(SecurityUtil.getCurrentDidAddress().get(), memberFilteringDto);
         return new ResponseEntity<>("유저 필터링 정보 수정에 성공했습니다.", HttpStatus.OK);
     }
 

@@ -87,6 +87,8 @@ public class RedirectController {
                     RegistDto registDto = authService.registAuth(authDto);
                     memberService.addMember(registDto);
                     memberService.addMemberCert(registDto.getHolderDid());
+                    memberService.addNewInfo(authDto.getHolderDid());
+                    memberService.addNewFiltering(authDto.getHolderDid());
                     String jwt = authService.authenticate(authDto.getHolderDid(), authDto.getVpJwt());
                     return urlInfo.getOmmFront() + "/moreinfo?jwt="+jwt;
                 } else {

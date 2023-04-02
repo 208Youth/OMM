@@ -498,3 +498,4 @@ insert into membercert (member_id, certificate, estate, health, income, job, uni
 insert into membercert (member_id, certificate, estate, health, income, job, university) values (498, true, false, false, false, false, false);
 insert into membercert (member_id, certificate, estate, health, income, job, university) values (499, false, true, false, true, true, false);
 insert into membercert (member_id, certificate, estate, health, income, job, university) values (500, false, false, false, false, true, false);
+insert into membercert (member_id, certificate, estate, health, income, job, university) values (501, false, false, false, false, true, false);
