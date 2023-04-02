@@ -90,7 +90,7 @@ public class RedirectController {
                     memberService.addNewInfo(authDto.getHolderDid());
                     memberService.addNewFiltering(authDto.getHolderDid());
                     String jwt = authService.authenticate(authDto.getHolderDid(), authDto.getVpJwt());
-                    return urlInfo.getOmmFront() + "/moreinfo?jwt="+jwt;
+                    return urlInfo.getOmmFront() + "/signup?jwt="+jwt;
                 } else {
 //                    return new ResponseEntity<>("로그인하세요.", HttpStatus.BAD_REQUEST);
                     return "#";
