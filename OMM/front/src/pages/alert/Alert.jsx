@@ -19,11 +19,12 @@ function Alert() {
     */
     const ws = new SockJS('http:localhost:5000/api/matching');
     const stompClient = Stomp.over(ws);
+    // 유저 3 토큰
     const token =
-      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkaWQ6ZXRocjpnb2VybGk6MHgwM2RmOGU1NGEzMGUzOTA2ZDI0M2Q3NDAyYzU5YjgyYjVkODU0MjIzYmEzYWU5NjllYTIzZDJjMTJiOGRhNDljNWUiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjgwMzQ5NTQ3fQ.j9jodZrhQuHRPYsS2UYc-saB6TEUUd8x0c_QKlgt1hr_-PFmsU7RVawZwI8niwmAitfeVO1GKdKUlQhbabh6fg';
+      '0x7786ce5e8413e6ac73bf4c7283b20f574640dc14eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIweDc3ODZjZTVlODQxM2U2YWM3M2JmNGM3MjgzYjIwZjU3NDY0MGRjMTQiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNzY2NzQxODMyfQ.7BnOYQdP1p9_VDVnehTnGoIsEmpG2OZ31ONBbdWh03ap0XX7fDbuZCtDhT2xDGh_xLYWVksqkzFlN8hDBKPhUQ';
     const decoded = jwt_decode(token);
     const headers = {
-      Authorization: import.meta.env.VITE_TOKEN,
+      Authorization: import.meta.env.VITE_TOKEN_3, // 유저3 토큰
     };
     stompClient.connect(
       headers,
