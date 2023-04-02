@@ -45,7 +45,7 @@ function ChatWindow() {
     setReportOpen(false);
   };
 
-  const ws = new SockJS('http://localhost:8080/api/chat');
+  const ws = new SockJS('http://localhost:5000/api/chat');
   const stompClient = Stomp.over(ws);
   // 임시값으로 쁘띠재용을 받는다.
   const user2ID = '쁘띠재용';
@@ -53,14 +53,14 @@ function ChatWindow() {
   const findRoom = () => {
     console.log('개신기한 호이스팅');
     axios
-      .get(`http://localhost:8080/api/chat/room/${roomId}`)
+      .get(`http://localhost:5000/api/chat/room/${roomId}`)
       .then((response) => {
         setRoom(response.data);
       });
   };
 
   const sendMessage = () => {
-    // const ws = new SockJS('http://localhost:8080/api/chat');
+    // const ws = new SockJS('http://localhost:5000/api/chat');
     // const stompClient = Stomp.over(ws);
     stompClient.connect({}, (frame) => {
       stompClient.send(
@@ -119,7 +119,7 @@ function ChatWindow() {
   useEffect(() => {
     findRoom();
     axios
-      .get(`http://localhost:8080/api/chat/room/${roomId}` + '/messages')
+      .get(`http://localhost:5000/api/chat/room/${roomId}` + '/messages')
       .then(({ data }) => {
         console.log('아래는 data 정보');
         console.log({ data });

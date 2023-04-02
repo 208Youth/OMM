@@ -38,6 +38,8 @@ public class RedirectController {
 
     private final GetCredentialService getCredentialService;
 
+
+
     @GetMapping("/{type}")
     public String moveToCC24Sign(@PathVariable String type) throws IOException {
         String toUrl = urlInfo.getCc24Front() + "/login?type=";
@@ -51,8 +53,8 @@ public class RedirectController {
     }
 
 
-    @GetMapping("/certificate/{type}")
-    public String moveToCC24Certificate(@PathVariable String type) {
+    @GetMapping("/certificate")
+    public String moveToCC24Certificate() {
         return urlInfo.getCc24Front() + "/certificate";
 //        switch (type) {
 //            case "UniversityCredential":
@@ -70,8 +72,6 @@ public class RedirectController {
 
     @PostMapping("/{type}")
     public String doSign(@PathVariable("type") String type, @RequestBody AuthDto authDto) throws URISyntaxException {
-        System.out.println("hellohello");
-        System.out.println(type);
         System.out.println(authDto.getHolderDid());
         System.out.println(authDto.getVpJwt());
 
@@ -79,7 +79,6 @@ public class RedirectController {
         URI target = null;
 
         String did = authDto.getHolderDid();
-        String jwt = authService.authenticate(authDto.getHolderDid(), authDto.getVpJwt());
 
         // 로그인, 회원가입에 따라 분기
         switch (type) {
@@ -87,13 +86,16 @@ public class RedirectController {
                 if (!memberService.existDidAddress(authDto.getHolderDid())) {
                     RegistDto registDto = authService.registAuth(authDto);
                     memberService.addMember(registDto);
-                    return urlInfo.getOmmFront() + "/main?did="+did+"&jwt="+jwt;
+                    memberService.addMemberCert(registDto.getHolderDid());
+                    String jwt = authService.authenticate(authDto.getHolderDid(), authDto.getVpJwt());
+                    return urlInfo.getOmmFront() + "/moreinfo?jwt="+jwt;
                 } else {
 //                    return new ResponseEntity<>("로그인하세요.", HttpStatus.BAD_REQUEST);
                     return "#";
                 }
             case "SIGNIN":
                 if (memberService.existDidAddress(authDto.getHolderDid())) {
+                    String jwt = authService.authenticate(authDto.getHolderDid(), authDto.getVpJwt());
                     return urlInfo.getOmmFront() + "/main?did="+did+"&jwt="+jwt;
                 } else {
 //                    return new ResponseEntity<>("회원가입하세요.", HttpStatus.BAD_REQUEST);

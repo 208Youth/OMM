@@ -3,7 +3,8 @@ import { TinyFaceDetectorOptions } from 'face-api.js';
 import * as faceapi from 'face-api.js';
 import './FaceRecog.css';
 import axios from 'axios';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const MODEL_URL = '/models';
 // 비디오 사이즈 설정
@@ -26,6 +27,7 @@ function FaceRecog() {
   const [whatpage, setPage] = useState('');
 
   const location = useLocation();
+  const navigate = useNavigate();
   const fromPage = location.state.page;
   console.log(fromPage);
 
@@ -57,11 +59,15 @@ function FaceRecog() {
   // 라벨링 할 인물 이미지 로컬에서 가져오기
   const loadImage = async () => {
     // 업로드 된 이미지 이름을 배열에 담아 라벨링 합니다.
-    const labels = ['boyoung', 'yangwon'];
+    // const labels = [name];
+    const labels = ['boyoung', 'boyoung2'];
 
     return Promise.all(
       labels.map(async (label) => {
-        const images = await faceapi.fetchImage(`./imgs/${label}.jpg`);
+        // const images = await faceapi.fetchImage(didaddress 에 있는 firebase url 주소 가져오기);
+        const images = await faceapi.fetchImage(
+          `../../../public/imgs/${label}.jpg`,
+        );
         const descriptions = [];
         const detections = await faceapi
           .detectSingleFace(images)
@@ -88,7 +94,7 @@ function FaceRecog() {
   };
 
   const onPlay = async () => {
-    setNotice('인증되기까지 잠시만 기다려주세요.');
+    setNotice('마스크를 벗고 정면을 바라봐주세요.');
     // 이미지 정보를 기반으로 canvas 요소 생성
     console.log('캔버스 그리기 시작');
     const canvas = faceapi.createCanvasFromMedia(videoRef.current);
@@ -193,9 +199,13 @@ function FaceRecog() {
         });
         video.remove();
         canvas.remove();
+        if (whatpage === 'chat') {
+          console.log('대기로 이동');
+          navigate('/loading');
+        } else {
+          navigate('/moreinfo');
+        }
       }, 3000);
-      // 새로고침 혹은 채팅방으로 이동
-      window.location.reload();
     }
   }, [recog]);
 
@@ -261,14 +271,14 @@ function FaceRecog() {
           {isStartDetect && notice && (
             <div className="text-center text-[#364C63]">{notice}</div>
           )}
-          {whatpage !== 'chat' && (
+          {/* {whatpage !== 'chat' && (
             <div className="flex justify-between mx-8 text-[#364C63] text-lg">
               <div>&lt; </div>
               <div aria-hidden onClick={() => {}}>
                 &gt;
               </div>
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </div>

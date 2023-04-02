@@ -57,18 +57,18 @@ public class AuthService {
 
     public RegistDto registAuth(AuthDto authDto) {
         SubjectsDto subjects = verifyVP(authDto);
-        Map<String, String> personalInfo = subjects.getSubjects().get("personalInfo");
-        if (personalInfo == null ||
-            personalInfo.get("birthdate") == null ||
-            personalInfo.get("gender") == null) {
+        Map<String, String> personalId = subjects.getSubjects().get("personalId");
+        if (personalId == null ||
+            personalId.get("birthdate") == null ||
+            personalId.get("gender") == null) {
             throw new CustomException(ErrorCode.INVALID_VP);
         }
 
         return RegistDto.builder()
             .holderDid(authDto.getHolderDid())
             .age((short) (Calendar.getInstance().get(Calendar.YEAR) -
-                Integer.parseInt(personalInfo.get("birthdate").substring(0, 4)) + 1))
-            .gender(personalInfo.get("gender"))
+                Integer.parseInt(personalId.get("birthdate").substring(0, 4)) + 1))
+            .gender(personalId.get("gender"))
             .build();
 
     }

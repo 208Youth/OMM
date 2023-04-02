@@ -58,6 +58,7 @@ function Signup() {
       method: 'post',
       url: 'http://localhost:4424/api/node/credential/personal-id',
       data: {
+        "holderDid": localData.did,
         "personalId": {
           "name": id.personalId.name, 
           "birthdate": id.personalId.birthdate,
@@ -70,6 +71,7 @@ function Signup() {
       .then((res) => {
         console.log(res);
         dispatch(idenVC(res.data.vcJwt));
+        window.localStorage.setItem('IdenVC', JSON.stringify(res.data.vcJwt));
       })
       .catch((err) => {
         console.log(err);

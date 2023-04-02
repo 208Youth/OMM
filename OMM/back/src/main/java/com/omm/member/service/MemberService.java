@@ -75,6 +75,8 @@ public class MemberService {
 
     }
 
+
+
 //    public void createMember(String memberNickname) {
 //        try {
 //            Member member = Member.builder()
@@ -575,5 +577,20 @@ public class MemberService {
         } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
         }
+    }
+
+    public void addMemberCert(String holderDid) {
+        Member member = memberRepository.findByDidAddress(holderDid)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        try {
+            MemberCert memberCert = MemberCert.builder()
+                    .member(member).build();
+            memberCertRepository.save(memberCert);
+        }catch (Exception e){
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS);
+        }
+
+
     }
 }

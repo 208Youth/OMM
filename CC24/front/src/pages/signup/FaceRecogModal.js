@@ -14,7 +14,7 @@ function FaceRecogModal({ setFaceModal, setFaceComplete, name }) {
   const encodeFileToBase64 = (fileBlob) => {
     // 파일명 변경(회원이름 가져올것)
     let editFile = null;
-    editFile = new File([fileBlob], '{name}.jpg', { type: fileBlob.type });
+    editFile = new File([fileBlob], `${name}.jpg`, { type: fileBlob.type });
     // 파일명 변경된 파일을 저장
     setFile(editFile);
     // 업로드한 이미지 보여주기
@@ -33,7 +33,11 @@ function FaceRecogModal({ setFaceModal, setFaceComplete, name }) {
 
   async function sendImg() {
     setFaceComplete(true);
-    // axios로 fastapi 에 이미지 보내기
+    // axios로 node.js 에 이미지 보내기
+    // 사진 파일, 사람정보, 서명을 FormData 형식으로 보내주기
+    const formData = new FormData();
+    formData.append('name', '얼굴인증 보낸사람 정보');
+    formData.append('img', imgfile);
     await axios({
       method: 'post',
       url: 'http://127.0.0.1:8000/api/fast/photo',
