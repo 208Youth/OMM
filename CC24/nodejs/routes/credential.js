@@ -7,7 +7,7 @@ const router = express.Router();
 
 const http = require("./module/http");
 const did = require("./module/did");
-// const file = require("./module/file");
+const store = require("./module/store");
 
 // multer 미들웨어 설정
 const upload = multer({ dest: 'uploads/' });
@@ -74,12 +74,16 @@ router.post("/personal-id", upload.single('image'), async (req, res) => {
       throw new Error("Invalid personalId");
     }
 
+    if (req.file) {
+      const url = store.uploadImageToFirebase(req.file);
+      personalId.imageUrl = url;
+    }
+
     const vcJwt = await did.issueVC(
       holderDid,
       "PersonalIdCredential",
       { personalId: personalId }
     );
-
     res.json({ vcJwt: vcJwt });
   } catch (error) {
     console.error(error.message);
