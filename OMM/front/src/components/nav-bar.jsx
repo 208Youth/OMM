@@ -8,11 +8,11 @@ import axios from '../api/http';
 
 function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav }) {
   let stompClient;
-  const headers = {
-    Authorization: import.meta.env.VITE_TOKEN,
-  };
 
   const mainconnect = () => {
+    const headers = {
+      Authorization: import.meta.env.VITE_TOKEN,
+    };
     const ws = new SockJS('http://localhost:5000/api/matching');
     stompClient = Stomp.over(ws);
     stompClient.connect(
@@ -33,6 +33,9 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav }) {
     );
   };
   const chatlistconnect = () => {
+    const headers = {
+      Authorization: import.meta.env.VITE_TOKEN,
+    };
     const ws = new SockJS('http://localhost:5000/api/chat');
     stompClient = Stomp.over(ws);
     stompClient.connect(
@@ -56,11 +59,14 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav }) {
   const sendMatch = () => {
     // redux 에서 첫번째사람 지우는 함수 작성
     // match 알림 보내기
+    const headers = {
+      Authorization: import.meta.env.VITE_TOKEN,
+    };
     console.log(stompClient);
     stompClient.send(
       '/pub/matching/noti',
       headers,
-      JSON.stringify({ receiverId: 1 }),
+      JSON.stringify({ receiverId: 3 }),
     );
     console.log(stompClient);
     // stompClient.disconnect();
