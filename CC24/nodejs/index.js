@@ -1,8 +1,9 @@
 const express = require("express");
 const cors = require("cors");
+const dotenv = require("dotenv");
+
 const app = express();
 const port = 4424;
-const dotenv = require("dotenv");
 
 app.use("/api/node", express.static("public"));
 app.use(cors());
