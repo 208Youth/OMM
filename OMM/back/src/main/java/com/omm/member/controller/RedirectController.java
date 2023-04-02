@@ -51,8 +51,8 @@ public class RedirectController {
     }
 
 
-    @GetMapping("/certificate/{type}")
-    public String moveToCC24Certificate(@PathVariable String type) {
+    @GetMapping("/certificate")
+    public String moveToCC24Certificate() {
         return urlInfo.getCc24Front() + "/certificate";
 //        switch (type) {
 //            case "UniversityCredential":

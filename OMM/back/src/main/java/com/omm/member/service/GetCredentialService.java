@@ -64,6 +64,7 @@ public class GetCredentialService {
             case "EstateCredential":
                 String estate = getEstateCredential(authDto);
                 memberCert.setEstate(true);
+                System.out.println(estate);
                 memberCert.setEstateAmount(Long.valueOf(estate));
                 break;
             case "HealthCredential":
