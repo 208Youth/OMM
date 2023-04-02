@@ -13,7 +13,7 @@ admin.initializeApp({
 
 const bucket = admin.storage().bucket();
 
-const uploadImageToFirebase = (file) => {
+const uploadImageToFirebase = async (file) => {
   const filePath = file.path; 
   const fileName = uuidv4() + "-" + file.originalname;
 

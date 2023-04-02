@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
-function MoreInfo3() {
+function MoreInfo3({setStep}) {
   const [moreinfo, setMoreInfo] = useState({
     age_min: 20,
     age_max: 25,
@@ -11,7 +11,22 @@ function MoreInfo3() {
     range_min: 3,
     range_max: 80,
   });
-
+  const prev = ()=> {
+    setStep(2);
+  }
+  const next = () => { 
+    if (
+      moreinfo.age_min && 
+      moreinfo.age_max && 
+      moreinfo.height_min && 
+      moreinfo.height_max && 
+      moreinfo.range_min &&
+      moreinfo.range_max){
+        setStep(4)
+      } else {
+        alert('모든 정보를 입력해주세요!');
+      }
+  }
   const changeRange = (e) => {
     let min = e[0];
     let max = e[1];
@@ -158,15 +173,20 @@ function MoreInfo3() {
         />
       </div>
       <div className="flex justify-between mx-8 text-[#364C63] text-lg">
-        <div>&lt; </div>
-        <div
-          aria-hidden
-          onClick={() => {
-            console.log('다음페이지로 이동');
-          }}
-        >
-          &gt;
-        </div>
+        <button
+            type="button"
+            aria-hidden
+            onClick={() => {prev()}}
+          >
+            &lt;
+          </button>
+          <button
+            type="button"
+            aria-hidden
+            onClick={() => {next()}}
+          >
+            &gt;
+        </button>
       </div>
     </div>
   );

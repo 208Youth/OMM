@@ -1,13 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function MoreInfo4() {
+function MoreInfo4({setStep}) {
   const [moreinfo, setMoreInfo] = useState({
     contact_style: '',
     drinking_style: '',
     smoking_style: '',
   });
-
+  const prev = ()=> {
+    setStep(3);
+  }
+  const next = () => { 
+    if (
+      moreinfo.contact_style && 
+      moreinfo.drinking_style && 
+      moreinfo.smoking_style){
+        setStep(5)
+      } else {
+        alert('모든 정보를 입력해주세요!');
+      }
+  }
   async function sendMyInfo() {
     await axios({
       method: 'post',
@@ -333,24 +345,24 @@ function MoreInfo4() {
         </div>
       </div>
       <div className="flex justify-between mx-8 text-[#364C63] text-lg">
-        <div>&lt; </div>
-        <div
-          aria-hidden
-          onClick={() => {
-            if (
-              moreinfo.contact_style &&
-              moreinfo.drinking_style &&
-              moreinfo.smoking_style
-            ) {
-              sendMyInfo();
-              sendPreferInfo();
-            } else {
-              alert('정보를 입력해주세요');
-            }
-          }}
-        >
-          &gt;
-        </div>
+        <button
+            type="button"
+            aria-hidden
+            onClick={() => {prev()}}
+          >
+            &lt;
+          </button>
+          <button
+            type="button"
+            aria-hidden
+            onClick={() => {
+              sendMyInfo()
+              sendPreferInfo()
+              next()
+            }}
+          >
+            &gt;
+        </button>
       </div>
     </div>
   );

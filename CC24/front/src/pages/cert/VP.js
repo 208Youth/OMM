@@ -13,7 +13,7 @@ function VP() {
   const certList = useSelector((state) => state.user.cert);
   // console.log(certList);
   const VCs = JSON.parse(localStorage.getItem('VC'));
-  // console.log(VCs);
+  console.log(VCs);
   const iden = JSON.parse(localStorage.getItem('keypair')).identifier;
   const pk = JSON.parse(localStorage.getItem('keypair')).privateKey;
   const ethrDidOnGoerliNamed = new EthrDID({
@@ -22,7 +22,8 @@ function VP() {
     chainNameOrId: 'goerli',
   });
   const certKeys = []
-  for (let i = 0; i < VCs.length; i++) {
+  const vcLength = (VCs == null)? 0 : VCs.length;
+  for (let i = 0; i < vcLength; i++) {
     certKeys.push(Object.keys(VCs[i])[0]);
   }
   // const certs = []
@@ -116,6 +117,7 @@ function VP() {
       .post(`/sign/certificate/${credentialName}`, data)
       .then((res) => {
         console.log(res);
+        window.location.href = res.data;
       })
       .catch((err) => {
         console.log(err);

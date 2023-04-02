@@ -1,12 +1,24 @@
 import React, { useState, useEffect } from 'react';
 
-function MoreInfo2() {
+function MoreInfo2({setStep}) {
   const [moreinfo, setMoreInfo] = useState({
     drinking_style: '',
     smoking_style: '',
     military: '',
   });
-
+  const prev = ()=> {
+    setStep(1);
+  }
+  const next =() => { 
+    if (
+        moreinfo.drinking_style && 
+        moreinfo.smoking_style && 
+        moreinfo.military){
+          setStep(3)
+        } else {
+          alert('모든 정보를 입력해주세요!');
+        }
+  }
   useEffect(() => {
     console.log(moreinfo);
   }, [moreinfo]);
@@ -338,23 +350,22 @@ function MoreInfo2() {
         </div>
       </div>
       <div className="flex justify-between mx-8 text-[#364C63] text-lg">
-        <div>&lt; </div>
-        <div
-          aria-hidden
-          onClick={() => {
-            if (
-              moreinfo.drinking_style &&
-              moreinfo.smoking_style &&
-              moreinfo.military
-            ) {
-              console.log('다음페이지로 이동');
-            } else {
-              alert('정보를 입력해주세요');
-            }
-          }}
-        >
-          &gt;
-        </div>
+        <button
+            type="button"
+            aria-hidden
+            onClick={() => {
+              setStepD()
+            }}
+          >
+            &lt;
+          </button>
+          <button
+            type="button"
+            aria-hidden
+            onClick={() => {next()}}
+          >
+            &gt;
+        </button>
       </div>
     </div>
   );
