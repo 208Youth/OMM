@@ -62,7 +62,7 @@ function btoaUrl(input) {
 
 // Issue PersonalId Credential
 router.post("/personal-id", upload.single('image'), async (req, res) => {
-  const { holderDid, personalId, signature} = req.body;
+  const { holderDid, personalId, signature } = req.body;
 
   try {
     // 데이터 검증
@@ -78,6 +78,27 @@ router.post("/personal-id", upload.single('image'), async (req, res) => {
       holderDid,
       "PersonalIdCredential",
       { personalId: personalId }
+    );
+
+    res.json({ vcJwt: vcJwt });
+  } catch (error) {
+    console.error(error.message);
+    res.status(400).json({ error: error.message });
+  }
+});
+
+
+// Issue PersonalId Credential
+router.post("/did-address", async (req, res) => {
+  const { holderDid } = req.body;
+
+  try {
+    await did.verifyHolderDid(holderDid);
+
+    const vcJwt = await did.issueVC(
+      holderDid,
+      "DidAddressCredential",
+      { holderDid: holderDid }
     );
 
     res.json({ vcJwt: vcJwt });
