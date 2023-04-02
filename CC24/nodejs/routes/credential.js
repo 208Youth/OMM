@@ -66,24 +66,25 @@ router.post("/personal-id", upload.single('image'), async (req, res) => {
 
   try {
     // 데이터 검증
-    const data = JSON.stringify(personalId);
     const key = '1234';
-    const hmac = cryptoJS.HmacSHA256(data, key);
+    const hmac = cryptoJS.HmacSHA256(personalId, key);
     const expectedSignature = btoaUrl(hmac.toString(cryptoJS.enc.Latin1));
     if (signature !== expectedSignature) {
       throw new Error("Invalid personalId");
     }
 
-    if (req.file) {
-      const url = store.uploadImageToFirebase(req.file);
-      personalId.imageUrl = url;
-    }
+    let parsePersonalId = JSON.parse(personalId);
+    const url = await store.uploadImageToFirebase(req.file);
+    parsePersonalId.imageUrl = url;
+    // if (req.file) {
+    // }
 
     const vcJwt = await did.issueVC(
       holderDid,
       "PersonalIdCredential",
-      { personalId: personalId }
+      { personalId: parsePersonalId }
     );
+    console.log(vcJwt);
     res.json({ vcJwt: vcJwt });
   } catch (error) {
     console.error(error.message);

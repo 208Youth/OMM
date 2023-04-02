@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import Modal from 'react-modal';
 import './MoreInfo.css';
 import Kakaomap from './Kakaomap';
 
-function MoreInfo() {
+const MoreInfo = ({setStep}) => {
   const [moreinfo, setMoreInfo] = useState({
     nickname: '',
     height: '',
@@ -13,35 +13,48 @@ function MoreInfo() {
     highschool: '',
     contact_style: '',
   });
+  const next =() => { 
+    if (
+        moreinfo.nickname && 
+        moreinfo.height && 
+        moreinfo.lat &&
+        moreinfo.lng && 
+        moreinfo.highschool && 
+        moreinfo.contact_style){
+          setStep(2)
+        } else {
+          alert('모든 정보를 입력해주세요!');
+        }
+  }
   const [show, setShow] = useState(false);
   const [duplication, setDuplication] = useState(false);
 
-  async function checkNickname() {
-    await axios({
-      method: 'get',
-      url: '/api/member/nickname',
-      data: {
-        nickname: moreinfo.nickname,
-      },
-      // headers: {
-      //   Authorization: token,
-      // },
-    })
-      .then((res) => {
-        console.log(res);
-        setShow(true);
-        setDuplication(res);
-      })
-      .catch((err) => {
-        console.log(err);
-        setShow(true);
-        setDuplication(false);
-        setMoreInfo((prevInfo) => ({
-          ...prevInfo,
-          nickname: '',
-        }));
-      });
-  }
+  // async function checkNickname() {
+  //   await axios({
+  //     method: 'get',
+  //     url: '/api/member/nickname',
+  //     data: {
+  //       nickname: moreinfo.nickname,
+  //     },
+  //     // headers: {
+  //     //   Authorization: token,
+  //     // },
+  //   })
+  //     .then((res) => {
+  //       console.log(res);
+  //       setShow(true);
+  //       setDuplication(res);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //       setShow(true);
+  //       setDuplication(false);
+  //       setMoreInfo((prevInfo) => ({
+  //         ...prevInfo,
+  //         nickname: '',
+  //       }));
+  //     });
+  // }
   // let subtitle;
   const [modalIsOpen, setIsOpen] = useState(false);
 
@@ -82,7 +95,7 @@ function MoreInfo() {
                 ...prevInfo,
                 nickname: e.target.value,
               }));
-              checkNickname();
+              // checkNickname();
             }}
             type="text"
             id="nickname"
@@ -104,7 +117,7 @@ function MoreInfo() {
             중복 확인
           </button> */}
         </div>
-        {show && duplication && (
+        {/* {show && duplication && (
           <p className="mt-1 text-sm text-[#F59FB1] ml-2 font-sans">
             <span className="font-medium">사용할 수 있는 닉네임입니다.</span>
           </p>
@@ -113,7 +126,7 @@ function MoreInfo() {
           <p className="mt-1 text-sm text-red-500 ml-2 font-sans">
             <span className="font-medium">사용할 수 없는 닉네임입니다.</span>
           </p>
-        )}
+        )} */}
       </div>
       <div className="mb-6 mx-8 flex">
         <span className="font-medium text-[#364C63] mr-5 self-center text-base">
@@ -306,25 +319,21 @@ function MoreInfo() {
         </div>
       </div>
       <div className="flex justify-between mx-8 text-[#364C63] text-lg">
-        <div>&lt; </div>
-        <div
+        <button
+          type="button"
           aria-hidden
           onClick={() => {
-            if (
-              moreinfo.nickname
-              && moreinfo.contact_style
-              && moreinfo.height
-              && moreinfo.highschool
-              && moreinfo.location
-            ) {
-              console.log('다음페이지로 이동');
-            } else {
-              alert('정보를 입력해주세요');
-            }
           }}
         >
+          &lt;
+        </button>
+        <button
+          type="button"
+          aria-hidden
+          onClick={() => {next()}}
+        >
           &gt;
-        </div>
+        </button>
       </div>
     </div>
   );

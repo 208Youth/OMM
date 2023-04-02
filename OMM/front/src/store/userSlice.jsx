@@ -13,12 +13,21 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    userInfo: (state, action) => {
-      state.name = action.payload.name;
-      state.year = action.payload.year;
-      state.month = action.payload.month;
-      state.day = action.payload.day;
-      state.gender = action.payload.gender;
+    moreInfo1: (state, action) => {
+      state.nickname = action.payload.nickname;
+      state.height = action.payload.height;
+      state.lat = action.payload.lat;
+      state.lng = action.payload.lng;
+      state.highschool = action.payload.highschool;
+      state.contact_style = action.payload.contact_style;
+    },
+    moreInfo2: (state, action) => {
+      state.drinking_style = action.payload.drinking_style;
+      state.height = action.payload.height;
+      state.lat = action.payload.lat;
+      state.lng = action.payload.lng;
+      state.highschool = action.payload.highschool;
+      state.contact_style = action.payload.contact_style;
     },
   },
 });

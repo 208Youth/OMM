@@ -26,6 +26,7 @@ function Signup() {
   const [month, setMonth] = useState('1');
   const [day, setDay] = useState('1');
   const [gender, setGender] = useState(null);
+  const [img, setImg] = useState(null);
   const dispatch = useDispatch();
   const id = useSelector((state) => state.user.id);
 
@@ -54,29 +55,32 @@ function Signup() {
     window.localStorage.setItem('DID', JSON.stringify(ethrDidOnGoerliNamed));
     const localData = JSON.parse(localStorage.getItem('DID'));
     console.log(localData.did);
+    const data = new FormData();
+    console.log(id.personalId);
+    data.append('holderDid', localData.did);
+    data.append('personalId', JSON.stringify(id.personalId));
+    data.append('signature', id.signature);
+    data.append('image', img);
+    for (let key of data.keys()) {
+      console.log(key, ":", data.get(key));
+    }
+
     await axios({
       method: 'post',
       url: 'http://localhost:4424/api/node/credential/personal-id',
-      data: {
-        "holderDid": localData.did,
-        "personalId": {
-          "name": id.personalId.name, 
-          "birthdate": id.personalId.birthdate,
-          "gender": id.personalId.gender
-        },
-      "signature" : id.signature,
-      },
+      data: data,
 
     })
       .then((res) => {
-        console.log(res);
+        console.log('성공!!!!!!!!', res);
         dispatch(idenVC(res.data.vcJwt));
         window.localStorage.setItem('IdenVC', JSON.stringify(res.data.vcJwt));
       })
       .catch((err) => {
         console.log(err);
       });
-    navigate('/main');
+    // navigate('/main');
+    console.log(img);
   };
 
   useEffect(() => {
@@ -117,6 +121,7 @@ function Signup() {
       >
         <FaceRecogModal
           setFaceModal={setFaceModal}
+          img={(res) => {setImg(res)}}
           setFaceComplete={(res) => {
             if (res) {
               setFaceComplete(true);
