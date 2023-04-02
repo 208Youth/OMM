@@ -38,6 +38,8 @@ public class RedirectController {
 
     private final GetCredentialService getCredentialService;
 
+
+
     @GetMapping("/{type}")
     public String moveToCC24Sign(@PathVariable String type) throws IOException {
         String toUrl = urlInfo.getCc24Front() + "/login?type=";
@@ -70,8 +72,6 @@ public class RedirectController {
 
     @PostMapping("/{type}")
     public String doSign(@PathVariable("type") String type, @RequestBody AuthDto authDto) throws URISyntaxException {
-        System.out.println("hellohello");
-        System.out.println(type);
         System.out.println(authDto.getHolderDid());
         System.out.println(authDto.getVpJwt());
 
@@ -86,6 +86,7 @@ public class RedirectController {
                 if (!memberService.existDidAddress(authDto.getHolderDid())) {
                     RegistDto registDto = authService.registAuth(authDto);
                     memberService.addMember(registDto);
+                    memberService.addMemberCert(registDto.getHolderDid());
                     String jwt = authService.authenticate(authDto.getHolderDid(), authDto.getVpJwt());
                     return urlInfo.getOmmFront() + "/main?did="+did+"&jwt="+jwt;
                 } else {
