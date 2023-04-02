@@ -79,7 +79,6 @@ public class RedirectController {
         URI target = null;
 
         String did = authDto.getHolderDid();
-        String jwt = authService.authenticate(authDto.getHolderDid(), authDto.getVpJwt());
 
         // 로그인, 회원가입에 따라 분기
         switch (type) {
@@ -87,6 +86,7 @@ public class RedirectController {
                 if (!memberService.existDidAddress(authDto.getHolderDid())) {
                     RegistDto registDto = authService.registAuth(authDto);
                     memberService.addMember(registDto);
+                    String jwt = authService.authenticate(authDto.getHolderDid(), authDto.getVpJwt());
                     return urlInfo.getOmmFront() + "/main?did="+did+"&jwt="+jwt;
                 } else {
 //                    return new ResponseEntity<>("로그인하세요.", HttpStatus.BAD_REQUEST);
@@ -94,6 +94,7 @@ public class RedirectController {
                 }
             case "SIGNIN":
                 if (memberService.existDidAddress(authDto.getHolderDid())) {
+                    String jwt = authService.authenticate(authDto.getHolderDid(), authDto.getVpJwt());
                     return urlInfo.getOmmFront() + "/main?did="+did+"&jwt="+jwt;
                 } else {
 //                    return new ResponseEntity<>("회원가입하세요.", HttpStatus.BAD_REQUEST);
