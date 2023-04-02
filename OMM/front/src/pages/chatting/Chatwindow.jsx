@@ -60,7 +60,7 @@ function ChatWindow() {
   };
 
   const sendMessage = () => {
-    // const ws = new SockJS('http://localhost:8080/api/chat');
+    // const ws = new SockJS('http://localhost:5000/api/chat');
     // const stompClient = Stomp.over(ws);
     stompClient.connect({}, (frame) => {
       stompClient.send(
@@ -119,7 +119,7 @@ function ChatWindow() {
   useEffect(() => {
     findRoom();
     axios
-      .get(`http://localhost:8080/api/chat/room/${roomId}` + '/messages')
+      .get(`http://localhost:5000/api/chat/room/${roomId}` + '/messages')
       .then(({ data }) => {
         console.log('아래는 data 정보');
         console.log({ data });
