@@ -40,11 +40,11 @@ public class MemberCertDto {
     private boolean estate;
 
     @JsonProperty(value = "estate_amount")
-    private Long estateAmount;
+    private String estateAmount;
 
     @JsonProperty(value = "income")
     private boolean income;
 
     @JsonProperty(value = "income_amount")
-    private Long incomeAmount;
+    private String incomeAmount;
 }

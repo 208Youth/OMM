@@ -59,13 +59,13 @@ public class GetCredentialService {
             case "IncomeCredential":
                 String income = getIncomeCredential(authDto);
                 memberCert.setIncome(true);
-                memberCert.setIncomeAmount(Long.valueOf(income));
+                memberCert.setIncomeAmount(income);
                 break;
             case "EstateCredential":
                 String estate = getEstateCredential(authDto);
                 memberCert.setEstate(true);
                 System.out.println(estate);
-                memberCert.setEstateAmount(Long.valueOf(estate));
+                memberCert.setEstateAmount(estate);
                 break;
             case "HealthCredential":
                 String health = getHealthCredential(authDto);

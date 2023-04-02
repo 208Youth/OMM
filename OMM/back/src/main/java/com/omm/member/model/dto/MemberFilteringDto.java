@@ -1,10 +1,10 @@
-package com.omm.member.model.request;
+package com.omm.member.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 @Getter
-public class PutMemberFilteringRequestDto {
+public class MemberFilteringDto {
 
     @JsonProperty(value = "age_min")
     private int ageMin;
