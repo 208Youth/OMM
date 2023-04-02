@@ -46,17 +46,28 @@ public class ChatService {
         for(Map.Entry<String, ChatRoom> entrySet : rooms.entrySet()) {
             ChatRoom room = entrySet.getValue();
             if(room.isMyRoom(myInfo.getId())) {
-                ChatRoomDto chatRoomDto = new ChatRoomDto();
-                chatRoomDto.setId(room.getId());
-                chatRoomDto.setContent(room.getContent());
-                chatRoomDto.setMsgs(room.getMsgs());
-                chatRoomDto.setMyNotReadIndex(room.getLastReadIndex().get(myInfo.getId()));
-                chatRoomDto.setLastMsgTime(room.getLastMsgTime());
-                chatRoomDto.setOther(getOtherInfo(room.getUserIds(), myInfo, room));
+                ChatRoomDto chatRoomDto = getRoomDto(room, myInfo);
                 myRooms.add(chatRoomDto);
             }
         }
         return myRooms;
+    }
+
+    public ChatRoomDto getRoom(String roomId) {
+        Member myInfo = getMember();
+        ChatRoom chatRoom = chatRepository.getRoom(roomId);
+        return getRoomDto(chatRoom, myInfo);
+    }
+
+    public ChatRoomDto getRoomDto(ChatRoom room, Member myInfo) {
+        ChatRoomDto chatRoomDto = new ChatRoomDto();
+        chatRoomDto.setId(room.getId());
+        chatRoomDto.setContent(room.getContent());
+        chatRoomDto.setMsgs(room.getMsgs());
+        chatRoomDto.setMyNotReadIndex(room.getLastReadIndex().get(myInfo.getId()));
+        chatRoomDto.setLastMsgTime(room.getLastMsgTime());
+        chatRoomDto.setOther(getOtherInfo(room.getUserIds(), myInfo, room));
+        return chatRoomDto;
     }
 
     public Member getMember() {

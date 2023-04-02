@@ -14,6 +14,7 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -39,6 +40,11 @@ public class ChatController {
     public ResponseEntity<?> getRooms() {
         List<ChatRoomDto> rooms = chatService.getRooms();
         return new ResponseEntity<>(new GetRoomsResponseDto(rooms), HttpStatus.OK);
+    }
+
+    @GetMapping("/chat/room/{room-id}")
+    public ResponseEntity<?> getRoom(@PathVariable("room-id") String roomId) {
+        return new ResponseEntity<>(chatService.getRoom(roomId), HttpStatus.OK);
     }
 
     @MessageMapping("/chat/room/{room-id}")
