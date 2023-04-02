@@ -23,6 +23,7 @@ import ChatingRobbyClone from './pages/chatting/ChatingRobbyClone';
 import ImageUploader from './pages/profile/ImageUploader';
 import Login from './pages/login/login';
 import LikeList from './pages/like/LikeList';
+import WaitChat from './pages/chatting/WaitChat';
 
 const router = createBrowserRouter([
   {
@@ -82,7 +83,7 @@ const router = createBrowserRouter([
     element: <ChatList />,
   },
   {
-    path: '/Chatwindow',
+    path: '/Chatwindow/:id',
     element: <Chatwindow />,
   },
   {
@@ -117,6 +118,10 @@ const router = createBrowserRouter([
   //   path: '/ChatingRoomClone',
   //   element: <ChatingRoomClone />,
   // },
+  {
+    path: '/loading',
+    element: <WaitChat />,
+  },
 ]);
 
 export default router;
