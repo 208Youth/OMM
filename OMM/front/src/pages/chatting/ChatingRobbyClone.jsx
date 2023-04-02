@@ -10,7 +10,7 @@ function ChatingRobbyClone() {
   const [chatRooms, setChatRooms] = useState([]);
   const [showChat, setShowChat] = useState(false);
 
-  const ws = new SockJS('http://localhost:8080/api/chat');
+  const ws = new SockJS('http://localhost:5000/api/chat');
   const stompClient = Stomp.over(ws);
 
   const findAllRoom = () => {
@@ -20,7 +20,7 @@ function ChatingRobbyClone() {
         setChatRooms(response.data);
       });
   };
-  // axios.get('http://localhost:8080/api/chat/rooms')
+  // axios.get('http://localhost:5000/api/chat/rooms')
   //   .then((response) => {
   //     console.log('findallRoom 함수 실행됨', response);
   //     setChatRooms(response.data);
@@ -74,7 +74,7 @@ function ChatingRobbyClone() {
       소켓 연결
       /chat으로 가는 요청에 대해 소켓 연결 설정
     */
-    const ws = new SockJS('http://localhost:8080/api/chat');
+    const ws = new SockJS('http://localhost:5000/api/chat');
     const stompClient = Stomp.over(ws);
 
     /*

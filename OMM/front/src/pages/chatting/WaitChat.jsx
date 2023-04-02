@@ -43,8 +43,7 @@ function WaitChat() {
       Authorization: import.meta.env.VITE_TOKEN, // 매칭 수락한사람의 토큰
     };
     console.log(stompClient);
-    const token =
-      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkaWQ6ZXRocjpnb2VybGk6MHgwM2RmOGU1NGEzMGUzOTA2ZDI0M2Q3NDAyYzU5YjgyYjVkODU0MjIzYmEzYWU5NjllYTIzZDJjMTJiOGRhNDljNWUiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjgwNDM3MzI0fQ.8mpP75fhreoO6sKLCjQ_JzGLRmgO7TjsQu0C8T20zHOzTdb212aB9nIXldAcDjr0j3vGwbYGjE3JiDWaOEA3oA';
+    const token = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkaWQ6ZXRocjpnb2VybGk6MHgwM2RmOGU1NGEzMGUzOTA2ZDI0M2Q3NDAyYzU5YjgyYjVkODU0MjIzYmEzYWU5NjllYTIzZDJjMTJiOGRhNDljNWUiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjgwNDM3MzI0fQ.8mpP75fhreoO6sKLCjQ_JzGLRmgO7TjsQu0C8T20zHOzTdb212aB9nIXldAcDjr0j3vGwbYGjE3JiDWaOEA3oA';
     const decoded = jwt_decode(token);
     stompClient.connect(headers, (frame) => {
       stompClient.subscribe(`/sub/chat/room/${decoded.sub}`, (message) => {

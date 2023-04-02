@@ -3,6 +3,9 @@ import axios from 'axios';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import Modal from 'react-modal';
+import { useLocation } from 'react-router-dom';
+import chat from '../../api/chat';
+import http from '../../api/http';
 import BottomModal from './BottomModal';
 import ReportModal from './ReportModal';
 import './ChatModal.css';
@@ -11,7 +14,12 @@ function ChatWindow() {
   const [roomId, setRoomId] = useState(localStorage.getItem('wschat.roomId'));
   const [sender, setSender] = useState(localStorage.getItem('wschat.sender'));
   const [room, setRoom] = useState({});
+  const location = useLocation();
   const [message, setMessage] = useState('');
+  const headers = {
+    Authorization: import.meta.env.VITE_TOKEN, // 매칭 수락한사람의 토큰
+  };
+
   // 임시로 메시지를 저장
   const [messages, setMessages] = useState([
     { senderId: 1, content: '자나요?', isRead: true },
@@ -44,6 +52,10 @@ function ChatWindow() {
   const closeReportModal = () => {
     setReportOpen(false);
   };
+  console.log(location);
+  // const roomId = location.pathname.substring(12, location.pathname.lastIndex);
+  console.log(roomId);
+  console.log(sender);
 
   const ws = new SockJS('http://localhost:5000/api/chat');
   const stompClient = Stomp.over(ws);
@@ -51,11 +63,16 @@ function ChatWindow() {
   const user2ID = '쁘띠재용';
 
   const findRoom = () => {
-    console.log('개신기한 호이스팅');
-    axios
-      .get(`http://localhost:5000/api/chat/room/${roomId}`)
+    console.log('파인드룸시잗');
+    http
+      .get(`chat/room/${roomId},`, headers)
       .then((response) => {
         setRoom(response.data);
+        console.log('findroom정상실행');
+      })
+      .catch((error) => {
+        console.log(error);
+        console.log('dd');
       });
   };
 
@@ -64,7 +81,7 @@ function ChatWindow() {
     // const stompClient = Stomp.over(ws);
     stompClient.connect({}, (frame) => {
       stompClient.send(
-        '/api/pub/chat/message',
+        `/api/pub/chat/room${roomId}`,
         {},
         JSON.stringify({ roomId, senderId: sender, content: message }),
       );
