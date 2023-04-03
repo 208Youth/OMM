@@ -3,15 +3,19 @@ import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import './MoreInfo.css';
 import Kakaomap from './Kakaomap';
+import { moreInfo1 } from '../../store/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const MoreInfo = ({setStep}) => {
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.user);
   const [moreinfo, setMoreInfo] = useState({
     nickname: '',
     height: '',
     lat: '',
     lng: '',
     highschool: '',
-    contact_style: '',
+    military: '',
   });
   const next =() => { 
     if (
@@ -20,12 +24,25 @@ const MoreInfo = ({setStep}) => {
         moreinfo.lat &&
         moreinfo.lng && 
         moreinfo.highschool && 
-        moreinfo.contact_style){
+        moreinfo.military){
           setStep(2)
         } else {
           alert('모든 정보를 입력해주세요!');
         }
   }
+  const sendInfo = () => {
+    const info = {
+      nickname: moreinfo.nickname,
+      height: moreinfo.height,
+      lat: moreinfo.lat,
+      lng: moreinfo.lng,
+      highschool: moreinfo.highschool,
+      military: moreinfo.military,
+    };
+    console.log(info);
+    dispatch(moreInfo1(info));
+  };
+  console.log(user);
   const [show, setShow] = useState(false);
   const [duplication, setDuplication] = useState(false);
 
@@ -76,7 +93,7 @@ const MoreInfo = ({setStep}) => {
 
   return (
     <div className="bg-white w-[22.5rem] h-[48.75rem]">
-      <img src="/heart-step-3.svg" alt="" className="mx-auto w-48 pt-16 pb-8" />
+      <img src="/heart-step-1.svg" alt="" className="mx-auto w-48 pt-16 pb-8" />
       <h1 className="text-center text-2xl text-[#364C63] mb-3">더 많은 정보</h1>
       <p className="text-center text-xs text-gray-400 font-sans">
         좋은 사람을 찾기 위해 추가 정보를 넣어주세요
@@ -206,51 +223,30 @@ const MoreInfo = ({setStep}) => {
           고등학교
         </span>
       </div>
-      <div className="mb-3 mx-8">
-        <h3 className="text-[#364C63] block mb-2 text-base">
-          당신의 연락 스타일은?
+      <div className="mt-8 mb-14 mx-8">
+        <h3 className="text-[#364C63] block mb-5 text-base">
+          병역 관련사항을 선택해주세요.
         </h3>
-        <div className="grid grid-rows-3 grid-flow-col">
+        <div className="grid grid-rows-2 grid-flow-col">
           <div>
             <input
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  contact_style: e.target.value,
+                  military: e.target.value,
                 }));
               }}
-              id="contact1"
+              id="military1"
               type="radio"
-              name="contact"
-              value="PREFER_MSG"
-              className="peer/contact1"
+              name="military"
+              value="NONE"
+              className="peer/military1"
             />
             <label
-              htmlFor="contact1"
-              className="peer-checked/contact1:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
+              htmlFor="military1"
+              className="peer-checked/military1:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
             >
-              카톡 자주하는 편
-            </label>
-          </div>
-          <div>
-            <input
-              onClick={(e) => {
-                setMoreInfo((prevInfo) => ({
-                  ...prevInfo,
-                  contact_style: e.target.value,
-                }));
-              }}
-              id="contact3"
-              type="radio"
-              name="contact"
-              value="PREFER_CALL"
-              className="peer/contact3"
-            />
-            <label
-              htmlFor="contact3"
-              className="peer-checked/contact3:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
-            >
-              전화가 좋아요
+              해당사항 없음
             </label>
           </div>
           <div>
@@ -258,62 +254,62 @@ const MoreInfo = ({setStep}) => {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  contact_style: e.target.value,
+                  military: e.target.value,
                 }));
               }}
-              id="contact5"
+              id="military3"
               type="radio"
-              name="contact"
-              value="PREFER_OFFLINE"
-              className="peer/contact5"
+              name="military"
+              value="COMPLETE"
+              className="peer/military3"
             />
             <label
-              htmlFor="contact5"
-              className="peer-checked/contact5:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
+              htmlFor="military3"
+              className="peer-checked/military3:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
             >
-              만나는게 좋아요
+              군필
             </label>
           </div>
-          <div className="ml-2">
+          <div>
             <input
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  contact_style: e.target.value,
+                  military: e.target.value,
                 }));
               }}
-              id="contact2"
+              id="military5"
               type="radio"
-              name="contact"
-              value="NOT_MSG"
-              className="peer/contact2"
+              name="military"
+              value="EXEMPT"
+              className="peer/military5"
             />
             <label
-              htmlFor="contact2"
-              className="peer-checked/contact2:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
+              htmlFor="military5"
+              className="peer-checked/military5:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
             >
-              카톡 안하는 편
+              면제
             </label>
           </div>
-          <div className="ml-2">
+          <div>
             <input
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  contact_style: e.target.value,
+                  military: e.target.value,
                 }));
               }}
-              id="contact4"
+              id="military2"
               type="radio"
-              name="contact"
-              value="PREFER_FACECALL"
-              className="peer/contact4"
+              name="military"
+              value="YET"
+              className="peer/military2"
             />
             <label
-              htmlFor="contact4"
-              className="peer-checked/contact4:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
+              htmlFor="military2"
+              className="peer-checked/military2:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
             >
-              영상통화가 좋아요
+              미필
             </label>
           </div>
         </div>
@@ -330,7 +326,7 @@ const MoreInfo = ({setStep}) => {
         <button
           type="button"
           aria-hidden
-          onClick={() => {next()}}
+          onClick={() => {next(); sendInfo()}}
         >
           &gt;
         </button>
