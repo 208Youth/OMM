@@ -143,9 +143,7 @@ public class ChatService {
         message.setSenderId(myInfo.getId());
         message.setReceiverId(messageDto.getReceiverId());
         message.setRead(false);
-        /**
-         * TODO : 상대방 연결 여부 확인
-         */
+
         if(sessionIdFromMemberId.get(messageDto.getReceiverId()) != null) {
             String sessionId = sessionIdFromMemberId.get(messageDto.getReceiverId());
             if (roomIdFromSessionId.get(sessionId).equals(chatRoom.getId())) {
