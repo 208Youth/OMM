@@ -10,6 +10,7 @@ import http from '../../api/http';
 
 function Alert() {
   const [alertlist, setAlertList] = useState([]);
+  const token = localStorage.getItem('accesstoken');
   const connect = () => {
     /*
     페이지 렌더링 후 실행되는 connect()
@@ -20,9 +21,9 @@ function Alert() {
     const ws = new SockJS('http:localhost:5000/api/matching');
     const stompClient = Stomp.over(ws);
     // 유저 3 토큰
-    const token =
-      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIweDc3ODZjZTVlODQxM2U2YWM3M2JmNGM3MjgzYjIwZjU3NDY0MGRjMTQiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjgwNTI4NzcwfQ.AYwGzr9U5_vgdgOOoALILxt8wLe6XvUC4mVd4sfcUKJNTipXcgrZz2H7FRTW6GctLFwUNv7u-ewgV5XNYhADZw';
-    const decoded = jwt_decode(token);
+    const token3 =
+      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIweDA2YTgwMzg5M2IzNTE2NWFhYzJmYmMwYTgyM2M0MDkzNTdlOGVlNmQiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjgwNTg4MzgyfQ.0_7GyqVNQyaVwRd5AiFDzergGyTQuh2Nv7ptcRfLzJkBIby733B4OxiSLrusBPm7lfZTlcK5LSPqvOAkU8nidQ';
+    const decoded = jwt_decode(token3);
     const headers = {
       Authorization: import.meta.env.VITE_TOKEN_3, // 유저3 토큰
     };
@@ -81,12 +82,16 @@ function Alert() {
       headers: {
         Authorization: import.meta.env.VITE_TOKEN_3,
       },
-    }).then((res) => {
-      console.log('기존 알림가져옴', res.data.list);
-      if (res.data.list) {
-        setAlertList(res.data.list);
-      }
-    });
+    })
+      .then((res) => {
+        console.log('기존 알림가져옴', res.data.list);
+        if (res.data.list) {
+          setAlertList(res.data.list);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   useEffect(() => {

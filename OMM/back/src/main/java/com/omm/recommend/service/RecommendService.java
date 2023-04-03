@@ -50,6 +50,7 @@ public class RecommendService {
 
     public GetRecommendListResponseDto getRecommendList(String currentMemberDidAddress) {
 
+
         System.out.println(currentMemberDidAddress);
         try {
             Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
@@ -129,7 +130,7 @@ public class RecommendService {
 
             List<Long> idList = responseBody.getUserList();
             idList.forEach((num) -> System.out.print(num + " "));
-            System.out.println(idList.get(0) + idList.get(1));
+//            System.out.println(idList.get(0) + idList.get(1));
 
             return responseBody;
 

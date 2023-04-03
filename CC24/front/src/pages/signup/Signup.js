@@ -29,7 +29,11 @@ function Signup() {
   const [img, setImg] = useState(null);
   const dispatch = useDispatch();
   const id = useSelector((state) => state.user.id);
-
+  
+  console.log(localStorage.getItem('DID'));
+  if (localStorage.getItem('DID')){
+    navigate('/main');
+  }
   const sendInfo = () => {
     const info = {
       name,
@@ -75,12 +79,11 @@ function Signup() {
         console.log('성공!!!!!!!!', res);
         dispatch(idenVC(res.data.vcJwt));
         window.localStorage.setItem('IdenVC', JSON.stringify(res.data.vcJwt));
-        dispatch(certInfo('신분증'))
       })
       .catch((err) => {
         console.log(err);
       });
-    // navigate('/main');
+    navigate('/main');
     console.log(img);
   };
 

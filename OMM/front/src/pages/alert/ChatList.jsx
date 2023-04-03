@@ -6,7 +6,7 @@ import http from '../../api/http';
 
 function ChatList() {
   const [chats, setChats] = useState([]);
-
+  const token = localStorage.getItem('accesstoken');
   const navigate = useNavigate();
 
   async function getChatList() {
@@ -14,7 +14,8 @@ function ChatList() {
       method: 'get',
       url: '/chat/room',
       headers: {
-        Authorization: import.meta.env.VITE_TOKEN,
+        // Authorization: import.meta.env.VITE_TOKEN,
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => {

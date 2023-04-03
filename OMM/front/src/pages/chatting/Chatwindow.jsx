@@ -16,8 +16,10 @@ function ChatWindow() {
   const [room, setRoom] = useState({});
   const location = useLocation();
   const [message, setMessage] = useState('');
+  const token = localStorage.getItem('accessoken');
   const headers = {
-    Authorization: import.meta.env.VITE_TOKEN, // 매칭 수락한사람의 토큰
+    // Authorization: import.meta.env.VITE_TOKEN,
+    Authorization: token, // 매칭 수락한사람의 토큰
   };
 
   // 임시로 메시지를 저장
