@@ -2,7 +2,6 @@ const express = require("express");
 const multer = require("multer");
 const cryptoJS = require("crypto-js");
 
-
 const router = express.Router();
 
 const http = require("./module/http");
@@ -10,7 +9,7 @@ const did = require("./module/did");
 const store = require("./module/store");
 
 // multer 미들웨어 설정
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: "uploads/" });
 
 // Issue Credential
 router.post("/", async (req, res) => {
@@ -57,16 +56,16 @@ router.post("/", async (req, res) => {
 
 function btoaUrl(input) {
   const base64 = btoa(input);
-  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+  return base64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
 }
 
 // Issue PersonalId Credential
-router.post("/personal-id", upload.single('image'), async (req, res) => {
+router.post("/personal-id", upload.single("image"), async (req, res) => {
   const { holderDid, personalId, signature } = req.body;
 
   try {
     // 데이터 검증
-    const key = '1234';
+    const key = "1234";
     const hmac = cryptoJS.HmacSHA256(personalId, key);
     const expectedSignature = btoaUrl(hmac.toString(cryptoJS.enc.Latin1));
     if (signature !== expectedSignature) {
@@ -74,24 +73,45 @@ router.post("/personal-id", upload.single('image'), async (req, res) => {
     }
 
     let parsePersonalId = JSON.parse(personalId);
+
     const url = await store.uploadImageToFirebase(req.file);
     parsePersonalId.imageUrl = url;
-    // if (req.file) {
-    // }
 
-    const vcJwt = await did.issueVC(
-      holderDid,
-      "PersonalIdCredential",
-      { personalId: parsePersonalId }
-    );
-    console.log(vcJwt);
+    const vcJwt = await did.issueVC(holderDid, "PersonalIdCredential", {
+      personalId: parsePersonalId,
+    });
+    // console.log(vcJwt);
     res.json({ vcJwt: vcJwt });
+
+    // let url = "";
+    // let vcJwt = "";
+
+    // let parsePersonalId = JSON.parse(personalId);
+    // url = await store
+    //   .uploadImageToFirebase(req.file)
+    //   .then(async () => {
+    //     parsePersonalId.imageUrl = url;
+    //     console.log("stage 1");
+    //     console.log(url);
+    //   })
+    //   .then(async () => {
+    //     console.log("stage 2");
+    //     vcJwt = await did.issueVC(holderDid, "PersonalIdCredential", {
+    //       personalId: parsePersonalId,
+    //     });
+    //     console.log("stage 3");
+    //     console.log(vcJwt);
+    //     console.log("stage 4");
+    //     res.json({ vcJwt: vcJwt });
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   } catch (error) {
     console.error(error.message);
     res.status(400).json({ error: error.message });
   }
 });
-
 
 // Issue PersonalId Credential
 router.post("/did-address", async (req, res) => {
@@ -100,11 +120,9 @@ router.post("/did-address", async (req, res) => {
   try {
     await did.verifyHolderDid(holderDid);
 
-    const vcJwt = await did.issueVC(
-      holderDid,
-      "DidAddressCredential",
-      { holderDid: holderDid }
-    );
+    const vcJwt = await did.issueVC(holderDid, "DidAddressCredential", {
+      holderDid: holderDid,
+    });
 
     res.json({ vcJwt: vcJwt });
   } catch (error) {
