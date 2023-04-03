@@ -18,9 +18,10 @@ public class ChatMessage implements Serializable {
     private Long id;
     private String roomId;
     private Long senderId;
+    private Long receiverId;
     private String content;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    private LocalDateTime timestamp; // 메시지 생성 시간
-    private boolean isRead; //상대방의 읽음 여부
+    private LocalDateTime createdTime;
+    private boolean isRead;
 }

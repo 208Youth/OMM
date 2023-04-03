@@ -4,6 +4,7 @@ import com.omm.chat.model.dto.ChatRoomDto;
 import com.omm.chat.model.dto.request.CreateRoomRequestDto;
 import com.omm.chat.model.dto.request.CreateMessageRequestDto;
 import com.omm.chat.model.dto.response.GetRoomsResponseDto;
+import com.omm.chat.model.entity.ChatMessage;
 import com.omm.chat.model.entity.ChatRoom;
 import com.omm.chat.service.ChatService;
 import com.omm.chat.service.ChatPublisherService;
@@ -48,7 +49,9 @@ public class ChatController {
     }
 
     @MessageMapping("/chat/room/{room-id}")
-    public void createMessage(@DestinationVariable("room-id") String roomId, CreateMessageRequestDto messageDto) {
-        
+    public void createMessage(@DestinationVariable("room-id") String roomId, StompHeaderAccessor accessor, CreateMessageRequestDto messageDto) {
+        String user = accessor.getUser().getName();
+        ChatMessage message = chatService.createMessage(messageDto, user);
+        publishService.publishMessage(message);
     }
 }
