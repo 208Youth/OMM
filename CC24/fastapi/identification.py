@@ -59,12 +59,12 @@ def detect_text(path, inputday, inputname, inputyear, inputmonth, inputgender):
     gender = int((texts[0].description)[22:23])
     if (gender == 1 or gender == 3):
         gender = 'MALE'
-    else:
+    elif (gender == 2 or gender == 4):
         gender = 'FEMALE'
 
     if inputgender == '여':
         inputgender = 'FEMALE'
-    else:
+    elif inputgender == '남':
         inputgender = 'MALE'
 
     print(doc_type)
