@@ -105,24 +105,6 @@ function MyProfile({ profileNav }) {
     FreshInterest();
   }, []);
 
-  function InterestList({ interest }) {
-    return (
-      <div>
-        <div>
-          <div />
-        </div>
-
-        {interest.map((item) => (
-          <button
-            key={item.interest_list_id}
-            className="bg-white border border-black rounded-full text-sm px-4"
-          >
-            {item.name}
-          </button>
-        ))}
-      </div>
-    );
-  }
   async function toCert() {
     await http
       .get('/sign/certificate', {
@@ -556,6 +538,25 @@ function MyProfile({ profileNav }) {
           <Navbar profileNav={profileNav} />
         </div>
       </div>
+    </div>
+  );
+}
+
+function InterestList({ interest }) {
+  return (
+    <div>
+      <div>
+        <div />
+      </div>
+
+      {interest.map((item) => (
+        <button
+          key={item.interest_list_id}
+          className="bg-white border border-black rounded-full text-sm px-4"
+        >
+          {item.name}
+        </button>
+      ))}
     </div>
   );
 }
