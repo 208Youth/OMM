@@ -11,7 +11,7 @@ import ReportModal from './ReportModal';
 import './ChatModal.css';
 
 function ChatWindow() {
-  const [roomId, setRoomId] = useState(localStorage.getItem('wschat.roomId'));
+  // const [roomId, setRoomId] = useState(localStorage.getItem('wschat.roomId'));
   const [sender, setSender] = useState(localStorage.getItem('wschat.sender'));
   const [room, setRoom] = useState({});
   const location = useLocation();
@@ -53,7 +53,7 @@ function ChatWindow() {
     setReportOpen(false);
   };
   console.log(location);
-  // const roomId = location.pathname.substring(12, location.pathname.lastIndex);
+  const roomId = location.pathname.substring(12, location.pathname.lastIndex);
   console.log(roomId);
   console.log(sender);
 
@@ -65,7 +65,7 @@ function ChatWindow() {
   const findRoom = () => {
     console.log('파인드룸시잗');
     http
-      .get(`chat/room/${roomId},`, headers)
+      .get(`/chat/room/${roomId},`, headers)
       .then((response) => {
         setRoom(response.data);
         console.log('findroom정상실행');
@@ -81,7 +81,7 @@ function ChatWindow() {
     // const stompClient = Stomp.over(ws);
     stompClient.connect({}, (frame) => {
       stompClient.send(
-        `/api/pub/chat/room${roomId}`,
+        `/api/pub/chat/room/${roomId}`,
         {},
         JSON.stringify({ roomId, senderId: sender, content: message }),
       );
