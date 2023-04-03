@@ -210,4 +210,9 @@ public class MemberController {
     public ResponseEntity<?> getLikedMembers(){
         return new ResponseEntity<>(memberService.getLikedMembers(SecurityUtil.getCurrentDidAddress().get()), HttpStatus.OK);
     }
+
+    @GetMapping("/{member-id}/cert")
+    public ResponseEntity<?> getMemberCert(@PathVariable("member-id") Long memberId) {
+        return new ResponseEntity<>(memberService.getMemberCert(memberId), HttpStatus.OK);
+    }
 }
