@@ -18,8 +18,10 @@ client = vision.ImageAnnotatorClient()
 # Gets a list of filenames in the "book_img" directory
 
 # 1 로컬사진을 분석하는 코드
+
+
 def detect_text(path, inputday, inputname, inputyear, inputmonth, inputgender):
-# def detect_text(path,):
+    # def detect_text(path,):
     # image_extensions = ('.jpg', '.jpeg', '.png', '.bmp')  # 이미지 파일 확장자 리스트
     # filenames = os.listdir('./iden_img')  # 디렉토리 내 모든 파일 리스트
 
@@ -27,7 +29,7 @@ def detect_text(path, inputday, inputname, inputyear, inputmonth, inputgender):
     # for filename in filenames:
     #     if filename.endswith(image_extensions):
     #         image_files.append(filename)
-    
+
     # image_extensions = ('.jpg', '.jpeg', '.png', '.bmp')  # 이미지 파일 확장자 리스트
     # filenames = os.listdir('./iden_img')  # 디렉토리 내 모든 파일 리스트
 
@@ -35,7 +37,7 @@ def detect_text(path, inputday, inputname, inputyear, inputmonth, inputgender):
     # for filename in filenames:
     #     if filename.endswith(image_extensions):
     #         image_files.append(filename)
-    
+
     filenames = os.listdir('./iden_img')
 
     filename = filenames[-1]
@@ -54,17 +56,17 @@ def detect_text(path, inputday, inputname, inputyear, inputmonth, inputgender):
     doc_type = (texts[0].description)[0:5]
     name = (texts[0].description)[6:9]
     birthday = (texts[0].description)[15:21]
-    gender = (texts[0].description)[22:23]
+    gender = int((texts[0].description)[22:23])
     if (gender == 1 or gender == 3):
-        gender ='MALE'
-    else:
+        gender = 'MALE'
+    elif (gender == 2 or gender == 4):
         gender = 'FEMALE'
 
     if inputgender == '여':
         inputgender = 'FEMALE'
-    else:
+    elif inputgender == '남':
         inputgender = 'MALE'
-    
+
     print(doc_type)
     print(name)
     print(birthday)
@@ -76,14 +78,13 @@ def detect_text(path, inputday, inputname, inputyear, inputmonth, inputgender):
     if len(filenames) > 0:
         last_file = os.path.join('./iden_img', filenames[-1])  # 마지막 파일의 경로
         os.remove(last_file)  # 마지막 파일 삭제
-    
-        
+
     if doc_type == '주민등록증' and \
-        int(birthday[:2]) == int(inputyear) % 100 and \
-        int(birthday[2:4]) == int(inputmonth) and \
-        int(birthday[4:6]) == int(inputday) and \
-        name == inputname and \
-        inputgender == gender:
+            int(birthday[:2]) == int(inputyear) % 100 and \
+            int(birthday[2:4]) == int(inputmonth) and \
+            int(birthday[4:6]) == int(inputday) and \
+            name == inputname and \
+            inputgender == gender:
 
         personalId = {
             "name": name,
@@ -91,10 +92,13 @@ def detect_text(path, inputday, inputname, inputyear, inputmonth, inputgender):
             "gender": gender
         }
 
-        json_string = json.dumps(personalId, separators=(",", ":"), ensure_ascii=False)
+        json_string = json.dumps(
+            personalId, separators=(",", ":"), ensure_ascii=False)
         # print(json_string)
-        hashed = hmac.new("1234".encode(), json_string.encode(), hashlib.sha256)
-        signature = base64.urlsafe_b64encode(hashed.digest()).decode().rstrip('=')
+        hashed = hmac.new(
+            "1234".encode(), json_string.encode(), hashlib.sha256)
+        signature = base64.urlsafe_b64encode(
+            hashed.digest()).decode().rstrip('=')
         # print(signature)
         return {'personalId': personalId, 'signature': signature, 'valid': True}
     else:
@@ -102,22 +106,18 @@ def detect_text(path, inputday, inputname, inputyear, inputmonth, inputgender):
         return {'message': "인증 정보가 일치하지 않습니다.", 'valid': False}
     # for file in filenames:
     #     os.remove(os.path.join('./iden_img', file))
-     
-    # return {'doc_type': doc_type, 
-    #         'name': name, 
-    #         'birthday': birthday, 
-    #         'gender': gender,  
+
+    # return {'doc_type': doc_type,
+    #         'name': name,
+    #         'birthday': birthday,
+    #         'gender': gender,
     #         'inputday': inputday,
-    #         'inputname': inputname, 
-    #         'inputyear': inputyear, 
-    #         'inputmonth': inputmonth, 
+    #         'inputname': inputname,
+    #         'inputyear': inputyear,
+    #         'inputmonth': inputmonth,
     #         'inputgender': inputgender,
-  
 
-            
     #         }
-
-
 
 
 # # 1 로컬사진을 분석하는 코드
@@ -138,7 +138,7 @@ def detect_text(path, inputday, inputname, inputyear, inputmonth, inputgender):
 #     name = (texts[0].description)[6:9]
 #     birthday = (texts[0].description)[15:21]
 #     gender = (texts[0].description)[22:23]
- 
+
 #     print(doc_type)
 #     print(name)
 #     print(birthday)
@@ -146,15 +146,15 @@ def detect_text(path, inputday, inputname, inputyear, inputmonth, inputgender):
 #     print(inputname)
 #     print(inputmonth)
 
-#     return {'doc_type': doc_type, 
-#             'name': name, 
-#             'birthday': birthday, 
-#             'gender': gender,  
-#             'inputname': inputname, 
-#             'inputyear': inputyear, 
-#             'inputmonth': inputmonth, 
+#     return {'doc_type': doc_type,
+#             'name': name,
+#             'birthday': birthday,
+#             'gender': gender,
+#             'inputname': inputname,
+#             'inputyear': inputyear,
+#             'inputmonth': inputmonth,
 #             'inputgender': inputgender
-            
+
 #             }
     # return {'doc_type': doc_type, 'name': name, 'birthday': birthday, 'gender': gender}
 
@@ -193,7 +193,7 @@ def detect_text(path, inputday, inputname, inputyear, inputmonth, inputgender):
 def detect_text_uri(uri):
     """Detects text in the file located in Google Cloud Storage or on the Web.
     """
-  
+
     client = vision.ImageAnnotatorClient()
     image = vision.Image()
     image.source.image_uri = uri
@@ -207,10 +207,9 @@ def detect_text_uri(uri):
     # print('\n"{}"'.format(texts[0].description))
     # return '\n"{}"'.format(texts[0].description)
 
+
 def plus2(a):
-    return a+ 2
+    return a + 2
 
 
-    
-    
 # detect_text_uri('https://ifh.cc/g/yfWH3y.jpg')
