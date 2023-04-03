@@ -8,6 +8,7 @@ import ommapi from '../../api/ommapi';
 import axios from 'axios';
 import { createVerifiablePresentationJwt } from 'did-jwt-vc';
 import { EthrDID } from 'ethr-did';
+import http from '../../api/nodeapi';
 
 function Login() {
   const navigate = useNavigate();
@@ -24,31 +25,33 @@ function Login() {
   });
   const [isLoading, setIsLoading] = useState(false);
   // const [vc, setVC] = useState('');
-  let vc = ''
+  let vc = '';
   const data = {
     holderDid: did,
-  }
-  
+  };
+
   const getVC = async () => {
     setIsLoading(true);
-    await axios({
+    await http({
+      // await axios({
       method: 'post',
-      url: 'http://localhost:4424/api/node/credential/did-address',
+      url: '/credential/did-address',
+      // url: 'http://localhost:4424/api/node/credential/did-address',
       data: data,
     })
-    .then((res) => {
-      console.log('성공!!!!!!!!', res);
-      console.log(res.data.vcJwt);
-      vc = res.data.vcJwt
+      .then((res) => {
+        console.log('성공!!!!!!!!', res);
+        console.log(res.data.vcJwt);
+        vc = res.data.vcJwt;
       })
-    .then((res) => {
-      console.log(res);
-      ommLogin()
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  navigate('/main');
+      .then((res) => {
+        console.log(res);
+        ommLogin();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    navigate('/main');
   };
   const ommLogin = async () => {
     const vpPayload = {
@@ -60,22 +63,26 @@ function Login() {
     };
     console.log(did);
     console.log(vc);
-    const vpJwt = await createVerifiablePresentationJwt(vpPayload, ethrDidOnGoerliNamed);
+    const vpJwt = await createVerifiablePresentationJwt(
+      vpPayload,
+      ethrDidOnGoerliNamed
+    );
     console.log(vpJwt);
     const data = {
       type: type,
       holderDid: did,
       vpJwt: vpJwt,
-    }
+    };
     await ommapi
       .post(`/sign/${type}`, data)
       .then((res) => {
         console.log(res);
-        if (res.data == "#") {
-          window.location.href = "http://localhost:3000/login?type=SIGNUP"
+        if (res.data == '#') {
+          // window.location.href = 'http://localhost:3000/login?type=SIGNUP';
+          window.location.href = `${process.env.OMM_FRONT}/login?type=SIGNUP`;
         } else {
-        setIsLoading(false);
-        window.location.href = res.data;
+          setIsLoading(false);
+          window.location.href = res.data;
         }
       })
       .catch((err) => {
@@ -92,7 +99,9 @@ function Login() {
       <div class="text-center">
         {isLoading && (
           <div class="static" role="status">
-            <p className="text-3xl mt-10 text-center mb-4 leading-relaxed">로그인 중 ...</p>
+            <p className="text-3xl mt-10 text-center mb-4 leading-relaxed">
+              로그인 중 ...
+            </p>
             <div className="flex justify-center">
               <img
                 class="z-40 absolute animate-bounce top-[175px]"
