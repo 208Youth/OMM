@@ -19,12 +19,14 @@ function Login() {
   const [iden, setIden] = useState(null);
   const [pk, setPK] = useState(null);
   const [isMember, setIsMember] = useState(false);
-  let ethrDidOnGoerliNamed = ''
+  let ethrDidOnGoerliNamed = '';
   useEffect(() => {
-    if (localStorage.getItem('DID') === null) { setTimeout(() => {
-      navigate('/signup')}, 3000)}
-    else if (localStorage.getItem('DID')!= null) {
-      setIsMember(true)
+    if (localStorage.getItem('DID') === null) {
+      setTimeout(() => {
+        navigate('/signup');
+      }, 3000);
+    } else if (localStorage.getItem('DID') != null) {
+      setIsMember(true);
       setDid(JSON.parse(localStorage.getItem('DID')).did);
       setIden(JSON.parse(localStorage.getItem('keypair')).identifier);
       setPK(JSON.parse(localStorage.getItem('keypair')).privateKey);
@@ -34,7 +36,7 @@ function Login() {
         chainNameOrId: 'goerli',
       });
     }
-  }, [])
+  }, []);
   const [isLoading, setIsLoading] = useState(false);
   // const [vc, setVC] = useState('');
   let vc = '';
@@ -75,10 +77,7 @@ function Login() {
     };
     console.log(did);
     console.log(vc);
-    const vpJwt = await createVerifiablePresentationJwt(
-      vpPayload,
-      ethrDidOnGoerliNamed
-    );
+    const vpJwt = await createVerifiablePresentationJwt(vpPayload, ethrDidOnGoerliNamed);
     console.log(vpJwt);
     const data = {
       type: type,
@@ -91,7 +90,7 @@ function Login() {
         console.log(res);
         if (res.data == '#') {
           // window.location.href = 'http://localhost:3000/login?type=SIGNUP';
-          window.location.href = `${process.env.OMM_FRONT}/login?type=SIGNUP`;
+          window.location.href = `${process.env.REACT_APP_OMM_FRONT}/login?type=SIGNUP`;
         } else {
           setIsLoading(false);
           window.location.href = res.data;
@@ -111,9 +110,7 @@ function Login() {
       <div class="text-center">
         {isLoading && (
           <div class="static" role="status">
-            <p className="text-3xl mt-10 text-center mb-4 leading-relaxed">
-              로그인 중 ...
-            </p>
+            <p className="text-3xl mt-10 text-center mb-4 leading-relaxed">로그인 중 ...</p>
             <div className="flex justify-center">
               <img
                 class="z-40 absolute animate-bounce top-[175px]"
@@ -148,20 +145,24 @@ function Login() {
         className="Modal"
         overlayClassName="Overlay"
       >
-        { !isMember && 
+        {!isMember && (
           <div>
-            <p className='text-xl mt-10 text-center mb-4 leading-relaxed'>회원이 아니시군요! 회원가입 페이지로 이동합니다.</p>
+            <p className="text-xl mt-10 text-center mb-4 leading-relaxed">
+              회원이 아니시군요! 회원가입 페이지로 이동합니다.
+            </p>
           </div>
-        }
-        { isMember && <Password
-          setPasswordModal={setPasswordModal}
-          setPasswordComplete={(res) => {
-            if (res) {
-              setPasswordComplete(true);
-              if (type == 'SIGNIN') getVC();
-            }
-          }}
-        />}
+        )}
+        {isMember && (
+          <Password
+            setPasswordModal={setPasswordModal}
+            setPasswordComplete={(res) => {
+              if (res) {
+                setPasswordComplete(true);
+                if (type == 'SIGNIN') getVC();
+              }
+            }}
+          />
+        )}
       </Modal>
     </div>
   );
