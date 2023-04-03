@@ -159,6 +159,49 @@ public class MemberService {
         try {
             GetMemberInfoResponseDto getMemberInfoResponseDto = GetMemberInfoResponseDto.builder()
                     .nickname(member.getNickname())
+                    .age(member.getAge())
+                    .lat(myInfo.getLat())
+                    .lng(myInfo.getLng())
+                    .pr(myInfo.getPr())
+                    .height(myInfo.getHeight())
+                    .contactStyle(myInfo.getContactStyle().name())
+                    .drinkingStyle(myInfo.getDrinkingStyle().name())
+                    .smokingStyle(myInfo.getSmokingStyle().name())
+                    .military(myInfo.getMilitary().name())
+                    .pet(myInfo.getPet().name())
+                    .mbti(myInfo.getMbti().name())
+                    .profileimgs(memberimgsblobs)
+                    .build();
+            return getMemberInfoResponseDto;
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
+        }
+    }
+
+    /**
+     * 현재 유저 정보를 조회
+     *
+     * @param currentUserDidAddress 멤버의 아이디
+     * @return
+     */
+    public GetMemberInfoResponseDto getMyInfo(String currentUserDidAddress) {
+        Member member = memberRepository.findByDidAddress(currentUserDidAddress)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        MyInfo myInfo = myInfoRepository.findByMember(member)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+
+        List<MemberImg> memberimgs = memberImgRepository.findAllByMember(member);
+        List<byte[]> memberimgsblobs = new ArrayList<>();
+
+        for (MemberImg memberimg : memberimgs) {
+            memberimgsblobs.add(memberimg.getImageContent());
+        }
+
+        try {
+            GetMemberInfoResponseDto getMemberInfoResponseDto = GetMemberInfoResponseDto.builder()
+                    .nickname(member.getNickname())
+                    .age(member.getAge())
                     .lat(myInfo.getLat())
                     .lng(myInfo.getLng())
                     .pr(myInfo.getPr())

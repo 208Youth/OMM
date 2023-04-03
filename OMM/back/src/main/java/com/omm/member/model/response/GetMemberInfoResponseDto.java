@@ -14,6 +14,9 @@ public class GetMemberInfoResponseDto {
     @JsonProperty(value = "nickname")
     private String nickname;
 
+    @JsonProperty(value = "age")
+    private int age;
+
     @JsonProperty(value = "lat")
     private float lat;
 

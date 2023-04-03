@@ -7,6 +7,7 @@ import com.omm.member.model.dto.RegistDto;
 import com.omm.member.model.request.*;
 import com.omm.member.service.AuthService;
 import com.omm.member.service.MemberService;
+import com.omm.util.CommonMethods;
 import com.omm.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -60,6 +61,16 @@ public class MemberController {
     public ResponseEntity<?> initMemberFiltering(@RequestBody MemberFilteringDto memberFilteringDto) {
         memberService.initMemberFiltering(SecurityUtil.getCurrentDidAddress().get(), memberFilteringDto);
         return new ResponseEntity<>("선호 상대 정보 등록 성공", HttpStatus.OK);
+    }
+
+    /**
+     * 현재 유저의 정보 조희
+     *
+     * @return
+     */
+    @GetMapping
+    public ResponseEntity<?> getMyInfo() {
+        return new ResponseEntity<>(memberService.getMyInfo(SecurityUtil.getCurrentDidAddress().get()), HttpStatus.OK);
     }
 
     /**
