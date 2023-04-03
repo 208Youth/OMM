@@ -35,6 +35,7 @@ public class RecommendController {
     @GetMapping
     public ResponseEntity<?> getRecommendList(){
         // 현재 유저의 정보를 얻어온다
+        System.out.println("요청 와쩌염");
         return new ResponseEntity<>(recommendService.getRecommendList(SecurityUtil.getCurrentDidAddress().get()), HttpStatus.OK);
     }
 

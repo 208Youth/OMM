@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 // import axios from 'axios';
 import Modal from 'react-modal';
 import './MoreInfo.css';
+import { useDispatch, useSelector } from 'react-redux';
 import Kakaomap from './Kakaomap';
 import { moreInfo1 } from '../../store/userSlice';
-import { useDispatch, useSelector } from 'react-redux';
 
-const MoreInfo = ({setStep}) => {
+function MoreInfo({ setStep }) {
   const dispatch = useDispatch();
-  const user = useSelector(state => state.user);
+  const user = useSelector((state) => state.user);
   const [moreinfo, setMoreInfo] = useState({
     nickname: '',
     height: '',
@@ -17,19 +17,20 @@ const MoreInfo = ({setStep}) => {
     highschool: '',
     military: '',
   });
-  const next =() => { 
+  const next = () => {
     if (
-        moreinfo.nickname && 
-        moreinfo.height && 
-        moreinfo.lat &&
-        moreinfo.lng && 
-        moreinfo.highschool && 
-        moreinfo.military){
-          setStep(2)
-        } else {
-          alert('모든 정보를 입력해주세요!');
-        }
-  }
+      moreinfo.nickname &&
+      moreinfo.height &&
+      moreinfo.lat &&
+      moreinfo.lng &&
+      moreinfo.highschool &&
+      moreinfo.military
+    ) {
+      setStep(2);
+    } else {
+      alert('모든 정보를 입력해주세요!');
+    }
+  };
   const sendInfo = () => {
     const info = {
       nickname: moreinfo.nickname,
@@ -315,18 +316,16 @@ const MoreInfo = ({setStep}) => {
         </div>
       </div>
       <div className="flex justify-between mx-8 text-[#364C63] text-lg">
-        <button
-          type="button"
-          aria-hidden
-          onClick={() => {
-          }}
-        >
+        <button type="button" aria-hidden onClick={() => {}}>
           &lt;
         </button>
         <button
           type="button"
           aria-hidden
-          onClick={() => {next(); sendInfo()}}
+          onClick={() => {
+            next();
+            sendInfo();
+          }}
         >
           &gt;
         </button>

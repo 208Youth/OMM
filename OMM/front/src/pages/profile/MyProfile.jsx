@@ -59,6 +59,7 @@ function MyProfile({ profileNav }) {
   const [MymodalIsOpen, setMyIsOpen] = useState(false);
   const [MymodalIsOpen2, setMyIsOpen2] = useState(false);
   const [MymodalIsOpen3, setMyIsOpen3] = useState(true);
+  const token = localStorage.getItem('accesstoken');
   const openMyModal = () => {
     setMyIsOpen(true);
   };
@@ -88,12 +89,14 @@ function MyProfile({ profileNav }) {
   // };
   // new_certinfo인지 certinfo인지 axios주고받으면서 확인
   const FreshCert = () => {
-    axios.get('https://example.com/api/data')
+    axios
+      .get('https://example.com/api/data')
       .then((response) => setCert(response.data))
       .catch((error) => console.error(error));
   };
   const FreshInterest = () => {
-    axios.get('')
+    axios
+      .get('')
       .then((response) => setInterest(response.data.interestList))
       .catch((error) => console.error(error));
   };
@@ -106,12 +109,16 @@ function MyProfile({ profileNav }) {
     return (
       <div>
         <div>
-
           <div />
         </div>
 
         {interest.map((item) => (
-          <button key={item.interest_list_id} className="bg-white border border-black rounded-full text-sm px-4">{item.name}</button>
+          <button
+            key={item.interest_list_id}
+            className="bg-white border border-black rounded-full text-sm px-4"
+          >
+            {item.name}
+          </button>
         ))}
       </div>
     );
@@ -120,12 +127,13 @@ function MyProfile({ profileNav }) {
     await http
       .get('/sign/certificate', {
         headers: {
-          Authorization: import.meta.env.VITE_TOKEN, // TODO: 임시 토큰 부여
+          // Authorization: import.meta.env.VITE_TOKEN,
+          Authorization: `Bearer ${token}`, // TODO: 임시 토큰 부여
         },
       })
       .then((res) => {
         console.log(res);
-        window.location.href=res.data
+        window.location.href = res.data;
       })
       .catch((err) => {
         console.log(err);
@@ -143,10 +151,8 @@ function MyProfile({ profileNav }) {
   // 컴포넌트가 처음 마운트될 때만 useEffect 콜백 함수가 호출되고,
   // 그 이후에는 호출되지 않습니다.
   return (
-
     <div className="scroll-smooth">
       <div className="text-center">
-
         <Modal
           className="MyinfoModal"
           isOpen={MymodalIsOpen}
@@ -156,7 +162,6 @@ function MyProfile({ profileNav }) {
         </Modal>
       </div>
       <div className="text-center">
-
         <Modal
           className="MyinfoModal"
           isOpen={MymodalIsOpen2}
@@ -184,24 +189,22 @@ function MyProfile({ profileNav }) {
             className="imagesetting"
           >
             <img src={imagesetting} alt="$" />
-
           </div>
         </div>
 
         <div className="myprofileinfo">
           <div className="infodetail">
-
             <div className="text-right">
-              <img src={CloseBtn} alt="closbtn" className="w-8 h-8 inline-block object-right" />
+              <img
+                src={CloseBtn}
+                alt="closbtn"
+                className="w-8 h-8 inline-block object-right"
+              />
             </div>
 
-            <span className="text-3xl ml-2">
-              이름
-            </span>
+            <span className="text-3xl ml-2">이름</span>
             <span> 나이</span>
-            <div
-              className="text-slate-500 text-sm ml-2"
-            >
+            <div className="text-slate-500 text-sm ml-2">
               <span className="inline-block">
                 <img src={location} alt="" width={10} />
               </span>
@@ -211,45 +214,31 @@ function MyProfile({ profileNav }) {
               </div>
             </div>
             <div>
-
               <hr className="thickhr" />
               <div className="my-1">
-                <div className="text-2xl m-3">
-                  자기소개
-                </div>
+                <div className="text-2xl m-3">자기소개</div>
                 {/* 아이콘을 누르면 input이 가능하게 바꾸기 */}
-                <div
-                  className="text-slate-600 text-sm"
-                >
-                  자기소개 내용
-                </div>
-                <span className="flex justify-end"><img src={pencil} alt="" /></span>
+                <div className="text-slate-600 text-sm">자기소개 내용</div>
+                <span className="flex justify-end">
+                  <img src={pencil} alt="" />
+                </span>
               </div>
               <hr className="thickhr" />
               <div className="font-light">
-                <div className="text-2xl m-3 font-light">
-                  내 정보
-                </div>
+                <div className="text-2xl m-3 font-light">내 정보</div>
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span>
-                      키
-                    </span>
+                    <span>키</span>
                   </div>
                   <div>
                     <div className="flex items-center">
                       <span className="">180 cm</span>
-                      <div onClick={() => {
-                        openMyModal();
-                      }}
+                      <div
+                        onClick={() => {
+                          openMyModal();
+                        }}
                       >
-
-                        <img
-                          src={userarrow}
-                          alt=""
-                          className="w-3 ml-2"
-                        />
-
+                        <img src={userarrow} alt="" className="w-3 ml-2" />
                       </div>
                     </div>
                   </div>
@@ -258,19 +247,17 @@ function MyProfile({ profileNav }) {
 
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span>
-                      음주 스타일
-                    </span>
+                    <span>음주 스타일</span>
                   </div>
                   <div>
                     <div className="flex items-center">
                       <span className="">{}</span>
-                      <div onClick={() => {
-                        openMyModal();
-                      }}
+                      <div
+                        onClick={() => {
+                          openMyModal();
+                        }}
                       >
                         <img src={userarrow} alt="" className="w-3 ml-2" />
-
                       </div>
                     </div>
                   </div>
@@ -278,20 +265,17 @@ function MyProfile({ profileNav }) {
                 <hr />
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span>
-                      고등학교
-                    </span>
-
+                    <span>고등학교</span>
                   </div>
                   <div>
                     <div className="flex items-center">
                       <span className="">{}</span>
-                      <div onClick={() => {
-                        openMyModal();
-                      }}
+                      <div
+                        onClick={() => {
+                          openMyModal();
+                        }}
                       >
                         <img src={userarrow} alt="" className="w-3 ml-2" />
-
                       </div>
                     </div>
                   </div>
@@ -299,19 +283,17 @@ function MyProfile({ profileNav }) {
                 <hr />
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span>
-                      연락 스타일
-                    </span>
+                    <span>연락 스타일</span>
                   </div>
                   <div>
                     <div className="flex items-center">
                       <span className="">{}</span>
-                      <div onClick={() => {
-                        openMyModal();
-                      }}
+                      <div
+                        onClick={() => {
+                          openMyModal();
+                        }}
                       >
                         <img src={userarrow} alt="" className="w-3 ml-2" />
-
                       </div>
                     </div>
                   </div>
@@ -319,19 +301,17 @@ function MyProfile({ profileNav }) {
                 <hr />
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span>
-                      흡연 스타일
-                    </span>
+                    <span>흡연 스타일</span>
                   </div>
                   <div>
                     <div className="flex items-center">
                       <span className="">{}</span>
-                      <div onClick={() => {
-                        openMyModal();
-                      }}
+                      <div
+                        onClick={() => {
+                          openMyModal();
+                        }}
                       >
                         <img src={userarrow} alt="" className="w-3 ml-2" />
-
                       </div>
                     </div>
                   </div>
@@ -339,19 +319,17 @@ function MyProfile({ profileNav }) {
                 <hr />
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span>
-                      MBTI
-                    </span>
+                    <span>MBTI</span>
                   </div>
                   <div>
                     <div className="flex items-center">
                       <span className="">{}</span>
-                      <div onClick={() => {
-                        openMyModal();
-                      }}
+                      <div
+                        onClick={() => {
+                          openMyModal();
+                        }}
                       >
                         <img src={userarrow} alt="" className="w-3 ml-2" />
-
                       </div>
                     </div>
                   </div>
@@ -359,36 +337,35 @@ function MyProfile({ profileNav }) {
                 <hr />
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span>
-                      관심사
-                    </span>
+                    <span>관심사</span>
                   </div>
-                  <div onClick={() => {
-                    openMyModal3();
-                  }}
+                  <div
+                    onClick={() => {
+                      openMyModal3();
+                    }}
                   >
                     <div className="flex items-center">
                       <span className="">{}</span>
-                      <div><img src={userarrow} alt="" className="w-3 ml-2" /></div>
+                      <div>
+                        <img src={userarrow} alt="" className="w-3 ml-2" />
+                      </div>
                     </div>
                   </div>
                 </div>
                 <hr />
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span>
-                      반려동물
-                    </span>
+                    <span>반려동물</span>
                   </div>
                   <div>
                     <div className="flex items-center">
                       <span className="">{}</span>
-                      <div onClick={() => {
-                        openMyModal();
-                      }}
+                      <div
+                        onClick={() => {
+                          openMyModal();
+                        }}
                       >
                         <img src={userarrow} alt="" className="w-3 ml-2" />
-
                       </div>
                     </div>
                   </div>
@@ -397,149 +374,122 @@ function MyProfile({ profileNav }) {
               </div>
               <hr className="thickhr" />
 
-              <div className="text-2xl m-3 ">
-                선호하는 상대정보
-              </div>
+              <div className="text-2xl m-3 ">선호하는 상대정보</div>
               <div className="flex justify-between m-3">
                 <div className="">
-                  <span>
-                    나이범위
-                  </span>
+                  <span>나이범위</span>
                 </div>
                 <div>
                   <div className="flex items-center">
-                    <span className="">
-                      {' '}
-                      -
-                      {' '}
-                      {' '}
-                      살
-                    </span>
-                    <div><img src={userarrow} alt="" className="w-3 ml-2" /></div>
+                    <span className=""> - 살</span>
+                    <div>
+                      <img src={userarrow} alt="" className="w-3 ml-2" />
+                    </div>
                   </div>
                 </div>
               </div>
               <hr />
               <div className="flex justify-between m-3">
                 <div className="">
-                  <span>
-                    키범위
-                  </span>
+                  <span>키범위</span>
                 </div>
                 <div>
                   <div className="flex items-center">
-                    <span className="">
-                      {' '}
-                      -
-                      {' '}
-                      {' '}
-                      cm
-                    </span>
-                    <div><img src={userarrow} alt="" className="w-3 ml-2" /></div>
+                    <span className=""> - cm</span>
+                    <div>
+                      <img src={userarrow} alt="" className="w-3 ml-2" />
+                    </div>
                   </div>
                 </div>
               </div>
               <hr />
               <div className="flex justify-between m-3">
                 <div className="">
-                  <span>
-                    거리 반경
-                  </span>
+                  <span>거리 반경</span>
                 </div>
                 <div>
                   <div className="flex items-center">
-                    <span className="">
-                      {' '}
-                      -
-                      {' '}
-                      {' '}
-                      km
-                    </span>
-                    <div><img src={userarrow} alt="" className="w-3 ml-2" /></div>
+                    <span className=""> - km</span>
+                    <div>
+                      <img src={userarrow} alt="" className="w-3 ml-2" />
+                    </div>
                   </div>
                 </div>
               </div>
               <hr />
               <div className="flex justify-between m-3">
                 <div className="">
-                  <span>
-                    연락 스타일
-                  </span>
+                  <span>연락 스타일</span>
                 </div>
                 <div>
                   <div className="flex items-center">
-                    <span className="">
-                      {}
-                    </span>
-                    <div><img src={userarrow} alt="" className="w-3 ml-2" /></div>
+                    <span className="">{}</span>
+                    <div>
+                      <img src={userarrow} alt="" className="w-3 ml-2" />
+                    </div>
                   </div>
                 </div>
               </div>
               <hr />
               <div className="flex justify-between m-3">
                 <div className="">
-                  <span>
-                    음주 스타일
-                  </span>
+                  <span>음주 스타일</span>
                 </div>
                 <div>
                   <div className="flex items-center">
-                    <span className="">
-                      {}
-                    </span>
-                    <div><img src={userarrow} alt="" className="w-3 ml-2" /></div>
+                    <span className="">{}</span>
+                    <div>
+                      <img src={userarrow} alt="" className="w-3 ml-2" />
+                    </div>
                   </div>
                 </div>
               </div>
               <hr className="" />
               <div className="flex justify-between m-3">
                 <div className="">
-                  <span>
-                    흡연여부
-
-                  </span>
+                  <span>흡연여부</span>
                 </div>
                 <div>
                   <div className="flex items-center">
-                    <span className="">
-                      {}
-                    </span>
-                    <div><img src={userarrow} alt="" className="w-3 ml-2" /></div>
+                    <span className="">{}</span>
+                    <div>
+                      <img src={userarrow} alt="" className="w-3 ml-2" />
+                    </div>
                   </div>
                 </div>
               </div>
               <hr className="" />
               <div className="flex justify-between">
-                <span className="text-xl m-3 ">
-
-                  인증정보
-                </span>
+                <span className="text-xl m-3 ">인증정보</span>
                 <div onClick={toCert} className="flex items-center m-2">
-                  <span className="">
-                    설정하기
-                  </span>
-                  <div><img src={userarrow} alt="" className="w-3 ml-2" /></div>
+                  <span className="">설정하기</span>
+                  <div>
+                    <img src={userarrow} alt="" className="w-3 ml-2" />
+                  </div>
                 </div>
-
               </div>
 
               <div>
-
                 <div className="my-5 ml-5">
                   <div className="inline-block">
                     <Tooltip id="my-tooltip" />
                     <img
-                      src={new_certinfo.health === true ? health_yes : health_no}
+                      src={
+                        new_certinfo.health === true ? health_yes : health_no
+                      }
                       alt="#"
                       className="badges"
                       data-tooltip-id="my-tooltip"
                       data-tooltip-content={`건강데이터넣을것임 ${new_certinfo.health}`}
                     />
-
                   </div>
                   <div className="inline-block">
                     <img
-                      src={new_certinfo.university === true ? university_yes : university_no}
+                      src={
+                        new_certinfo.university === true
+                          ? university_yes
+                          : university_no
+                      }
                       alt="#"
                       className="badges"
                       data-tooltip-id="my-tooltip"
@@ -557,7 +507,11 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div className="inline-block">
                     <img
-                      src={new_certinfo.certificate === true ? certificate_yes : certificate_no}
+                      src={
+                        new_certinfo.certificate === true
+                          ? certificate_yes
+                          : certificate_no
+                      }
                       alt="#"
                       className="badges"
                       data-tooltip-id="my-tooltip"
@@ -566,7 +520,9 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div className="inline-block">
                     <img
-                      src={new_certinfo.estate === true ? estate_yes : estate_no}
+                      src={
+                        new_certinfo.estate === true ? estate_yes : estate_no
+                      }
                       alt="#"
                       className="badges"
                       data-tooltip-id="my-tooltip"
@@ -575,7 +531,9 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div className="inline-block">
                     <img
-                      src={new_certinfo.income === true ? income_yes : income_no}
+                      src={
+                        new_certinfo.income === true ? income_yes : income_no
+                      }
                       alt="#"
                       className="badges"
                       data-tooltip-id="my-tooltip"
@@ -585,20 +543,14 @@ function MyProfile({ profileNav }) {
                 </div>
               </div>
               <hr />
-              <div className="text-xl">
-                Oh my my
-              </div>
+              <div className="text-xl">Oh my my</div>
               <div>
-
                 <InterestList interest={interest} />
 
                 <div />
-
               </div>
             </div>
-
           </div>
-
         </div>
         <Navbar profileNav={profileNav} />
       </div>

@@ -15,10 +15,11 @@ function Signup() {
   const [month, setMonth] = useState(null);
   const [day, setDay] = useState(null);
   const [gender, setGender] = useState(null);
-  const [step, setStep] = useState(0)
-
-
+  const [step, setStep] = useState(0);
   const navigate = useNavigate();
+  const searchParams = new URLSearchParams(window.location.search);
+  const jwt = searchParams.get('jwt');
+  localStorage.setItem('accesstoken', jwt);
 
   const goFaceRecog = () => {
     navigate('/faceRecog/signup', {
@@ -48,13 +49,13 @@ function Signup() {
   }
   return (
     <div className="bg-white w-[22.5rem] h-[48.75rem]">
-      {(step == 0) && <FaceRecog setStep={setStep}/>}
-      {(step == 1) && <MoreInfo setStep={setStep}/>}
-      {(step == 2) && <MoreInfo2 setStep={setStep}/>}
-      {(step == 3) && <MoreInfo3 setStep={setStep}/>}
-      {(step == 4) && <MoreInfo4 setStep={setStep}/>}
-      {(step == 5) && <MoreInfo5 setStep={setStep}/>}
-      {(step == 6) && <SignupComplete />}
+      {step == 0 && <FaceRecog setStep={setStep} />}
+      {step == 1 && <MoreInfo setStep={setStep} />}
+      {step == 2 && <MoreInfo2 setStep={setStep} />}
+      {step == 3 && <MoreInfo3 setStep={setStep} />}
+      {step == 4 && <MoreInfo4 setStep={setStep} />}
+      {step == 5 && <MoreInfo5 setStep={setStep} />}
+      {step == 6 && <SignupComplete />}
     </div>
   );
 }
