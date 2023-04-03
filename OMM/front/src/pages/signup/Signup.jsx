@@ -15,7 +15,7 @@ function Signup() {
   const [month, setMonth] = useState(null);
   const [day, setDay] = useState(null);
   const [gender, setGender] = useState(null);
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(1);
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(window.location.search);
   const jwt = searchParams.get('jwt');

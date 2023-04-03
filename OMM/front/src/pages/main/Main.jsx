@@ -14,11 +14,10 @@ function Main() {
   const [userlist, setUserList] = useState();
   const [img, setImage] = useState();
   const [name, setName] = useState();
-  if (!localStorage.getItem('accesstoken')) {
     const searchParams = new URLSearchParams(window.location.search);
     const jwt = searchParams.get('jwt');
     localStorage.setItem('accesstoken', jwt);
-  }
+  
   const token = localStorage.getItem('accesstoken');
 
   useEffect(() => {

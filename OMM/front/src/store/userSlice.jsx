@@ -9,18 +9,18 @@ const initialState = {
   lng: '',
   highschool: '',
   military: '',
-  my_contact_style: '',
   my_drinking_style: '',
   my_smoking_style: '',
-  contact_style: '',
-  drinking_style: '',
-  smoking_style: '',
+  my_contact_style: '',
   age_min: '',
   age_max: '',
   height_min: '',
   height_max: '',
   range_min: '',
   range_max: '',
+  drinking_style: '',
+  smoking_style: '',
+  contact_style: '',
   MBTI: '',
   pet: '',
 };
@@ -53,7 +53,7 @@ const userSlice = createSlice({
     moreInfo4: (state, action) => {
       state.drinking_style = action.payload.drinking_style;
       state.smoking_style = action.payload.smoking_style;
-      state.my_contact_style = action.payload.my_contact_style;
+      state.contact_style = action.payload.contact_style;
     },
     moreInfo5: (state, action) => {
       state.MBTI = action.payload.MBTI;

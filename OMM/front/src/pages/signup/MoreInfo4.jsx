@@ -14,14 +14,14 @@ function MoreInfo4({setStep}) {
     setStep(3);
   }
   const next = () => { 
-    if (
-      moreinfo.contact_style && 
-      moreinfo.drinking_style && 
-      moreinfo.smoking_style){
+    // if (
+    //   moreinfo.contact_style && 
+    //   moreinfo.drinking_style && 
+    //   moreinfo.smoking_style){
         setStep(5)
-      } else {
-        alert('모든 정보를 입력해주세요!');
-      }
+      // } else {
+      //   alert('모든 정보를 입력해주세요!');
+      // }
   }
   const sendInfo = () => {
     const info = {
