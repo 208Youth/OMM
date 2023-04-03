@@ -29,7 +29,7 @@ module.exports = function (app) {
     '/api',
     createProxyMiddleware({
       // target: 'http://localhost:5000',
-      target: process.env.OMM_SPRINT_API_URL,
+      target: process.env.OMM_SPRING_API_URL,
       changeOrigin: true,
     })
   );
