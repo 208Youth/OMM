@@ -58,7 +58,7 @@ function MyProfile({ profileNav }) {
   ];
   const [MymodalIsOpen, setMyIsOpen] = useState(false);
   const [MymodalIsOpen2, setMyIsOpen2] = useState(false);
-  const [MymodalIsOpen3, setMyIsOpen3] = useState(true);
+  const [MymodalIsOpen3, setMyIsOpen3] = useState(false);
   const token = localStorage.getItem('accesstoken');
   const openMyModal = () => {
     setMyIsOpen(true);

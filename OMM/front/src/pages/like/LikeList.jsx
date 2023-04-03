@@ -18,13 +18,6 @@ function LikeList() {
         Authorization: import.meta.env.VITE_TOKEN,
       },
     })
-    // await axios({
-    //   method: 'get',
-    //   url: '/api/member/liked',
-    //   // headers: {
-    //   //   Authorization: token,
-    //   // },
-    // })
       .then((res) => {
         console.log(res.liked_list);
         setLikes(res.liked_list);

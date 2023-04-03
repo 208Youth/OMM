@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import http from '../../api/http';
 import CloseBtn from '../../assets/CloseBtn.svg';
 import estate_yes from '../../assets/estate_yes.svg';
 import estate_no from '../../assets/estate_no.svg';
@@ -20,6 +21,8 @@ import './Pslider.css';
 // props를 통해 userid를 받고 claose 버튼을 눌러서 해당 userid의
 // 아니면 메인 페이지에 해당 컴포넌트를 아예 합쳐버릴까
 function OtherProfile() {
+  const token = localStorage.getItem('accesstoken');
+  const memberId = 2;
   const certinfo = {
     university: false,
     job: true,
@@ -46,11 +49,31 @@ function OtherProfile() {
   const [new_certinfo, setCert] = useState(certinfo);
   const [new_interest, setInterest] = useState(null);
   // new_certinfo인지 certinfo인지 axios주고받으면서 확인
-  const FreshCert = () => {
-    http.get(`member/${memberId}/cert`)
-      .then((response) => setCert(response.data))
-      .catch((error) => console.error(error));
-  };
+
+  async function FreshCert() {
+    await http({
+      method: 'get',
+      url: `/member/${memberId}/cert`,
+      headers: {
+        Authorization: import.meta.env.VITE_TOKEN,
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        setCert(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log('왜자꾸안되');
+        console.log(import.meta.env.VITE_TOKEN);
+      });
+  }
+
+  // const FreshCert = () => {
+  //   http.get(`member/${memberId}/cert`, { headers: { Authorization: `Bearer ${token}` } })
+  //     .then((response) => setCert(response.data))
+  //     .catch((error) => console.error(error));
+  // };
   const FreshInterest = () => {
     http.get(`/member/${memberId}/interest-list`)
       .then((response) => setInterest(response.data.interestList))
@@ -58,7 +81,7 @@ function OtherProfile() {
   };
   useEffect(() => {
     FreshCert();
-    FreshInterest();
+    // FreshInterest();
   }, []);
 
   function InterestList({ interest }) {
