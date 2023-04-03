@@ -161,7 +161,7 @@ function CertModal({ cert, info, isClose }) {
             <div className="flex justify-between mt-3 items-center">
               <div className="truncate ...">발급할 인증서 : {select.name}</div>
               <button
-                className="btn-cert"
+                className="btn-cert flex content-center items-center"
                 onClick={() => {
                   requestCert(cert);
                   setCertProgress(true);
@@ -172,7 +172,7 @@ function CertModal({ cert, info, isClose }) {
                   <div role="status">
                     <svg
                       aria-hidden="true"
-                      class="inline w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                      class="inline w-8 h-8 text-center text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
                       viewBox="0 0 100 101"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
