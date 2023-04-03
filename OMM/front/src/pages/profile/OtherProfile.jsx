@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './Pslider.css';
 import axios from 'axios';
 import CloseBtn from '../../assets/CloseBtn.svg';
 import estate_yes from '../../assets/estate_yes.svg';
@@ -16,6 +15,7 @@ import certificate_yes from '../../assets/certificate_yes.svg';
 import certificate_no from '../../assets/certificate_no.svg';
 import location from '../../assets/location.svg';
 import Pslider from '../../components/Pslider';
+import './Pslider.css';
 
 // props를 통해 userid를 받고 claose 버튼을 눌러서 해당 userid의
 // 아니면 메인 페이지에 해당 컴포넌트를 아예 합쳐버릴까

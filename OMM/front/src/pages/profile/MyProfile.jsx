@@ -182,7 +182,8 @@ function MyProfile({ profileNav }) {
       <div>
         <div className="absolute top-20 left-0 w-full z-5">
           <Pslider />
-          <div
+          <div>
+            <div
             // className={isHovered ? 'imagesetting:hover' : 'imagesetting'}
             // onMouseEnter={handleMouseEnter}
             // onMouseLeave={handleMouseLeave}
@@ -192,7 +193,7 @@ function MyProfile({ profileNav }) {
           </div>
         </div>
 
-        <div className="myprofileinfo">
+        <div className="profileinfo">
           <div className="infodetail">
             <div className="text-right">
               <img
