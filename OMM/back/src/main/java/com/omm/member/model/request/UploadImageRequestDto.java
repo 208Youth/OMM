@@ -10,5 +10,5 @@ import java.util.List;
 public class UploadImageRequestDto {
 
     @JsonProperty(value = "photos")
-    private List<Blob> images;
+    private List<Byte[]> images;
 }

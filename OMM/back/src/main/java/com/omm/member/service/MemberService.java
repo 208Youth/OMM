@@ -231,7 +231,8 @@ public class MemberService {
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         try {
-            List<Blob> images = uploadImageRequestDto.getImages();
+            List<Blob> images = null;
+//            List<Blob> images = uploadImageRequestDto.getImages();
 
             images.forEach((image) -> {
                 MemberImg memberImg = MemberImg.builder()
@@ -264,7 +265,8 @@ public class MemberService {
         }
 
         try {
-            List<Blob> images = uploadImageRequestDto.getImages();
+            List<Blob> images = null;
+//            List<Blob> images = uploadImageRequestDto.getImages();
 
             images.forEach((image) -> {
                 MemberImg memberImg = MemberImg.builder()

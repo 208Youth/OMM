@@ -57,7 +57,7 @@ public class AuthService {
 
     public RegistDto registAuth(AuthDto authDto) {
         SubjectsDto subjects = verifyVP(authDto);
-        Map<String, String> personalId = subjects.getSubjects().get("personalId");
+        Map<String, Object> personalId = subjects.getSubjects().get("personalId");
         if (personalId == null ||
             personalId.get("birthdate") == null ||
             personalId.get("gender") == null) {
@@ -67,8 +67,8 @@ public class AuthService {
         return RegistDto.builder()
             .holderDid(authDto.getHolderDid())
             .age((short) (Calendar.getInstance().get(Calendar.YEAR) -
-                Integer.parseInt(personalId.get("birthdate").substring(0, 4)) + 1))
-            .gender(personalId.get("gender"))
+                Integer.parseInt(((String) personalId.get("birthdate")).substring(0, 4)) + 1))
+            .gender((String) personalId.get("gender"))
             .build();
 
     }
