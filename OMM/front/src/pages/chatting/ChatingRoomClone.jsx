@@ -12,14 +12,14 @@ function ChatingRoomClone() {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
 
-  const ws = new SockJS('http://localhost:8080/api/chat');
+  const ws = new SockJS('http://localhost:5000/api/chat');
   const stompClient = Stomp.over(ws);
 
   useEffect(() => {
     findRoom();
     chat.get(`/rooms/${roomId}` + '/messages')
 
-    // axios.get(`http://localhost:8080/api/chat/room/${roomId}` + '/messages')
+    // axios.get(`http://localhost:5000/api/chat/room/${roomId}` + '/messages')
       .then(({ data }) => {
         console.log('아래는 유스이펙트시 실행되는 코드');
         console.log(data);
@@ -32,7 +32,7 @@ function ChatingRoomClone() {
   }, []);
 
   const findRoom = () => {
-    // axios.get(`http://localhost:8080/api/chat/room/${roomId}`).then((response) => {
+    // axios.get(`http://localhost:5000/api/chat/room/${roomId}`).then((response) => {
     chat.get(`/room/${roomId}`).then((response) => {
       setRoom(response.data);
       console.log('아래는 파인드 룸의 리스폰스 데이터');
@@ -63,7 +63,7 @@ function ChatingRoomClone() {
     stompClient.connect({}, () => {
       console.log('stompClient connect');
       stompClient.subscribe('/sub/chat/entrance', (readDto) => {
-        // axios.get(`http://localhost:8080/api/chat/room/${roomId}` + '/messages')
+        // axios.get(`http://localhost:5000/api/chat/room/${roomId}` + '/messages')
         chat.get(`/room/${roomId}` + '/messages')
           .then(({ data }) => {
             console.log('아래는 유스이펙트시 실행되는 코드');

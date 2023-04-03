@@ -133,6 +133,16 @@ function OtherProfile() {
               <div className="text-xl m-3">
                 인증정보
               </div>
+              <div className="text-xl">
+                Oh my my
+              </div>
+              <div>
+
+                <InterestList interest={interest} />
+
+                <div />
+
+              </div>
               <div>
                 <div className="my-5 ml-5">
                   <div className="inline-block">
@@ -156,16 +166,7 @@ function OtherProfile() {
                 </div>
               </div>
               <hr />
-              <div className="text-xl">
-                Oh my my
-              </div>
-              <div>
 
-                <InterestList interest={interest} />
-
-                <div />
-
-              </div>
             </div>
 
           </div>
