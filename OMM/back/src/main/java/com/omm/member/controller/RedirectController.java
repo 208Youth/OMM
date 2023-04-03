@@ -93,15 +93,15 @@ public class RedirectController {
                     return urlInfo.getOmmFront() + "/signup?jwt="+jwt;
                 } else {
 //                    return new ResponseEntity<>("로그인하세요.", HttpStatus.BAD_REQUEST);
-                    return "#";
+                    return urlInfo.getCc24Front() + "/login?type=SIGNIN";
                 }
             case "SIGNIN":
                 if (memberService.existDidAddress(authDto.getHolderDid())) {
                     String jwt = authService.authenticate(authDto.getHolderDid(), authDto.getVpJwt());
-                    return urlInfo.getOmmFront() + "/main?did="+did+"&jwt="+jwt;
+                    return urlInfo.getOmmFront() + "/main?jwt="+jwt;
                 } else {
 //                    return new ResponseEntity<>("회원가입하세요.", HttpStatus.BAD_REQUEST);
-                    return "#";
+                    return urlInfo.getCc24Front() + "/login?type=SIGNUP";
                 }
             default:
                 throw new CustomException(ErrorCode.CANNOT_AUTHORIZE_MEMBER);
