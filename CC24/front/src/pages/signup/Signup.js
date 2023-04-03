@@ -9,7 +9,7 @@ import { EthrDID } from 'ethr-did';
 import FaceRecogModal from './FaceRecogModal';
 import IdenModal from './IdenModal';
 import PasswordModal from './PasswordModal';
-import { userInfo, idenVC } from '../../store/userSlice';
+import { userInfo, idenVC, certInfo } from '../../store/userSlice';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -75,6 +75,7 @@ function Signup() {
         console.log('성공!!!!!!!!', res);
         dispatch(idenVC(res.data.vcJwt));
         window.localStorage.setItem('IdenVC', JSON.stringify(res.data.vcJwt));
+        dispatch(certInfo('신분증'))
       })
       .catch((err) => {
         console.log(err);
