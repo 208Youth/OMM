@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import http from '@/api/http';
 import Report from '@/components/Report';
 
@@ -8,6 +9,12 @@ function Admin() {
 
   const headers = {
     Authorization: import.meta.env.VITE_AUTH_TOKEN,
+  };
+
+  const navigate = useNavigate();
+
+  const gotoDetail = (id) => {
+    navigate(`/admin/detail/${id}`);
   };
 
   useEffect(() => {
@@ -50,7 +57,16 @@ function Admin() {
             <tbody>
               {notProcessed
                 && notProcessed.map((report, index) => (
-                  <Report report={report} index={index} />
+                  <Report
+                    report={report}
+                    index={index}
+                    isProcessed={false}
+                    moveTo={(res) => {
+                      if (res) {
+                        gotoDetail(report.reportId);
+                      }
+                    }}
+                  />
                 ))}
             </tbody>
           </table>
@@ -77,7 +93,7 @@ function Admin() {
             <tbody>
               {processed
                 && processed.map((report, index) => (
-                  <Report report={report} index={index} />
+                  <Report report={report} isProcessed index={index} />
                 ))}
             </tbody>
           </table>
