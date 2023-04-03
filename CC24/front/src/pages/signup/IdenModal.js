@@ -1,12 +1,13 @@
 /* eslint-disable */
 
-import React, { useState, useEffect } from "react";
-import CloseBtn from "../../assets/CloseBtn.svg";
-import "./IdenModal.css";
+import React, { useState, useEffect } from 'react';
+import CloseBtn from '../../assets/CloseBtn.svg';
+import './IdenModal.css';
 // import fastapi from '../../api/fastapi.js';
-import axios from "axios";
-import { useSelector, useDispatch } from "react-redux";
-import { idInfo } from "../../store/userSlice";
+import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
+import { idInfo } from '../../store/userSlice';
+import http from '../../api/fastapi';
 
 function IdenModal({
   setIdenModal,
@@ -17,11 +18,11 @@ function IdenModal({
   inputmonth,
   inputgender,
 }) {
-  const [imageSrc, setImageSrc] = useState("");
-  const [imgfile, setFile] = useState("");
-  const [name, setName] = useState("");
-  const [gender, setGender] = useState("");
-  const [birthday, setBirthday] = useState("");
+  const [imageSrc, setImageSrc] = useState('');
+  const [imgfile, setFile] = useState('');
+  const [name, setName] = useState('');
+  const [gender, setGender] = useState('');
+  const [birthday, setBirthday] = useState('');
   const dispatch = useDispatch();
 
   // fastapi의 idening를 실행시키기 위한 코드
@@ -29,20 +30,22 @@ function IdenModal({
     const formData = new FormData();
     // formData.append('pay', JSON.stringify(pay));
 
-    formData.append("inputday", inputday);
-    formData.append("inputname", inputname);
-    formData.append("inputyear", inputyear);
-    formData.append("inputmonth", inputmonth);
-    formData.append("inputgender", inputgender);
-    formData.append("file", imgfile);
+    formData.append('inputday', inputday);
+    formData.append('inputname', inputname);
+    formData.append('inputyear', inputyear);
+    formData.append('inputmonth', inputmonth);
+    formData.append('inputgender', inputgender);
+    formData.append('file', imgfile);
     // for (let key of formData.keys()) {
     //   console.log(key, formData.get(key))
     // }
 
     console.log(formData);
-    await axios({
-      method: "post",
-      url: "http://localhost:8000/api/fast/idenimg",
+    // await axios({
+    await http({
+      method: 'post',
+      // url: 'http://localhost:8000/api/fast/idenimg',
+      url: '/idenimg',
       data: formData,
       // {
       //   // 데이터의 파일부분에 문제가 있는 것 같다.
@@ -51,11 +54,11 @@ function IdenModal({
       //   // file:imgfile
       // },
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
       },
     })
       .then((res) => {
-        console.log("fastapi로 이미지를 보냈습니다.");
+        console.log('fastapi로 이미지를 보냈습니다.');
         console.log(res.data);
         setName(res.data.personalId.name);
         setBirthday(res.data.personalId.birthdate);
@@ -65,7 +68,7 @@ function IdenModal({
       .catch((err) => {
         console.log(imgfile);
         console.log(err);
-        console.log("fastapi로 이미지를 보내는데 실패했습니다.");
+        console.log('fastapi로 이미지를 보내는데 실패했습니다.');
         for (let key of formData.keys()) {
           console.log(key, formData.get(key));
         }
@@ -97,7 +100,7 @@ function IdenModal({
 
     // fastapi/iden_img에 이미지를 저장하는 코드를 써야한다.
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append('file', file);
     // const { data } = await fastapi.get('/');
 
     // fastapi.post('/idenimg', { file: imgfile });
@@ -120,12 +123,18 @@ function IdenModal({
       <br />
       <br />
       <div>
-        <p className="text-3xl text-left ml-9 leading-relaxed" style={{ marginLeft: "1rem" }}>
+        <p
+          className="text-3xl text-left ml-9 leading-relaxed"
+          style={{ marginLeft: '1rem' }}
+        >
           본인
         </p>
       </div>
       <div>
-        <p className="text-3xl text-left ml-9 leading-relaxed" style={{ marginLeft: "1rem" }}>
+        <p
+          className="text-3xl text-left ml-9 leading-relaxed"
+          style={{ marginLeft: '1rem' }}
+        >
           확인
         </p>
         <br />
@@ -140,13 +149,15 @@ function IdenModal({
           <input
             id="imginput"
             type="file"
-            style={{ display: "none" }}
+            style={{ display: 'none' }}
             onChange={handleFileInputChange}
           />
         </div>
       </div>
-      <div className="preview" style={{ marginLeft: "2rem" }}>
-        {imageSrc && <img src={imageSrc} alt="preview-img" className="idenimage" />}
+      <div className="preview" style={{ marginLeft: '2rem' }}>
+        {imageSrc && (
+          <img src={imageSrc} alt="preview-img" className="idenimage" />
+        )}
       </div>
       <br />
       <div>
@@ -171,17 +182,17 @@ function Result({ data, setIdenModal, setIdenComplete }) {
   const strbirth = String(birthday);
   let year = strbirth.slice(0, 4);
   let month = strbirth.slice(5, 7);
-  if (month.slice(0, 1) == "0") {
+  if (month.slice(0, 1) == '0') {
     month = month.slice(1, 2);
   }
   let day = strbirth.slice(9, 11);
-  if (day.slice(0, 1) == "0") {
+  if (day.slice(0, 1) == '0') {
     day = day.slice(1, 2);
   }
-  if (gender == "MALE") {
-    gender = "남";
+  if (gender == 'MALE') {
+    gender = '남';
   } else {
-    gender = "여";
+    gender = '여';
   }
   const storeName = useSelector((state) => state.user.name);
   const storeYear = useSelector((state) => state.user.year);
@@ -216,7 +227,9 @@ function Result({ data, setIdenModal, setIdenComplete }) {
         </div>
         <div>
           <span>{name}</span>
-          {nameCheck && <img src="../../../check.png" alt="#" className="ml-3 inline" />}
+          {nameCheck && (
+            <img src="../../../check.png" alt="#" className="ml-3 inline" />
+          )}
         </div>
       </div>
 
@@ -227,7 +240,9 @@ function Result({ data, setIdenModal, setIdenComplete }) {
         </div>
         <div>
           <span>{gender}</span>
-          {genderCheck && <img src="../../../check.png" alt="#" className="ml-3 inline" />}
+          {genderCheck && (
+            <img src="../../../check.png" alt="#" className="ml-3 inline" />
+          )}
         </div>
       </div>
       <div className="flex mx-5 justify-between">
@@ -239,7 +254,9 @@ function Result({ data, setIdenModal, setIdenComplete }) {
           <span>
             {year}년 {month}월 {day}일
           </span>
-          {birthdayCheck && <img src="../../../check.png" alt="#" className="ml-3 inline" />}
+          {birthdayCheck && (
+            <img src="../../../check.png" alt="#" className="ml-3 inline" />
+          )}
         </div>
       </div>
       <div className="mx-auto text-center">
@@ -256,7 +273,9 @@ function Result({ data, setIdenModal, setIdenComplete }) {
             </button>
           )}
         </div>
-        <div>{!complete && <button className="btn-inactive">확인 완료</button>}</div>
+        <div>
+          {!complete && <button className="btn-inactive">확인 완료</button>}
+        </div>
       </div>
     </div>
   );
