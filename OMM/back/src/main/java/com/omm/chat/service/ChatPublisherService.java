@@ -1,6 +1,7 @@
 package com.omm.chat.service;
 
 import com.omm.chat.model.dto.ChatRoomDto;
+import com.omm.chat.model.entity.ChatMessage;
 import com.omm.chat.model.entity.ChatRoom;
 import com.omm.exception.CustomException;
 import com.omm.model.entity.Member;
@@ -71,5 +72,9 @@ public class ChatPublisherService {
     public MemberImg getImg(Long id) {
         List<MemberImg> memberImgs = memberImgRepository.findAllById(id);
         return memberImgs.isEmpty() ? null : memberImgs.get(0);
+    }
+
+    public void publishMessage(ChatMessage message) {
+        messagingTemplate.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
     }
 }

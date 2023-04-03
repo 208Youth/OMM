@@ -16,8 +16,10 @@ function ChatWindow() {
   const [room, setRoom] = useState({});
   const location = useLocation();
   const [message, setMessage] = useState('');
+  const token = localStorage.getItem('accessoken');
   const headers = {
-    Authorization: import.meta.env.VITE_TOKEN, // 매칭 수락한사람의 토큰
+    // Authorization: import.meta.env.VITE_TOKEN,
+    Authorization: token, // 매칭 수락한사람의 토큰
   };
 
   // 임시로 메시지를 저장
@@ -135,18 +137,29 @@ function ChatWindow() {
 
   useEffect(() => {
     findRoom();
-    axios
-      .get(`http://localhost:5000/api/chat/room/${roomId}` + '/messages')
-      .then(({ data }) => {
-        console.log('아래는 data 정보');
-        console.log({ data });
-        console.log(...data);
-        console.log('위는data 정보');
-        setMessages([...data]);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    http({
+      method: 'get',
+      url: `/chat/room/${roomId}/messages`,
+      headers: {
+        Authorization: import.meta.env.VITE_TOKEN,
+      },
+    }).then((response) => {
+      console.log(response);
+      setMessages([...response]);
+    });
+
+    // axios
+    //   .get(`http://localhost:5000/api/chat/room/${roomId}/messages`)
+    //   .then(({ data }) => {
+    //     console.log('아래는 data 정보');
+    //     console.log({ data });
+    //     console.log(...data);
+    //     console.log('위는data 정보');
+    //     setMessages([...data]);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
     connect();
   }, []);
 
@@ -158,7 +171,7 @@ function ChatWindow() {
           {user2ID}
         </span>
       </div>
-      <div className="flex mx-auto w-[20rem] h-[39rem] overscroll-x-none overflow-y-scroll scrollbar-hide touch-pan-y bg-white bg-opacity-20 text-xs rounded-lg mb-1">
+      <div className="flex mx-auto w-[20rem] h-[39rem] overscroll-x-none overflow-y-scroll scrollbar-hide touch-pan-y text-xs rounded-lg mb-1">
         <div id="chatdetail" className="w-[20rem] mx-auto">
           <div>{/* 만약 보낸사람이 내가 아니라면 */}</div>
           <div id="Chat">
@@ -203,117 +216,8 @@ function ChatWindow() {
                   </li>
                 ))}
               </ul>
-              <ul>
-                {messages.map((msg, index) => (
-                  <li
-                    key={index}
-                    className={`my-2 ${
-                      msg.senderId === 1 ? 'text-right' : 'text-left'
-                    }`}
-                  >
-                    {msg.senderId === 1 ? (
-                      <div>
-                        <span className="text-xs mr-1">
-                          {msg.isRead ? '읽음' : '안읽음'}
-                        </span>
-                        <div className="bg-[#E1E3EB] p-2 rounded-lg">
-                          <span className="">{msg.senderId}</span>
-                          <span className="text-sm mr-2">
-                            {msg.content}
-                            오른쪽
-                          </span>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="w-60 flex">
-                        <div className="w-44 bg-[#E6C9C6] p-2 rounded-lg">
-                          <span className="text-sm mr-2">
-                            왼쪽
-                            {msg.content}
-                          </span>
-                          <span className="">{msg.senderId}</span>
-                        </div>
-                        <span className="text-xs ml-1 self-end">
-                          {msg.isRead ? '읽음' : '안읽음'}
-                        </span>
-                      </div>
-                    )}
-                  </li>
-                ))}
-              </ul>
-              <ul>
-                {messages.map((msg, index) => (
-                  <li
-                    key={index}
-                    className={`my-2 ${
-                      msg.senderId === 1 ? 'text-right' : 'text-left'
-                    }`}
-                  >
-                    {msg.senderId === 1 ? (
-                      <div className='"w-44"'>
-                        <span className="text-xs mr-1">
-                          {msg.isRead ? '읽음' : '안읽음'}
-                        </span>
-                        <span className="">{msg.senderId}</span>
-                        <span className="text-sm mr-2">
-                          {msg.content}
-                          오른쪽
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="w-56 flex">
-                        <div className="w-44 bg-[#E6C9C6] p-2 rounded-lg">
-                          <span className="text-sm mr-2">
-                            왼쪽
-                            {msg.content}
-                          </span>
-                          <span className="">{msg.senderId}</span>
-                        </div>
-                        <span className="text-xs ml-1 self-end">
-                          {msg.isRead ? '읽음' : '안읽음'}
-                        </span>
-                      </div>
-                    )}
-                  </li>
-                ))}
-              </ul>
-              <ul>
-                {messages.map((msg, index) => (
-                  <li
-                    key={index}
-                    className={`my-2 ${
-                      msg.senderId === 1 ? 'text-right' : 'text-left'
-                    }`}
-                  >
-                    {msg.senderId === 1 ? (
-                      <div className='"w-44"'>
-                        <span className="text-xs mr-1">
-                          {msg.isRead ? '읽음' : '안읽음'}
-                        </span>
-                        <span className="">{msg.senderId}</span>
-                        <span className="text-sm mr-2">
-                          {msg.content}
-                          오른쪽
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="w-56 flex">
-                        <div className="w-44 bg-[#E6C9C6] p-2 rounded-lg">
-                          <span className="text-sm mr-2">
-                            왼쪽
-                            {msg.content}
-                          </span>
-                          <span className="">{msg.senderId}</span>
-                        </div>
-                        <span className="text-xs ml-1 self-end">
-                          {msg.isRead ? '읽음' : '안읽음'}
-                        </span>
-                      </div>
-                    )}
-                  </li>
-                ))}
-              </ul>
-              <div className="flex fixed bottom-0 left-1">
+
+              <div className="flex fixed bottom-0 ">
                 <button
                   onClick={() => {
                     openModal();

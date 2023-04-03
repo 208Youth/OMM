@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 // import Dropzone from 'react-dropzone';
-import axios from 'axios';
 import './ImageUploader.css';
+import http from '../../api/http';
 
 function ImageUploader() {
   const [images, setImages] = useState(Array(6).fill(null));
@@ -24,16 +24,31 @@ function ImageUploader() {
             images.map((image, i) => (i === index ? blob : image)),
           );
         });
+        console.log('images');
+        console.log(images);
+        console.log(typeof images);
       };
     };
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    console.log(images);
     const formData = new FormData();
     images.forEach((image, index) => {
-      formData.append(`image${index + 1}`, image);
+      formData.append(`image${index}`, image);
     });
-    axios.post('/api/upload', formData).then((response) => {
+    console.log('formData');
+    console.log(formData);
+    console.log(import.meta.env.VITE_TOKEN);
+
+    await http({
+      method: 'post',
+      url: '/member/img',
+      headers: {
+        Authorization: import.meta.env.VITE_TOKEN,
+      },
+      data: formData,
+    }).then((response) => {
       console.log(response.data);
     });
   };

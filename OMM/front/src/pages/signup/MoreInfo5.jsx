@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { moreInfo5 } from '../../store/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import http from '../../api/http';
+import { moreInfo5 } from '../../store/userSlice';
 
-function MoreInfo5({setStep}) {
+function MoreInfo5({ setStep }) {
   const dispatch = useDispatch();
-  const user = useSelector(state => state.user);
+  const user = useSelector((state) => state.user);
   const [MBTI1, setMBTI1] = useState('');
   const [MBTI2, setMBTI2] = useState('');
   const [MBTI3, setMBTI3] = useState('');
@@ -14,17 +15,17 @@ function MoreInfo5({setStep}) {
     pet: '',
     MBTI: '',
   });
-  const prev = ()=> {
+  const prev = () => {
     setStep(4);
-  }
-  const next =() => { 
-    if (moreinfo.pet && 
-        moreinfo.MBTI){
-          setStep(6)
-        } else {
-          alert('모든 정보를 입력해주세요!');
-        }
-  }
+  };
+  const next = () => {
+    if (moreinfo.pet
+        && moreinfo.MBTI) {
+      setStep(6);
+    } else {
+      alert('모든 정보를 입력해주세요!');
+    }
+  };
   const sendInfo = () => {
     const info = {
       contact_style: moreinfo.contact_style,
@@ -62,9 +63,9 @@ function MoreInfo5({setStep}) {
   }, [moreinfo]);
 
   async function sendMyInfo() {
-    await axios({
+    await http({
       method: 'post',
-      url: '/api/member/info',
+      url: '/member/info',
       data: my_info,
       // headers: {
       //   Authorization: token,
@@ -79,9 +80,9 @@ function MoreInfo5({setStep}) {
   }
 
   async function sendPreferInfo() {
-    await axios({
+    await http({
       method: 'post',
-      url: '/api/member/filtering',
+      url: '/member/filtering',
       data: my_fav,
       // headers: {
       //   Authorization: token,
@@ -199,7 +200,7 @@ function MoreInfo5({setStep}) {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                 pet: e.target.value,
+                  pet: e.target.value,
                 }));
               }}
               id="drink4"
@@ -246,7 +247,7 @@ function MoreInfo5({setStep}) {
           <div className="mr-20">
             <input
               onClick={(e) => {
-                setMBTI1(e.target.value)
+                setMBTI1(e.target.value);
               }}
               id="MBTI1"
               type="radio"
@@ -264,7 +265,7 @@ function MoreInfo5({setStep}) {
           <div>
             <input
               onClick={(e) => {
-                setMBTI1(e.target.value)
+                setMBTI1(e.target.value);
               }}
               id="smoke3"
               type="radio"
@@ -284,7 +285,7 @@ function MoreInfo5({setStep}) {
           <div className="mr-20">
             <input
               onClick={(e) => {
-                setMBTI2(e.target.value)
+                setMBTI2(e.target.value);
               }}
               id="smoke1"
               type="radio"
@@ -302,7 +303,7 @@ function MoreInfo5({setStep}) {
           <div>
             <input
               onClick={(e) => {
-                setMBTI2(e.target.value)
+                setMBTI2(e.target.value);
               }}
               id="smoke3"
               type="radio"
@@ -322,7 +323,7 @@ function MoreInfo5({setStep}) {
           <div className="mr-20">
             <input
               onClick={(e) => {
-                setMBTI3(e.target.value)
+                setMBTI3(e.target.value);
               }}
               id="smoke1"
               type="radio"
@@ -340,7 +341,7 @@ function MoreInfo5({setStep}) {
           <div>
             <input
               onClick={(e) => {
-                setMBTI3(e.target.value)
+                setMBTI3(e.target.value);
               }}
               id="smoke3"
               type="radio"
@@ -360,7 +361,7 @@ function MoreInfo5({setStep}) {
           <div className="mr-20">
             <input
               onClick={(e) => {
-                setMBTI4(e.target.value)
+                setMBTI4(e.target.value);
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
                   MBTI: MBTI1 + MBTI2 + MBTI3 + MBTI4,
@@ -382,7 +383,7 @@ function MoreInfo5({setStep}) {
           <div>
             <input
               onClick={(e) => {
-                setMBTI4(e.target.value)
+                setMBTI4(e.target.value);
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
                   MBTI: MBTI1 + MBTI2 + MBTI3 + MBTI4,
@@ -405,23 +406,23 @@ function MoreInfo5({setStep}) {
       </div>
       <div className="flex justify-between mx-8 text-[#364C63] text-lg">
         <button
-            type="button"
-            aria-hidden
-            onClick={() => {prev()}}
-          >
-            &lt;
-          </button>
-          <button
-            type="button"
-            aria-hidden
-            onClick={() => {
-              next() 
-              sendInfo()
-              sendMyInfo()
-              sendPreferInfo()
-            }}
-          >
-            &gt;
+          type="button"
+          aria-hidden
+          onClick={() => { prev(); }}
+        >
+          &lt;
+        </button>
+        <button
+          type="button"
+          aria-hidden
+          onClick={() => {
+            next();
+            sendInfo();
+            sendMyInfo();
+            sendPreferInfo();
+          }}
+        >
+          &gt;
         </button>
       </div>
     </div>

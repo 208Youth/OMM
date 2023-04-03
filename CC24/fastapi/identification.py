@@ -50,13 +50,16 @@ def detect_text(path, inputday, inputname, inputyear, inputmonth, inputgender):
     # Creates a Vision API Image object
     image = types.Image(content=content)
 
+    name_len = len(inputname)
+
     # Performs text detection on the image
     response = client.text_detection(image=image)
     texts = response.text_annotations
-    doc_type = (texts[0].description)[0:5]
-    name = (texts[0].description)[6:9]
-    birthday = (texts[0].description)[15:21]
-    gender = int((texts[0].description)[22:23])
+    parcingdata = texts[0].description.splitlines()
+    doc_type = (parcingdata[0])[:5]
+    name = (parcingdata[1])[: name_len]
+    birthday = (parcingdata[2])[:6]
+    gender = int((parcingdata[2])[7:8])
     if (gender == 1 or gender == 3):
         gender = 'MALE'
     elif (gender == 2 or gender == 4):
@@ -67,10 +70,10 @@ def detect_text(path, inputday, inputname, inputyear, inputmonth, inputgender):
     elif inputgender == '남':
         inputgender = 'MALE'
 
-    print(doc_type)
-    print(name)
-    print(birthday)
-    print(gender)
+    # print(doc_type)
+    # print(name)
+    # print(birthday)
+    # print(gender)
     # print(inputgender)
     # print(inputname)
     # print(inputmonth)

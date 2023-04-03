@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import axios from '../../api/http';
 import Navbar from '../../components/nav-bar';
 import Pslider from '../../components/Pslider';
+import http from '../../api/http';
 import './Main.css';
 import { lists } from '../../store/recSlice';
 
@@ -13,14 +14,22 @@ function Main() {
   const [userlist, setUserList] = useState();
   const [img, setImage] = useState();
   const [name, setName] = useState();
+  if (!localStorage.getItem('accesstoken')) {
+    const searchParams = new URLSearchParams(window.location.search);
+    const jwt = searchParams.get('jwt');
+    localStorage.setItem('accesstoken', jwt);
+  }
+  const token = localStorage.getItem('accesstoken');
 
   useEffect(() => {
     // 추천알고리즘 으로 나온 상대방 id 리스트 axios 요청
-    axios({
+    console.log(token);
+    http({
       method: 'get',
       url: '/recommend',
       headers: {
-        Authorization: import.meta.env.VITE_TOKEN,
+        // Authorization: import.meta.env.VITE_TOKEN,
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => {
@@ -36,11 +45,12 @@ function Main() {
   }, []);
 
   useEffect(() => {
-    axios({
+    http({
       method: 'get',
       url: `/recommend/member/${firstperson}`,
       headers: {
-        Authorization: import.meta.env.VITE_TOKEN,
+        // Authorization: import.meta.env.VITE_TOKEN,
+        Authorization: `Bearer ${token}`,
       },
     }).then((res) => {
       console.log(res);

@@ -1,7 +1,11 @@
 package com.omm.chat.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.omm.chat.model.dto.ChatRoomDto;
+import com.omm.chat.model.dto.request.CreateMessageRequestDto;
 import com.omm.chat.model.dto.request.CreateRoomRequestDto;
+import com.omm.chat.model.dto.response.GetRoomResponseDto;
+import com.omm.chat.model.entity.ChatMessage;
 import com.omm.chat.model.entity.ChatRoom;
 import com.omm.chat.repository.ChatRepository;
 import com.omm.exception.CustomException;
@@ -14,7 +18,10 @@ import com.omm.util.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +29,15 @@ public class ChatService {
     private final ChatRepository chatRepository;
     private final MemberRepository memberRepository;
     private final MemberImgRepository memberImgRepository;
+    private final ObjectMapper objectMapper;
+    private Map<Long, String> sessionIdFromMemberId;
+    private Map<String, String> roomIdFromSessionId;
+
+    @PostConstruct
+    private void init() {
+        this.roomIdFromSessionId = new ConcurrentHashMap<>();
+        this.sessionIdFromMemberId = new ConcurrentHashMap<>();
+    }
 
     /**
      * 채팅방 생성
@@ -53,10 +69,16 @@ public class ChatService {
         return myRooms;
     }
 
-    public ChatRoomDto getRoom(String roomId) {
+    public GetRoomResponseDto getRoom(String roomId) {
         Member myInfo = getMember();
         ChatRoom chatRoom = chatRepository.getRoom(roomId);
-        return getRoomDto(chatRoom, myInfo);
+        List<ChatMessage> messages = chatRepository.getMessages(roomId);
+        List<ChatMessage> chatMessages = new ArrayList<>();
+        for(Object messageObject : messages) {
+            ChatMessage message = objectMapper.convertValue(messageObject, ChatMessage.class);
+            chatMessages.add(message);
+        }
+        return new GetRoomResponseDto(getRoomDto(chatRoom, myInfo), chatMessages);
     }
 
     public ChatRoomDto getRoomDto(ChatRoom room, Member myInfo) {
@@ -106,5 +128,55 @@ public class ChatService {
         other.put("notReadIndex", chatRoom.getLastReadIndex().get(otherInfo.getId()));
 
         return other;
+    }
+
+    public ChatMessage createMessage(CreateMessageRequestDto messageDto, String user) {
+        Member myInfo = getMember(user);
+        ChatMessage message = new ChatMessage();
+        Long id = chatRepository.getMessageSize(messageDto.getRoomId()) + 1;
+        ChatRoom chatRoom = chatRepository.getRoom(message.getRoomId());
+
+        message.setId(id);
+        message.setRoomId(messageDto.getRoomId());
+        message.setContent(messageDto.getContent());
+        message.setCreatedTime(LocalDateTime.now());
+        message.setSenderId(myInfo.getId());
+        message.setReceiverId(messageDto.getReceiverId());
+        message.setRead(false);
+
+        if(sessionIdFromMemberId.get(messageDto.getReceiverId()) != null) {
+            String sessionId = sessionIdFromMemberId.get(messageDto.getReceiverId());
+            if (roomIdFromSessionId.get(sessionId).equals(chatRoom.getId())) {
+                message.setRead(true);
+            }
+        }
+
+        return message;
+    }
+
+    public void connectUser(String roomId, String websocketSessionId, Long myId) {
+        if(sessionIdFromMemberId.get(myId) != null) {
+            roomIdFromSessionId.remove(sessionIdFromMemberId.get(myId));
+        }
+        roomIdFromSessionId.put(websocketSessionId, roomId);
+        sessionIdFromMemberId.put(myId, websocketSessionId);
+    }
+
+    public void disconnectUser(String websocketSessionId, Long myId) {
+        if(roomIdFromSessionId.get(websocketSessionId) != null) {
+            roomIdFromSessionId.remove(websocketSessionId);
+        }
+        if(sessionIdFromMemberId.get(myId) != null) {
+            sessionIdFromMemberId.remove(myId);
+        }
+    }
+
+    public void enterRoom(String roomId, Long myId) {
+        ChatRoom chatRoom = chatRepository.getRoom(roomId);
+        Map<Long, Long> lastReadIndex = chatRoom.getLastReadIndex();
+        Long msgSize = chatRepository.getMessageSize(roomId);
+        lastReadIndex.put(myId, msgSize);
+        chatRoom.setLastReadIndex(lastReadIndex);
+        chatRepository.setRoom(chatRoom);
     }
 }
