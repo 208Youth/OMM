@@ -187,77 +187,203 @@ function MyProfile({ profileNav }) {
             // className={isHovered ? 'imagesetting:hover' : 'imagesetting'}
             // onMouseEnter={handleMouseEnter}
             // onMouseLeave={handleMouseLeave}
-            className="imagesetting"
-          >
-            <img src={imagesetting} alt="$" />
+              className="imagesetting"
+            >
+              <img src={imagesetting} alt="$" />
+            </div>
           </div>
-        </div>
 
-        <div className="profileinfo">
-          <div className="infodetail">
-            <div className="text-right">
-              <img
-                src={CloseBtn}
-                alt="closbtn"
-                className="w-8 h-8 inline-block object-right"
-              />
-            </div>
-
-            <span className="text-3xl ml-2">이름</span>
-            <span> 나이</span>
-            <div className="text-slate-500 text-sm ml-2">
-              <span className="inline-block">
-                <img src={location} alt="" width={10} />
-              </span>
-              <div className="flex justify-between">
-                <span className="mb-1">주소</span>
-                <span className="flex justify-end">위치수정</span>
+          <div className="profileinfo">
+            <div className="infodetail">
+              <div className="text-right">
+                <img
+                  src={CloseBtn}
+                  alt="closbtn"
+                  className="w-8 h-8 inline-block object-right"
+                />
               </div>
-            </div>
-            <div>
-              <hr className="thickhr" />
-              <div className="my-1">
-                <div className="text-2xl m-3">자기소개</div>
-                {/* 아이콘을 누르면 input이 가능하게 바꾸기 */}
-                <div className="text-slate-600 text-sm">자기소개 내용</div>
-                <span className="flex justify-end">
-                  <img src={pencil} alt="" />
+
+              <span className="text-3xl ml-2">이름</span>
+              <span> 나이</span>
+              <div className="text-slate-500 text-sm ml-2">
+                <span className="inline-block">
+                  <img src={location} alt="" width={10} />
                 </span>
+                <div className="flex justify-between">
+                  <span className="mb-1">주소</span>
+                  <span className="flex justify-end">위치수정</span>
+                </div>
               </div>
-              <hr className="thickhr" />
-              <div className="font-light">
-                <div className="text-2xl m-3 font-light">내 정보</div>
-                <div className="flex justify-between m-3">
-                  <div className="">
-                    <span>키</span>
-                  </div>
-                  <div>
-                    <div className="flex items-center">
-                      <span className="">180 cm</span>
-                      <div
-                        onClick={() => {
-                          openMyModal();
-                        }}
-                      >
-                        <img src={userarrow} alt="" className="w-3 ml-2" />
+              <div>
+                <hr className="thickhr" />
+                <div className="my-1">
+                  <div className="text-2xl m-3">자기소개</div>
+                  {/* 아이콘을 누르면 input이 가능하게 바꾸기 */}
+                  <div className="text-slate-600 text-sm">자기소개 내용</div>
+                  <span className="flex justify-end">
+                    <img src={pencil} alt="" />
+                  </span>
+                </div>
+                <hr className="thickhr" />
+                <div className="font-light">
+                  <div className="text-2xl m-3 font-light">내 정보</div>
+                  <div className="flex justify-between m-3">
+                    <div className="">
+                      <span>키</span>
+                    </div>
+                    <div>
+                      <div className="flex items-center">
+                        <span className="">180 cm</span>
+                        <div
+                          onClick={() => {
+                            openMyModal();
+                          }}
+                        >
+                          <img src={userarrow} alt="" className="w-3 ml-2" />
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <hr />
+                  <hr />
 
+                  <div className="flex justify-between m-3">
+                    <div className="">
+                      <span>음주 스타일</span>
+                    </div>
+                    <div>
+                      <div className="flex items-center">
+                        <span className="">{}</span>
+                        <div
+                          onClick={() => {
+                            openMyModal();
+                          }}
+                        >
+                          <img src={userarrow} alt="" className="w-3 ml-2" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                  <div className="flex justify-between m-3">
+                    <div className="">
+                      <span>고등학교</span>
+                    </div>
+                    <div>
+                      <div className="flex items-center">
+                        <span className="">{}</span>
+                        <div
+                          onClick={() => {
+                            openMyModal();
+                          }}
+                        >
+                          <img src={userarrow} alt="" className="w-3 ml-2" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                  <div className="flex justify-between m-3">
+                    <div className="">
+                      <span>연락 스타일</span>
+                    </div>
+                    <div>
+                      <div className="flex items-center">
+                        <span className="">{}</span>
+                        <div
+                          onClick={() => {
+                            openMyModal();
+                          }}
+                        >
+                          <img src={userarrow} alt="" className="w-3 ml-2" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                  <div className="flex justify-between m-3">
+                    <div className="">
+                      <span>흡연 스타일</span>
+                    </div>
+                    <div>
+                      <div className="flex items-center">
+                        <span className="">{}</span>
+                        <div
+                          onClick={() => {
+                            openMyModal();
+                          }}
+                        >
+                          <img src={userarrow} alt="" className="w-3 ml-2" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                  <div className="flex justify-between m-3">
+                    <div className="">
+                      <span>MBTI</span>
+                    </div>
+                    <div>
+                      <div className="flex items-center">
+                        <span className="">{}</span>
+                        <div
+                          onClick={() => {
+                            openMyModal();
+                          }}
+                        >
+                          <img src={userarrow} alt="" className="w-3 ml-2" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                  <div className="flex justify-between m-3">
+                    <div className="">
+                      <span>관심사</span>
+                    </div>
+                    <div
+                      onClick={() => {
+                        openMyModal3();
+                      }}
+                    >
+                      <div className="flex items-center">
+                        <span className="">{}</span>
+                        <div>
+                          <img src={userarrow} alt="" className="w-3 ml-2" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                  <div className="flex justify-between m-3">
+                    <div className="">
+                      <span>반려동물</span>
+                    </div>
+                    <div>
+                      <div className="flex items-center">
+                        <span className="">{}</span>
+                        <div
+                          onClick={() => {
+                            openMyModal();
+                          }}
+                        >
+                          <img src={userarrow} alt="" className="w-3 ml-2" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                </div>
+                <hr className="thickhr" />
+
+                <div className="text-2xl m-3 ">선호하는 상대정보</div>
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span>음주 스타일</span>
+                    <span>나이범위</span>
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="">{}</span>
-                      <div
-                        onClick={() => {
-                          openMyModal();
-                        }}
-                      >
+                      <span className=""> - 살</span>
+                      <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
                       </div>
                     </div>
@@ -266,16 +392,26 @@ function MyProfile({ profileNav }) {
                 <hr />
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span>고등학교</span>
+                    <span>키범위</span>
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="">{}</span>
-                      <div
-                        onClick={() => {
-                          openMyModal();
-                        }}
-                      >
+                      <span className=""> - cm</span>
+                      <div>
+                        <img src={userarrow} alt="" className="w-3 ml-2" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <hr />
+                <div className="flex justify-between m-3">
+                  <div className="">
+                    <span>거리 반경</span>
+                  </div>
+                  <div>
+                    <div className="flex items-center">
+                      <span className=""> - km</span>
+                      <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
                       </div>
                     </div>
@@ -289,64 +425,6 @@ function MyProfile({ profileNav }) {
                   <div>
                     <div className="flex items-center">
                       <span className="">{}</span>
-                      <div
-                        onClick={() => {
-                          openMyModal();
-                        }}
-                      >
-                        <img src={userarrow} alt="" className="w-3 ml-2" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <hr />
-                <div className="flex justify-between m-3">
-                  <div className="">
-                    <span>흡연 스타일</span>
-                  </div>
-                  <div>
-                    <div className="flex items-center">
-                      <span className="">{}</span>
-                      <div
-                        onClick={() => {
-                          openMyModal();
-                        }}
-                      >
-                        <img src={userarrow} alt="" className="w-3 ml-2" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <hr />
-                <div className="flex justify-between m-3">
-                  <div className="">
-                    <span>MBTI</span>
-                  </div>
-                  <div>
-                    <div className="flex items-center">
-                      <span className="">{}</span>
-                      <div
-                        onClick={() => {
-                          openMyModal();
-                        }}
-                      >
-                        <img src={userarrow} alt="" className="w-3 ml-2" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <hr />
-                <div className="flex justify-between m-3">
-                  <div className="">
-                    <span>관심사</span>
-                  </div>
-                  <div
-                    onClick={() => {
-                      openMyModal3();
-                    }}
-                  >
-                    <div className="flex items-center">
-                      <span className="">{}</span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
                       </div>
@@ -356,204 +434,127 @@ function MyProfile({ profileNav }) {
                 <hr />
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span>반려동물</span>
+                    <span>음주 스타일</span>
                   </div>
                   <div>
                     <div className="flex items-center">
                       <span className="">{}</span>
-                      <div
-                        onClick={() => {
-                          openMyModal();
-                        }}
-                      >
+                      <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
                       </div>
                     </div>
                   </div>
                 </div>
-                <hr />
-              </div>
-              <hr className="thickhr" />
-
-              <div className="text-2xl m-3 ">선호하는 상대정보</div>
-              <div className="flex justify-between m-3">
-                <div className="">
-                  <span>나이범위</span>
-                </div>
-                <div>
-                  <div className="flex items-center">
-                    <span className=""> - 살</span>
-                    <div>
-                      <img src={userarrow} alt="" className="w-3 ml-2" />
-                    </div>
+                <hr className="" />
+                <div className="flex justify-between m-3">
+                  <div className="">
+                    <span>흡연여부</span>
                   </div>
-                </div>
-              </div>
-              <hr />
-              <div className="flex justify-between m-3">
-                <div className="">
-                  <span>키범위</span>
-                </div>
-                <div>
-                  <div className="flex items-center">
-                    <span className=""> - cm</span>
-                    <div>
-                      <img src={userarrow} alt="" className="w-3 ml-2" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <hr />
-              <div className="flex justify-between m-3">
-                <div className="">
-                  <span>거리 반경</span>
-                </div>
-                <div>
-                  <div className="flex items-center">
-                    <span className=""> - km</span>
-                    <div>
-                      <img src={userarrow} alt="" className="w-3 ml-2" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <hr />
-              <div className="flex justify-between m-3">
-                <div className="">
-                  <span>연락 스타일</span>
-                </div>
-                <div>
-                  <div className="flex items-center">
-                    <span className="">{}</span>
-                    <div>
-                      <img src={userarrow} alt="" className="w-3 ml-2" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <hr />
-              <div className="flex justify-between m-3">
-                <div className="">
-                  <span>음주 스타일</span>
-                </div>
-                <div>
-                  <div className="flex items-center">
-                    <span className="">{}</span>
-                    <div>
-                      <img src={userarrow} alt="" className="w-3 ml-2" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <hr className="" />
-              <div className="flex justify-between m-3">
-                <div className="">
-                  <span>흡연여부</span>
-                </div>
-                <div>
-                  <div className="flex items-center">
-                    <span className="">{}</span>
-                    <div>
-                      <img src={userarrow} alt="" className="w-3 ml-2" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <hr className="" />
-              <div className="flex justify-between">
-                <span className="text-xl m-3 ">인증정보</span>
-                <div onClick={toCert} className="flex items-center m-2">
-                  <span className="">설정하기</span>
                   <div>
-                    <img src={userarrow} alt="" className="w-3 ml-2" />
+                    <div className="flex items-center">
+                      <span className="">{}</span>
+                      <div>
+                        <img src={userarrow} alt="" className="w-3 ml-2" />
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+                <hr className="" />
+                <div className="flex justify-between">
+                  <span className="text-xl m-3 ">인증정보</span>
+                  <div onClick={toCert} className="flex items-center m-2">
+                    <span className="">설정하기</span>
+                    <div>
+                      <img src={userarrow} alt="" className="w-3 ml-2" />
+                    </div>
+                  </div>
+                </div>
 
-              <div>
-                <div className="my-5 ml-5">
-                  <div className="inline-block">
-                    <Tooltip id="my-tooltip" />
-                    <img
-                      src={
+                <div>
+                  <div className="my-5 ml-5">
+                    <div className="inline-block">
+                      <Tooltip id="my-tooltip" />
+                      <img
+                        src={
                         new_certinfo.health === true ? health_yes : health_no
                       }
-                      alt="#"
-                      className="badges"
-                      data-tooltip-id="my-tooltip"
-                      data-tooltip-content={`건강데이터넣을것임 ${new_certinfo.health}`}
-                    />
-                  </div>
-                  <div className="inline-block">
-                    <img
-                      src={
+                        alt="#"
+                        className="badges"
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content={`건강데이터넣을것임 ${new_certinfo.health}`}
+                      />
+                    </div>
+                    <div className="inline-block">
+                      <img
+                        src={
                         new_certinfo.university === true
                           ? university_yes
                           : university_no
                       }
-                      alt="#"
-                      className="badges"
-                      data-tooltip-id="my-tooltip"
-                      data-tooltip-content={` ${''}`}
-                    />
-                  </div>
-                  <div className="inline-block">
-                    <img
-                      src={new_certinfo.job === true ? job_yes : job_no}
-                      alt="#"
-                      className="badges"
-                      data-tooltip-id="my-tooltip"
-                      data-tooltip-content={` ${''}`}
-                    />
-                  </div>
-                  <div className="inline-block">
-                    <img
-                      src={
+                        alt="#"
+                        className="badges"
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content={` ${''}`}
+                      />
+                    </div>
+                    <div className="inline-block">
+                      <img
+                        src={new_certinfo.job === true ? job_yes : job_no}
+                        alt="#"
+                        className="badges"
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content={` ${''}`}
+                      />
+                    </div>
+                    <div className="inline-block">
+                      <img
+                        src={
                         new_certinfo.certificate === true
                           ? certificate_yes
                           : certificate_no
                       }
-                      alt="#"
-                      className="badges"
-                      data-tooltip-id="my-tooltip"
-                      data-tooltip-content={` ${''}`}
-                    />
-                  </div>
-                  <div className="inline-block">
-                    <img
-                      src={
+                        alt="#"
+                        className="badges"
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content={` ${''}`}
+                      />
+                    </div>
+                    <div className="inline-block">
+                      <img
+                        src={
                         new_certinfo.estate === true ? estate_yes : estate_no
                       }
-                      alt="#"
-                      className="badges"
-                      data-tooltip-id="my-tooltip"
-                      data-tooltip-content={` ${''}`}
-                    />
-                  </div>
-                  <div className="inline-block">
-                    <img
-                      src={
+                        alt="#"
+                        className="badges"
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content={` ${''}`}
+                      />
+                    </div>
+                    <div className="inline-block">
+                      <img
+                        src={
                         new_certinfo.income === true ? income_yes : income_no
                       }
-                      alt="#"
-                      className="badges"
-                      data-tooltip-id="my-tooltip"
-                      data-tooltip-content={` ${''}`}
-                    />
+                        alt="#"
+                        className="badges"
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content={` ${''}`}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-              <hr />
-              <div className="text-xl">Oh my my</div>
-              <div>
-                <InterestList interest={interest} />
+                <hr />
+                <div className="text-xl">Oh my my</div>
+                <div>
+                  <InterestList interest={interest} />
 
-                <div />
+                  <div />
+                </div>
               </div>
             </div>
           </div>
+          <Navbar profileNav={profileNav} />
         </div>
-        <Navbar profileNav={profileNav} />
       </div>
     </div>
   );
