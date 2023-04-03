@@ -2,18 +2,14 @@ import React, { useState, useEffect } from 'react';
 import Img from '../assets/testprofile.png';
 
 function ChatRoom({ chat }) {
-  const [lastmessage, setLastmessage] = useState(
-    '내가 그대를 사랑해도 될까요..제발',
-  );
   const [lasttime, setLasttime] = useState(null);
-  const [count, setCount] = useState(111);
+  const [notread, setNotRead] = useState('');
 
   useEffect(() => {
     const now = new Date();
     const compareTime = new Date(chat.lastMsgTime);
     let timeDiff = now.getTime() - compareTime.getTime(); // 밀리초 단위의 차이
     let minutesDiff = Math.floor(timeDiff / 1000 / 60); // 분 단위의 차이
-
     if (minutesDiff >= 60) {
       const hourDiff = Math.floor(minutesDiff / 60);
       if (hourDiff >= 24 && hourDiff <= 72) {
@@ -36,7 +32,15 @@ function ChatRoom({ chat }) {
     // 오늘 -> 몇 초(1분 이내), 몇 분(1시간 이내), 몇 시간(24시간 이내)
     // 어제
     // 3일 전이상 -> 날짜로 표시 (올해 이면 월, 일 / 올해가 아니면 년, 월, 일)
-  });
+    const read = chat.msgs - chat.myNotReadIndex;
+    if (read === 0) {
+      setNotRead(null);
+    } else if (read >= 99) {
+      setNotRead('99+');
+    } else {
+      setNotRead(`${read}`);
+    }
+  }, [chat]);
 
   return (
     <div className="w-[312px] h-[4.7rem] flex p-3 bg-white bg-opacity-60 text-xs rounded-lg mb-1">
@@ -45,8 +49,7 @@ function ChatRoom({ chat }) {
         <img src={Img} alt="사진" />
       </div>
       <div className="self-center w-40 ml-3">
-        {/* <div className="text-xs mb-1">{chat.other.nickname}</div> */}
-        <div className="text-xs mb-1">보영</div>
+        <div className="text-xs mb-1">{chat.other.nickname}</div>
         <div className="font-sans font-semibold text-[0.7rem] text-gray-500 overflow-x-hidden text-ellipsis whitespace-nowrap">
           {chat.content}
         </div>
@@ -59,16 +62,16 @@ function ChatRoom({ chat }) {
         <div className="text-[0.3rem] font-sans font-semibold mb-1 text-gray-500 mx-auto">
           {lasttime}
         </div>
-        {100 - 100 && (
+        {notread && (
           <div className="rounded-xl w-7 h-fit bg-white text-center text-[0.5rem] mx-auto">
-            {100 - 100 > 99 ? '99+' : count}
+            {notread}
           </div>
         )}
-        {/* {chat.msgs - chat.myNotReadIndex && (
+        {!notread && (
           <div className="rounded-xl w-7 h-fit bg-white text-center text-[0.5rem] mx-auto">
-            {chat.msgs - chat.myNotReadIndex > 99 ? '99+' : count}
+            {notread}
           </div>
-        )} */}
+        )}
       </div>
     </div>
   );
