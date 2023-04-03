@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Img from '../assets/testprofile.png';
 
-function ChatRoom({ chat }) {
+function ChatRoom({ chat, moveTo }) {
   const [lasttime, setLasttime] = useState(null);
   const [notread, setNotRead] = useState('');
 
@@ -34,7 +34,7 @@ function ChatRoom({ chat }) {
     // 3일 전이상 -> 날짜로 표시 (올해 이면 월, 일 / 올해가 아니면 년, 월, 일)
     const read = chat.msgs - chat.myNotReadIndex;
     if (read === 0) {
-      setNotRead(null);
+      setNotRead('0');
     } else if (read >= 99) {
       setNotRead('99+');
     } else {
@@ -43,7 +43,13 @@ function ChatRoom({ chat }) {
   }, [chat]);
 
   return (
-    <div className="w-[312px] h-[4.7rem] flex p-3 bg-white bg-opacity-60 text-xs rounded-lg mb-1">
+    <div
+      onClick={() => {
+        moveTo(true);
+      }}
+      aria-hidden
+      className="w-[312px] h-[4.7rem] flex p-3 bg-white bg-opacity-60 text-xs rounded-lg mb-1"
+    >
       <div className="w-10 h-10 self-center rounded-full">
         {/* <img src={chat.other.image} alt="사진" /> */}
         <img src={Img} alt="사진" />
@@ -56,17 +62,21 @@ function ChatRoom({ chat }) {
       </div>
       <div
         className={
-          lasttime.length > 8 ? 'self-center ml-1' : 'self-center ml-6'
+          lasttime?.length > 8 ? 'self-center ml-1' : 'self-center ml-6'
         }
       >
         <div className="text-[0.3rem] font-sans font-semibold mb-1 text-gray-500 mx-auto">
           {lasttime}
         </div>
-        {notread && (
-          <div className="rounded-xl w-7 h-fit bg-white text-center text-[0.5rem] mx-auto">
-            {notread}
-          </div>
-        )}
+        <div
+          className={
+            notread === '0'
+              ? 'rounded-xl w-7 h-fit bg-white text-center text-[0.5rem] mx-auto invisible'
+              : 'rounded-xl w-7 h-fit bg-white text-center text-[0.5rem] mx-auto'
+          }
+        >
+          {notread}
+        </div>
         {!notread && (
           <div className="rounded-xl w-7 h-fit bg-white text-center text-[0.5rem] mx-auto">
             {notread}
