@@ -3,6 +3,7 @@ package com.omm.admin.service;
 import com.omm.admin.model.dto.ReportDto;
 import com.omm.admin.model.request.CreateReportRequestDto;
 import com.omm.admin.model.request.PunishMemberRequestDto;
+import com.omm.admin.model.response.GetReportResponseDto;
 import com.omm.repository.ReportRepository;
 import com.omm.exception.admin.ReportExceptionCode;
 import com.omm.exception.admin.ReportRuntimeException;
@@ -66,22 +67,20 @@ public class AdminService {
      *
      * @return
      */
-    public List<ReportDto> getReportList() {
+    public List<GetReportResponseDto> getReportList() {
         // 모든 리포트를 가져온다
         List<Report> reports = reportRepository.findAll();
         // 반환할 형식 리스트를 생성한다
-        List<ReportDto> result = new ArrayList<>();
+        List<GetReportResponseDto> result = new ArrayList<>();
         // 반환할 리스트로 하나씩 넣는다
         reports.forEach(report -> {
-            result.add(ReportDto.builder()
-                    .reportId(report.getId())
-                    .memberId(report.getMember().getId())
-                    .targetId(report.getReported().getId())
-                    .reason(report.getReason())
-                    .image(report.getImage())
-                    .state(report.isState())
-                    .category(report.getCategory().name()).build()
-            );
+            result.add(GetReportResponseDto.builder()
+                            .reportId(report.getId())
+                            .memberNickname(report.getMember().getNickname())
+                            .reportedMemberNickname(report.getReported().getNickname())
+                            .state(report.isState())
+                            .category(report.getCategory().name())
+                    .build());
         });
         return result;
     }
