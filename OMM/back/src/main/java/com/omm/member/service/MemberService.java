@@ -1,16 +1,15 @@
 package com.omm.member.service;
 
+import com.omm.exception.CustomException;
 import com.omm.exception.member.MemberExceptionCode;
 import com.omm.exception.member.MemberRuntimeException;
 import com.omm.member.model.dto.*;
 import com.omm.member.model.request.*;
-import com.omm.member.model.response.GetInterestListResponseDto;
-import com.omm.member.model.response.GetLikedMembersResponseDto;
-import com.omm.member.model.response.GetMemberFilteringResponseDto;
-import com.omm.member.model.response.GetMemberInfoResponseDto;
+import com.omm.member.model.response.*;
 import com.omm.model.entity.*;
 import com.omm.model.entity.enums.*;
 import com.omm.repository.*;
+import com.omm.util.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -63,10 +62,10 @@ public class MemberService {
                     .didAddress(registDto.getHolderDid())
                     .age(registDto.getAge())
                     .gender(registDto.getGender())
+                    .imageUrl(registDto.getImageUrl())
                     .build();
             System.out.println(member.toString());
             memberRepository.save(member);
-            System.out.println(member.toString());
         } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
         }
@@ -617,6 +616,29 @@ public class MemberService {
         } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
         }
+
+    }
+
+    public GetMemberCertResponseDto getMemberCert(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> {
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        });
+        MemberCert memberCert = memberCertRepository.findByMember(member)
+                .orElse(new MemberCert());
+        return GetMemberCertResponseDto.builder()
+                .university(memberCert.getUniversityName() == null ?
+                        null : memberCert.getUniversityName())
+                .job(memberCert.getJobNames() == null ?
+                        null : memberCert.getJobNames())
+                .certificate(memberCert.getCertificateNames() == null ?
+                        null : memberCert.getCertificateNames())
+                .estate(memberCert.getEstateAmount() == null ?
+                        null : Long.valueOf(memberCert.getEstateAmount()))
+                .health(memberCert.getHealthInfo() == null ?
+                        null : memberCert.getHealthInfo())
+                .income(memberCert.getIncomeAmount() == null ?
+                        null : Long.valueOf(memberCert.getIncomeAmount()))
+                .build();
 
     }
 }

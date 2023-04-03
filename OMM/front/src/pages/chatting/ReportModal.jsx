@@ -14,7 +14,7 @@ function ReportModal({ setReportModal }) {
     state: false,
     category: 'SEXUAL_HARASS',
   });
-
+  const token = localStorage.getItem('accessToken');
   const encodeFileToBase64 = (fileBlob) => {
     setFile(fileBlob);
     setReport((prev) => ({
@@ -45,7 +45,8 @@ function ReportModal({ setReportModal }) {
     await http
       .post('/admin/report', formData, {
         headers: {
-          Authorization: import.meta.env.VITE_TOKEN, // TODO: 임시 토큰 부여
+          // Authorization: import.meta.env.VITE_TOKEN,
+          Authorization: `Bearer ${token}`, // TODO: 임시 토큰 부여
         },
       })
       .then((res) => {

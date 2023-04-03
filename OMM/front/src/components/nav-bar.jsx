@@ -4,14 +4,16 @@ import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import './nav-bar.scss';
 import { Link } from 'react-router-dom';
-import axios from '../api/http';
 
-function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav }) {
+function Navbar({
+  profileNav, mainNav, notiNav, chatlistNav, likesNav,
+}) {
   let stompClient;
-
+  const token = localStorage.getItem('accesstoken');
   const mainconnect = () => {
     const headers = {
-      Authorization: import.meta.env.VITE_TOKEN,
+      // Authorization: import.meta.env.VITE_TOKEN,
+      Authorization: `Bearer ${token}`,
     };
     const ws = new SockJS('http://localhost:5000/api/matching');
     stompClient = Stomp.over(ws);
@@ -34,7 +36,8 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav }) {
   };
   const chatlistconnect = () => {
     const headers = {
-      Authorization: import.meta.env.VITE_TOKEN,
+      // Authorization: import.meta.env.VITE_TOKEN,
+      Authorization: token,
     };
     const ws = new SockJS('http://localhost:5000/api/chat');
     stompClient = Stomp.over(ws);
@@ -60,7 +63,8 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav }) {
     // redux 에서 첫번째사람 지우는 함수 작성
     // match 알림 보내기
     const headers = {
-      Authorization: import.meta.env.VITE_TOKEN,
+      // Authorization: import.meta.env.VITE_TOKEN,
+      Authorization: `Bearer ${token}`,
     };
     console.log(stompClient);
     stompClient.send(

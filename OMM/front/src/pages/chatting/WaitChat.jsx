@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router';
 function WaitChat() {
   // const [load, setLoad] = useState(null);
   const [chatid, setChatId] = useState(null);
-
+  const token = localStorage.getItem('accesstoken');
   const navigate = useNavigate();
 
   let stompClient;
@@ -16,7 +16,8 @@ function WaitChat() {
   const websocket = () => {
     const ws = new SockJS('http://localhost:5000/api/chat');
     const headers = {
-      Authorization: import.meta.env.VITE_TOKEN, // 매칭 수락한사람의 토큰
+      // Authorization: import.meta.env.VITE_TOKEN,
+      Authorization: token, // 매칭 수락한사람의 토큰
     };
     stompClient = Stomp.over(ws);
 
@@ -40,11 +41,13 @@ function WaitChat() {
 
   const createChatting = () => {
     const headers = {
-      Authorization: import.meta.env.VITE_TOKEN, // 매칭 수락한사람의 토큰
+      // Authorization: import.meta.env.VITE_TOKEN,
+      Authorization: `Bearer ${token}`, // 매칭 수락한사람의 토큰
     };
     console.log(stompClient);
-    const token = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkaWQ6ZXRocjpnb2VybGk6MHgwM2RmOGU1NGEzMGUzOTA2ZDI0M2Q3NDAyYzU5YjgyYjVkODU0MjIzYmEzYWU5NjllYTIzZDJjMTJiOGRhNDljNWUiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjgwNDM3MzI0fQ.8mpP75fhreoO6sKLCjQ_JzGLRmgO7TjsQu0C8T20zHOzTdb212aB9nIXldAcDjr0j3vGwbYGjE3JiDWaOEA3oA';
-    const decoded = jwt_decode(token);
+    const token1 =
+      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkaWQ6ZXRocjpnb2VybGk6MHgwM2RmOGU1NGEzMGUzOTA2ZDI0M2Q3NDAyYzU5YjgyYjVkODU0MjIzYmEzYWU5NjllYTIzZDJjMTJiOGRhNDljNWUiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjgwNDM3MzI0fQ.8mpP75fhreoO6sKLCjQ_JzGLRmgO7TjsQu0C8T20zHOzTdb212aB9nIXldAcDjr0j3vGwbYGjE3JiDWaOEA3oA';
+    const decoded = jwt_decode(token1);
     stompClient.connect(headers, (frame) => {
       stompClient.subscribe(`/sub/chat/room/${decoded.sub}`, (message) => {
         console.log(message);
@@ -68,9 +71,9 @@ function WaitChat() {
   //   const headers = {
   //     Authorization: import.meta.env.VITE_TOKEN_3, // 매칭 수락한사람의 토큰
   //   };
-  //   const token =
+  //   const token3 =
   //     '0x7786ce5e8413e6ac73bf4c7283b20f574640dc14eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIweDc3ODZjZTVlODQxM2U2YWM3M2JmNGM3MjgzYjIwZjU3NDY0MGRjMTQiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNzY2NzQxODMyfQ.7BnOYQdP1p9_VDVnehTnGoIsEmpG2OZ31ONBbdWh03ap0XX7fDbuZCtDhT2xDGh_xLYWVksqkzFlN8hDBKPhUQ';
-  //   const decoded = jwt_decode(token);
+  //   const decoded = jwt_decode(token3);
   //   console.log('해독됨', decoded.sub);
   //   await stompClient.connect(
   //     headers,
