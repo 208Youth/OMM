@@ -12,6 +12,7 @@ import PasswordModal from './PasswordModal';
 import { userInfo, idenVC, certInfo } from '../../store/userSlice';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import http from '../../api/springapi';
 
 function Signup() {
   const navigate = useNavigate();
@@ -29,9 +30,9 @@ function Signup() {
   const [img, setImg] = useState(null);
   const dispatch = useDispatch();
   const id = useSelector((state) => state.user.id);
-  
+
   console.log(localStorage.getItem('DID'));
-  if (localStorage.getItem('DID')){
+  if (localStorage.getItem('DID')) {
     navigate('/main');
   }
   const sendInfo = () => {
@@ -66,14 +67,15 @@ function Signup() {
     data.append('signature', id.signature);
     data.append('image', img);
     for (let key of data.keys()) {
-      console.log(key, ":", data.get(key));
+      console.log(key, ':', data.get(key));
     }
 
-    await axios({
+    // await axios({
+    await http({
       method: 'post',
-      url: 'http://localhost:4424/api/node/credential/personal-id',
+      // url: 'http://localhost:4424/api/node/credential/personal-id',
+      url: '/credential/personal-id',
       data: data,
-
     })
       .then((res) => {
         console.log('성공!!!!!!!!', res);
@@ -125,7 +127,9 @@ function Signup() {
       >
         <FaceRecogModal
           setFaceModal={setFaceModal}
-          img={(res) => {setImg(res)}}
+          img={(res) => {
+            setImg(res);
+          }}
           setFaceComplete={(res) => {
             if (res) {
               setFaceComplete(true);
@@ -141,7 +145,7 @@ function Signup() {
         className="Modal"
         overlayClassName="Overlay"
       >
-        <IdenModal 
+        <IdenModal
           setIdenModal={setIdenModal}
           setIdenComplete={(res) => {
             if (res) {
