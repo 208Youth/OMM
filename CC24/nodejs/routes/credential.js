@@ -96,7 +96,9 @@ router.post("/did-address", async (req, res) => {
     await did.verifyHolderDid(holderDid);
 
     const vcJwt = await did.issueVC(holderDid, "DidAddressCredential", {
-      holderDid: holderDid,
+      did: {
+        address: holderDid,
+      },
     });
 
     res.json({ vcJwt: vcJwt });
