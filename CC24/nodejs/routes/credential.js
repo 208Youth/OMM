@@ -82,31 +82,6 @@ router.post("/personal-id", upload.single("image"), async (req, res) => {
     });
     // console.log(vcJwt);
     res.json({ vcJwt: vcJwt });
-
-    // let url = "";
-    // let vcJwt = "";
-
-    // let parsePersonalId = JSON.parse(personalId);
-    // url = await store
-    //   .uploadImageToFirebase(req.file)
-    //   .then(async () => {
-    //     parsePersonalId.imageUrl = url;
-    //     console.log("stage 1");
-    //     console.log(url);
-    //   })
-    //   .then(async () => {
-    //     console.log("stage 2");
-    //     vcJwt = await did.issueVC(holderDid, "PersonalIdCredential", {
-    //       personalId: parsePersonalId,
-    //     });
-    //     console.log("stage 3");
-    //     console.log(vcJwt);
-    //     console.log("stage 4");
-    //     res.json({ vcJwt: vcJwt });
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
   } catch (error) {
     console.error(error.message);
     res.status(400).json({ error: error.message });
