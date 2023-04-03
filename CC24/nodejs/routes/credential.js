@@ -75,7 +75,7 @@ router.post("/personal-id", upload.single("image"), async (req, res) => {
     let parsePersonalId = JSON.parse(personalId);
 
     const url = await store.uploadImageToFirebase(req.file);
-    parsePersonalId.imageUrl = url;
+    parsePersonalId.imageUrl = url[0];
 
     const vcJwt = await did.issueVC(holderDid, "PersonalIdCredential", {
       personalId: parsePersonalId,

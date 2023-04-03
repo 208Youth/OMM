@@ -37,7 +37,7 @@ const uploadImageToFirebase = (file) => {
         return bucket.file(fileName).getSignedUrl(config);
       })
       .then((url) => {
-        console.log(`URL for ${fileName}: ${url}`);
+        // console.log(`URL for ${fileName}: ${url}`);
         resolve(url);
       })
       .catch((error) => {
