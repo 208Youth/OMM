@@ -111,4 +111,16 @@ public class TokenProvider implements InitializingBean {
         }
         return false;
     }
+
+    public Long getExpiration(String token) {
+        Claims claims = Jwts
+            .parserBuilder()
+            .setSigningKey(key)
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
+
+        return claims.getExpiration().getTime();
+    }
+
 }
