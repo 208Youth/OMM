@@ -1,4 +1,6 @@
-function Report({ report, index }) {
+function Report({
+  report, index, isProcessed, moveTo,
+}) {
   const category = {
     SEXUAL_HARASS: '성희롱',
     PROMOTION: '홍보, 광고',
@@ -8,7 +10,14 @@ function Report({ report, index }) {
   };
 
   return (
-    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+    <tr
+      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+      onClick={() => {
+        if (!isProcessed) {
+          moveTo(true);
+        }
+      }}
+    >
       <th
         scope="row"
         className="px-3 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
