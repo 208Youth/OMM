@@ -69,10 +69,16 @@ public class ChatService {
         return myRooms;
     }
 
-    public ChatRoomDto getRoom(String roomId) {
+    public GetRoomResponseDto getRoom(String roomId) {
         Member myInfo = getMember();
         ChatRoom chatRoom = chatRepository.getRoom(roomId);
-        return getRoomDto(chatRoom, myInfo);
+        List<ChatMessage> messages = chatRepository.getMessages(roomId);
+        List<ChatMessage> chatMessages = new ArrayList<>();
+        for(Object messageObject : messages) {
+            ChatMessage message = objectMapper.convertValue(messageObject, ChatMessage.class);
+            chatMessages.add(message);
+        }
+        return new GetRoomResponseDto(getRoomDto(chatRoom, myInfo), chatMessages);
     }
 
     public ChatRoomDto getRoomDto(ChatRoom room, Member myInfo) {
@@ -137,9 +143,7 @@ public class ChatService {
         message.setSenderId(myInfo.getId());
         message.setReceiverId(messageDto.getReceiverId());
         message.setRead(false);
-        /**
-         * TODO : 상대방 연결 여부 확인
-         */
+
         if(sessionIdFromMemberId.get(messageDto.getReceiverId()) != null) {
             String sessionId = sessionIdFromMemberId.get(messageDto.getReceiverId());
             if (roomIdFromSessionId.get(sessionId).equals(chatRoom.getId())) {
