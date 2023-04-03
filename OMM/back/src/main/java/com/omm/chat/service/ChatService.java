@@ -69,10 +69,16 @@ public class ChatService {
         return myRooms;
     }
 
-    public ChatRoomDto getRoom(String roomId) {
+    public GetRoomResponseDto getRoom(String roomId) {
         Member myInfo = getMember();
         ChatRoom chatRoom = chatRepository.getRoom(roomId);
-        return getRoomDto(chatRoom, myInfo);
+        List<ChatMessage> messages = chatRepository.getMessages(roomId);
+        List<ChatMessage> chatMessages = new ArrayList<>();
+        for(Object messageObject : messages) {
+            ChatMessage message = objectMapper.convertValue(messageObject, ChatMessage.class);
+            chatMessages.add(message);
+        }
+        return new GetRoomResponseDto(getRoomDto(chatRoom, myInfo), chatMessages);
     }
 
     public ChatRoomDto getRoomDto(ChatRoom room, Member myInfo) {
