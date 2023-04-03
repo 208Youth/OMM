@@ -48,7 +48,7 @@ function Login() {
     .catch((err) => {
       console.log(err);
     });
-  // navigate('/main');
+  navigate('/main');
   };
   const ommLogin = async () => {
     const vpPayload = {
