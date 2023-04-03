@@ -5,7 +5,7 @@ module.exports = function (app) {
     '/api/spring',
     createProxyMiddleware({
       // target: "http://localhost:3324",
-      target: process.env.SPRING_API_URL,
+      target: process.env.REACT_APP_SPRING_API_URL,
       changeOrigin: true,
     })
   );
@@ -13,7 +13,7 @@ module.exports = function (app) {
     '/api/node',
     createProxyMiddleware({
       // target: 'http://localhost:4424',
-      target: process.env.NODE_API_URL,
+      target: process.env.REACT_APP_NODE_API_URL,
       changeOrigin: true,
     })
   );
@@ -21,7 +21,7 @@ module.exports = function (app) {
     '/api/fast',
     createProxyMiddleware({
       // target: 'http://localhost:8000',
-      target: process.env.FAST_API_URL,
+      target: process.env.REACT_APP_FAST_API_URL,
       changeOrigin: true,
     })
   );
@@ -29,7 +29,7 @@ module.exports = function (app) {
     '/api',
     createProxyMiddleware({
       // target: 'http://localhost:5000',
-      target: process.env.OMM_SPRING_API_URL,
+      target: process.env.REACT_APP_OMM_SPRING_API_URL,
       changeOrigin: true,
     })
   );
