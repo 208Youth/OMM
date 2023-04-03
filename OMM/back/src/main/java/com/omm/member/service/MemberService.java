@@ -63,10 +63,10 @@ public class MemberService {
                     .didAddress(registDto.getHolderDid())
                     .age(registDto.getAge())
                     .gender(registDto.getGender())
+                    .imageUrl(registDto.getImageUrl())
                     .build();
             System.out.println(member.toString());
             memberRepository.save(member);
-            System.out.println(member.toString());
         } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
         }
