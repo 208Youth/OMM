@@ -57,7 +57,6 @@ def detect_text(path, inputday, inputname, inputyear, inputmonth, inputgender):
     name = (texts[0].description)[6:9]
     birthday = (texts[0].description)[15:21]
     gender = int((texts[0].description)[22:23])
-    print(gender)
     if (gender == 1 or gender == 3):
         gender = 'MALE'
     else:
