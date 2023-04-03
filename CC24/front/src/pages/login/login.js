@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import Password from './Password';
 import Agree from './Agree';
@@ -14,14 +14,26 @@ function Login() {
   const searchParams = new URLSearchParams(window.location.search);
   const type = searchParams.get('type');
   console.log(type);
-  const did = JSON.parse(localStorage.getItem('DID')).did;
-  const iden = JSON.parse(localStorage.getItem('keypair')).identifier;
-  const pk = JSON.parse(localStorage.getItem('keypair')).privateKey;
-  const ethrDidOnGoerliNamed = new EthrDID({
-    identifier: iden,
-    privateKey: pk,
-    chainNameOrId: 'goerli',
-  });
+  const [did, setDid] = useState(null);
+  const [iden, setIden] = useState(null);
+  const [pk, setPK] = useState(null);
+  const [isMember, setIsMember] = useState(false);
+  let ethrDidOnGoerliNamed = ''
+  useEffect(() => {
+    if (localStorage.getItem('DID') === null) { setTimeout(() => {
+      navigate('/signup')}, 3000)}
+    else if (localStorage.getItem('DID')!= null) {
+      setIsMember(true)
+      setDid(JSON.parse(localStorage.getItem('DID')).did);
+      setIden(JSON.parse(localStorage.getItem('keypair')).identifier);
+      setPK(JSON.parse(localStorage.getItem('keypair')).privateKey);
+      ethrDidOnGoerliNamed = new EthrDID({
+        identifier: JSON.parse(localStorage.getItem('keypair')).identifier,
+        privateKey: JSON.parse(localStorage.getItem('keypair')).privateKey,
+        chainNameOrId: 'goerli',
+      });
+    }
+  }, [])
   const [isLoading, setIsLoading] = useState(false);
   // const [vc, setVC] = useState('');
   let vc = ''
@@ -127,7 +139,12 @@ function Login() {
         className="Modal"
         overlayClassName="Overlay"
       >
-        <Password
+        { !isMember && 
+          <div>
+            <p className='text-xl mt-10 text-center mb-4 leading-relaxed'>회원이 아니시군요! 회원가입 페이지로 이동합니다.</p>
+          </div>
+        }
+        { isMember && <Password
           setPasswordModal={setPasswordModal}
           setPasswordComplete={(res) => {
             if (res) {
@@ -135,7 +152,7 @@ function Login() {
               if (type == 'SIGNIN') getVC();
             }
           }}
-        />
+        />}
       </Modal>
     </div>
   );

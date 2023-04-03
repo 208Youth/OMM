@@ -9,7 +9,13 @@ import "swiper/css/effect-cards";
 import { EffectCards } from "swiper";
 
 function Main() {
-  const certList = useSelector((state) => state.user.cert);
+  const cert = useSelector((state) => state.user.cert);
+  let certList = []
+  if (localStorage.getItem('IdenVC')) {
+    console.log(localStorage.getItem('IdenVC'));
+    certList.push('신분증')
+  }
+  certList.push(...cert)
   console.log(certList);
   return (
     <div className="flex px-10">
