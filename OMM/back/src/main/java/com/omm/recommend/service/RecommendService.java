@@ -175,12 +175,12 @@ public class RecommendService {
         MyInfo myInfo = myInfoRepository.findByMember(member)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
-        List<MemberImg> memberImgList = memberImgRepository.findAllById(memberId);
+        List<MemberImg> memberImgList = memberImgRepository.findAllByMember(member);
 
         List<InterestList> interestList = interestListRepository.findAllByMember(member);
 
         try {
-            List<Blob> images = new ArrayList<>();
+            List<byte[]> images = new ArrayList<>();
             memberImgList.forEach((memberImg -> {
                 images.add(memberImg.getImageContent());
             }));

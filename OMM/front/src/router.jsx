@@ -24,6 +24,7 @@ import ImageUploader from './pages/profile/ImageUploader';
 import Login from './pages/login/login';
 import LikeList from './pages/like/LikeList';
 import WaitChat from './pages/chatting/WaitChat';
+import ImageGetTest from './pages/profile/ImageGetTest';
 
 const router = createBrowserRouter([
   {
@@ -121,6 +122,10 @@ const router = createBrowserRouter([
   {
     path: '/loading',
     element: <WaitChat />,
+  },
+  {
+    path: '/imagetest',
+    element: <ImageGetTest />,
   },
 ]);
 
