@@ -18,7 +18,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -95,11 +97,20 @@ public class AdminService {
         // 해당 리포트를 찾는다
         Report report = reportRepository.findById(reportId)
                 .orElseThrow(() -> new ReportRuntimeException(ReportExceptionCode.REPORT_NOT_FOUND));
+        Map<String, Object> memberInfo = new HashMap<>();
+        Member member = report.getMember();
+        memberInfo.put("memberId", member.getId());
+        memberInfo.put("memberNickname", member.getNickname());
+
+        Map<String, Object> reportedMemberInfo = new HashMap<>();
+        Member reportedMember = report.getReported();
+        reportedMemberInfo.put("reportedMemberId", reportedMember.getId());
+        reportedMemberInfo.put("reportedMemberNickname", reportedMember.getNickname());
         // 반환 형식에 맞게 변경하여 전송한다.
         ReportDto result = ReportDto.builder()
                 .reportId(report.getId())
-                .memberId(report.getMember().getId())
-                .targetId(report.getReported().getId())
+                .memberInfo(memberInfo)
+                .reportedMemberInfo(reportedMemberInfo)
                 .reason(report.getReason())
                 .image(report.getImage())
                 .state(report.isState())
