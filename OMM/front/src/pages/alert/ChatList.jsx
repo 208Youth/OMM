@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ChatRoom from '../../components/ChatRoom';
 import Navbar from '../../components/nav-bar';
 import http from '../../api/http';
 
 function ChatList() {
   const [chats, setChats] = useState([]);
+
+  const navigate = useNavigate();
 
   async function getChatList() {
     await http({
@@ -23,6 +26,11 @@ function ChatList() {
       });
   }
 
+  const gotoChatwindow = (id) => {
+    navigate(`/Chatwindow/:${id}`);
+    console.log('가자');
+  };
+
   useEffect(() => {
     getChatList();
   }, []);
@@ -38,7 +46,17 @@ function ChatList() {
         <span className="ml-3 font-sans font-bold">Chattings</span>
       </div>
       <div className="mx-6">
-        {chats && chats.map((chat) => <ChatRoom chat={chat} />)}
+        {chats &&
+          chats.map((chat) => (
+            <ChatRoom
+              chat={chat}
+              moveTo={(res) => {
+                if (res) {
+                  gotoChatwindow(chat.id);
+                }
+              }}
+            />
+          ))}
         {!chats && (
           <div className="h-[22.5rem] flex justify-center">
             <div className="my-auto">아직 매칭이 되지 않았어요ㅠ.ㅠ</div>
