@@ -45,8 +45,8 @@ function ReportModal({ setReportModal }) {
     await http
       .post('/admin/report', formData, {
         headers: {
-          // Authorization: import.meta.env.VITE_TOKEN,
-          Authorization: `Bearer ${token}`, // TODO: 임시 토큰 부여
+          Authorization: import.meta.env.VITE_TOKEN,
+          // Authorization: `Bearer ${token}`, // TODO: 임시 토큰 부여
         },
       })
       .then((res) => {
