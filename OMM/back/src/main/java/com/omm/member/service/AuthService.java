@@ -60,7 +60,8 @@ public class AuthService {
         Map<String, String> personalId = subjects.getSubjects().get("personalId");
         if (personalId == null ||
             personalId.get("birthdate") == null ||
-            personalId.get("gender") == null) {
+            personalId.get("gender") == null ||
+            personalId.get("imageUrl") == null) {
             throw new CustomException(ErrorCode.INVALID_VP);
         }
 
@@ -69,6 +70,7 @@ public class AuthService {
             .age((short) (Calendar.getInstance().get(Calendar.YEAR) -
                 Integer.parseInt(personalId.get("birthdate").substring(0, 4)) + 1))
             .gender(personalId.get("gender"))
+            .imageUrl(personalId.get("imageUrl"))
             .build();
 
     }

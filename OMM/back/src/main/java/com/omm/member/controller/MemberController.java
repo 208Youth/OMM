@@ -21,18 +21,6 @@ public class MemberController {
     private final MemberService memberService;
     private final AuthService authService;
 
-//    /**
-//     * 닉네임 중복 체크 함수
-//     *
-//     * @param checkNicknameRequestDto 닉네임 중복 체크 요청
-//     * @return
-//     */
-//    @GetMapping("/nickname")
-//    public ResponseEntity<?> checkNickname(@RequestBody CheckNicknameRequestDto checkNicknameRequestDto) {
-//        boolean exist = memberService.existNickname(checkNicknameRequestDto.getNickname());
-//        return new ResponseEntity<>(exist, HttpStatus.OK);
-//    }
-
     /**
      * 회원 신규 등록
      * @param authDto 인증을 위해서 필요한 정보, did 주소와 vp jwt를 받는다.

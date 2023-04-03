@@ -44,6 +44,9 @@ public class Member {
     @Column(name = "did_address", nullable = false, unique = true)
     private String didAddress;
 
+    @Column(name = "image_url", columnDefinition = "LONGTEXT", nullable = false, unique = true)
+    private String imageUrl;
+
     @Column(name = "authority")
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'ROLE_USER'")
