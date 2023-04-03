@@ -21,7 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -111,11 +113,8 @@ public class GetCredentialService {
         if (incomeInfo == null || incomeInfo.get("income") == null) {
             throw new CustomException(ErrorCode.INVALID_VP);
         }
-        System.out.println(incomeInfo.get("income"));
-        Double d = (double)incomeInfo.get("income");
-        String ret = String.valueOf(d);
-        return ret;
-//        return String.valueOf((double)incomeInfo.get("income"));
+        DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
+        return formatter.format((double)incomeInfo.get("income"));
     }
 
     public String getEstateCredential(AuthDto authDto) {
@@ -124,7 +123,13 @@ public class GetCredentialService {
         if (estateInfo == null || estateInfo.get("estates") == null) {
             throw new CustomException(ErrorCode.INVALID_VP);
         }
-        return (String) estateInfo.get("estates");
+        List<Double> data = (List<Double>) estateInfo.get("estates");
+        double res = 0;
+        for (Double datum : data) {
+            res += datum;
+        }
+        DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
+        return formatter.format(res);
     }
 
     public String getHealthCredential(AuthDto authDto) {
