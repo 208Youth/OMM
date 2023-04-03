@@ -89,14 +89,14 @@ function MyProfile({ profileNav }) {
   // };
   // new_certinfo인지 certinfo인지 axios주고받으면서 확인
   const FreshCert = () => {
-    axios
-      .get('https://example.com/api/data')
+    http
+      .get('/member/certificate')
       .then((response) => setCert(response.data))
       .catch((error) => console.error(error));
   };
   const FreshInterest = () => {
-    axios
-      .get('')
+    http
+      .get('/member/interest')
       .then((response) => setInterest(response.data.interestList))
       .catch((error) => console.error(error));
   };
@@ -182,7 +182,8 @@ function MyProfile({ profileNav }) {
       <div>
         <div className="absolute top-20 left-0 w-full z-5">
           <Pslider />
-          <div
+          <div>
+            <div
             // className={isHovered ? 'imagesetting:hover' : 'imagesetting'}
             // onMouseEnter={handleMouseEnter}
             // onMouseLeave={handleMouseLeave}
@@ -192,7 +193,7 @@ function MyProfile({ profileNav }) {
           </div>
         </div>
 
-        <div className="myprofileinfo">
+        <div className="profileinfo">
           <div className="infodetail">
             <div className="text-right">
               <img

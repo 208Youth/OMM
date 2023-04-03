@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import axios from '../../api/http';
 import Navbar from '../../components/nav-bar';
 import Pslider from '../../components/Pslider';
+import http from '../../api/http';
 import './Main.css';
 import { lists } from '../../store/recSlice';
 
@@ -23,7 +24,7 @@ function Main() {
   useEffect(() => {
     // 추천알고리즘 으로 나온 상대방 id 리스트 axios 요청
     console.log(token);
-    axios({
+    http({
       method: 'get',
       url: '/recommend',
       headers: {
@@ -44,7 +45,7 @@ function Main() {
   }, []);
 
   useEffect(() => {
-    axios({
+    http({
       method: 'get',
       url: `/recommend/member/${firstperson}`,
       headers: {

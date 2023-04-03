@@ -69,14 +69,15 @@
 
 .swiper_container {
   
-  height: 42rem;
+  height: 50rem;
   padding: 2rem 0;
   position: relative;
 }
 
 .swiper-slide {
   flex-shrink: 0;
-  width: 80%;
+  /* width: 80%; */
+  width: 37rem;
   height: 100%;
   position: relative;
   transition-property: transform;
@@ -86,20 +87,20 @@
 @media (max-width: 500px) {
   .swiper_container {
     width: 27rem;
-    height: 30rem;
+    height: 40rem;
   }
   .swiper-slide {
-    width: 28rem !important;
+    width: 20rem !important;
     height: 36rem !important;
   }
   .swiper-slide img {
-    width: 28rem !important;
+    width: 16rem !important;
     height: 36rem !important;
   }
 }
 
 .swiper-slide img {
-  width: 37rem;
+  width: 40rem;
   height: 42rem;
   border-radius: 2rem;
   object-fit: cover;
