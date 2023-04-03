@@ -21,7 +21,7 @@ function Alert() {
     const stompClient = Stomp.over(ws);
     // 유저 3 토큰
     const token =
-      '0x7786ce5e8413e6ac73bf4c7283b20f574640dc14eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIweDc3ODZjZTVlODQxM2U2YWM3M2JmNGM3MjgzYjIwZjU3NDY0MGRjMTQiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNzY2NzQxODMyfQ.7BnOYQdP1p9_VDVnehTnGoIsEmpG2OZ31ONBbdWh03ap0XX7fDbuZCtDhT2xDGh_xLYWVksqkzFlN8hDBKPhUQ';
+      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIweDc3ODZjZTVlODQxM2U2YWM3M2JmNGM3MjgzYjIwZjU3NDY0MGRjMTQiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjgwNTI4NzcwfQ.AYwGzr9U5_vgdgOOoALILxt8wLe6XvUC4mVd4sfcUKJNTipXcgrZz2H7FRTW6GctLFwUNv7u-ewgV5XNYhADZw';
     const decoded = jwt_decode(token);
     const headers = {
       Authorization: import.meta.env.VITE_TOKEN_3, // 유저3 토큰
@@ -63,7 +63,7 @@ function Alert() {
       url: '/matching/noti',
       data: msg,
       headers: {
-        Authorization: import.meta.env.VITE_TOKEN,
+        Authorization: import.meta.env.VITE_TOKEN_3,
       },
     })
       .then((res) => {
@@ -79,7 +79,7 @@ function Alert() {
       method: 'get',
       url: '/matching/noti',
       headers: {
-        Authorization: import.meta.env.VITE_TOKEN,
+        Authorization: import.meta.env.VITE_TOKEN_3,
       },
     }).then((res) => {
       console.log('기존 알림가져옴', res.data.list);

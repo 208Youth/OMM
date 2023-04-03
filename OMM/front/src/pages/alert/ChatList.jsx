@@ -4,7 +4,8 @@ import Navbar from '../../components/nav-bar';
 import http from '../../api/http';
 
 function ChatList() {
-  const [chats, setChat] = useState(null);
+  const [chats, setChats] = useState([]);
+
   async function getChatList() {
     await http({
       method: 'get',
@@ -14,10 +15,8 @@ function ChatList() {
       },
     })
       .then((res) => {
-        console.log(res.data.list);
-        console.log('채팅목록 불러오기 성공?');
-        setChat(res.data.list);
-        console.log('최종', chats);
+        console.log('받은데이터', res.data.list);
+        setChats(res.data.list);
       })
       .catch((err) => {
         console.log(err);
@@ -28,6 +27,10 @@ function ChatList() {
     getChatList();
   }, []);
 
+  useEffect(() => {
+    console.log('바꼇니', chats);
+  }, [chats]);
+
   return (
     <div className="text-[#364C63] w-[22.5rem] h-[48.75rem] mx-auto">
       <div className="text-2xl mx-6 py-8">
@@ -36,7 +39,7 @@ function ChatList() {
       </div>
       <div className="mx-6">
         {chats && chats.map((chat) => <ChatRoom chat={chat} />)}
-        {Array.isArray(chats) && chats.length === 0 && (
+        {!chats && (
           <div className="h-[22.5rem] flex justify-center">
             <div className="my-auto">아직 매칭이 되지 않았어요ㅠ.ㅠ</div>
           </div>
