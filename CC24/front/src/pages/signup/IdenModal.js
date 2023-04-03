@@ -1,44 +1,49 @@
 /* eslint-disable */
 
-import React, { useState, useEffect } from 'react';
-import CloseBtn from '../../assets/CloseBtn.svg';
-import './IdenModal.css';
+import React, { useState, useEffect } from "react";
+import CloseBtn from "../../assets/CloseBtn.svg";
+import "./IdenModal.css";
 // import fastapi from '../../api/fastapi.js';
-import axios from 'axios';
-import { useSelector, useDispatch } from 'react-redux';
-import { idInfo } from '../../store/userSlice';
+import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import { idInfo } from "../../store/userSlice";
 
-function IdenModal({ setIdenModal, setIdenComplete, inputday, inputname, inputyear, inputmonth, inputgender}) {
-  const [imageSrc, setImageSrc] = useState('');
-  const [imgfile, setFile] = useState('');
-  const [name, setName] = useState('');
-  const [gender, setGender] = useState('');
-  const [birthday, setBirthday] = useState('');
+function IdenModal({
+  setIdenModal,
+  setIdenComplete,
+  inputday,
+  inputname,
+  inputyear,
+  inputmonth,
+  inputgender,
+}) {
+  const [imageSrc, setImageSrc] = useState("");
+  const [imgfile, setFile] = useState("");
+  const [name, setName] = useState("");
+  const [gender, setGender] = useState("");
+  const [birthday, setBirthday] = useState("");
   const dispatch = useDispatch();
-  
 
   // fastapi의 idening를 실행시키기 위한 코드
   async function sendImg() {
-
-
     const formData = new FormData();
     // formData.append('pay', JSON.stringify(pay));
 
-    formData.append('inputday', inputday)
-    formData.append('inputname', inputname)
-    formData.append('inputyear', inputyear)
-    formData.append('inputmonth', inputmonth)
-    formData.append('inputgender', inputgender)
-    formData.append('file', imgfile);
+    formData.append("inputday", inputday);
+    formData.append("inputname", inputname);
+    formData.append("inputyear", inputyear);
+    formData.append("inputmonth", inputmonth);
+    formData.append("inputgender", inputgender);
+    formData.append("file", imgfile);
     // for (let key of formData.keys()) {
     //   console.log(key, formData.get(key))
     // }
-    
-    console.log(formData)
+
+    console.log(formData);
     await axios({
-      method: 'post',
-      url: 'http://127.0.0.1:8000/api/fast/idenimg',
-      data: formData ,
+      method: "post",
+      url: "http://localhost:8000/api/fast/idenimg",
+      data: formData,
       // {
       //   // 데이터의 파일부분에 문제가 있는 것 같다.
       //   // formData
@@ -46,11 +51,11 @@ function IdenModal({ setIdenModal, setIdenComplete, inputday, inputname, inputye
       //   // file:imgfile
       // },
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     })
       .then((res) => {
-        console.log('fastapi로 이미지를 보냈습니다.');
+        console.log("fastapi로 이미지를 보냈습니다.");
         console.log(res.data);
         setName(res.data.personalId.name);
         setBirthday(res.data.personalId.birthdate);
@@ -60,13 +65,13 @@ function IdenModal({ setIdenModal, setIdenComplete, inputday, inputname, inputye
       .catch((err) => {
         console.log(imgfile);
         console.log(err);
-        console.log('fastapi로 이미지를 보내는데 실패했습니다.');
-            for (let key of formData.keys()) {
-      console.log(key, formData.get(key))
-    }
+        console.log("fastapi로 이미지를 보내는데 실패했습니다.");
+        for (let key of formData.keys()) {
+          console.log(key, formData.get(key));
+        }
       });
   }
-  
+
   const encodeFileToBase64 = (fileBlob) => {
     const reader = new FileReader();
 
@@ -92,7 +97,7 @@ function IdenModal({ setIdenModal, setIdenComplete, inputday, inputname, inputye
 
     // fastapi/iden_img에 이미지를 저장하는 코드를 써야한다.
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append("file", file);
     // const { data } = await fastapi.get('/');
 
     // fastapi.post('/idenimg', { file: imgfile });
@@ -115,12 +120,12 @@ function IdenModal({ setIdenModal, setIdenComplete, inputday, inputname, inputye
       <br />
       <br />
       <div>
-        <p className="text-3xl text-left ml-9 leading-relaxed" style={{ marginLeft: '1rem' }}>
+        <p className="text-3xl text-left ml-9 leading-relaxed" style={{ marginLeft: "1rem" }}>
           본인
         </p>
       </div>
       <div>
-        <p className="text-3xl text-left ml-9 leading-relaxed" style={{ marginLeft: '1rem' }}>
+        <p className="text-3xl text-left ml-9 leading-relaxed" style={{ marginLeft: "1rem" }}>
           확인
         </p>
         <br />
@@ -135,12 +140,12 @@ function IdenModal({ setIdenModal, setIdenComplete, inputday, inputname, inputye
           <input
             id="imginput"
             type="file"
-            style={{ display: 'none' }}
+            style={{ display: "none" }}
             onChange={handleFileInputChange}
           />
         </div>
       </div>
-      <div className="preview" style={{ marginLeft: '2rem' }}>
+      <div className="preview" style={{ marginLeft: "2rem" }}>
         {imageSrc && <img src={imageSrc} alt="preview-img" className="idenimage" />}
       </div>
       <br />
@@ -166,23 +171,23 @@ function Result({ data, setIdenModal, setIdenComplete }) {
   const strbirth = String(birthday);
   let year = strbirth.slice(0, 4);
   let month = strbirth.slice(5, 7);
-  if (month.slice(0, 1) == '0') {
+  if (month.slice(0, 1) == "0") {
     month = month.slice(1, 2);
   }
   let day = strbirth.slice(9, 11);
-  if (day.slice(0, 1) == '0') {
+  if (day.slice(0, 1) == "0") {
     day = day.slice(1, 2);
   }
-  if (gender == 'MALE') {
-    gender = '남';
+  if (gender == "MALE") {
+    gender = "남";
   } else {
-    gender = '여';
+    gender = "여";
   }
-  const storeName = useSelector(state => state.user.name);
-  const storeYear = useSelector(state => state.user.year);
-  const storeMonth = useSelector(state => state.user.month);
-  const storeDay = useSelector(state => state.user.day);
-  const storeGender = useSelector(state => state.user.gender);
+  const storeName = useSelector((state) => state.user.name);
+  const storeYear = useSelector((state) => state.user.year);
+  const storeMonth = useSelector((state) => state.user.month);
+  const storeDay = useSelector((state) => state.user.day);
+  const storeGender = useSelector((state) => state.user.gender);
   // 일치 여부 확인
   let nameCheck = false;
   let birthdayCheck = false;

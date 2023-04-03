@@ -44,54 +44,36 @@ function MoreInfo({ setStep }) {
     dispatch(moreInfo1(info));
   };
   console.log(user);
-  const [show, setShow] = useState(false);
-  const [duplication, setDuplication] = useState(false);
-
-  // async function checkNickname() {
-  //   await axios({
-  //     method: 'get',
-  //     url: '/api/member/nickname',
-  //     data: {
-  //       nickname: moreinfo.nickname,
-  //     },
-  //     // headers: {
-  //     //   Authorization: token,
-  //     // },
-  //   })
-  //     .then((res) => {
-  //       console.log(res);
-  //       setShow(true);
-  //       setDuplication(res);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //       setShow(true);
-  //       setDuplication(false);
-  //       setMoreInfo((prevInfo) => ({
-  //         ...prevInfo,
-  //         nickname: '',
-  //       }));
-  //     });
-  // }
-  // let subtitle;
   const [modalIsOpen, setIsOpen] = useState(false);
 
   const openModal = () => {
     setIsOpen(true);
   };
-
+  
   // const afterOpenModal = () => {
-  //   subtitle.style.color = '#f00';
+    //   subtitle.style.color = '#f00';
   // };
-
+  
   const closeModal = () => {
     setIsOpen(false);
   };
-
+  
   useEffect(() => {
     console.log(moreinfo);
   }, [moreinfo]);
 
+  useEffect(() => {
+    console.log(user);
+    document.getElementById('nickname').value = user.nickname;
+    document.getElementById('height').value = user.height;
+    document.getElementById('highschool').value = user.highschool;
+    setMoreInfo((prev) => ({
+      ...prev,
+      lat: user.lat,
+      lng: user.lng,
+    }));
+    // document.getElementByName('military').value = user.military;
+  }, []);
   return (
     <div className="bg-white w-[22.5rem] h-[48.75rem]">
       <img src="/heart-step-1.svg" alt="" className="mx-auto w-48 pt-16 pb-8" />
@@ -120,31 +102,7 @@ function MoreInfo({ setStep }) {
             className="w-full font-sans text-[#364C63] font-semibold tracking-wide bg-white border-2 border-[#f59fb277] focus:border-[#F094A7] placeholder-[#f59fb277] text-sm rounded-3xl block p-2.5 drop-shadow-md"
             placeholder="닉네임을 입력해주세요"
           />
-          {/* <button
-            onClick={() => {
-              if (moreinfo.nickname) {
-                checkNickname();
-              }
-            }}
-            className={
-              moreinfo.nickname
-                ? 'w-20 ml-2 rounded-3xl bg-[#F59FB1] text-white font-sans font-semibold text-sm drop-shadow-md'
-                : 'w-20 ml-2 rounded-3xl bg-[#f59fb277] text-white font-sans font-semibold text-sm drop-shadow-md'
-            }
-          >
-            중복 확인
-          </button> */}
         </div>
-        {/* {show && duplication && (
-          <p className="mt-1 text-sm text-[#F59FB1] ml-2 font-sans">
-            <span className="font-medium">사용할 수 있는 닉네임입니다.</span>
-          </p>
-        )}
-        {show && !duplication && (
-          <p className="mt-1 text-sm text-red-500 ml-2 font-sans">
-            <span className="font-medium">사용할 수 없는 닉네임입니다.</span>
-          </p>
-        )} */}
       </div>
       <div className="mb-6 mx-8 flex">
         <span className="font-medium text-[#364C63] mr-5 self-center text-base">
@@ -161,6 +119,7 @@ function MoreInfo({ setStep }) {
               height: Math.round(e.target.value),
             }));
           }}
+          id="height"
           type="text"
           placeholder="키"
           className="w-20 h-10 font-sans font-semibold text-[#364C63] bg-white border-2 border-[#f59fb277] focus:border-[#F094A7] placeholder-[#f59fb277] text-sm text-center rounded-3xl block p-2.5 drop-shadow-md"
@@ -216,6 +175,7 @@ function MoreInfo({ setStep }) {
               highschool: e.target.value,
             }));
           }}
+          id="highschool"
           type="text"
           placeholder="싸피"
           className="w-20 h-10 font-sans font-semibold text-[#364C63] bg-white border-2 border-[#f59fb277] focus:border-[#F094A7] placeholder-[#f59fb277] text-sm text-center rounded-3xl block p-2.5 drop-shadow-md"
@@ -224,7 +184,7 @@ function MoreInfo({ setStep }) {
           고등학교
         </span>
       </div>
-      <div className="mt-8 mb-14 mx-8">
+      <div className="mt-8 mb-1 mx-8">
         <h3 className="text-[#364C63] block mb-5 text-base">
           병역 관련사항을 선택해주세요.
         </h3>

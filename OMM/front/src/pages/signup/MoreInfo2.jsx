@@ -1,39 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import { moreInfo2 } from '../../store/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { moreInfo2 } from '../../store/userSlice';
 
-function MoreInfo2({setStep}) {
+function MoreInfo2({ setStep }) {
   const dispatch = useDispatch();
-  const user = useSelector(state => state.user);
+  const user = useSelector((state) => state.user);
   const [moreinfo, setMoreInfo] = useState({
-    drinking_style: '',
-    smoking_style: '',
-    contact_style: '',
+    my_drinking_style: '',
+    my_smoking_style: '',
+    my_contact_style: '',
   });
-  const prev = ()=> {
+  const prev = () => {
     setStep(1);
-  }
-  const next =() => { 
+  };
+  const next = () => {
     if (
-        moreinfo.drinking_style && 
-        moreinfo.smoking_style && 
-        moreinfo.contact_style){
-          setStep(3)
-        } else {
-          alert('모든 정보를 입력해주세요!');
-        }
-  }
+      moreinfo.my_drinking_style &&
+      moreinfo.my_smoking_style &&
+      moreinfo.my_contact_style
+    ) {
+      setStep(3);
+    } else {
+      alert('모든 정보를 입력해주세요!');
+    }
+  };
   const sendInfo = () => {
     const info = {
-      drinking_style: moreinfo.drinking_style,
-      smoking_style: moreinfo.smoking_style,
-      contact_style: moreinfo.contact_style,
+      my_drinking_style: moreinfo.my_drinking_style,
+      my_smoking_style: moreinfo.my_smoking_style,
+      my_contact_style: moreinfo.my_contact_style,
     };
     console.log(info);
     dispatch(moreInfo2(info));
   };
   useEffect(() => {
     console.log(moreinfo);
+    console.log(user);
   }, [moreinfo]);
 
   return (
@@ -57,7 +59,7 @@ function MoreInfo2({setStep}) {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  contact_style: e.target.value,
+                  my_contact_style: e.target.value,
                 }));
               }}
               id="contact1"
@@ -78,7 +80,7 @@ function MoreInfo2({setStep}) {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  contact_style: e.target.value,
+                  my_contact_style: e.target.value,
                 }));
               }}
               id="contact3"
@@ -99,7 +101,7 @@ function MoreInfo2({setStep}) {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  contact_style: e.target.value,
+                  my_contact_style: e.target.value,
                 }));
               }}
               id="contact5"
@@ -120,7 +122,7 @@ function MoreInfo2({setStep}) {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  contact_style: e.target.value,
+                  my_contact_style: e.target.value,
                 }));
               }}
               id="contact2"
@@ -141,7 +143,7 @@ function MoreInfo2({setStep}) {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  contact_style: e.target.value,
+                  my_contact_style: e.target.value,
                 }));
               }}
               id="contact4"
@@ -169,7 +171,7 @@ function MoreInfo2({setStep}) {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  drinking_style: e.target.value,
+                  my_drinking_style: e.target.value,
                 }));
               }}
               id="drink1"
@@ -190,7 +192,7 @@ function MoreInfo2({setStep}) {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  drinking_style: e.target.value,
+                  my_drinking_style: e.target.value,
                 }));
               }}
               id="drink3"
@@ -211,7 +213,7 @@ function MoreInfo2({setStep}) {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  drinking_style: e.target.value,
+                  my_drinking_style: e.target.value,
                 }));
               }}
               id="drink5"
@@ -232,7 +234,7 @@ function MoreInfo2({setStep}) {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  drinking_style: e.target.value,
+                  my_drinking_style: e.target.value,
                 }));
               }}
               id="drink2"
@@ -253,7 +255,7 @@ function MoreInfo2({setStep}) {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  drinking_style: e.target.value,
+                  my_drinking_style: e.target.value,
                 }));
               }}
               id="drink4"
@@ -274,7 +276,7 @@ function MoreInfo2({setStep}) {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  drinking_style: e.target.value,
+                  my_drinking_style: e.target.value,
                 }));
               }}
               id="drink6"
@@ -302,7 +304,7 @@ function MoreInfo2({setStep}) {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  smoking_style: e.target.value,
+                  my_smoking_style: e.target.value,
                 }));
               }}
               id="smoke1"
@@ -323,7 +325,7 @@ function MoreInfo2({setStep}) {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  smoking_style: e.target.value,
+                  my_smoking_style: e.target.value,
                 }));
               }}
               id="smoke3"
@@ -344,7 +346,7 @@ function MoreInfo2({setStep}) {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  smoking_style: e.target.value,
+                  my_smoking_style: e.target.value,
                 }));
               }}
               id="smoke5"
@@ -365,7 +367,7 @@ function MoreInfo2({setStep}) {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  smoking_style: e.target.value,
+                  my_smoking_style: e.target.value,
                 }));
               }}
               id="smoke2"
@@ -385,18 +387,23 @@ function MoreInfo2({setStep}) {
       </div>
       <div className="flex justify-between mx-8 text-[#364C63] text-lg">
         <button
-            type="button"
-            aria-hidden
-            onClick={() => {prev()}}
-          >
-            &lt;
-          </button>
-          <button
-            type="button"
-            aria-hidden
-            onClick={() => {next(); sendInfo()}}
-          >
-            &gt;
+          type="button"
+          aria-hidden
+          onClick={() => {
+            prev();
+          }}
+        >
+          &lt;
+        </button>
+        <button
+          type="button"
+          aria-hidden
+          onClick={() => {
+            next();
+            sendInfo();
+          }}
+        >
+          &gt;
         </button>
       </div>
     </div>
