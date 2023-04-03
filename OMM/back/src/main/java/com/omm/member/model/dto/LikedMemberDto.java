@@ -21,7 +21,7 @@ public class LikedMemberDto {
     private short age;
 
     @JsonProperty(value = "image_main")
-    private Blob imageMain;
+    private byte[] imageMain;
 
 //    public LikedMemberDto(Long memberId, String nickname, short age){
 //        this.memberId = memberId;

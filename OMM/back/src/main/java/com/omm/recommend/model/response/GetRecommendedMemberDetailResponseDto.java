@@ -28,7 +28,7 @@ public class GetRecommendedMemberDetailResponseDto {
     private short age;
 
     @JsonProperty(value = "imageList")
-    List<Blob> imageList;
+    List<byte[]> imageList;
 
     @JsonProperty(value = "interestList")
     List<String> interestList;

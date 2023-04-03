@@ -20,9 +20,7 @@ function ImageUploader() {
         canvas.height = img.height;
         ctx.drawImage(img, 0, 0);
         canvas.toBlob((blob) => {
-          setImages(
-            images.map((image, i) => (i === index ? blob : image)),
-          );
+          setImages(images.map((image, i) => (i === index ? blob : image)));
         });
         console.log('images');
         console.log(images);
@@ -34,17 +32,21 @@ function ImageUploader() {
   const handleSubmit = async () => {
     console.log(images);
     const formData = new FormData();
-    images.forEach((image, index) => {
-      formData.append(`image${index}`, image);
+    images.forEach((image) => {
+      formData.append('images', image);
     });
+    // images.forEach((image, index) => {
+    //   formData.append(`image${index}`, image);
+    // });
     console.log('formData');
     console.log(formData);
     console.log(import.meta.env.VITE_TOKEN);
 
     await http({
-      method: 'post',
+      method: 'put',
       url: '/member/img',
       headers: {
+        'Content-Type': 'multipart/form-data',
         Authorization: import.meta.env.VITE_TOKEN,
       },
       data: formData,
@@ -57,7 +59,13 @@ function ImageUploader() {
     <div>
       <div className="bgslate">
         <div className="text-center text">이미지를 업로드 해주세요.</div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+          }}
+        >
           {images.map((image, index) => (
             <div
               key={index}
@@ -89,7 +97,11 @@ function ImageUploader() {
                   src={URL.createObjectURL(image)}
                   alt={`uploaded_image_${index}`}
                   style={{
-                    maxWidth: 100, maxHeight: 200, width: 100, height: 200, borderRadius: 20,
+                    maxWidth: 100,
+                    maxHeight: 200,
+                    width: 100,
+                    height: 200,
+                    borderRadius: 20,
                   }}
                 />
               ) : (
@@ -99,7 +111,12 @@ function ImageUploader() {
           ))}
         </div>
         <div className="text-center">
-          <button className="border-solid border-2 rounded-md bg-white" onClick={handleSubmit}>Submit</button>
+          <button
+            className="border-solid border-2 rounded-md bg-white"
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
         </div>
       </div>
     </div>

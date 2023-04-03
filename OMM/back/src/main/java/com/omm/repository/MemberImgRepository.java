@@ -11,7 +11,9 @@ import java.util.List;
 @Repository
 public interface MemberImgRepository extends JpaRepository<MemberImg, Long> {
 
-    List<MemberImg> findAllById(Long memberId);
+    List<MemberImg> findAllByMember(Member member);
+
+    List<MemberImg> findAllById(Long id);
 
     MemberImg findFirstByMember(Member member);
 

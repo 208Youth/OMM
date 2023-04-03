@@ -45,5 +45,5 @@ public class GetMemberInfoResponseDto {
     private String mbti;
 
     @JsonProperty(value = "profileimgs")
-    private List<Blob> profileimgs;
+    private List<byte[]> profileimgs;
 }

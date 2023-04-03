@@ -45,7 +45,7 @@ public class Filtering {
 
     @Column(name = "range_min")
     @ColumnDefault("0")
-    private int rangeMin = 0;
+    private int rangeMin;
 
     @Column(name = "range_max", nullable = false)
     @ColumnDefault("1000")

@@ -12,6 +12,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/member")
@@ -79,28 +84,46 @@ public class MemberController {
     }
 
     /**
-     * 유저 이미지 업로드 함수
-     *
-     * @param uploadImageRequestDto 유저 이미지 업로드 폼
+     * 유저 이미지 업로드 (사용하지 말 것)
+     * @param images 이미지 정보
      * @return
+     * @throws IOException
      */
     @PostMapping("/img")
-    public ResponseEntity<?> postMemberImages(@RequestBody UploadImageRequestDto uploadImageRequestDto) {
-        memberService.postMemberImages(SecurityUtil.getCurrentDidAddress().get(), uploadImageRequestDto);
+    public ResponseEntity<?> postMemberImages(@RequestParam("images") List<MultipartFile> images) throws IOException {
+        List<byte[]> data = new ArrayList<>();
+
+        for (MultipartFile image : images) {
+            byte[] imageData = image.getBytes();
+            if(imageData == null) break;
+            data.add(imageData);
+        }
+
+        memberService.postMemberImages(SecurityUtil.getCurrentDidAddress().get(), data);
         return new ResponseEntity<>("사진 등록을 성공했습니다.", HttpStatus.OK);
     }
 
+
     /**
-     * 유저 새 이미지로 교체
-     *
-     * @param uploadImageRequestDto 이미지 업로드 정보
+     * 유저 이미지 교체
+     * @param images 이미지 정보
      * @return
+     * @throws IOException
      */
     @PutMapping("/img")
-    public ResponseEntity<?> putMemberImages(@RequestBody UploadImageRequestDto uploadImageRequestDto) {
-        memberService.putMemberImages(SecurityUtil.getCurrentDidAddress().get(), uploadImageRequestDto);
+    public ResponseEntity<?> putMemberImages(@RequestParam("images") List<MultipartFile> images) throws IOException {
+        List<byte[]> data = new ArrayList<>();
+
+        for (MultipartFile image : images) {
+            byte[] imageData = image.getBytes();
+            if(imageData == null) break;
+            data.add(imageData);
+        }
+        memberService.putMemberImages(SecurityUtil.getCurrentDidAddress().get(), data);
         return new ResponseEntity<>("사진 교체에 성공했습니다.", HttpStatus.OK);
     }
+
+
 
     /**
      * 유저 정보 수정
@@ -206,11 +229,20 @@ public class MemberController {
         return new ResponseEntity<>(memberService.addInterest(SecurityUtil.getCurrentDidAddress().get(), postInterestRequestDto.getName()), HttpStatus.OK);
     }
 
+    /**
+     * 좋아요 한 유저들 목록 가져오기
+     * @return
+     */
     @GetMapping("/liked")
     public ResponseEntity<?> getLikedMembers(){
         return new ResponseEntity<>(memberService.getLikedMembers(SecurityUtil.getCurrentDidAddress().get()), HttpStatus.OK);
     }
 
+    /**
+     * 유저 인증 정보 가져오기
+     * @param memberId
+     * @return
+     */
     @GetMapping("/{member-id}/cert")
     public ResponseEntity<?> getMemberCert(@PathVariable("member-id") Long memberId) {
         return new ResponseEntity<>(memberService.getMemberCert(memberId), HttpStatus.OK);
