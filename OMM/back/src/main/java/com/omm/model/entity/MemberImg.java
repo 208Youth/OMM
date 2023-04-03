@@ -27,5 +27,5 @@ public class MemberImg {
 
     @Lob
     @Column(name = "image_content", nullable = false)
-    private Blob imageContent;
+    private byte[] imageContent;
 }

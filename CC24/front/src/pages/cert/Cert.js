@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
-import axios from '../../api/cc24api';
+import axios from '../../api/springapi';
 import './Cert.css';
 import CC24Logo from '../../assets/CC24.svg';
 import CertModal from './CertModal';

@@ -37,7 +37,7 @@ function FaceRecog() {
     // axios로 fastapi 에 이미지 보내기
     await axios({
       method: 'get',
-      url: 'http://127.0.0.1:8000/image',
+      url: 'http://localhost:8000/image',
       data: {
         getname: 'c최윤하',
       },

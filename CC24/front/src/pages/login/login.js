@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import Password from './Password';
 import Agree from './Agree';
@@ -8,47 +8,64 @@ import ommapi from '../../api/ommapi';
 import axios from 'axios';
 import { createVerifiablePresentationJwt } from 'did-jwt-vc';
 import { EthrDID } from 'ethr-did';
+import http from '../../api/nodeapi';
 
 function Login() {
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(window.location.search);
   const type = searchParams.get('type');
   console.log(type);
-  const did = JSON.parse(localStorage.getItem('DID')).did;
-  const iden = JSON.parse(localStorage.getItem('keypair')).identifier;
-  const pk = JSON.parse(localStorage.getItem('keypair')).privateKey;
-  const ethrDidOnGoerliNamed = new EthrDID({
-    identifier: iden,
-    privateKey: pk,
-    chainNameOrId: 'goerli',
-  });
+  const [did, setDid] = useState(null);
+  const [iden, setIden] = useState(null);
+  const [pk, setPK] = useState(null);
+  const [isMember, setIsMember] = useState(false);
+  let ethrDidOnGoerliNamed = '';
+  useEffect(() => {
+    if (localStorage.getItem('DID') === null) {
+      setTimeout(() => {
+        navigate('/signup');
+      }, 3000);
+    } else if (localStorage.getItem('DID') != null) {
+      setIsMember(true);
+      setDid(JSON.parse(localStorage.getItem('DID')).did);
+      setIden(JSON.parse(localStorage.getItem('keypair')).identifier);
+      setPK(JSON.parse(localStorage.getItem('keypair')).privateKey);
+      ethrDidOnGoerliNamed = new EthrDID({
+        identifier: JSON.parse(localStorage.getItem('keypair')).identifier,
+        privateKey: JSON.parse(localStorage.getItem('keypair')).privateKey,
+        chainNameOrId: 'goerli',
+      });
+    }
+  }, []);
   const [isLoading, setIsLoading] = useState(false);
   // const [vc, setVC] = useState('');
-  let vc = ''
+  let vc = '';
   const data = {
     holderDid: did,
-  }
-  
+  };
+
   const getVC = async () => {
     setIsLoading(true);
-    await axios({
+    await http({
+      // await axios({
       method: 'post',
-      url: 'http://localhost:4424/api/node/credential/did-address',
+      url: '/credential/did-address',
+      // url: 'http://localhost:4424/api/node/credential/did-address',
       data: data,
     })
-    .then((res) => {
-      console.log('성공!!!!!!!!', res);
-      console.log(res.data.vcJwt);
-      vc = res.data.vcJwt
+      .then((res) => {
+        console.log('성공!!!!!!!!', res);
+        console.log(res.data.vcJwt);
+        vc = res.data.vcJwt;
       })
-    .then((res) => {
-      console.log(res);
-      ommLogin()
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  // navigate('/main');
+      .then((res) => {
+        console.log(res);
+        ommLogin();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    navigate('/main');
   };
   const ommLogin = async () => {
     const vpPayload = {
@@ -66,16 +83,17 @@ function Login() {
       type: type,
       holderDid: did,
       vpJwt: vpJwt,
-    }
+    };
     await ommapi
       .post(`/sign/${type}`, data)
       .then((res) => {
         console.log(res);
-        if (res.data == "#") {
-          window.location.href = "http://localhost:3000/login?type=SIGNUP"
+        if (res.data == '#') {
+          // window.location.href = 'http://localhost:3000/login?type=SIGNUP';
+          window.location.href = `${process.env.REACT_APP_OMM_FRONT}/login?type=SIGNUP`;
         } else {
-        setIsLoading(false);
-        window.location.href = res.data;
+          setIsLoading(false);
+          window.location.href = res.data;
         }
       })
       .catch((err) => {
@@ -127,15 +145,24 @@ function Login() {
         className="Modal"
         overlayClassName="Overlay"
       >
-        <Password
-          setPasswordModal={setPasswordModal}
-          setPasswordComplete={(res) => {
-            if (res) {
-              setPasswordComplete(true);
-              if (type == 'SIGNIN') getVC();
-            }
-          }}
-        />
+        {!isMember && (
+          <div>
+            <p className="text-xl mt-10 text-center mb-4 leading-relaxed">
+              회원이 아니시군요! 회원가입 페이지로 이동합니다.
+            </p>
+          </div>
+        )}
+        {isMember && (
+          <Password
+            setPasswordModal={setPasswordModal}
+            setPasswordComplete={(res) => {
+              if (res) {
+                setPasswordComplete(true);
+                if (type == 'SIGNIN') getVC();
+              }
+            }}
+          />
+        )}
       </Modal>
     </div>
   );

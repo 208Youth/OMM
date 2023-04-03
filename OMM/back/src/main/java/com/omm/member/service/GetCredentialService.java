@@ -21,7 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -80,56 +82,63 @@ public class GetCredentialService {
 
     public String getUniversityCredential(AuthDto authDto) {
         SubjectsDto subjects = verifyVP(authDto);
-        Map<String, String> universityInfo = subjects.getSubjects().get("university");
+        Map<String, Object> universityInfo = subjects.getSubjects().get("university");
         if (universityInfo == null || universityInfo.get("name") == null) {
             throw new CustomException(ErrorCode.INVALID_VP);
         }
-        return universityInfo.get("name");
+        return (String) universityInfo.get("name");
     }
 
     public String getCertificateCredential(AuthDto authDto) {
         SubjectsDto subjects = verifyVP(authDto);
-        Map<String, String> cerificateInfo = subjects.getSubjects().get("certificate");
+        Map<String, Object> cerificateInfo = subjects.getSubjects().get("certificate");
         if (cerificateInfo == null || cerificateInfo.get("name") == null) {
             throw new CustomException(ErrorCode.INVALID_VP);
         }
-        return cerificateInfo.get("name");
+        return (String) cerificateInfo.get("name");
     }
 
     public String getJobCredential(AuthDto authDto) {
         SubjectsDto subjects = verifyVP(authDto);
-        Map<String, String> jobInfo = subjects.getSubjects().get("university");
+        Map<String, Object> jobInfo = subjects.getSubjects().get("job");
         if (jobInfo == null || jobInfo.get("name") == null) {
             throw new CustomException(ErrorCode.INVALID_VP);
         }
-        return jobInfo.get("name");
+        return (String) jobInfo.get("name");
     }
 
     public String getIncomeCredential(AuthDto authDto) {
         SubjectsDto subjects = verifyVP(authDto);
-        Map<String, String> incomeInfo = subjects.getSubjects().get("income");
+        Map<String, Object> incomeInfo = subjects.getSubjects().get("income");
         if (incomeInfo == null || incomeInfo.get("income") == null) {
             throw new CustomException(ErrorCode.INVALID_VP);
         }
-        return incomeInfo.get("name");
+        DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
+        return formatter.format((double)incomeInfo.get("income"));
     }
 
     public String getEstateCredential(AuthDto authDto) {
         SubjectsDto subjects = verifyVP(authDto);
-        Map<String, String> estateInfo = subjects.getSubjects().get("estate");
+        Map<String, Object> estateInfo = subjects.getSubjects().get("estate");
         if (estateInfo == null || estateInfo.get("estates") == null) {
             throw new CustomException(ErrorCode.INVALID_VP);
         }
-        return estateInfo.get("estates");
+        List<Double> data = (List<Double>) estateInfo.get("estates");
+        double res = 0;
+        for (Double datum : data) {
+            res += datum;
+        }
+        DecimalFormat formatter = new DecimalFormat("###,###,###,###,###");
+        return formatter.format(res);
     }
 
     public String getHealthCredential(AuthDto authDto) {
         SubjectsDto subjects = verifyVP(authDto);
-        Map<String, String> healthInfo = subjects.getSubjects().get("health");
+        Map<String, Object> healthInfo = subjects.getSubjects().get("health");
         if (healthInfo == null || healthInfo.get("date") == null) {
             throw new CustomException(ErrorCode.INVALID_VP);
         }
-        return healthInfo.get("date");
+        return (String) healthInfo.get("date");
     }
 
     private SubjectsDto verifyVP(AuthDto authDto) {

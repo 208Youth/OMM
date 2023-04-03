@@ -9,6 +9,7 @@ import com.omm.member.model.response.*;
 import com.omm.model.entity.*;
 import com.omm.model.entity.enums.*;
 import com.omm.repository.*;
+import com.omm.util.ImageUtil;
 import com.omm.util.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -70,18 +71,6 @@ public class MemberService {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
         }
     }
-//    public void createMember(String memberNickname) {
-//        try {
-//            Member member = Member.builder()
-//                    .nickname(memberNickname)
-////                    .isBlack(false)
-////                    .grade("role_user")
-//                    .build();
-//            memberRepository.save(member);
-//        } catch (Exception e) {
-//            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
-//        }
-//    }
 
     /**
      * 초기 회원 정보 설정 함수
@@ -160,8 +149,8 @@ public class MemberService {
         MyInfo myInfo = myInfoRepository.findByMember(member)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
 
-        List<MemberImg> memberimgs = memberImgRepository.findAllById(memberId);
-        List<Blob> memberimgsblobs = new ArrayList<>();
+        List<MemberImg> memberimgs = memberImgRepository.findAllByMember(member);
+        List<byte[]> memberimgsblobs = new ArrayList<>();
 
         for (MemberImg memberimg : memberimgs) {
             memberimgsblobs.add(memberimg.getImageContent());
@@ -170,6 +159,49 @@ public class MemberService {
         try {
             GetMemberInfoResponseDto getMemberInfoResponseDto = GetMemberInfoResponseDto.builder()
                     .nickname(member.getNickname())
+                    .age(member.getAge())
+                    .lat(myInfo.getLat())
+                    .lng(myInfo.getLng())
+                    .pr(myInfo.getPr())
+                    .height(myInfo.getHeight())
+                    .contactStyle(myInfo.getContactStyle().name())
+                    .drinkingStyle(myInfo.getDrinkingStyle().name())
+                    .smokingStyle(myInfo.getSmokingStyle().name())
+                    .military(myInfo.getMilitary().name())
+                    .pet(myInfo.getPet().name())
+                    .mbti(myInfo.getMbti().name())
+                    .profileimgs(memberimgsblobs)
+                    .build();
+            return getMemberInfoResponseDto;
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
+        }
+    }
+
+    /**
+     * 현재 유저 정보를 조회
+     *
+     * @param currentUserDidAddress 멤버의 아이디
+     * @return
+     */
+    public GetMemberInfoResponseDto getMyInfo(String currentUserDidAddress) {
+        Member member = memberRepository.findByDidAddress(currentUserDidAddress)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        MyInfo myInfo = myInfoRepository.findByMember(member)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+
+        List<MemberImg> memberimgs = memberImgRepository.findAllByMember(member);
+        List<byte[]> memberimgsblobs = new ArrayList<>();
+
+        for (MemberImg memberimg : memberimgs) {
+            memberimgsblobs.add(memberimg.getImageContent());
+        }
+
+        try {
+            GetMemberInfoResponseDto getMemberInfoResponseDto = GetMemberInfoResponseDto.builder()
+                    .nickname(member.getNickname())
+                    .age(member.getAge())
                     .lat(myInfo.getLat())
                     .lng(myInfo.getLng())
                     .pr(myInfo.getPr())
@@ -219,20 +251,18 @@ public class MemberService {
         }
     }
 
+
     /**
-     * 유저 이미지 업로드 함수
-     *
-     * @param currentMemberDidAddress 현재 로그인 유저 did 주소
-     * @param uploadImageRequestDto   업로드 폼
+     * 유저 이미지 등록 (사용하지 말 것)
+     * @param currentMemberDidAddress
+     * @param data
      */
-    public void postMemberImages(String currentMemberDidAddress, UploadImageRequestDto uploadImageRequestDto) {
+    public void postMemberImages(String currentMemberDidAddress, List<byte[]> data) {
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         try {
-            List<Blob> images = uploadImageRequestDto.getImages();
-
-            images.forEach((image) -> {
+            data.forEach((image) -> {
                 MemberImg memberImg = MemberImg.builder()
                         .member(member)
                         .imageContent(image)
@@ -244,18 +274,22 @@ public class MemberService {
         }
     }
 
+
     /**
-     * 이미지 교체 방식
-     *
-     * @param currentMemberDidAddress 현재 로그인 유저
-     * @param uploadImageRequestDto   이미지 교체 요청 정보
+     * 이미지 교체 함수
+     * @param currentMemberDidAddress
+     * @param data
      */
-    public void putMemberImages(String currentMemberDidAddress, UploadImageRequestDto uploadImageRequestDto) {
+    public void putMemberImages(String currentMemberDidAddress, List<byte[]> data) {
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         try {
-            List<MemberImg> memberImages = memberImgRepository.findAllById(member.getId());
+            List<MemberImg> memberImages = memberImgRepository.findAllByMember(member);
+
+            memberImages.forEach((img) -> {
+                System.out.println(img.toString());
+            });
 
             memberImgRepository.deleteAll(memberImages);
         } catch (Exception e) {
@@ -263,9 +297,8 @@ public class MemberService {
         }
 
         try {
-            List<Blob> images = uploadImageRequestDto.getImages();
 
-            images.forEach((image) -> {
+            data.forEach((image) -> {
                 MemberImg memberImg = MemberImg.builder()
                         .member(member)
                         .imageContent(image)
@@ -545,7 +578,11 @@ public class MemberService {
         }
     }
 
-
+    /**
+     * 좋아요 한 멤버들 가져오기
+     * @param currentMemberDidAddress
+     * @return
+     */
     public GetLikedMembersResponseDto getLikedMembers(String currentMemberDidAddress) {
 
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
@@ -574,6 +611,10 @@ public class MemberService {
         }
     }
 
+    /**
+     * 유저 인증 정보 초기 세팅
+     * @param holderDid
+     */
     public void addMemberCert(String holderDid) {
         Member member = memberRepository.findByDidAddress(holderDid)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
@@ -589,6 +630,10 @@ public class MemberService {
 
     }
 
+    /**
+     * 유저 정보 초기 세팅
+     * @param holderDid
+     */
     public void addNewInfo(String holderDid) {
         Member member = memberRepository.findByDidAddress(holderDid)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
@@ -603,6 +648,10 @@ public class MemberService {
         }
     }
 
+    /**
+     * 유저 초기 필터링 정보 세팅
+     * @param holderDid
+     */
     public void addNewFiltering(String holderDid) {
         Member member = memberRepository.findByDidAddress(holderDid)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
@@ -616,6 +665,7 @@ public class MemberService {
         }
 
     }
+
 
     public GetMemberCertResponseDto getMemberCert(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> {

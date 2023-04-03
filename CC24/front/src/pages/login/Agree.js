@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { createVerifiablePresentationJwt } from 'did-jwt-vc';
 import { useSelector } from 'react-redux';
 import { EthrDID } from 'ethr-did';
@@ -8,17 +8,28 @@ import ommapi from '../../api/ommapi';
 function Agree({setIsLoading}) {
   const [checkedList, setCheckedList] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
-  const did = JSON.parse(localStorage.getItem('DID')).did;
   const searchParams = new URLSearchParams(window.location.search);
   const type = searchParams.get('type');
   const vc = JSON.parse(localStorage.getItem('IdenVC'));
-  const iden = JSON.parse(localStorage.getItem('keypair')).identifier;
-  const pk = JSON.parse(localStorage.getItem('keypair')).privateKey;
-  const ethrDidOnGoerliNamed = new EthrDID({
-    identifier: iden,
-    privateKey: pk,
-    chainNameOrId: 'goerli',
-  });
+  const [did, setDid] = useState(null);
+  const [iden, setIden] = useState(null);
+  const [pk, setPK] = useState(null);
+  const [ethrDidOnGoerliNamed, setEthrDidOnGoerliNamed] = useState(null);
+  useEffect(() => {
+    if (localStorage.getItem('DID')) {
+      setDid(JSON.parse(localStorage.getItem('DID')).did);
+      setIden(JSON.parse(localStorage.getItem('keypair')).identifier);
+      setPK(JSON.parse(localStorage.getItem('keypair')).privateKey);
+      console.log(JSON.parse(localStorage.getItem('keypair')).privateKey);
+      console.log(JSON.parse(localStorage.getItem('keypair')).identifier);
+      const ethrDidOnGoerli = new EthrDID({
+        identifier: JSON.parse(localStorage.getItem('keypair')).identifier,
+        privateKey: JSON.parse(localStorage.getItem('keypair')).privateKey,
+        chainNameOrId: 'goerli',
+      });
+      setEthrDidOnGoerliNamed(ethrDidOnGoerli);
+    }
+  }, [])
 
   const checkedItemHandler = (value: string, isChecked: boolean) => {
     if (isChecked) {
@@ -47,6 +58,8 @@ function Agree({setIsLoading}) {
       },
     };
     console.log(did);
+    console.log(vpPayload);
+    console.log(ethrDidOnGoerliNamed);
     const vpJwt = await createVerifiablePresentationJwt(vpPayload, ethrDidOnGoerliNamed);
     console.log(vpJwt);
     const data = {

@@ -26,7 +26,7 @@ public class Member {
     @JsonIgnore
     @Column(name = "is_black")
     @ColumnDefault("false")
-    private boolean isBlack = false;
+    private boolean isBlack;
 
     @Column(name = "nickname")
     private String nickname;

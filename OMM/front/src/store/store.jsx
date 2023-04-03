@@ -1,9 +1,7 @@
-/* eslint-disable */
-
 import { configureStore } from '@reduxjs/toolkit';
 import storage from 'redux-persist/lib/storage';
 import { combineReducers } from 'redux';
-import { persistReducer } from 'redux-persist';
+import { PERSIST, REGISTER, persistReducer } from 'redux-persist';
 
 import userSlice from './userSlice';
 import chatSlice from './chatSlice';
@@ -15,7 +13,7 @@ const reducers = combineReducers({
   user: userSlice.reducer,
   chat: chatSlice.reducer,
   rec: recSlice.reducer,
-})
+});
 const persistConfig = {
   key: 'root',
   storage,
@@ -24,6 +22,12 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, reducers);
 const store = configureStore({
   reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [REGISTER, PERSIST],
+      },
+    }),
 });
 
 export default store;

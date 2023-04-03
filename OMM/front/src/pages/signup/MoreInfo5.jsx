@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import http from '../../api/http';
 import { moreInfo5 } from '../../store/userSlice';
 
 function MoreInfo5({ setStep }) {
+  const token = localStorage.getItem('accesstoken');
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const [MBTI1, setMBTI1] = useState('');
@@ -19,8 +19,7 @@ function MoreInfo5({ setStep }) {
     setStep(4);
   };
   const next = () => {
-    if (moreinfo.pet
-        && moreinfo.MBTI) {
+    if (moreinfo.pet && moreinfo.MBTI) {
       setStep(6);
     } else {
       alert('모든 정보를 입력해주세요!');
@@ -28,53 +27,80 @@ function MoreInfo5({ setStep }) {
   };
   const sendInfo = () => {
     const info = {
-      contact_style: moreinfo.contact_style,
-      drinking_style: moreinfo.drinking_style,
-      smoking_style: moreinfo.smoking_style,
+      pet: moreinfo.pet,
+      MBTI: moreinfo.MBTI,
     };
     console.log(info);
     dispatch(moreInfo5(info));
   };
-  const my_info = new FormData();
-  my_info.append('nickname', user.nickname);
-  my_info.append('lat', user.lat);
-  my_info.append('lng', user.lng);
-  my_info.append('height', user.height);
-  my_info.append('my_contact_style', user.my_contact_style);
-  my_info.append('my_drinking_style', user.my_drinking_style);
-  my_info.append('my_smoking_style', user.my_smoking_style);
-  my_info.append('military', user.military);
-  my_info.append('pet', user.pet);
-  my_info.append('MBTI1', user.MBTI);
+  // const my_info = new FormData();
+  // my_info.append('nickname', user.nickname);
+  // my_info.append('lat', user.lat);
+  // my_info.append('lng', user.lng);
+  // my_info.append('height', user.height);
+  // my_info.append('contact_style', user.my_contact_style);
+  // my_info.append('drinking_style', user.my_drinking_style);
+  // my_info.append('smoking_style', user.my_smoking_style);
+  // my_info.append('military', user.military);
+  // my_info.append('pet', user.pet);
+  // my_info.append('MBTI1', user.MBTI);
+  const myInfo = {
+    nickname: user.nickname,
+    lat: user.lat,
+    lng: user.lng,
+    height: user.height,
+    contact_style: user.my_contact_style,
+    drinking_style: user.my_drinking_style,
+    smoking_style: user.my_smoking_style,
+    military: user.military,
+    pet: user.pet,
+    MBTI: user.MBTI,
+  };
 
-  const my_fav = new FormData();
-  my_fav.append('age_min', user.age_min);
-  my_fav.append('age_max', user.age_max);
-  my_fav.append('height_min', user.height_min);
-  my_fav.append('height_max', user.height_max);
-  my_fav.append('range_min', user.range_min);
-  my_fav.append('range_max', user.range_max);
-  my_info.append('contact_style', user.contact_style);
-  my_info.append('drinking_style', user.drinking_style);
-  my_info.append('smoking_style', user.smoking_style);
+  // const my_fav = new FormData();
+  // my_fav.append('age_min', user.age_min);
+  // my_fav.append('age_max', user.age_max);
+  // my_fav.append('height_min', user.height_min);
+  // my_fav.append('height_max', user.height_max);
+  // my_fav.append('range_min', user.range_min);
+  // my_fav.append('range_max', user.range_max);
+  // my_fav.append('contact_style', user.contact_style);
+  // my_fav.append('drinking_style', user.drinking_style);
+  // my_fav.append('smoking_style', user.smoking_style);
+
+  const myFav = {
+    age_min: user.age_min,
+    age_max: user.age_max,
+    height_min: user.height_min,
+    height_max: user.height_max,
+    range_min: user.range_min,
+    range_max: user.range_max,
+    contact_style: user.contact_style,
+    drinking_style: user.drinking_style,
+    smoking_style: user.smoking_style,
+    military: user.military,
+  };
 
   useEffect(() => {
     console.log(moreinfo);
+    console.log(user);
   }, [moreinfo]);
 
   async function sendMyInfo() {
     await http({
       method: 'post',
       url: '/member/info',
-      data: my_info,
-      // headers: {
-      //   Authorization: token,
-      // },
+      data: myInfo,
+      headers: {
+        // Authorization: import.meta.env.VITE_TOKEN,
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then((res) => {
-        console.log(res.message);
+        console.log(res.data);
       })
       .catch((err) => {
+        // console.log(user);
         console.log(err);
       });
   }
@@ -83,13 +109,15 @@ function MoreInfo5({ setStep }) {
     await http({
       method: 'post',
       url: '/member/filtering',
-      data: my_fav,
-      // headers: {
-      //   Authorization: token,
-      // },
+      data: myFav,
+      headers: {
+        // Authorization: import.meta.env.VITE_TOKEN,
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then((res) => {
-        console.log(res.message);
+        console.log(res.data);
+        next();
       })
       .catch((err) => {
         console.log(err);
@@ -364,7 +392,7 @@ function MoreInfo5({ setStep }) {
                 setMBTI4(e.target.value);
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  MBTI: MBTI1 + MBTI2 + MBTI3 + MBTI4,
+                  MBTI: MBTI1 + MBTI2 + MBTI3 + e.target.value,
                 }));
               }}
               id="smoke1"
@@ -386,7 +414,7 @@ function MoreInfo5({ setStep }) {
                 setMBTI4(e.target.value);
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  MBTI: MBTI1 + MBTI2 + MBTI3 + MBTI4,
+                  MBTI: MBTI1 + MBTI2 + MBTI3 + e.target.value,
                 }));
               }}
               id="smoke3"
@@ -408,7 +436,9 @@ function MoreInfo5({ setStep }) {
         <button
           type="button"
           aria-hidden
-          onClick={() => { prev(); }}
+          onClick={() => {
+            prev();
+          }}
         >
           &lt;
         </button>
@@ -416,7 +446,6 @@ function MoreInfo5({ setStep }) {
           type="button"
           aria-hidden
           onClick={() => {
-            next();
             sendInfo();
             sendMyInfo();
             sendPreferInfo();

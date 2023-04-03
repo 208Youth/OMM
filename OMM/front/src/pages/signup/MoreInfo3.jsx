@@ -19,17 +19,17 @@ function MoreInfo3({setStep}) {
     setStep(2);
   }
   const next = () => { 
-    if (
-      moreinfo.age_min && 
-      moreinfo.age_max && 
-      moreinfo.height_min && 
-      moreinfo.height_max && 
-      moreinfo.range_min &&
-      moreinfo.range_max){
+    // if (
+    //   moreinfo.age_min && 
+    //   moreinfo.age_max && 
+    //   moreinfo.height_min && 
+    //   moreinfo.height_max && 
+    //   moreinfo.range_min &&
+    //   moreinfo.range_max){
         setStep(4)
-      } else {
-        alert('모든 정보를 입력해주세요!');
-      }
+      // } else {
+      //   alert('모든 정보를 입력해주세요!');
+      // }
   }
   const sendInfo = () => {
     const info = {
@@ -85,6 +85,7 @@ function MoreInfo3({setStep}) {
 
   useEffect(() => {
     console.log(moreinfo);
+    console.log(user);
   }, [moreinfo]);
 
   return (

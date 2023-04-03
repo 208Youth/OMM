@@ -38,6 +38,8 @@ dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
     implementation 'org.postgresql:postgresql'
     implementation 'org.springframework:spring-messaging'
+    implementation 'commons-fileupload:commons-fileupload:1.4'
+
 }
 
 tasks.named('test') {

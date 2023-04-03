@@ -14,6 +14,9 @@ public class GetMemberInfoResponseDto {
     @JsonProperty(value = "nickname")
     private String nickname;
 
+    @JsonProperty(value = "age")
+    private int age;
+
     @JsonProperty(value = "lat")
     private float lat;
 
@@ -45,5 +48,5 @@ public class GetMemberInfoResponseDto {
     private String mbti;
 
     @JsonProperty(value = "profileimgs")
-    private List<Blob> profileimgs;
+    private List<byte[]> profileimgs;
 }

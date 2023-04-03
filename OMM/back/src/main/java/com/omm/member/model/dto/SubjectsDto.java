@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SubjectsDto {
 
-    private Map<String, Map<String, String>> subjects;
+    private Map<String, Map<String, Object>> subjects;
 
 }
