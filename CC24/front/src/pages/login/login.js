@@ -5,6 +5,9 @@ import Password from './Password';
 import Agree from './Agree';
 import { useNavigate } from 'react-router-dom';
 import ommapi from '../../api/ommapi';
+import axios from 'axios';
+import { createVerifiablePresentationJwt } from 'did-jwt-vc';
+import { EthrDID } from 'ethr-did';
 
 function Login() {
   const navigate = useNavigate();
@@ -12,24 +15,68 @@ function Login() {
   const type = searchParams.get('type');
   console.log(type);
   const did = JSON.parse(localStorage.getItem('DID')).did;
+  const iden = JSON.parse(localStorage.getItem('keypair')).identifier;
+  const pk = JSON.parse(localStorage.getItem('keypair')).privateKey;
+  const ethrDidOnGoerliNamed = new EthrDID({
+    identifier: iden,
+    privateKey: pk,
+    chainNameOrId: 'goerli',
+  });
   const [isLoading, setIsLoading] = useState(false);
+  // const [vc, setVC] = useState('');
+  let vc = ''
   const data = {
-    type: 'SIGNIN',
     holderDid: did,
-    vpJwt:
-      'eyJhbGciOiJFUzI1NkstUiIsInR5cCI6IkpXVCJ9.eyJ2cCI6eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvMjAxOC9jcmVkZW50aWFscy92MSJdLCJ0eXBlIjpbIlZlcmlmaWFibGVQcmVzZW50YXRpb24iXSwidmVyaWZpYWJsZUNyZWRlbnRpYWwiOlsiZXlKaGJHY2lPaUpGVXpJMU5rc3RVaUlzSW5SNWNDSTZJa3BYVkNKOS5leUpsZUhBaU9qRTJPREkzTlRjMU9USXNJblpqSWpwN0lrQmpiMjUwWlhoMElqcGJJbWgwZEhCek9pOHZkM2QzTG5jekxtOXlaeTh5TURFNEwyTnlaV1JsYm5ScFlXeHpMM1l4SWwwc0luUjVjR1VpT2xzaVZtVnlhV1pwWVdKc1pVTnlaV1JsYm5ScFlXd2lMQ0pRWlhKemIyNWhiRWxrUTNKbFpHVnVkR2xoYkNKZExDSmpjbVZrWlc1MGFXRnNVM1ZpYW1WamRDSTZleUp3WlhKemIyNWhiRWx1Wm04aU9uc2libUZ0WlNJNkl1cTVnT3ljcE91dnVDSXNJbUpwY25Sb1pHRjBaU0k2SWpFNU9Ua3RNVEV0TVRZaUxDSm5aVzVrWlhJaU9pSkdSVTFCVEVVaWZYMTlMQ0p6ZFdJaU9pSmthV1E2WlhSb2NqcG5iMlZ5YkdrNk1IZ3dNMlJtT0dVMU5HRXpNR1V6T1RBMlpESTBNMlEzTkRBeVl6VTVZamd5WWpWa09EVTBNakl6WW1FellXVTVOamxsWVRJelpESmpNVEppT0dSaE5EbGpOV1VpTENKcGMzTWlPaUprYVdRNlpYUm9janBuYjJWeWJHazZNSGd3TXpBM1pqUmtPRFUzTVdSa056WmpOakZqTUdJMVl6aGxaV1ppT0RBMU4yVTRORGxqWWpjd1pUSXdNV014WWpCa016TXhaV1U1Tnpaa09UVXpOMkkzTTJJaWZRLng5Qnd6bFpjSDhTd21NeXJDbzdVZFdpNUIzZW1WSldaZWJ0RHd6ZGlJNldsd1drSW9BVW56dC12SmxxVnZnOFo0amZNYTRnR3BZM3JWUnhiNlFCQjJBQSJdfSwiaXNzIjoiZGlkOmV0aHI6Z29lcmxpOjB4MDNkZjhlNTRhMzBlMzkwNmQyNDNkNzQwMmM1OWI4MmI1ZDg1NDIyM2JhM2FlOTY5ZWEyM2QyYzEyYjhkYTQ5YzVlIn0.aaQ-BH_yEonZanA95Afb2yRGHbNMLfpXwymvPYywWRr3Iq8fl8qmAWdT-97btV21jNNDgA1XBTccqZM5_rIa5wA',
-  };
-  if (localStorage.getItem('IdenVC') == undefined) {
-    navigate('/signup');
   }
-  const ommLogin = async () => {
+  
+  const getVC = async () => {
     setIsLoading(true);
+    await axios({
+      method: 'post',
+      url: 'http://localhost:4424/api/node/credential/did-address',
+      data: data,
+    })
+    .then((res) => {
+      console.log('성공!!!!!!!!', res);
+      console.log(res.data.vcJwt);
+      vc = res.data.vcJwt
+      })
+    .then((res) => {
+      console.log(res);
+      ommLogin()
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  // navigate('/main');
+  };
+  const ommLogin = async () => {
+    const vpPayload = {
+      vp: {
+        '@context': ['https://www.w3.org/2018/credentials/v1'],
+        type: ['VerifiablePresentation', 'PersonalIdPresentation'],
+        verifiableCredential: vc,
+      },
+    };
+    console.log(did);
+    console.log(vc);
+    const vpJwt = await createVerifiablePresentationJwt(vpPayload, ethrDidOnGoerliNamed);
+    console.log(vpJwt);
+    const data = {
+      type: type,
+      holderDid: did,
+      vpJwt: vpJwt,
+    }
     await ommapi
       .post(`/sign/${type}`, data)
       .then((res) => {
         console.log(res);
+        if (res.data == "#") {
+          window.location.href = "http://localhost:3000/login?type=SIGNUP"
+        } else {
         setIsLoading(false);
         window.location.href = res.data;
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -85,7 +132,7 @@ function Login() {
           setPasswordComplete={(res) => {
             if (res) {
               setPasswordComplete(true);
-              if (type == 'SIGNIN') ommLogin();
+              if (type == 'SIGNIN') getVC();
             }
           }}
         />

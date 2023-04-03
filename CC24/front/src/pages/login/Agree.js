@@ -38,6 +38,7 @@ function Agree({setIsLoading}) {
   };
   
   const toOMM = async () => {
+    console.log(vc);
     const vpPayload = {
       vp: {
         '@context': ['https://www.w3.org/2018/credentials/v1'],
@@ -59,8 +60,10 @@ function Agree({setIsLoading}) {
         .post(`/sign/${type}`, data)
         .then((res) => {
           console.log(res);
+          
           setIsLoading(false)
           window.location.href = res.data;
+          
         })
         .catch((err) => {
           console.log(err);
