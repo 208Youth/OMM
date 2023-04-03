@@ -4,9 +4,10 @@ import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import './nav-bar.scss';
 import { Link } from 'react-router-dom';
-import axios from '../api/http';
 
-function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav }) {
+function Navbar({
+  profileNav, mainNav, notiNav, chatlistNav, likesNav,
+}) {
   let stompClient;
   const token = localStorage.getItem('accesstoken');
   const mainconnect = () => {

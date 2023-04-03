@@ -47,12 +47,12 @@ function OtherProfile() {
   const [new_interest, setInterest] = useState(null);
   // new_certinfo인지 certinfo인지 axios주고받으면서 확인
   const FreshCert = () => {
-    axios.get('https://example.com/api/data')
+    http.get(`member/${memberId}/cert`)
       .then((response) => setCert(response.data))
       .catch((error) => console.error(error));
   };
   const FreshInterest = () => {
-    axios.get('')
+    http.get(`/member/${memberId}/interest-list`)
       .then((response) => setInterest(response.data.interestList))
       .catch((error) => console.error(error));
   };

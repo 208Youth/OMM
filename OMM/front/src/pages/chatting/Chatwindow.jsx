@@ -137,18 +137,29 @@ function ChatWindow() {
 
   useEffect(() => {
     findRoom();
-    axios
-      .get(`http://localhost:5000/api/chat/room/${roomId}/messages`)
-      .then(({ data }) => {
-        console.log('아래는 data 정보');
-        console.log({ data });
-        console.log(...data);
-        console.log('위는data 정보');
-        setMessages([...data]);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    http({
+      method: 'get',
+      url: `/chat/room/${roomId}/messages`,
+      headers: {
+        Authorization: import.meta.env.VITE_TOKEN,
+      },
+    }).then((response) => {
+      console.log(response);
+      setMessages([...response]);
+    });
+
+    // axios
+    //   .get(`http://localhost:5000/api/chat/room/${roomId}/messages`)
+    //   .then(({ data }) => {
+    //     console.log('아래는 data 정보');
+    //     console.log({ data });
+    //     console.log(...data);
+    //     console.log('위는data 정보');
+    //     setMessages([...data]);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
     connect();
   }, []);
 

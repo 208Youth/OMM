@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import http from '../../api/http';
 import TestImg from '../../components/assets/images/img_1.jpg';
 import Navbar from '../../components/nav-bar';
 
@@ -10,13 +11,20 @@ function LikeList() {
   const navigate = useNavigate();
 
   async function getLikes() {
-    await axios({
+    await http({
       method: 'get',
-      url: '/api/member/liked',
-      // headers: {
-      //   Authorization: token,
-      // },
+      url: '/liskes',
+      headers: {
+        Authorization: import.meta.env.VITE_TOKEN,
+      },
     })
+    // await axios({
+    //   method: 'get',
+    //   url: '/api/member/liked',
+    //   // headers: {
+    //   //   Authorization: token,
+    //   // },
+    // })
       .then((res) => {
         console.log(res.liked_list);
         setLikes(res.liked_list);
@@ -41,8 +49,8 @@ function LikeList() {
         <span className="ml-3 font-sans font-bold">OMM List</span>
       </div>
       <div className="mx-6 grid grid-cols-2 gap-y-4">
-        {likes &&
-          likes.map((person) => (
+        {likes
+          && likes.map((person) => (
             <div
               className="relative"
               onClick={() => {
