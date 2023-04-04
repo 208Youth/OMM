@@ -1,5 +1,6 @@
 package com.omm.handler;
 
+import com.omm.chat.service.ChatPublisherService;
 import com.omm.chat.service.ChatService;
 import com.omm.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class WebSocketEventListener {
     private final TokenProvider jwtTokenProvider;
 
     private final ChatService chatService;
+    private final ChatPublisherService publisherService;
 
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
@@ -48,6 +50,7 @@ public class WebSocketEventListener {
                     logger.info("[Connected] room id : {} | websocket session id : {}", roomId, sessionId);
                     chatService.connectUser(roomId, sessionId, myId);
                     chatService.enterRoom(roomId, myId);
+                    publisherService.publishEnter(roomId);
                 }
             }
         }
