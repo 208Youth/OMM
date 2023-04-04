@@ -5,6 +5,7 @@ import CloseBtn from '../../assets/CloseBtn.svg';
 
 function ImageUploader({ setModal }) {
   const [images, setImages] = useState(Array(6).fill(null));
+  const token = localStorage.getItem('accesstoken');
 
   const onDrop = (acceptedFiles, index) => {
     const file = acceptedFiles[0];
@@ -42,7 +43,7 @@ function ImageUploader({ setModal }) {
       url: '/member/img',
       headers: {
         'Content-Type': 'multipart/form-data',
-        Authorization: import.meta.env.VITE_TOKEN,
+        Authorization: `Bearer ${token}`,
       },
       data: formData,
     }).then((response) => {

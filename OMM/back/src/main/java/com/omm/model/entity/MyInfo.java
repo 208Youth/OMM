@@ -57,6 +57,7 @@ public class MyInfo {
 
     @Column(name = "military")
     @Enumerated(EnumType.STRING)
+    @ColumnDefault("'NONE'")
     private InfoMilitary military;
 
     @Column(name = "pet")
