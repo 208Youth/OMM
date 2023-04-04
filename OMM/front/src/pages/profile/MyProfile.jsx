@@ -59,12 +59,12 @@ function InterestList({ interest }) {
 function MyProfile({ profileNav }) {
   profileNav = true;
   const certinfo = {
-    university: null,
-    job: true,
-    certificate: '잘했어요일기장',
-    health: null,
-    estate: null,
-    income: null,
+    university:false,
+    job: false,
+    certificate: false,
+    health: false,
+    estate: false,
+    income: false,
   };
 
   // const interest = [
@@ -146,6 +146,7 @@ function MyProfile({ profileNav }) {
   const [interest, setInterest] = useState([]);
   const [basicInfomation, setInfo] = useState([]);
   const [filterInfomation, setFilter] = useState([]);
+  const [profileImg, setProfileImg] = useState([]);
 
   // const [isHovered, setIsHovered] = useState(false);
   // const handleMouseEnter = () => {
@@ -164,7 +165,7 @@ function MyProfile({ profileNav }) {
       method: 'get',
       url: '/member',
       headers: {
-        Authorization: import.meta.env.VITE_TOKEN,
+        Authorization: `Bearer ${token}`,
       },
 
     })
@@ -175,16 +176,16 @@ function MyProfile({ profileNav }) {
       .catch((err) => {
         console.log(err);
         console.log('왜자꾸안되');
-        console.log(import.meta.env.VITE_TOKEN);
+        console.log();
       });
   }
 
   async function FreshCert() {
     await http({
       method: 'get',
-      url: `/member/${memberId}/cert`,
+      url: '/member/certificate',
       headers: {
-        Authorization: import.meta.env.VITE_TOKEN,
+        Authorization: `Bearer ${token}`
       },
     })
       .then((res) => {
@@ -200,7 +201,7 @@ function MyProfile({ profileNav }) {
       method: 'put',
       url: '/member/pr',
       headers: {
-        Authorization: import.meta.env.VITE_TOKEN,
+        Authorization: `Bearer ${token}`,
       },
       data: { pr: new_pr },
 
@@ -221,7 +222,7 @@ function MyProfile({ profileNav }) {
       method: 'get',
       url: '/member/filtering',
       headers: {
-        Authorization: import.meta.env.VITE_TOKEN,
+        Authorization: `Bearer ${token}`
       },
     })
       .then((res) => {
@@ -238,7 +239,7 @@ function MyProfile({ profileNav }) {
       method: 'get',
       url: '/member/interest-list',
       headers: {
-        Authorization: import.meta.env.VITE_TOKEN,
+        Authorization: `Bearer ${token}`
       },
     })
       .then((res) => {
@@ -380,7 +381,7 @@ function MyProfile({ profileNav }) {
   // 컴포넌트가 처음 마운트될 때만 useEffect 콜백 함수가 호출되고,
   // 그 이후에는 호출되지 않습니다.
   return (
-    <div className="bg-white w-[22.5rem] h-[48.75rem]">
+    <div>
       <div className="text-center">
         <Modal
           className="MyinfoModal"
@@ -410,7 +411,7 @@ function MyProfile({ profileNav }) {
       </div>
       <div>
         <div className="absolute top-20 left-0 w-full z-5">
-          <Pslider />
+          <Pslider profileImg={profileImg}/>
           <div>
             <div
               // className={isHovered ? 'imagesetting:hover' : 'imagesetting'}
@@ -799,60 +800,60 @@ function MyProfile({ profileNav }) {
                 </div>
 
                 <div>
-                  <div className="my-5 ml-5">
+                  <div className="my-5 ml-10">
                     <div className="inline-block">
                       <Tooltip id="my-tooltip" />
                       <img
-                        src={new_certinfo.health !== null ? health_yes : health_no}
+                        src={new_certinfo.health !== false ? health_yes : health_no}
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={`${new_certinfo.health}`}
+                        data-tooltip-content={`${new_certinfo.health_info}`}
                       />
                     </div>
                     <div className="inline-block">
                       <img
-                        src={new_certinfo.university !== null ? university_yes : university_no}
+                        src={new_certinfo.university !== false ? university_yes : university_no}
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={`${new_certinfo.university}`}
+                        data-tooltip-content={`${new_certinfo.university_name}`}
                       />
                     </div>
                     <div className="inline-block">
                       <img
-                        src={new_certinfo.job !== null ? job_yes : job_no}
+                        src={new_certinfo.job !== false ? job_yes : job_no}
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={`${new_certinfo.job}`}
+                        data-tooltip-content={`${new_certinfo.job_name}`}
                       />
                     </div>
                     <div className="inline-block">
                       <img
-                        src={new_certinfo.certificate !== null ? certificate_yes : certificate_no}
+                        src={new_certinfo.certificate !== false ? certificate_yes : certificate_no}
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={` ${new_certinfo.certificate}`}
+                        data-tooltip-content={` ${new_certinfo.certificate_names}`}
                       />
                     </div>
                     <div className="inline-block">
                       <img
-                        src={new_certinfo.estate !== null ? estate_yes : estate_no}
+                        src={new_certinfo.estate !== false ? estate_yes : estate_no}
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={` ${new_certinfo.estate}`}
+                        data-tooltip-content={` ${new_certinfo.estate_amount}`}
                       />
                     </div>
                     <div className="inline-block">
                       <img
-                        src={new_certinfo.income !== null ? income_yes : income_no}
+                        src={new_certinfo.income !== false ? income_yes : income_no}
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={` ${new_certinfo.income}`}
+                        data-tooltip-content={` ${new_certinfo.income_amount}`}
                       />
                     </div>
                   </div>
