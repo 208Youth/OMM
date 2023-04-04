@@ -1,18 +1,18 @@
 /* eslint-disable */
-import React, { useEffect, useState } from "react";
-import "./Signup.css";
-import Modal from "react-modal";
-import { useDispatch, useSelector } from "react-redux";
-import { EthrDID } from "ethr-did";
+import React, { useEffect, useState } from 'react';
+import './Signup.css';
+import Modal from 'react-modal';
+import { useDispatch, useSelector } from 'react-redux';
+import { EthrDID } from 'ethr-did';
 // import EthrDidResolver from 'ethr-did-resolver';
 // import { getResolver } from 'ethr-did-resolver';
-import FaceRecogModal from "./FaceRecogModal";
-import IdenModal from "./IdenModal";
-import PasswordModal from "./PasswordModal";
-import { userInfo, idenVC, certInfo } from "../../store/userSlice";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import http from "../../api/nodeapi";
+import FaceRecogModal from './FaceRecogModal';
+import IdenModal from './IdenModal';
+import PasswordModal from './PasswordModal';
+import { userInfo, idenVC, certInfo } from '../../store/userSlice';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import http from '../../api/nodeapi';
 
 function Signup() {
   const navigate = useNavigate();
@@ -23,17 +23,17 @@ function Signup() {
   const [passwordModal, setPasswordModal] = useState(false);
   const [passwordComplete, setPasswordComplete] = useState(false);
   const [name, setName] = useState(null);
-  const [year, setYear] = useState("1980");
-  const [month, setMonth] = useState("1");
-  const [day, setDay] = useState("1");
+  const [year, setYear] = useState('1980');
+  const [month, setMonth] = useState('1');
+  const [day, setDay] = useState('1');
   const [gender, setGender] = useState(null);
   const [img, setImg] = useState(null);
   const dispatch = useDispatch();
   const id = useSelector((state) => state.user.id);
 
-  console.log(localStorage.getItem("DID"));
-  if (localStorage.getItem("DID")) {
-    navigate("/main");
+  console.log(localStorage.getItem('DID'));
+  if (localStorage.getItem('DID')) {
+    navigate('/main');
   }
   const sendInfo = () => {
     const info = {
@@ -52,55 +52,55 @@ function Signup() {
       year,
       gender,
     };
-    window.localStorage.setItem("Info", JSON.stringify(Info));
+    window.localStorage.setItem('Info', JSON.stringify(Info));
     const keypair = EthrDID.createKeyPair();
-    const chainNameOrId = "goerli"; // you can use the network name for the most popular [test] networks.
+    const chainNameOrId = 'goerli'; // you can use the network name for the most popular [test] networks.
     const ethrDidOnGoerliNamed = new EthrDID({ ...keypair, chainNameOrId });
-    window.localStorage.setItem("keypair", JSON.stringify(keypair));
-    window.localStorage.setItem("DID", JSON.stringify(ethrDidOnGoerliNamed));
-    const localData = JSON.parse(localStorage.getItem("DID"));
+    window.localStorage.setItem('keypair', JSON.stringify(keypair));
+    window.localStorage.setItem('DID', JSON.stringify(ethrDidOnGoerliNamed));
+    const localData = JSON.parse(localStorage.getItem('DID'));
     console.log(localData.did);
     const data = new FormData();
     console.log(id.personalId);
-    data.append("holderDid", localData.did);
-    data.append("personalId", JSON.stringify(id.personalId));
-    data.append("signature", id.signature);
-    data.append("image", img);
+    data.append('holderDid', localData.did);
+    data.append('personalId', JSON.stringify(id.personalId));
+    data.append('signature', id.signature);
+    data.append('image', img);
     for (let key of data.keys()) {
-      console.log(key, ":", data.get(key));
+      console.log(key, ':', data.get(key));
     }
 
     // await axios({
     await http({
-      method: "post",
+      method: 'post',
       // url: 'http://localhost:4424/api/node/credential/personal-id',
-      url: "/credential/personal-id",
+      url: '/credential/personal-id',
       data: data,
     })
       .then((res) => {
-        console.log("성공!!!!!!!!", res);
+        console.log('성공!!!!!!!!', res);
         dispatch(idenVC(res.data.vcJwt));
-        window.localStorage.setItem("IdenVC", JSON.stringify(res.data.vcJwt));
+        window.localStorage.setItem('IdenVC', JSON.stringify(res.data.vcJwt));
       })
       .catch((err) => {
         console.log(err);
       });
-    navigate("/main");
+    navigate('/main');
     console.log(img);
   };
 
   useEffect(() => {
     if (faceModal) {
-      console.log("모달 열림");
+      console.log('모달 열림');
     } else {
-      console.log("모달 닫힘");
+      console.log('모달 닫힘');
     }
   }, [faceModal]);
   useEffect(() => {
     if (idenModal) {
-      console.log("모달 열림");
+      console.log('모달 열림');
     } else {
-      console.log("모달 닫힘");
+      console.log('모달 닫힘');
     }
   }, [idenModal]);
 
@@ -251,7 +251,7 @@ function Signup() {
             <div className="flex mb-6">
               <div className="flex items-center mr-4">
                 <input
-                  onClick={() => setGender("남")}
+                  onClick={() => setGender('남')}
                   id="inline-radio"
                   type="radio"
                   value=""
@@ -267,7 +267,7 @@ function Signup() {
               </div>
               <div className="flex items-center mr-4">
                 <input
-                  onClick={() => setGender("여")}
+                  onClick={() => setGender('여')}
                   id="inline-2-radio"
                   type="radio"
                   value=""
@@ -296,7 +296,7 @@ function Signup() {
                   첨부
                 </div>
                 <svg
-                  className={faceComplete ? "hidden" : "checkmark"}
+                  className={faceComplete ? 'hidden' : 'checkmark'}
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="1"
@@ -311,7 +311,7 @@ function Signup() {
                   />
                 </svg>
                 <svg
-                  className={faceComplete ? "checkmark" : "hidden"}
+                  className={faceComplete ? 'checkmark' : 'hidden'}
                   fill="#4654a3"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
@@ -340,7 +340,7 @@ function Signup() {
                   첨부
                 </div>
                 <svg
-                  className={idenComplete ? "hidden" : "checkmark"}
+                  className={idenComplete ? 'hidden' : 'checkmark'}
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="1"
@@ -355,7 +355,7 @@ function Signup() {
                   />
                 </svg>
                 <svg
-                  className={idenComplete ? "checkmark" : "hidden"}
+                  className={idenComplete ? 'checkmark' : 'hidden'}
                   fill="#4654a3"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
@@ -383,7 +383,7 @@ function Signup() {
                   설정
                 </div>
                 <svg
-                  className={passwordComplete ? "hidden" : "checkmark"}
+                  className={passwordComplete ? 'hidden' : 'checkmark'}
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="1"
@@ -398,7 +398,7 @@ function Signup() {
                   />
                 </svg>
                 <svg
-                  className={passwordComplete ? "checkmark" : "hidden"}
+                  className={passwordComplete ? 'checkmark' : 'hidden'}
                   fill="#4654a3"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
