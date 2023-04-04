@@ -97,7 +97,7 @@ function Agree({setIsLoading}) {
           {checkedList}
         </p>
         <p className="text-xl mt-10 mb-4 leading-relaxed text-center text-blue-800">
-          이름, 나이, 성별
+          이름, 나이, 성별, 사진
         </p>
         <p className="text-lg mb-4 leading-relaxed px-10">
           개인정보 제공에 동의해야만 OMM 서비스를 이용할 수 있습니다.
