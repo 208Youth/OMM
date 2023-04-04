@@ -4,16 +4,30 @@ import React, { useState, useEffect } from 'react';
 // import CloseBtn from '../../assets/CloseBtn.svg';
 import './Profile.css';
 import CloseBtn from '../../assets/CloseBtn.svg';
+import http from '../../api/http';
 
 function MyinfoSetModal3({ setModal }) {
   // const [interests, setInterests] = useState([]);
   const [interests, setInterests] = useState(['잠자기', '밥먹기', '술마시기', '눕기', '유투브보기', '간식먹기']);
   const [newInterest, setNewInterest] = useState('');
+  const memberId = 1;
 
   // API에서 관심사 리스트를 가져오는 함수
   async function fetchInterests() {
-    // const response = await axios.get(`/api/member/${member - id}}/interest-list`);
-    // setInterests(response.data);
+    await http({
+      method: 'get',
+      url: `/member/${memberId}/interest-list`,
+      // headers: {
+      //   Authorization: import.meta.env.VITE_TOKEN,
+      // },
+    })
+      .then((res) => {
+        console.log(res);
+        setInterests(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   // 관심사 리스트를 API로 보내는 함수
@@ -23,8 +37,8 @@ function MyinfoSetModal3({ setModal }) {
       name: interest,
     }));
     console.log(interestList);
-    // await axios.post(`/api/member/${member - id}}/interest-list`, interests);
-    // alert('관심사가 저장되었습니다.');
+    await http.put(`/member/${memberId}}/interest-list`, interests);
+    alert('관심사가 저장되었습니다.');
     setModal(true);
   }
 

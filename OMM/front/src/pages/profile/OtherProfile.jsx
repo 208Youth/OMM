@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Tooltip } from 'react-tooltip';
+import 'react-tooltip/dist/react-tooltip.css';
 import http from '../../api/http';
 import CloseBtn from '../../assets/CloseBtn.svg';
 import estate_yes from '../../assets/estate_yes.svg';
@@ -54,9 +56,9 @@ function OtherProfile() {
     await http({
       method: 'get',
       url: `/member/${memberId}/cert`,
-      headers: {
-        Authorization: import.meta.env.VITE_TOKEN,
-      },
+      // headers: {
+      //   Authorization: import.meta.env.VITE_TOKEN,
+      // },
     })
       .then((res) => {
         console.log(res);
@@ -80,7 +82,7 @@ function OtherProfile() {
       .catch((error) => console.error(error));
   };
   useEffect(() => {
-    FreshCert();
+    // FreshCert();
     // FreshInterest();
   }, []);
 
@@ -169,22 +171,59 @@ function OtherProfile() {
               <div>
                 <div className="my-5 ml-5">
                   <div className="inline-block">
-                    <img src={new_certinfo.health === true ? health_yes : health_no} alt="#" className="badges" />
+                    <Tooltip id="my-tooltip" />
+                    <img
+                      src={new_certinfo.health === true ? health_yes : health_no}
+                      alt="#"
+                      className="badges"
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={`건강데이터넣을것임 ${new_certinfo.health}`}
+                    />
                   </div>
                   <div className="inline-block">
-                    <img src={new_certinfo.university === true ? university_yes : university_no} alt="#" className="badges" />
+                    <img
+                      src={new_certinfo.university === true ? university_yes : university_no}
+                      alt="#"
+                      className="badges"
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={`${new_certinfo.university}`}
+                    />
                   </div>
                   <div className="inline-block">
-                    <img src={new_certinfo.job === true ? job_yes : job_no} alt="#" className="badges" />
+                    <img
+                      src={new_certinfo.job === true ? job_yes : job_no}
+                      alt="#"
+                      className="badges"
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={`${new_certinfo.job}`}
+                    />
                   </div>
                   <div className="inline-block">
-                    <img src={new_certinfo.certificate === true ? certificate_yes : certificate_no} alt="#" className="badges" />
+                    <img
+                      src={new_certinfo.certificate === true ? certificate_yes : certificate_no}
+                      alt="#"
+                      className="badges"
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={` ${new_certinfo.certificate}`}
+                    />
                   </div>
                   <div className="inline-block">
-                    <img src={new_certinfo.estate === true ? estate_yes : estate_no} alt="#" className="badges" />
+                    <img
+                      src={new_certinfo.estate === true ? estate_yes : estate_no}
+                      alt="#"
+                      className="badges"
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={` ${new_certinfo.estate}`}
+                    />
                   </div>
                   <div className="inline-block">
-                    <img src={new_certinfo.income === true ? income_yes : income_no} alt="#" className="badges" />
+                    <img
+                      src={new_certinfo.income === true ? income_yes : income_no}
+                      alt="#"
+                      className="badges"
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={` ${new_certinfo.income}`}
+                    />
                   </div>
                 </div>
               </div>
