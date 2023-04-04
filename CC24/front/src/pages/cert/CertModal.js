@@ -130,12 +130,14 @@ function CertModal({ cert, info, isClose }) {
       VCs.push(credential);
       localStorage.setItem('VC', JSON.stringify(VCs));
       setCertResult(true);
+      setTimeout(() => {setCertResult(false)}, 3000)
     })
     .catch((err) => {
         setCertProgress(false);
         console.log(err);
         if (err.message === "Request failed with status code 400") {
           setFound(true)
+          setTimeout(() => {setFound(false)}, 3000)
         }
       });
   }
