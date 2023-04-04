@@ -17,17 +17,19 @@ function Main() {
   const [img, setImage] = useState([]);
   const [name, setName] = useState();
   const [age, setAge] = useState();
-  const [id, setId] = useState()
+  const [id, setId] = useState();
   const searchParams = new URLSearchParams(window.location.search);
   const jwt = searchParams.get('jwt');
-  localStorage.setItem('accesstoken', jwt);
+  if (jwt != null) {
+    localStorage.setItem('accesstoken', jwt);
+  }
   const token = localStorage.getItem('accesstoken');
   console.log(people);
   useEffect(() => {
     // 추천알고리즘 으로 나온 상대방 id 리스트 axios 요청
     console.log(localStorage.getItem('accesstoken'));
     if (localStorage.getItem('accesstoken') === null) {
-      navigate('/')
+      navigate('/');
     }
     console.log(token);
     http({
@@ -48,7 +50,7 @@ function Main() {
       .catch((err) => {
         console.log(err);
         if (err.message === 'Request failed with status code 400') {
-          // window.location.href = '/';
+          window.location.href = '/';
         }
       });
   }, []);
@@ -72,27 +74,27 @@ function Main() {
 
   const dislike = async function () {
     const data = {
-      'sender_id': id,
-      'favor': false,
-    }
+      sender_id: id,
+      favor: false,
+    };
     await http({
       method: 'post',
       url: '/recommend',
-      headers: {Authorization: `Bearer ${token}`}, 
-      data: data,
+      headers: { Authorization: `Bearer ${token}` },
+      data,
     })
-    .then((res) => {
-      console.log('시러요오오오',res)
-      dispatch(dis(id));
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  }
+      .then((res) => {
+        console.log('시러요오오오', res);
+        dispatch(dis(id));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <div className="flex flex-col">
-      <div onClick={() => {dislike()}} className="z-20 w-16 h-16 transition duration-500 hover:scale-110 bg-red-100 rounded-full shadow-md justify-center mx-auto mt-5">
+      <div onClick={() => { dislike(); }} className="z-20 w-16 h-16 transition duration-500 hover:scale-110 bg-red-100 rounded-full shadow-md justify-center mx-auto mt-5">
         <img
           className="w-10 h-10 mx-auto mt-3 flex"
           src="/reverseheart.png"
@@ -100,14 +102,14 @@ function Main() {
         />
       </div>
       <div className="">
-        <Pslider 
+        <Pslider
           mainImg={img}
           name={name}
-          age={age} 
+          age={age}
         />
       </div>
       {/* <Navbar mainNav={firstperson} /> */}
-      <Navbar mainNav id={id}/>
+      <Navbar mainNav id={id} />
     </div>
   );
 }
