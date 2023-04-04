@@ -1,4 +1,6 @@
+// 변경
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Pslider.css';
 // import './Profile.css';
 import { Tooltip } from 'react-tooltip';
@@ -32,6 +34,26 @@ import MyinfoSetModal2 from './MyinfoSetModal2';
 import http from '@/api/http';
 // props를 통해 userid를 받고 claose 버튼을 눌러서 해당 userid의
 // 아니면 메인 페이지에 해당 컴포넌트를 아예 합쳐버릴까
+
+function InterestList({ interest }) {
+  return (
+    <div>
+      <div>
+        <div />
+      </div>
+
+      {interest.map((item) => (
+        <button
+          key={item.interest_list_id}
+          className="bg-white border border-black rounded-full text-sm px-4"
+        >
+          {item.name}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 function MyProfile({ profileNav }) {
   profileNav = true;
   const certinfo = {
@@ -42,6 +64,7 @@ function MyProfile({ profileNav }) {
     estate: null,
     income: null,
   };
+
   // const interest = [
   //   {
   //     interest_list_id: 1,
@@ -78,13 +101,20 @@ function MyProfile({ profileNav }) {
   //   height_min: 1,
   //   height_max: 100,
   // }];
-
+  const navigate = useNavigate();
   const [MymodalIsOpen, setMyIsOpen] = useState(false);
   const [MymodalIsOpen2, setMyIsOpen2] = useState(false);
   const [MymodalIsOpen3, setMyIsOpen3] = useState(false);
-  // const memberId = localStorage.getItem('member_id');
+  // const memberId = localStorage.getItem('member_id');\
+  const [disabled, setDisabled] = useState(true);
+  const [new_pr, setNew_pr] = useState('');
+
   const memberId = 1;
   const token = localStorage.getItem('accesstoken');
+
+  const handleClick = () => {
+    setDisabled(false);
+  };
   const openMyModal = () => {
     setMyIsOpen(true);
   };
@@ -104,9 +134,9 @@ function MyProfile({ profileNav }) {
     setMyIsOpen3(false);
   };
   const [new_certinfo, setCert] = useState(certinfo);
-  const [new_interest, setInterest] = useState(null);
-  const [basicInfomation, setInfo] = useState(null);
-  const [filterInfomation, setFilter] = useState(null);
+  const [interest, setInterest] = useState([]);
+  const [basicInfomation, setInfo] = useState([]);
+  const [filterInfomation, setFilter] = useState([]);
 
   // const [isHovered, setIsHovered] = useState(false);
   // const handleMouseEnter = () => {
@@ -127,6 +157,7 @@ function MyProfile({ profileNav }) {
       headers: {
         Authorization: import.meta.env.VITE_TOKEN,
       },
+
     })
       .then((res) => {
         console.log(res);
@@ -155,6 +186,27 @@ function MyProfile({ profileNav }) {
         console.log(err);
       });
   }
+  async function sendPr() {
+    await http({
+      method: 'put',
+      url: '/member/pr',
+      headers: {
+        Authorization: import.meta.env.VITE_TOKEN,
+      },
+      data: { pr: new_pr },
+
+    })
+      .then((res) => {
+        console.log(res);
+        console.log(new_pr);
+      })
+      .catch((err) => {
+        console.log(new_pr);
+        console.log(typeof new_pr);
+        console.log(err);
+      });
+  }
+
   async function FreshFilter() {
     await http({
       method: 'get',
@@ -172,12 +224,25 @@ function MyProfile({ profileNav }) {
       });
   }
 
-  const FreshInterest = () => {
-    http
-      .get('/member/interest')
-      .then((response) => setInterest(response.data.interestList))
-      .catch((error) => console.error(error));
-  };
+  async function FreshInterest() {
+    await http({
+      method: 'get',
+      url: '/member/interest-list',
+      headers: {
+        Authorization: import.meta.env.VITE_TOKEN,
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        console.log('관심사성공');
+        setInterest(res.data.interestList);
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log('관심사실패');
+      });
+  }
+
   useEffect(() => {
     FreshCert();
     FreshInterest();
@@ -201,6 +266,99 @@ function MyProfile({ profileNav }) {
         console.log(err);
       });
   }
+  let drinkingStyleText;
+  if (basicInfomation.drinking_style === 'NOT') {
+    drinkingStyleText = '논 알코올';
+  } else if (basicInfomation.drinking_style === 'SOMETIMES') {
+    drinkingStyleText = '가끔';
+  } else if (basicInfomation.drinking_style === 'OFTEN') {
+    drinkingStyleText = '자주';
+  } else if (basicInfomation.drinking_style === 'EVERYDAY') {
+    drinkingStyleText = '술고래';
+  } else if (basicInfomation.drinking_style === 'ONLY_FRIENDS') {
+    drinkingStyleText = '친구들이랑';
+  } else if (basicInfomation.drinking_style === 'STOPPING') {
+    drinkingStyleText = '금주령';
+  }
+  let drinkingStyleText2;
+  if (filterInfomation.drinking_style === 'NONE') {
+    drinkingStyleText2 = '상관없음';
+  } else if (filterInfomation.drinking_style === 'PREFER_NO') {
+    drinkingStyleText2 = '안마셨으면';
+  } else if (filterInfomation.drinking_style === 'PREFER_YES') {
+    drinkingStyleText2 = '잘마셨으면';
+  }
+  let smokingStyleText;
+  if (basicInfomation.smoking_style === 'NOT') {
+    smokingStyleText = '비흡연자';
+  } else if (basicInfomation.smoking_style === 'SOMETIMES') {
+    smokingStyleText = '가끔';
+  } else if (basicInfomation.smoking_style === 'OFTEN') {
+    smokingStyleText = '자주';
+  } else if (basicInfomation.smoking_style === 'STOPPING') {
+    smokingStyleText = '금연중';
+  }
+  let smokingStyleText2;
+  if (filterInfomation.smoking_style === 'NONE') {
+    smokingStyleText2 = '상관없음';
+  } else if (filterInfomation.smoking_style === 'PREFER_NO') {
+    smokingStyleText2 = '비흡연자 선호';
+  } else if (filterInfomation.smoking_style === 'PREFER_YES') {
+    smokingStyleText2 = '흡연자 선호';
+  }
+  let contactStyleText;
+  if (basicInfomation.contact_style === 'PREFER_MSG') {
+    contactStyleText = '카톡러';
+  } else if (basicInfomation.contact_style === 'PREFER_CALL') {
+    contactStyleText = '전화선호';
+  } else if (basicInfomation.contact_style === 'PREFER_FACECALL') {
+    contactStyleText = '영상통화선호';
+  } else if (basicInfomation.contact_style === 'NOT_MSG') {
+    contactStyleText = '카톡 안보는 편';
+  } else if (basicInfomation.contact_style === 'PREFER_OFFLINE') {
+    contactStyleText = '직접 만나는거 선호';
+  }
+  let contactStyleText2;
+  if (filterInfomation.contact_style === 'PREFER_MSG') {
+    contactStyleText2 = '카톡러';
+  } else if (filterInfomation.contact_style === 'PREFER_CALL') {
+    contactStyleText2 = '전화선호';
+  } else if (filterInfomation.contact_style === 'NONE') {
+    contactStyleText2 = '상관없음';
+  } else if (filterInfomation.contact_style === 'PREFER_FACECALL') {
+    contactStyleText2 = '영상통화선호';
+  } else if (filterInfomation.contact_style === 'NOT_MSG') {
+    contactStyleText2 = '카톡 안보는 편';
+  } else if (filterInfomation.contact_style === 'PREFER_OFFLINE') {
+    contactStyleText2 = '직접 만나는거 선호';
+  }
+
+  let petText;
+  if (basicInfomation.pet === 'NOT') {
+    petText = '안키움';
+  } else if (basicInfomation.pet === 'DOG') {
+    petText = '강아지';
+  } else if (basicInfomation.pet === 'CAT') {
+    petText = '고양이';
+  } else if (basicInfomation.pet === 'HAMSTER') {
+    petText = '햄스터';
+  } else if (basicInfomation.pet === 'LIZARD') {
+    petText = '도마뱀';
+  } else if (basicInfomation.pet === 'ETC') {
+    petText = '기타';
+  }
+
+  let militaryText;
+  if (basicInfomation.military === 'NONE') {
+    militaryText = '해당없음';
+  } else if (basicInfomation.military === 'EXEMPT') {
+    militaryText = '면제';
+  } else if (basicInfomation.military === 'COMPLETE') {
+    militaryText = '군필';
+  } else if (basicInfomation.military === 'YET') {
+    militaryText = '미필';
+  }
+
   // useEffect(() => {
   //   axios.get('')
   //     .then((response) => setInterest(response.data.interestList))
@@ -258,11 +416,16 @@ function MyProfile({ profileNav }) {
           <div className="profileinfo">
             <div className="infodetail">
               <div className="text-right">
-                <img
-                  src={CloseBtn}
-                  alt="closbtn"
-                  className="w-8 h-8 inline-block object-right"
-                />
+                {/* 아래는 온클릭시 함수의 결과가 바로 도출되는 코드 */}
+                {/* <button onClick={navigate('/main')}> */}
+                <button onClick={() => navigate('/main')}>
+                  <img
+                    src={CloseBtn}
+                    alt="closbtn"
+                    className="w-8 h-8 inline-block object-right"
+
+                  />
+                </button>
               </div>
 
               <span className="text-3xl ml-2">{basicInfomation.nickname}</span>
@@ -284,9 +447,37 @@ function MyProfile({ profileNav }) {
                 <div className="my-1">
                   <div className="text-2xl m-3">자기소개</div>
                   {/* 아이콘을 누르면 input이 가능하게 바꾸기 */}
-                  <div className="text-slate-600 text-sm">{basicInfomation.pr}</div>
+                  <div />
+                  <div>
+                    <textarea
+                      maxLength={40}
+                      disabled={disabled}
+                      className=" break-words h-20 resize-none overflow-hidden focus:ring-2 focus:ring-blue-300 text-slate-600 text-sm bg-transparent border-none outline-none w-full"
+                      type="text"
+                      value={new_pr}
+                      onChange={(e) => {
+                        setNew_pr(e.target.value);
+                        console.log(new_pr);
+                      }}
+
+                    />
+
+                  </div>
                   <span className="flex justify-end">
-                    <img src={pencil} alt="" />
+
+                    {disabled && (
+                    <button>
+                      {' '}
+                      <img onClick={handleClick} src={pencil} alt="" />
+                    </button>
+                    )}
+                    {!disabled && (
+                    <button>
+                      {' '}
+                      <span onClick={sendPr}>변경완료</span>
+                    </button>
+                    )}
+
                   </span>
                 </div>
                 <hr className="thickhr" />
@@ -298,7 +489,7 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="">
+                        <span className="hover:cursor-pointer">
                           {basicInfomation.height}
                           {' '}
                           cm
@@ -321,7 +512,8 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="">{basicInfomation.drinking_stlye}</span>
+                        {/* <span className="hover:cursor-pointer">{basicInfomation.drinking_style}</span> */}
+                        <span className="hover:cursor-pointer">{drinkingStyleText}</span>
                         <div
                           onClick={() => {
                             openMyModal();
@@ -357,7 +549,7 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="">{basicInfomation.conteact_stlye}</span>
+                        <span className="hover:cursor-pointer">{contactStyleText}</span>
                         <div
                           onClick={() => {
                             openMyModal();
@@ -375,7 +567,7 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="">{basicInfomation.smoking_stlye}</span>
+                        <span className="hover:cursor-pointer">{smokingStyleText}</span>
                         <div
                           onClick={() => {
                             openMyModal();
@@ -393,7 +585,7 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="">{basicInfomation.mbti}</span>
+                        <span className="hover:cursor-pointer">{basicInfomation.MBTI}</span>
                         <div
                           onClick={() => {
                             openMyModal();
@@ -414,8 +606,9 @@ function MyProfile({ profileNav }) {
                         openMyModal3();
                       }}
                     >
-                      <div className="flex items-center">
-                        <span className="">{}</span>
+                      <div className="flex items-center hover:cursor-pointer">
+                        <span className="hover:cursor-pointer">{}</span>
+                        설정하기
                         <div>
                           <img src={userarrow} alt="" className="w-3 ml-2" />
                         </div>
@@ -429,7 +622,25 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="">{}</span>
+                        <span className="">{petText}</span>
+                        <div
+                          onClick={() => {
+                            openMyModal();
+                          }}
+                        >
+                          <img src={userarrow} alt="" className="w-3 ml-2" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                  <div className="flex justify-between m-3">
+                    <div className="">
+                      <span>병역여부</span>
+                    </div>
+                    <div>
+                      <div className="flex items-center">
+                        <span className="">{militaryText}</span>
                         <div
                           onClick={() => {
                             openMyModal();
@@ -451,7 +662,7 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="">
+                      <span className="hover:cursor-pointer">
                         {' '}
                         {filterInfomation.age_min}
                         {' '}
@@ -518,7 +729,7 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="">{filterInfomation.contact_stlye}</span>
+                      <span className="">{contactStyleText2}</span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
                       </div>
@@ -532,7 +743,7 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="">{filterInfomation.drinking_stlye}</span>
+                      <span className="">{drinkingStyleText2}</span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
                       </div>
@@ -546,7 +757,7 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="">{filterInfomation.smoking_stlye}</span>
+                      <span className="">{smokingStyleText2}</span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
                       </div>
@@ -557,7 +768,7 @@ function MyProfile({ profileNav }) {
                 <div className="flex justify-between">
                   <span className="text-xl m-3 ">인증정보</span>
                   <div onClick={toCert} className="flex items-center m-2">
-                    <span className="">설정하기</span>
+                    <span className="hover:cursor-pointer">설정하기</span>
                     <div>
                       <img src={userarrow} alt="" className="w-3 ml-2" />
                     </div>
@@ -628,7 +839,6 @@ function MyProfile({ profileNav }) {
                 <div>
                   <InterestList interest={interest} />
 
-                  <div />
                 </div>
               </div>
             </div>
@@ -636,25 +846,6 @@ function MyProfile({ profileNav }) {
           <Navbar profileNav={profileNav} />
         </div>
       </div>
-    </div>
-  );
-}
-
-function InterestList({ interest }) {
-  return (
-    <div>
-      <div>
-        <div />
-      </div>
-
-      {interest.map((item) => (
-        <button
-          key={item.interest_list_id}
-          className="bg-white border border-black rounded-full text-sm px-4"
-        >
-          {item.name}
-        </button>
-      ))}
     </div>
   );
 }
