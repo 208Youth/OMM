@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-// import Dropzone from 'react-dropzone';
 import './ImageUploader.css';
 import http from '../../api/http';
+import CloseBtn from '../../assets/CloseBtn.svg';
 
-function ImageUploader() {
+function ImageUploader({ setModal }) {
   const [images, setImages] = useState(Array(6).fill(null));
 
   const onDrop = (acceptedFiles, index) => {
@@ -30,17 +30,12 @@ function ImageUploader() {
   };
 
   const handleSubmit = async () => {
-    console.log(images);
+    console.log('이미지배열', images);
     const formData = new FormData();
     images.forEach((image) => {
       formData.append('images', image);
+      console.log(image);
     });
-    // images.forEach((image, index) => {
-    //   formData.append(`image${index}`, image);
-    // });
-    console.log('formData');
-    console.log(formData);
-    console.log(import.meta.env.VITE_TOKEN);
 
     await http({
       method: 'put',
@@ -57,68 +52,67 @@ function ImageUploader() {
 
   return (
     <div>
-      <div className="bgslate">
-        <div className="text-center text">이미지를 업로드 해주세요.</div>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            flexWrap: 'wrap',
-          }}
-        >
+      <p className="flex justify-end">
+        <img
+          onClick={() => setModal(false)}
+          src={CloseBtn}
+          className="w-8 h-8"
+          alt="닫기"
+          aria-hidden="true"
+        />
+      </p>
+      <div className="font-medium text-[#364C63] mb-3">프로필 이미지</div>
+      <div className="text-xs text-gray-400 mb-3 font-sans">
+        10MB 미만의 파일만 올려주세요.
+      </div>
+      <div className="overflow-x-scroll uploadimg-croll mt-5">
+        <div className="flex flex-row w-fit">
           {images.map((image, index) => (
             <div
-              key={index}
-              style={{
-                width: 100,
-                height: 200,
-
-                border: '1px solid black',
-                margin: '10px',
-                borderRadius: '20px',
-                cursor: 'pointer',
-                backgroundColor: 'white',
-              }}
+              className={
+                image
+                  ? 'flex w-28 h-56 m-3 cursor-pointer bg-opacity-25 rounded-2xl shadow-lg'
+                  : 'flex w-28 h-56 m-3 cursor-pointer bg-opacity-25 border-2 border-[#364C63] rounded-2xl shadow-lg'
+              }
               onClick={() => {
-                const dropzone = document.createElement('input');
-                dropzone.setAttribute('type', 'file');
-                dropzone.setAttribute('accept', 'image/*');
-                dropzone.onchange = (event) => {
+                const img = document.createElement('input');
+                img.setAttribute('type', 'file');
+                img.setAttribute('accept', 'image/*');
+                img.onchange = (event) => {
                   const file = event.target.files[0];
                   if (file) {
                     onDrop([file], index);
                   }
                 };
-                dropzone.click();
+                img.click();
               }}
+              aria-hidden
             >
               {image ? (
                 <img
                   src={URL.createObjectURL(image)}
                   alt={`uploaded_image_${index}`}
-                  style={{
-                    maxWidth: 100,
-                    maxHeight: 200,
-                    width: 100,
-                    height: 200,
-                    borderRadius: 20,
-                  }}
+                  className="rounded-2xl object-cover"
                 />
               ) : (
-                <p style={{ textAlign: 'center' }}>Click to upload</p>
+                <div className="text-center my-auto font-sans text-[#364C63]">
+                  Click to upload
+                </div>
               )}
             </div>
           ))}
         </div>
-        <div className="text-center">
-          <button
-            className="border-solid border-2 rounded-md bg-white"
-            onClick={handleSubmit}
-          >
-            Submit
-          </button>
-        </div>
       </div>
+      <button
+        type="button"
+        onClick={() => {
+          setModal(false);
+          handleSubmit();
+        }}
+        className="bg-[#364C63] text-white hover:bg-white hover:text-[#364C63] hover:border-[#364C63] hover:border-2 w-full mt-5 h-10 rounded-3xl drop-shadow-md font-sans font-semibold"
+      >
+        완료
+      </button>
     </div>
   );
 }
