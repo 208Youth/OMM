@@ -53,4 +53,8 @@ public class ChatRepository {
     public void setRoom(ChatRoom chatRoom) {
         opsHashChatRoom.put(ROOMS, chatRoom.getId(), chatRoom);
     }
+
+    public void deleteRoom(String roomId) {
+        opsHashChatRoom.delete(ROOMS, roomId);
+    }
 }
