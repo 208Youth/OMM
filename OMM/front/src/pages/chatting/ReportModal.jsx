@@ -38,15 +38,18 @@ function ReportModal({ setReportModal }) {
     const formData = new FormData();
     formData.append('target_id', report.target_id);
     formData.append('reason', report.reason);
-    formData.append('image', new Uint8Array(imgfile));
+    formData.append('image', imgfile);
     formData.append('state', report.state);
     formData.append('category', report.category);
+    console.log(formData);
 
     await http
       .post('/admin/report', formData, {
         headers: {
+          'Content-Type': 'multipart/form-data',
           Authorization: import.meta.env.VITE_TOKEN,
           // Authorization: `Bearer ${token}`, // TODO: 임시 토큰 부여
+          data: formData,
         },
       })
       .then((res) => {
