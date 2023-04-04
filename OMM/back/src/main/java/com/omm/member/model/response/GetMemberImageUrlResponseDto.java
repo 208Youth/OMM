@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class GetMemberImageUrlResponseDto {
 
+    private String didAddress;
     private String faceUrl;
 
 }
