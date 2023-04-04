@@ -22,6 +22,7 @@ function ChatWindow() {
   const [messages, setMessages] = useState([]);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
+  const [otherNickname, setOtherNickname] = useState('');
 
   const openModal = () => {
     setIsOpen(true);
@@ -108,6 +109,7 @@ function ChatWindow() {
         console.log(response.data.roomInfo.msgs);
         setMessages([...response.data.payload]);
         setRoom(response.data.roomInfo);
+        setOtherNickname(response.data.roomInfo.other.nickname);
       })
       .catch((error) => {
         console.log(error);
@@ -172,7 +174,7 @@ function ChatWindow() {
       <div className="text-2xl mx-6 py-8">
         <span>&lt;</span>
         <span className="ml-3 font-sans font-extrabold text-[1.3rem]">
-          {user2ID}
+          {otherNickname}
         </span>
       </div>
       <div className="flex mx-auto w-[20rem] h-[39rem] overscroll-x-none overflow-y-scroll scrollbar-hide touch-pan-y text-xs rounded-lg mb-1">
