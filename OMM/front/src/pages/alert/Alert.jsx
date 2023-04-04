@@ -21,8 +21,7 @@ function Alert() {
     const ws = new SockJS('http:localhost:5000/api/matching');
     const stompClient = Stomp.over(ws);
     // 유저 3 토큰
-    const token3 =
-      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIweDA2YTgwMzg5M2IzNTE2NWFhYzJmYmMwYTgyM2M0MDkzNTdlOGVlNmQiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjgwNTg4MzgyfQ.0_7GyqVNQyaVwRd5AiFDzergGyTQuh2Nv7ptcRfLzJkBIby733B4OxiSLrusBPm7lfZTlcK5LSPqvOAkU8nidQ';
+    const token3 = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIweDc3ODZjZTVlODQxM2U2YWM3M2JmNGM3MjgzYjIwZjU3NDY0MGRjMTQiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxMDMyMDQ4Mjg0M30.UanoFHotHIJmavfVtJNDrpNZSAtST9aOWenfxI3j-juotGg-ElnRK7s1Tdu4IMQk1cnhXMXTWqh978ituAKGKg';
     const decoded = jwt_decode(token3);
     const headers = {
       Authorization: import.meta.env.VITE_TOKEN_3, // 유저3 토큰
@@ -111,8 +110,8 @@ function Alert() {
       </div>
       <div className="mx-6 text-lg mb-3" id="msgs">
         <div className="mt-3">
-          {alertlist &&
-            alertlist.map((msg) => (
+          {alertlist
+            && alertlist.map((msg) => (
               <div>
                 <AlertMsg
                   msg={msg}
