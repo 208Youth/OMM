@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './Cert.css';
 import Modal from 'react-modal';
+import axios from '../../api/springapi';
+import './Cert.css';
 import CC24Logo from '../../assets/CC24.svg';
 import CertModal from './CertModal';
+import Navbar from '../../components/Navbar';
 
 function Cert() {
   const [modal, setModal] = useState(false);
@@ -13,12 +14,13 @@ function Cert() {
   async function getList(select) {
     await axios({
       method: 'get',
-      url: `/api/cert/${select}`,
+      url: `cert/${select}`,
       // headers: {
       //   Authorization: token,
       // },
     })
       .then((res) => {
+        console.log(res);
         setInfo(res);
         setModal(true);
       })
@@ -122,6 +124,7 @@ function Cert() {
           <div className="text-xl hover:text-blue-900">자격증 인증</div>
           <div className="cert-point text-xl hover:text-stone-900"> &gt;</div>
         </div>
+        <Navbar className="fixed" />
       </div>
     </div>
   );

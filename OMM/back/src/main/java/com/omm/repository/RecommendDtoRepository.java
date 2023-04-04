@@ -22,19 +22,19 @@ public interface RecommendDtoRepository extends JpaRepository <RecommendDto, Lon
             "from myinfo myi inner join member mem on myi.member_id = mem.member_id " +
             "where mem.age between :#{#filtering.ageMin} and :#{#filtering.ageMax} and myi.height between  :#{#filtering.heightMin} and :#{#filtering.heightMax} " +
             "and round(ST_Distance_Sphere(point(myi.lng, myi.lat), point(:#{#myInfo.lng}, :#{#myInfo.lat}))/1000,3) between :#{#filtering.rangeMin} and :#{#filtering.rangeMax} " +
-            "and myi.member_id != :#{#myInfo.member.id} and mem.gender != :#{#myInfo.member.gender} "
+            "and myi.member_id != :#{#myInfo.member.id} and mem.gender != :#{#myInfo.member.gender} and mem.is_black = 0 "
             + "and not exists (select 1 from favor f where f.from_id = :#{#myInfo.member.id} and f.to_id = myi.member_id) "
             + "limit 200"
             , nativeQuery = true)
     List<RecommendDto> filteredMembers(@Param("myInfo")MyInfo myInfo, @Param("filtering")Filtering filtering);
 
-    @Query(value = "select mem.member_id as member_id, mem.age as age, myi.height as height," +
-            " round(ST_Distance_Sphere(point(myi.lng, myi.lat), point(:#{#myInfo.lng}, :#{#myInfo.lat}))/1000,3) as distance," +
+    @Query(value = "select mem.member_id as member_id, mem.age as age, myi.height as height, " +
+            " round(ST_Distance_Sphere(point(myi.lng, myi.lat), point(:#{#myInfo.lng}, :#{#myInfo.lat}))/1000,3) as distance, " +
             "myi.contact_style as contact_style, myi.drinking_style as drinking_style, myi.smoking_style as smoking_style " +
             "from myinfo myi inner join member mem on myi.member_id = mem.member_id " +
-            "where myi.member_id != :#{#myInfo.member.id} and mem.gender != :#{#myInfo.member.gender} "
-            + "and not exists (select 1 from favor f where f.from_id = :#{#myInfo.member.id} and f.to_id = myi.member_id "
-            + "limit 200"
+            "where myi.member_id != :#{#myInfo.member.id} and mem.gender != :#{#myInfo.member.gender} and mem.is_black = 0 "
+            + "and not exists (select 1 from favor f where f.from_id = :#{#myInfo.member.id} and f.to_id = myi.member_id) "
+            + "limit 200 "
             , nativeQuery = true)
     List<RecommendDto> filteredMembers2(@Param("myInfo")MyInfo myInfo);
 
@@ -42,7 +42,7 @@ public interface RecommendDtoRepository extends JpaRepository <RecommendDto, Lon
             " round(ST_Distance_Sphere(point(myi.lng, myi.lat), point(:#{#myInfo.lng}, :#{#myInfo.lat}))/1000,3) as distance," +
             "myi.contact_style as contact_style, myi.drinking_style as drinking_style, myi.smoking_style as smoking_style " +
             "from myinfo myi inner join member mem on myi.member_id = mem.member_id " +
-            "where myi.member_id != :#{#myInfo.member.id} and mem.gender != :#{#myInfo.member.gender} "
+            "where myi.member_id != :#{#myInfo.member.id} and mem.gender != :#{#myInfo.member.gender} and mem.is_black = 0 "
             + "limit 200"
             , nativeQuery = true)
     List<RecommendDto> filteredMembers3(@Param("myInfo")MyInfo myInfo);

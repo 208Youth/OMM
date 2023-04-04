@@ -9,8 +9,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from identification import detect_text_uri, detect_text
 from identification import plus2
 
-app = FastAPI(root_path="/api/fast")
-# app = FastAPI()
+# uvicorn main:app --reload
+# app = FastAPI(root_path="/api/fast")
+app = FastAPI()
 origins = [
 
     "*"  # private 영역에서 사용한다면 *로 모든 접근을 허용할 수 있다.
@@ -34,9 +35,21 @@ class Content(BaseModel):
 #     inputmonth: int
 
 
-@app.post("/idenimg")
+# @app.post("/api/fast/idenimg")
+# # async def upload_photo(file: UploadFile, pay: Inputdata):
+# async def upload_photo(inputname: str = Form(...), inputyear: int = Form(...), inputmonth: int = Form(...), inputgender: str = Form(...), file: UploadFile = Form(...)):
+# # async def upload_photo(file: UploadFile = Form(...)):
+
+#     # return {"filename": filename}
+#     # return {"filename": file.filename}
+#     # return detect_text('./iden_img')
+#     # return {file, inputgender, inputname, inputyear, inputmonth,}
+#     return detect_text(file, inputname, inputyear, inputmonth, inputgender)
+
+
+@app.post("/api/fast/idenimg")
 # async def upload_photo(file: UploadFile, pay: Inputdata):
-async def upload_photo(inputname: str = Form(...), inputyear: int = Form(...), inputmonth: int = Form(...), inputgender: str = Form(...), file: UploadFile = Form(...)):
+async def upload_photo(inputname: str = Form(...), inputday: int = Form(...), inputyear: int = Form(...), inputmonth: int = Form(...), inputgender: str = Form(...), file: UploadFile = Form(...)):
 # async def upload_photo(file: UploadFile = Form(...)):
     UPLOAD_DIR = "./iden_img"  # 이미지를 저장할 서버 경로
     content = await file.read()
@@ -47,7 +60,10 @@ async def upload_photo(inputname: str = Form(...), inputyear: int = Form(...), i
     # return {"filename": filename}
     # return {"filename": file.filename}
     # return detect_text('./iden_img')
-    return detect_text('./iden_img', inputname, inputyear, inputmonth, inputgender)
+    return detect_text('./iden_img', inputday, inputname, inputyear, inputmonth, inputgender)
+
+
+
 
 
 @app.get('/')
@@ -85,7 +101,7 @@ async def detect(path: str):
 # 얼굴 정보 올리기
 
 
-@app.post("/photo")
+@app.post("/api/fast/photo")
 async def upload_photo(file: UploadFile):
     UPLOAD_DIR = "./knowns"  # 이미지를 저장할 서버 경로
 

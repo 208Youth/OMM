@@ -24,32 +24,38 @@ public class MyInfo {
     @Column(name = "info_id")
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "member_id", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", unique = true)
     private Member member;
 
     @Column(name = "lat")
+    @ColumnDefault("35.20551")
     private float lat;
 
     @Column(name = "lng")
+    @ColumnDefault("126.81150")
     private float lng;
 
     @Column(name = "height", nullable = false)
+    @ColumnDefault("0")
     private short height;
 
     @Column(name = "contact_style", nullable = false)
     @Enumerated(EnumType.STRING)
+    @ColumnDefault("'PREFER_MSG'")
     private InfoContactStyle contactStyle;
 
     @Column(name = "drinking_style", nullable = false)
     @Enumerated(EnumType.STRING)
+    @ColumnDefault("'NOT'")
     private InfoDrinkingStyle drinkingStyle;
 
     @Column(name = "smoking_style", nullable = false)
     @Enumerated(EnumType.STRING)
+    @ColumnDefault("'NOT'")
     private InfoSmokingStyle smokingStyle;
 
-    @Column(name = "military", nullable = false)
+    @Column(name = "military")
     @Enumerated(EnumType.STRING)
     private InfoMilitary military;
 

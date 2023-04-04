@@ -1,69 +1,82 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import Modal from 'react-modal';
 import './MoreInfo.css';
+import { useDispatch, useSelector } from 'react-redux';
 import Kakaomap from './Kakaomap';
+import { moreInfo1 } from '../../store/userSlice';
 
-function MoreInfo() {
+function MoreInfo({ setStep }) {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
   const [moreinfo, setMoreInfo] = useState({
     nickname: '',
     height: '',
     lat: '',
     lng: '',
     highschool: '',
-    contact_style: '',
+    military: '',
   });
-  const [show, setShow] = useState(false);
-  const [duplication, setDuplication] = useState(false);
-
-  async function checkNickname() {
-    await axios({
-      method: 'get',
-      url: '/api/member/nickname',
-      data: {
-        nickname: moreinfo.nickname,
-      },
-      // headers: {
-      //   Authorization: token,
-      // },
-    })
-      .then((res) => {
-        console.log(res);
-        setShow(true);
-        setDuplication(res);
-      })
-      .catch((err) => {
-        console.log(err);
-        setShow(true);
-        setDuplication(false);
-        setMoreInfo((prevInfo) => ({
-          ...prevInfo,
-          nickname: '',
-        }));
-      });
-  }
-  // let subtitle;
+  const next = () => {
+    if (
+      moreinfo.nickname &&
+      moreinfo.height &&
+      moreinfo.lat &&
+      moreinfo.lng &&
+      moreinfo.highschool &&
+      moreinfo.military
+    ) {
+      setStep(2);
+    } else {
+      alert('모든 정보를 입력해주세요!');
+    }
+  };
+  const sendInfo = () => {
+    const info = {
+      nickname: moreinfo.nickname,
+      height: moreinfo.height,
+      lat: moreinfo.lat,
+      lng: moreinfo.lng,
+      highschool: moreinfo.highschool,
+      military: moreinfo.military,
+    };
+    console.log(info);
+    dispatch(moreInfo1(info));
+  };
+  console.log(user);
   const [modalIsOpen, setIsOpen] = useState(false);
 
   const openModal = () => {
     setIsOpen(true);
   };
-
+  
   // const afterOpenModal = () => {
-  //   subtitle.style.color = '#f00';
+    //   subtitle.style.color = '#f00';
   // };
-
+  
   const closeModal = () => {
     setIsOpen(false);
   };
-
+  
   useEffect(() => {
     console.log(moreinfo);
   }, [moreinfo]);
 
+  useEffect(() => {
+    console.log(user);
+    document.getElementById('nickname').value = user.nickname;
+    document.getElementById('height').value = user.height;
+    document.getElementById('highschool').value = user.highschool;
+    setMoreInfo((prev) => ({
+      ...prev,
+      lat: user.lat,
+      lng: user.lng,
+    }));
+    // document.getElementByName('military').value = user.military;
+  }, []);
   return (
     <div className="bg-white w-[22.5rem] h-[48.75rem]">
-      <img src="/heart-step-3.svg" alt="" className="mx-auto w-48 pt-16 pb-8" />
+      <img src="/heart-step-1.svg" alt="" className="mx-auto w-48 pt-16 pb-8" />
       <h1 className="text-center text-2xl text-[#364C63] mb-3">더 많은 정보</h1>
       <p className="text-center text-xs text-gray-400 font-sans">
         좋은 사람을 찾기 위해 추가 정보를 넣어주세요
@@ -82,38 +95,14 @@ function MoreInfo() {
                 ...prevInfo,
                 nickname: e.target.value,
               }));
-              checkNickname();
+              // checkNickname();
             }}
             type="text"
             id="nickname"
             className="w-full font-sans text-[#364C63] font-semibold tracking-wide bg-white border-2 border-[#f59fb277] focus:border-[#F094A7] placeholder-[#f59fb277] text-sm rounded-3xl block p-2.5 drop-shadow-md"
             placeholder="닉네임을 입력해주세요"
           />
-          {/* <button
-            onClick={() => {
-              if (moreinfo.nickname) {
-                checkNickname();
-              }
-            }}
-            className={
-              moreinfo.nickname
-                ? 'w-20 ml-2 rounded-3xl bg-[#F59FB1] text-white font-sans font-semibold text-sm drop-shadow-md'
-                : 'w-20 ml-2 rounded-3xl bg-[#f59fb277] text-white font-sans font-semibold text-sm drop-shadow-md'
-            }
-          >
-            중복 확인
-          </button> */}
         </div>
-        {show && duplication && (
-          <p className="mt-1 text-sm text-[#F59FB1] ml-2 font-sans">
-            <span className="font-medium">사용할 수 있는 닉네임입니다.</span>
-          </p>
-        )}
-        {show && !duplication && (
-          <p className="mt-1 text-sm text-red-500 ml-2 font-sans">
-            <span className="font-medium">사용할 수 없는 닉네임입니다.</span>
-          </p>
-        )}
       </div>
       <div className="mb-6 mx-8 flex">
         <span className="font-medium text-[#364C63] mr-5 self-center text-base">
@@ -130,6 +119,7 @@ function MoreInfo() {
               height: Math.round(e.target.value),
             }));
           }}
+          id="height"
           type="text"
           placeholder="키"
           className="w-20 h-10 font-sans font-semibold text-[#364C63] bg-white border-2 border-[#f59fb277] focus:border-[#F094A7] placeholder-[#f59fb277] text-sm text-center rounded-3xl block p-2.5 drop-shadow-md"
@@ -185,6 +175,7 @@ function MoreInfo() {
               highschool: e.target.value,
             }));
           }}
+          id="highschool"
           type="text"
           placeholder="싸피"
           className="w-20 h-10 font-sans font-semibold text-[#364C63] bg-white border-2 border-[#f59fb277] focus:border-[#F094A7] placeholder-[#f59fb277] text-sm text-center rounded-3xl block p-2.5 drop-shadow-md"
@@ -193,51 +184,30 @@ function MoreInfo() {
           고등학교
         </span>
       </div>
-      <div className="mb-3 mx-8">
-        <h3 className="text-[#364C63] block mb-2 text-base">
-          당신의 연락 스타일은?
+      <div className="mt-8 mb-1 mx-8">
+        <h3 className="text-[#364C63] block mb-5 text-base">
+          병역 관련사항을 선택해주세요.
         </h3>
-        <div className="grid grid-rows-3 grid-flow-col">
+        <div className="grid grid-rows-2 grid-flow-col">
           <div>
             <input
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  contact_style: e.target.value,
+                  military: e.target.value,
                 }));
               }}
-              id="contact1"
+              id="military1"
               type="radio"
-              name="contact"
-              value="PREFER_MSG"
-              className="peer/contact1"
+              name="military"
+              value="NONE"
+              className="peer/military1"
             />
             <label
-              htmlFor="contact1"
-              className="peer-checked/contact1:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
+              htmlFor="military1"
+              className="peer-checked/military1:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
             >
-              카톡 자주하는 편
-            </label>
-          </div>
-          <div>
-            <input
-              onClick={(e) => {
-                setMoreInfo((prevInfo) => ({
-                  ...prevInfo,
-                  contact_style: e.target.value,
-                }));
-              }}
-              id="contact3"
-              type="radio"
-              name="contact"
-              value="PREFER_CALL"
-              className="peer/contact3"
-            />
-            <label
-              htmlFor="contact3"
-              className="peer-checked/contact3:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
-            >
-              전화가 좋아요
+              해당사항 없음
             </label>
           </div>
           <div>
@@ -245,86 +215,80 @@ function MoreInfo() {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  contact_style: e.target.value,
+                  military: e.target.value,
                 }));
               }}
-              id="contact5"
+              id="military3"
               type="radio"
-              name="contact"
-              value="PREFER_OFFLINE"
-              className="peer/contact5"
+              name="military"
+              value="COMPLETE"
+              className="peer/military3"
             />
             <label
-              htmlFor="contact5"
-              className="peer-checked/contact5:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
+              htmlFor="military3"
+              className="peer-checked/military3:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
             >
-              만나는게 좋아요
+              군필
             </label>
           </div>
-          <div className="ml-2">
+          <div>
             <input
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  contact_style: e.target.value,
+                  military: e.target.value,
                 }));
               }}
-              id="contact2"
+              id="military5"
               type="radio"
-              name="contact"
-              value="NOT_MSG"
-              className="peer/contact2"
+              name="military"
+              value="EXEMPT"
+              className="peer/military5"
             />
             <label
-              htmlFor="contact2"
-              className="peer-checked/contact2:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
+              htmlFor="military5"
+              className="peer-checked/military5:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
             >
-              카톡 안하는 편
+              면제
             </label>
           </div>
-          <div className="ml-2">
+          <div>
             <input
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  contact_style: e.target.value,
+                  military: e.target.value,
                 }));
               }}
-              id="contact4"
+              id="military2"
               type="radio"
-              name="contact"
-              value="PREFER_FACECALL"
-              className="peer/contact4"
+              name="military"
+              value="YET"
+              className="peer/military2"
             />
             <label
-              htmlFor="contact4"
-              className="peer-checked/contact4:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
+              htmlFor="military2"
+              className="peer-checked/military2:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
             >
-              영상통화가 좋아요
+              미필
             </label>
           </div>
         </div>
       </div>
       <div className="flex justify-between mx-8 text-[#364C63] text-lg">
-        <div>&lt; </div>
-        <div
+        <button type="button" aria-hidden onClick={() => {}}>
+          &lt;
+        </button>
+        <button
+          type="button"
           aria-hidden
           onClick={() => {
-            if (
-              moreinfo.nickname
-              && moreinfo.contact_style
-              && moreinfo.height
-              && moreinfo.highschool
-              && moreinfo.location
-            ) {
-              console.log('다음페이지로 이동');
-            } else {
-              alert('정보를 입력해주세요');
-            }
+            next();
+            sendInfo();
           }}
         >
           &gt;
-        </div>
+        </button>
       </div>
     </div>
   );

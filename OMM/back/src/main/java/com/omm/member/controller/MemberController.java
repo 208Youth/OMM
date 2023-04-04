@@ -2,16 +2,22 @@ package com.omm.member.controller;
 
 import com.omm.member.model.dto.AuthDto;
 import com.omm.member.model.dto.MemberCertDto;
+import com.omm.member.model.dto.MemberFilteringDto;
 import com.omm.member.model.dto.RegistDto;
 import com.omm.member.model.request.*;
-import com.omm.member.model.response.GetLikedMembersResponseDto;
 import com.omm.member.service.AuthService;
 import com.omm.member.service.MemberService;
+import com.omm.util.CommonMethods;
 import com.omm.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/member")
@@ -20,18 +26,6 @@ public class MemberController {
 
     private final MemberService memberService;
     private final AuthService authService;
-
-//    /**
-//     * 닉네임 중복 체크 함수
-//     *
-//     * @param checkNicknameRequestDto 닉네임 중복 체크 요청
-//     * @return
-//     */
-//    @GetMapping("/nickname")
-//    public ResponseEntity<?> checkNickname(@RequestBody CheckNicknameRequestDto checkNicknameRequestDto) {
-//        boolean exist = memberService.existNickname(checkNicknameRequestDto.getNickname());
-//        return new ResponseEntity<>(exist, HttpStatus.OK);
-//    }
 
     /**
      * 회원 신규 등록
@@ -60,15 +54,23 @@ public class MemberController {
     /**
      * 유저 초기 정보 설정
      *
-     * @param initMemberFilteringRequestDto 유저 초기 정보 객체
+     * @param memberFilteringDto 유저 초기 정보 객체
      * @return
      */
     @PostMapping("/filtering")
-    public ResponseEntity<?> initMemberFiltering(@RequestBody InitMemberFilteringRequestDto initMemberFilteringRequestDto) {
-        // 유저 생성
-
-        memberService.initMemberFiltering(SecurityUtil.getCurrentDidAddress().get(), initMemberFilteringRequestDto);
+    public ResponseEntity<?> initMemberFiltering(@RequestBody MemberFilteringDto memberFilteringDto) {
+        memberService.initMemberFiltering(SecurityUtil.getCurrentDidAddress().get(), memberFilteringDto);
         return new ResponseEntity<>("선호 상대 정보 등록 성공", HttpStatus.OK);
+    }
+
+    /**
+     * 현재 유저의 정보 조희
+     *
+     * @return
+     */
+    @GetMapping
+    public ResponseEntity<?> getMyInfo() {
+        return new ResponseEntity<>(memberService.getMyInfo(SecurityUtil.getCurrentDidAddress().get()), HttpStatus.OK);
     }
 
     /**
@@ -93,28 +95,46 @@ public class MemberController {
     }
 
     /**
-     * 유저 이미지 업로드 함수
-     *
-     * @param uploadImageRequestDto 유저 이미지 업로드 폼
+     * 유저 이미지 업로드 (사용하지 말 것)
+     * @param images 이미지 정보
      * @return
+     * @throws IOException
      */
     @PostMapping("/img")
-    public ResponseEntity<?> postMemberImages(@RequestBody UploadImageRequestDto uploadImageRequestDto) {
-        memberService.postMemberImages(SecurityUtil.getCurrentDidAddress().get(), uploadImageRequestDto);
+    public ResponseEntity<?> postMemberImages(@RequestParam("images") List<MultipartFile> images) throws IOException {
+        List<byte[]> data = new ArrayList<>();
+
+        for (MultipartFile image : images) {
+            byte[] imageData = image.getBytes();
+            if(imageData == null) break;
+            data.add(imageData);
+        }
+
+        memberService.postMemberImages(SecurityUtil.getCurrentDidAddress().get(), data);
         return new ResponseEntity<>("사진 등록을 성공했습니다.", HttpStatus.OK);
     }
 
+
     /**
-     * 유저 새 이미지로 교체
-     *
-     * @param uploadImageRequestDto 이미지 업로드 정보
+     * 유저 이미지 교체
+     * @param images 이미지 정보
      * @return
+     * @throws IOException
      */
     @PutMapping("/img")
-    public ResponseEntity<?> putMemberImages(@RequestBody UploadImageRequestDto uploadImageRequestDto) {
-        memberService.putMemberImages(SecurityUtil.getCurrentDidAddress().get(), uploadImageRequestDto);
+    public ResponseEntity<?> putMemberImages(@RequestParam("images") List<MultipartFile> images) throws IOException {
+        List<byte[]> data = new ArrayList<>();
+
+        for (MultipartFile image : images) {
+            byte[] imageData = image.getBytes();
+            if(imageData == null) break;
+            data.add(imageData);
+        }
+        memberService.putMemberImages(SecurityUtil.getCurrentDidAddress().get(), data);
         return new ResponseEntity<>("사진 교체에 성공했습니다.", HttpStatus.OK);
     }
+
+
 
     /**
      * 유저 정보 수정
@@ -131,12 +151,12 @@ public class MemberController {
     /**
      * 유저 필터링 정보 수정
      *
-     * @param putMemberFilteringRequestDto 요청된 수정 필터링 정보
+     * @param memberFilteringDto 요청된 수정 필터링 정보
      * @return
      */
     @PutMapping("/filtering")
-    public ResponseEntity<?> putMemberFiltering(@RequestBody PutMemberFilteringRequestDto putMemberFilteringRequestDto) {
-        memberService.putMemberFiltering(SecurityUtil.getCurrentDidAddress().get(), putMemberFilteringRequestDto);
+    public ResponseEntity<?> putMemberFiltering(@RequestBody MemberFilteringDto memberFilteringDto) {
+        memberService.putMemberFiltering(SecurityUtil.getCurrentDidAddress().get(), memberFilteringDto);
         return new ResponseEntity<>("유저 필터링 정보 수정에 성공했습니다.", HttpStatus.OK);
     }
 
@@ -220,8 +240,22 @@ public class MemberController {
         return new ResponseEntity<>(memberService.addInterest(SecurityUtil.getCurrentDidAddress().get(), postInterestRequestDto.getName()), HttpStatus.OK);
     }
 
+    /**
+     * 좋아요 한 유저들 목록 가져오기
+     * @return
+     */
     @GetMapping("/liked")
     public ResponseEntity<?> getLikedMembers(){
         return new ResponseEntity<>(memberService.getLikedMembers(SecurityUtil.getCurrentDidAddress().get()), HttpStatus.OK);
+    }
+
+    /**
+     * 유저 인증 정보 가져오기
+     * @param memberId
+     * @return
+     */
+    @GetMapping("/{member-id}/cert")
+    public ResponseEntity<?> getMemberCert(@PathVariable("member-id") Long memberId) {
+        return new ResponseEntity<>(memberService.getMemberCert(memberId), HttpStatus.OK);
     }
 }

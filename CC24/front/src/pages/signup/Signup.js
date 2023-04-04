@@ -9,24 +9,32 @@ import { EthrDID } from 'ethr-did';
 import FaceRecogModal from './FaceRecogModal';
 import IdenModal from './IdenModal';
 import PasswordModal from './PasswordModal';
-import { userInfo } from '../../store/userSlice';
+import { userInfo, idenVC, certInfo } from '../../store/userSlice';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import http from '../../api/springapi';
 
 function Signup() {
   const navigate = useNavigate();
   const [faceModal, setFaceModal] = useState(false);
-  const [faceComplete, setFaceComplete] = useState(true);
+  const [faceComplete, setFaceComplete] = useState(false);
   const [idenModal, setIdenModal] = useState(false);
-  const [idenComplete, setIdenComplete] = useState(true);
+  const [idenComplete, setIdenComplete] = useState(false);
   const [passwordModal, setPasswordModal] = useState(false);
-  const [passwordComplete, setPasswordComplete] = useState(true);
+  const [passwordComplete, setPasswordComplete] = useState(false);
   const [name, setName] = useState(null);
   const [year, setYear] = useState('1980');
   const [month, setMonth] = useState('1');
   const [day, setDay] = useState('1');
   const [gender, setGender] = useState(null);
+  const [img, setImg] = useState(null);
   const dispatch = useDispatch();
+  const id = useSelector((state) => state.user.id);
 
+  console.log(localStorage.getItem('DID'));
+  if (localStorage.getItem('DID')) {
+    navigate('/main');
+  }
   const sendInfo = () => {
     const info = {
       name,
@@ -38,7 +46,7 @@ function Signup() {
     console.log(info);
     dispatch(userInfo(info));
   };
-  const signup = function () {
+  const signup = async function () {
     const Info = {
       name,
       year,
@@ -52,7 +60,33 @@ function Signup() {
     window.localStorage.setItem('DID', JSON.stringify(ethrDidOnGoerliNamed));
     const localData = JSON.parse(localStorage.getItem('DID'));
     console.log(localData.did);
+    const data = new FormData();
+    console.log(id.personalId);
+    data.append('holderDid', localData.did);
+    data.append('personalId', JSON.stringify(id.personalId));
+    data.append('signature', id.signature);
+    data.append('image', img);
+    for (let key of data.keys()) {
+      console.log(key, ':', data.get(key));
+    }
+
+    // await axios({
+    await http({
+      method: 'post',
+      // url: 'http://localhost:4424/api/node/credential/personal-id',
+      url: '/credential/personal-id',
+      data: data,
+    })
+      .then((res) => {
+        console.log('성공!!!!!!!!', res);
+        dispatch(idenVC(res.data.vcJwt));
+        window.localStorage.setItem('IdenVC', JSON.stringify(res.data.vcJwt));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     navigate('/main');
+    console.log(img);
   };
 
   useEffect(() => {
@@ -93,6 +127,9 @@ function Signup() {
       >
         <FaceRecogModal
           setFaceModal={setFaceModal}
+          img={(res) => {
+            setImg(res);
+          }}
           setFaceComplete={(res) => {
             if (res) {
               setFaceComplete(true);
@@ -108,13 +145,14 @@ function Signup() {
         className="Modal"
         overlayClassName="Overlay"
       >
-        <IdenModal 
+        <IdenModal
           setIdenModal={setIdenModal}
           setIdenComplete={(res) => {
             if (res) {
               setIdenComplete(true);
             }
           }}
+          inputday={day}
           inputname={name}
           inputyear={year}
           inputmonth={month}

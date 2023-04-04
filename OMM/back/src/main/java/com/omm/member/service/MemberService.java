@@ -1,19 +1,16 @@
 package com.omm.member.service;
 
+import com.omm.exception.CustomException;
 import com.omm.exception.member.MemberExceptionCode;
 import com.omm.exception.member.MemberRuntimeException;
-import com.omm.member.model.dto.InterestDto;
-import com.omm.member.model.dto.LikedMemberDto;
-import com.omm.member.model.dto.MemberCertDto;
-import com.omm.member.model.dto.RegistDto;
+import com.omm.member.model.dto.*;
 import com.omm.member.model.request.*;
-import com.omm.member.model.response.GetInterestListResponseDto;
-import com.omm.member.model.response.GetLikedMembersResponseDto;
-import com.omm.member.model.response.GetMemberFilteringResponseDto;
-import com.omm.member.model.response.GetMemberInfoResponseDto;
+import com.omm.member.model.response.*;
 import com.omm.model.entity.*;
 import com.omm.model.entity.enums.*;
 import com.omm.repository.*;
+import com.omm.util.ImageUtil;
+import com.omm.util.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +51,7 @@ public class MemberService {
 
     /**
      * 회원 추가
+     *
      * @param registDto
      */
     public void addMember(RegistDto registDto) {
@@ -65,28 +63,14 @@ public class MemberService {
                     .didAddress(registDto.getHolderDid())
                     .age(registDto.getAge())
                     .gender(registDto.getGender())
+                    .imageUrl(registDto.getImageUrl())
                     .build();
             System.out.println(member.toString());
             memberRepository.save(member);
-            System.out.println(member.toString());
-        } catch(Exception e){
+        } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
         }
-
     }
-
-//    public void createMember(String memberNickname) {
-//        try {
-//            Member member = Member.builder()
-//                    .nickname(memberNickname)
-////                    .isBlack(false)
-////                    .grade("role_user")
-//                    .build();
-//            memberRepository.save(member);
-//        } catch (Exception e) {
-//            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
-//        }
-//    }
 
     /**
      * 초기 회원 정보 설정 함수
@@ -96,23 +80,22 @@ public class MemberService {
      */
     public void initMemberInfo(String currentMemberDidAddress, InitMemberInfoRequestDto initMemberInfoRequestDto) {
 
-
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         try {
-            MyInfo myInfo = MyInfo.builder()
-                    .member(member)
-                    .lat(initMemberInfoRequestDto.getLat())
-                    .lng(initMemberInfoRequestDto.getLng())
-                    .height(initMemberInfoRequestDto.getHeight())
-                    .contactStyle(InfoContactStyle.valueOf(initMemberInfoRequestDto.getContactStyle()))
-                    .drinkingStyle(InfoDrinkingStyle.valueOf(initMemberInfoRequestDto.getDrinkingStyle()))
-                    .smokingStyle(InfoSmokingStyle.valueOf((initMemberInfoRequestDto.getSmokingStyle())))
-                    .military(InfoMilitary.valueOf(initMemberInfoRequestDto.getMilitary()))
-                    .pet(InfoPet.valueOf(initMemberInfoRequestDto.getPet()))
-                    .mbti(InfoMBTI.valueOf(initMemberInfoRequestDto.getMbti()))
-                    .build();
+            MyInfo myInfo = myInfoRepository.findByMember(member)
+                    .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+            myInfo.setLat(initMemberInfoRequestDto.getLat());
+            myInfo.setLng(initMemberInfoRequestDto.getLng());
+            myInfo.setHeight(initMemberInfoRequestDto.getHeight());
+            myInfo.setContactStyle(InfoContactStyle.valueOf(initMemberInfoRequestDto.getContactStyle()));
+            myInfo.setDrinkingStyle(InfoDrinkingStyle.valueOf(initMemberInfoRequestDto.getDrinkingStyle()));
+            myInfo.setSmokingStyle(InfoSmokingStyle.valueOf((initMemberInfoRequestDto.getSmokingStyle())));
+            myInfo.setMilitary(InfoMilitary.valueOf(initMemberInfoRequestDto.getMilitary()));
+            myInfo.setPet(InfoPet.valueOf(initMemberInfoRequestDto.getPet()));
+            myInfo.setMbti(InfoMBTI.valueOf(initMemberInfoRequestDto.getMbti()));
 
             myInfoRepository.save(myInfo);
         } catch (Exception e) {
@@ -124,27 +107,27 @@ public class MemberService {
     /**
      * 멤버의 초기 필터링 정보 설정
      *
-     * @param currentMemberDidAddress         현재 유저 did 주소
-     * @param initMemberFilteringRequestDto 등록 정보
+     * @param currentMemberDidAddress       현재 유저 did 주소
+     * @param memberFilteringDto 등록 정보
      */
-    public void initMemberFiltering(String currentMemberDidAddress, InitMemberFilteringRequestDto initMemberFilteringRequestDto) {
+    public void initMemberFiltering(String currentMemberDidAddress, MemberFilteringDto memberFilteringDto) {
 
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         try {
-            Filtering filtering = Filtering.builder()
-                    .member(member)
-                    .ageMin(initMemberFilteringRequestDto.getAgeMin())
-                    .ageMax(initMemberFilteringRequestDto.getAgeMax())
-                    .heightMin(initMemberFilteringRequestDto.getHeightMin())
-                    .heightMax(initMemberFilteringRequestDto.getHeightMax())
-                    .rangeMin(initMemberFilteringRequestDto.getRangeMin())
-                    .rangeMax(initMemberFilteringRequestDto.getRangeMax())
-                    .contactStyle(FilterContactStyle.valueOf(initMemberFilteringRequestDto.getContactStyle()))
-                    .drinkingStyle(FilterDrinkingStyle.valueOf(initMemberFilteringRequestDto.getDrinkingStyle()))
-                    .smokingStyle(FilterSmokingStyle.valueOf(initMemberFilteringRequestDto.getSmokingStyle()))
-                    .build();
+            Filtering filtering = filteringRepository.findByMember(member)
+                    .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+            filtering.setAgeMin(memberFilteringDto.getAgeMin());
+            filtering.setAgeMax(memberFilteringDto.getAgeMax());
+            filtering.setHeightMin(memberFilteringDto.getHeightMin());
+            filtering.setHeightMax(memberFilteringDto.getHeightMax());
+            filtering.setRangeMin(memberFilteringDto.getRangeMin());
+            filtering.setRangeMax(memberFilteringDto.getRangeMax());
+            filtering.setContactStyle(FilterContactStyle.valueOf(memberFilteringDto.getContactStyle()));
+            filtering.setDrinkingStyle(FilterDrinkingStyle.valueOf(memberFilteringDto.getDrinkingStyle()));
+            filtering.setSmokingStyle(FilterSmokingStyle.valueOf(memberFilteringDto.getSmokingStyle()));
 
             filteringRepository.save(filtering);
 
@@ -166,8 +149,8 @@ public class MemberService {
         MyInfo myInfo = myInfoRepository.findByMember(member)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
 
-        List<MemberImg> memberimgs = memberImgRepository.findAllById(memberId);
-        List<Blob> memberimgsblobs = new ArrayList<>();
+        List<MemberImg> memberimgs = memberImgRepository.findAllByMember(member);
+        List<byte[]> memberimgsblobs = new ArrayList<>();
 
         for (MemberImg memberimg : memberimgs) {
             memberimgsblobs.add(memberimg.getImageContent());
@@ -176,6 +159,49 @@ public class MemberService {
         try {
             GetMemberInfoResponseDto getMemberInfoResponseDto = GetMemberInfoResponseDto.builder()
                     .nickname(member.getNickname())
+                    .age(member.getAge())
+                    .lat(myInfo.getLat())
+                    .lng(myInfo.getLng())
+                    .pr(myInfo.getPr())
+                    .height(myInfo.getHeight())
+                    .contactStyle(myInfo.getContactStyle().name())
+                    .drinkingStyle(myInfo.getDrinkingStyle().name())
+                    .smokingStyle(myInfo.getSmokingStyle().name())
+                    .military(myInfo.getMilitary().name())
+                    .pet(myInfo.getPet().name())
+                    .mbti(myInfo.getMbti().name())
+                    .profileimgs(memberimgsblobs)
+                    .build();
+            return getMemberInfoResponseDto;
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
+        }
+    }
+
+    /**
+     * 현재 유저 정보를 조회
+     *
+     * @param currentUserDidAddress 멤버의 아이디
+     * @return
+     */
+    public GetMemberInfoResponseDto getMyInfo(String currentUserDidAddress) {
+        Member member = memberRepository.findByDidAddress(currentUserDidAddress)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        MyInfo myInfo = myInfoRepository.findByMember(member)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+
+        List<MemberImg> memberimgs = memberImgRepository.findAllByMember(member);
+        List<byte[]> memberimgsblobs = new ArrayList<>();
+
+        for (MemberImg memberimg : memberimgs) {
+            memberimgsblobs.add(memberimg.getImageContent());
+        }
+
+        try {
+            GetMemberInfoResponseDto getMemberInfoResponseDto = GetMemberInfoResponseDto.builder()
+                    .nickname(member.getNickname())
+                    .age(member.getAge())
                     .lat(myInfo.getLat())
                     .lng(myInfo.getLng())
                     .pr(myInfo.getPr())
@@ -225,20 +251,18 @@ public class MemberService {
         }
     }
 
+
     /**
-     * 유저 이미지 업로드 함수
-     *
-     * @param currentMemberDidAddress 현재 로그인 유저 did 주소
-     * @param uploadImageRequestDto 업로드 폼
+     * 유저 이미지 등록 (사용하지 말 것)
+     * @param currentMemberDidAddress
+     * @param data
      */
-    public void postMemberImages(String currentMemberDidAddress, UploadImageRequestDto uploadImageRequestDto) {
+    public void postMemberImages(String currentMemberDidAddress, List<byte[]> data) {
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         try {
-            List<Blob> images = uploadImageRequestDto.getImages();
-
-            images.forEach((image) -> {
+            data.forEach((image) -> {
                 MemberImg memberImg = MemberImg.builder()
                         .member(member)
                         .imageContent(image)
@@ -250,18 +274,22 @@ public class MemberService {
         }
     }
 
+
     /**
-     * 이미지 교체 방식
-     *
-     * @param currentMemberDidAddress 현재 로그인 유저
-     * @param uploadImageRequestDto 이미지 교체 요청 정보
+     * 이미지 교체 함수
+     * @param currentMemberDidAddress
+     * @param data
      */
-    public void putMemberImages(String currentMemberDidAddress, UploadImageRequestDto uploadImageRequestDto) {
+    public void putMemberImages(String currentMemberDidAddress, List<byte[]> data) {
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         try {
-            List<MemberImg> memberImages = memberImgRepository.findAllById(member.getId());
+            List<MemberImg> memberImages = memberImgRepository.findAllByMember(member);
+
+            memberImages.forEach((img) -> {
+                System.out.println(img.toString());
+            });
 
             memberImgRepository.deleteAll(memberImages);
         } catch (Exception e) {
@@ -269,9 +297,8 @@ public class MemberService {
         }
 
         try {
-            List<Blob> images = uploadImageRequestDto.getImages();
 
-            images.forEach((image) -> {
+            data.forEach((image) -> {
                 MemberImg memberImg = MemberImg.builder()
                         .member(member)
                         .imageContent(image)
@@ -286,7 +313,7 @@ public class MemberService {
     /**
      * 유저 정보 수정 로직
      *
-     * @param currentMemberDidAddress   현재 로그인 유저
+     * @param currentMemberDidAddress 현재 로그인 유저
      * @param putMemberInfoRequestDto 수정 유저 정보 객체
      */
     public void putMemberInfo(String currentMemberDidAddress, PutMemberInfoRequestDto putMemberInfoRequestDto) {
@@ -297,6 +324,8 @@ public class MemberService {
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
 
         try {
+            member.setNickname(putMemberInfoRequestDto.getNickname());
+
             myInfo.setHeight(putMemberInfoRequestDto.getHeight());
             myInfo.setContactStyle(InfoContactStyle.valueOf(putMemberInfoRequestDto.getContactStyle()));
             myInfo.setDrinkingStyle(InfoDrinkingStyle.valueOf(putMemberInfoRequestDto.getDrinkingStyle()));
@@ -305,6 +334,7 @@ public class MemberService {
             myInfo.setPet(InfoPet.valueOf(putMemberInfoRequestDto.getPet()));
             myInfo.setMbti(InfoMBTI.valueOf(putMemberInfoRequestDto.getMbti()));
 
+            memberRepository.save(member);
             myInfoRepository.save(myInfo);
 
         } catch (Exception e) {
@@ -316,10 +346,10 @@ public class MemberService {
     /**
      * 멤버 필터링 정보 수정
      *
-     * @param currentMemberDidAddress        현재 로그인 유저
-     * @param putMemberFilteringRequestDto 필터링 정보 객체
+     * @param currentMemberDidAddress      현재 로그인 유저
+     * @param memberFilteringDto 필터링 정보 객체
      */
-    public void putMemberFiltering(String currentMemberDidAddress, PutMemberFilteringRequestDto putMemberFilteringRequestDto) {
+    public void putMemberFiltering(String currentMemberDidAddress, MemberFilteringDto memberFilteringDto) {
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
@@ -327,15 +357,15 @@ public class MemberService {
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_FILTERING_NOT_EXISTS));
 
         try {
-            filtering.setAgeMin(putMemberFilteringRequestDto.getAgeMin());
-            filtering.setAgeMax(putMemberFilteringRequestDto.getAgeMax());
-            filtering.setHeightMin(putMemberFilteringRequestDto.getHeightMin());
-            filtering.setHeightMax(putMemberFilteringRequestDto.getHeightMax());
-            filtering.setRangeMin(putMemberFilteringRequestDto.getRangeMin());
-            filtering.setRangeMax(putMemberFilteringRequestDto.getRangeMax());
-            filtering.setContactStyle(FilterContactStyle.valueOf(putMemberFilteringRequestDto.getContactStyle()));
-            filtering.setDrinkingStyle(FilterDrinkingStyle.valueOf(putMemberFilteringRequestDto.getDrinkingStyle()));
-            filtering.setSmokingStyle(FilterSmokingStyle.valueOf(putMemberFilteringRequestDto.getSmokingStyle()));
+            filtering.setAgeMin(memberFilteringDto.getAgeMin());
+            filtering.setAgeMax(memberFilteringDto.getAgeMax());
+            filtering.setHeightMin(memberFilteringDto.getHeightMin());
+            filtering.setHeightMax(memberFilteringDto.getHeightMax());
+            filtering.setRangeMin(memberFilteringDto.getRangeMin());
+            filtering.setRangeMax(memberFilteringDto.getRangeMax());
+            filtering.setContactStyle(FilterContactStyle.valueOf(memberFilteringDto.getContactStyle()));
+            filtering.setDrinkingStyle(FilterDrinkingStyle.valueOf(memberFilteringDto.getDrinkingStyle()));
+            filtering.setSmokingStyle(FilterSmokingStyle.valueOf(memberFilteringDto.getSmokingStyle()));
 
             filteringRepository.save(filtering);
         } catch (Exception e) {
@@ -347,7 +377,7 @@ public class MemberService {
     /**
      * 유저 위치 정보 수정
      *
-     * @param currentMemberDidAddress       현재 로그인 유저
+     * @param currentMemberDidAddress     현재 로그인 유저
      * @param putMemberLocationRequestDto 요청 유저 수정 위치 정보
      */
     public void putMemberLocation(String currentMemberDidAddress, PutMemberLocationRequestDto putMemberLocationRequestDto) {
@@ -372,7 +402,7 @@ public class MemberService {
      * 유저 자기소개 수정
      *
      * @param currentMemberDidAddress 현재 로그인 유저 닉네임
-     * @param putMemberPrRequestDto 수정 자기소개 정보
+     * @param putMemberPrRequestDto   수정 자기소개 정보
      */
     public void putMemberPr(String currentMemberDidAddress, PutMemberPrRequestDto putMemberPrRequestDto) {
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
@@ -427,7 +457,7 @@ public class MemberService {
      * 멤버 인증 정보 수정
      *
      * @param currentMemberDidAddress 현재 로그인 회원
-     * @param memberCertDto         유저 수정 인증 정보
+     * @param memberCertDto           유저 수정 인증 정보
      */
     public void putMemberCertificate(String currentMemberDidAddress, MemberCertDto memberCertDto) {
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
@@ -501,7 +531,7 @@ public class MemberService {
      * 유저 관심사 새 등록
      *
      * @param currentMemberDidAddress 현재 로그인한 유저
-     * @param name                  관심사 이름
+     * @param name                    관심사 이름
      * @return
      */
     public InterestDto addInterest(String currentMemberDidAddress, String name) {
@@ -548,7 +578,11 @@ public class MemberService {
         }
     }
 
-
+    /**
+     * 좋아요 한 멤버들 가져오기
+     * @param currentMemberDidAddress
+     * @return
+     */
     public GetLikedMembersResponseDto getLikedMembers(String currentMemberDidAddress) {
 
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
@@ -560,7 +594,7 @@ public class MemberService {
         try {
             List<LikedMemberDto> list = new ArrayList<>();
 
-            likedMembers.forEach((likedmember)->{
+            likedMembers.forEach((likedmember) -> {
                 LikedMemberDto likedMemberDto = LikedMemberDto.builder()
                         .memberId(likedmember.getId())
                         .nickname(likedmember.getNickname())
@@ -575,5 +609,84 @@ public class MemberService {
         } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
         }
+    }
+
+    /**
+     * 유저 인증 정보 초기 세팅
+     * @param holderDid
+     */
+    public void addMemberCert(String holderDid) {
+        Member member = memberRepository.findByDidAddress(holderDid)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        try {
+            MemberCert memberCert = MemberCert.builder()
+                    .member(member).build();
+            memberCertRepository.save(memberCert);
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS);
+        }
+
+
+    }
+
+    /**
+     * 유저 정보 초기 세팅
+     * @param holderDid
+     */
+    public void addNewInfo(String holderDid) {
+        Member member = memberRepository.findByDidAddress(holderDid)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        try {
+            MyInfo myInfo = MyInfo.builder()
+                    .member(member)
+                    .build();
+            myInfoRepository.save(myInfo);
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
+        }
+    }
+
+    /**
+     * 유저 초기 필터링 정보 세팅
+     * @param holderDid
+     */
+    public void addNewFiltering(String holderDid) {
+        Member member = memberRepository.findByDidAddress(holderDid)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+        try {
+            Filtering filtering = Filtering.builder()
+                    .member(member)
+                    .build();
+            filteringRepository.save(filtering);
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
+        }
+
+    }
+
+
+    public GetMemberCertResponseDto getMemberCert(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> {
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        });
+        MemberCert memberCert = memberCertRepository.findByMember(member)
+                .orElse(new MemberCert());
+        return GetMemberCertResponseDto.builder()
+                .university(memberCert.getUniversityName() == null ?
+                        null : memberCert.getUniversityName())
+                .job(memberCert.getJobNames() == null ?
+                        null : memberCert.getJobNames())
+                .certificate(memberCert.getCertificateNames() == null ?
+                        null : memberCert.getCertificateNames())
+                .estate(memberCert.getEstateAmount() == null ?
+                        null : Long.valueOf(memberCert.getEstateAmount()))
+                .health(memberCert.getHealthInfo() == null ?
+                        null : memberCert.getHealthInfo())
+                .income(memberCert.getIncomeAmount() == null ?
+                        null : Long.valueOf(memberCert.getIncomeAmount()))
+                .build();
+
     }
 }

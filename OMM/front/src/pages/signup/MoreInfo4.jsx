@@ -1,46 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { moreInfo4 } from '../../store/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
-function MoreInfo4() {
+function MoreInfo4({setStep}) {
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.user);
   const [moreinfo, setMoreInfo] = useState({
     contact_style: '',
     drinking_style: '',
     smoking_style: '',
   });
-
-  async function sendMyInfo() {
-    await axios({
-      method: 'post',
-      url: '/api/member/info',
-      data: '내 정보들 리덕스에서 가져와서 보낼거임',
-      // headers: {
-      //   Authorization: token,
-      // },
-    })
-      .then((res) => {
-        console.log(res.message);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const prev = ()=> {
+    setStep(3);
   }
-
-  async function sendPreferInfo() {
-    await axios({
-      method: 'post',
-      url: '/api/member/filtering',
-      data: '선호 정보들 리덕스에서 가져와서 보낼거임',
-      // headers: {
-      //   Authorization: token,
-      // },
-    })
-      .then((res) => {
-        console.log(res.message);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const next = () => { 
+    // if (
+    //   moreinfo.contact_style && 
+    //   moreinfo.drinking_style && 
+    //   moreinfo.smoking_style){
+        setStep(5)
+      // } else {
+      //   alert('모든 정보를 입력해주세요!');
+      // }
   }
+  const sendInfo = () => {
+    const info = {
+      contact_style: moreinfo.contact_style,
+      drinking_style: moreinfo.drinking_style,
+      smoking_style: moreinfo.smoking_style,
+    };
+    console.log(info);
+    dispatch(moreInfo4(info));
+  };
 
   useEffect(() => {
     console.log(moreinfo);
@@ -49,7 +40,7 @@ function MoreInfo4() {
   return (
     <div className="bg-white w-[22.5rem] h-[48.75rem]">
       <img
-        src="/heart-step-6.svg"
+        src="/heart-step-4.svg"
         alt=""
         className="mx-auto w-48 pt-16 pb-10"
       />
@@ -333,24 +324,23 @@ function MoreInfo4() {
         </div>
       </div>
       <div className="flex justify-between mx-8 text-[#364C63] text-lg">
-        <div>&lt; </div>
-        <div
-          aria-hidden
-          onClick={() => {
-            if (
-              moreinfo.contact_style &&
-              moreinfo.drinking_style &&
-              moreinfo.smoking_style
-            ) {
-              sendMyInfo();
-              sendPreferInfo();
-            } else {
-              alert('정보를 입력해주세요');
-            }
-          }}
-        >
-          &gt;
-        </div>
+        <button
+            type="button"
+            aria-hidden
+            onClick={() => {prev()}}
+          >
+            &lt;
+          </button>
+          <button
+            type="button"
+            aria-hidden
+            onClick={() => {
+              next()
+              sendInfo()
+            }}
+          >
+            &gt;
+        </button>
       </div>
     </div>
   );

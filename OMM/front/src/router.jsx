@@ -18,9 +18,13 @@ import Admin from './pages/admin/Admin';
 import Detail from './pages/admin/Detail';
 import Main from './pages/main/Main';
 import Chatwindow from './pages/chatting/Chatwindow';
+// import ChatingRoomClone from './pages/chatting/ChatingRoomClone';
+import ChatingRobbyClone from './pages/chatting/ChatingRobbyClone';
 import ImageUploader from './pages/profile/ImageUploader';
 import Login from './pages/login/login';
 import LikeList from './pages/like/LikeList';
+import WaitChat from './pages/chatting/WaitChat';
+import ImageGetTest from './pages/profile/ImageGetTest';
 
 const router = createBrowserRouter([
   {
@@ -36,7 +40,7 @@ const router = createBrowserRouter([
     element: <Signup />,
   },
   {
-    path: '/OtherProfile',
+    path: '/OtherProfile/:id',
     element: <OtherProfile />,
   },
   {
@@ -80,7 +84,7 @@ const router = createBrowserRouter([
     element: <ChatList />,
   },
   {
-    path: '/Chatwindow',
+    path: '/Chatwindow/:id',
     element: <Chatwindow />,
   },
   {
@@ -106,6 +110,22 @@ const router = createBrowserRouter([
   {
     path: '/ImageUploader',
     element: <ImageUploader />,
+  },
+  {
+    path: '/ChatingRobbyClone',
+    element: <ChatingRobbyClone />,
+  },
+  // {
+  //   path: '/ChatingRoomClone',
+  //   element: <ChatingRoomClone />,
+  // },
+  {
+    path: '/loading',
+    element: <WaitChat />,
+  },
+  {
+    path: '/imagetest',
+    element: <ImageGetTest />,
   },
 ]);
 

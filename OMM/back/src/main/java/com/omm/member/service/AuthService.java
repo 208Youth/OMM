@@ -6,13 +6,16 @@ import com.omm.jwt.TokenProvider;
 import com.omm.member.model.dto.AuthDto;
 import com.omm.member.model.dto.RegistDto;
 import com.omm.member.model.dto.SubjectsDto;
+import com.omm.util.UrlInfo;
 import com.omm.util.error.ErrorCode;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -22,6 +25,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -33,8 +37,13 @@ public class AuthService {
 
     private final RestTemplate restTemplate;
 
+    private final RedisTemplate redisTemplate;
+
     private final TokenProvider tokenProvider;
+
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+
+    private final UrlInfo urlInfo;
 
 
     /**
@@ -54,18 +63,20 @@ public class AuthService {
 
     public RegistDto registAuth(AuthDto authDto) {
         SubjectsDto subjects = verifyVP(authDto);
-        Map<String, String> personalInfo = subjects.getSubjects().get("personalInfo");
-        if (personalInfo == null ||
-            personalInfo.get("birthdate") == null ||
-            personalInfo.get("gender") == null) {
+        Map<String, Object> personalId = subjects.getSubjects().get("personalId");
+        if (personalId == null ||
+            personalId.get("birthdate") == null ||
+            personalId.get("gender") == null ||
+            personalId.get("imageUrl") == null) {
             throw new CustomException(ErrorCode.INVALID_VP);
         }
 
         return RegistDto.builder()
             .holderDid(authDto.getHolderDid())
             .age((short) (Calendar.getInstance().get(Calendar.YEAR) -
-                Integer.parseInt(personalInfo.get("birthdate").substring(0, 4)) + 1))
-            .gender(personalInfo.get("gender"))
+                Integer.parseInt(((String) personalId.get("birthdate")).substring(0, 4)) + 1))
+            .gender((String) personalId.get("gender"))
+                .imageUrl((String) personalId.get("imageUrl"))
             .build();
 
     }
@@ -88,7 +99,7 @@ public class AuthService {
 
         HttpEntity<String> requestEntity = new HttpEntity<>(gsonObj.toJson(requestBody), headers);
 
-        String url = "http://localhost:3000/api/did/presentation";
+        String url = urlInfo.getNodeapi() +  "/api/node/presentation";
         HttpMethod httpMethod = HttpMethod.POST;
 
         try {
@@ -111,6 +122,16 @@ public class AuthService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         return tokenProvider.createToken(authentication);
+    }
+
+    @Transactional
+    public void logout(String jwt){
+        if (!tokenProvider.validateToken(jwt)){
+            throw new CustomException(ErrorCode.INVALID_AUTH_TOKEN);
+        }
+
+        Long expiration = tokenProvider.getExpiration(jwt);
+        redisTemplate.opsForValue().set(jwt, "logout", expiration, TimeUnit.MILLISECONDS);
     }
 
 }

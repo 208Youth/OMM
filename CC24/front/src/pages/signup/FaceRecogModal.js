@@ -6,7 +6,7 @@ import CloseBtn from '../../assets/CloseBtn.svg';
 import FaceId from '../../assets/FaceId.svg';
 import './FaceRecogModal.css';
 
-function FaceRecogModal({ setFaceModal, setFaceComplete, name }) {
+function FaceRecogModal({ setFaceModal, setFaceComplete, name, img }) {
   const [completed, setBtn] = useState(false);
   const [imageSrc, setImageSrc] = useState('');
   const [imgfile, setFile] = useState(null);
@@ -14,7 +14,7 @@ function FaceRecogModal({ setFaceModal, setFaceComplete, name }) {
   const encodeFileToBase64 = (fileBlob) => {
     // 파일명 변경(회원이름 가져올것)
     let editFile = null;
-    editFile = new File([fileBlob], '{name}.jpg', { type: fileBlob.type });
+    editFile = new File([fileBlob], `${name}.jpg`, { type: fileBlob.type });
     // 파일명 변경된 파일을 저장
     setFile(editFile);
     // 업로드한 이미지 보여주기
@@ -31,29 +31,12 @@ function FaceRecogModal({ setFaceModal, setFaceComplete, name }) {
     });
   };
 
-  async function sendImg() {
+  const sendImg = function() {
     setFaceComplete(true);
-    // axios로 fastapi 에 이미지 보내기
-    await axios({
-      method: 'post',
-      url: 'http://127.0.0.1:8000/photo',
-      data: {
-        file: imgfile,
-      },
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-      .then((res) => {
-        console.log(res);
-        console.log('이미지를 보냈습니다.');
-        setFaceModal(false);
-        setFaceComplete(true);
-      })
-      .catch((err) => {
-        console.log(err);
-        setFaceComplete(true);
-      });
+    // axios로 node.js 에 이미지 보내기
+    // 사진 파일, 사람정보, 서명을 FormData 형식으로 보내주기
+    img(imgfile)
+    setFaceModal(false)
   }
 
   // 얼굴 인증 버튼 누른후 인식이 되면 버튼 변경

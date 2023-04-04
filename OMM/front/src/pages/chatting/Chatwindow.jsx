@@ -3,14 +3,25 @@ import axios from 'axios';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import Modal from 'react-modal';
+import { useLocation } from 'react-router-dom';
+import chat from '../../api/chat';
+import http from '../../api/http';
 import BottomModal from './BottomModal';
 import ReportModal from './ReportModal';
+import './ChatModal.css';
 
 function ChatWindow() {
-  const [roomId, setRoomId] = useState(localStorage.getItem('wschat.roomId'));
+  // const [roomId, setRoomId] = useState(localStorage.getItem('wschat.roomId'));
   const [sender, setSender] = useState(localStorage.getItem('wschat.sender'));
   const [room, setRoom] = useState({});
+  const location = useLocation();
   const [message, setMessage] = useState('');
+  const token = localStorage.getItem('accessoken');
+  const headers = {
+    // Authorization: import.meta.env.VITE_TOKEN,
+    Authorization: token, // 매칭 수락한사람의 토큰
+  };
+
   // 임시로 메시지를 저장
   const [messages, setMessages] = useState([
     { senderId: 1, content: '자나요?', isRead: true },
@@ -43,27 +54,36 @@ function ChatWindow() {
   const closeReportModal = () => {
     setReportOpen(false);
   };
+  console.log(location);
+  const roomId = location.pathname.substring(12, location.pathname.lastIndex);
+  console.log(roomId);
+  console.log(sender);
 
-  const ws = new SockJS('http://localhost:8080/api/chat');
+  const ws = new SockJS('http://localhost:5000/api/chat');
   const stompClient = Stomp.over(ws);
   // 임시값으로 쁘띠재용을 받는다.
   const user2ID = '쁘띠재용';
 
   const findRoom = () => {
-    console.log('개신기한 호이스팅');
-    axios
-      .get(`http://localhost:8080/api/chat/room/${roomId}`)
+    console.log('파인드룸시잗');
+    http
+      .get(`/chat/room/${roomId},`, headers)
       .then((response) => {
         setRoom(response.data);
+        console.log('findroom정상실행');
+      })
+      .catch((error) => {
+        console.log(error);
+        console.log('dd');
       });
   };
 
   const sendMessage = () => {
-    // const ws = new SockJS('http://localhost:8080/api/chat');
+    // const ws = new SockJS('http://localhost:5000/api/chat');
     // const stompClient = Stomp.over(ws);
     stompClient.connect({}, (frame) => {
       stompClient.send(
-        '/api/pub/chat/message',
+        `/api/pub/chat/room/${roomId}`,
         {},
         JSON.stringify({ roomId, senderId: sender, content: message }),
       );
@@ -117,18 +137,29 @@ function ChatWindow() {
 
   useEffect(() => {
     findRoom();
-    axios
-      .get(`http://localhost:8080/api/chat/room/${roomId}` + '/messages')
-      .then(({ data }) => {
-        console.log('아래는 data 정보');
-        console.log({ data });
-        console.log(...data);
-        console.log('위는data 정보');
-        setMessages([...data]);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    http({
+      method: 'get',
+      url: `/chat/room/${roomId}/messages`,
+      headers: {
+        Authorization: import.meta.env.VITE_TOKEN,
+      },
+    }).then((response) => {
+      console.log(response);
+      setMessages([...response]);
+    });
+
+    // axios
+    //   .get(`http://localhost:5000/api/chat/room/${roomId}/messages`)
+    //   .then(({ data }) => {
+    //     console.log('아래는 data 정보');
+    //     console.log({ data });
+    //     console.log(...data);
+    //     console.log('위는data 정보');
+    //     setMessages([...data]);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
     connect();
   }, []);
 
@@ -136,10 +167,12 @@ function ChatWindow() {
     <div className=" text-[#364C63] w-[22.5rem] h-[48.75rem] mx-auto">
       <div className="text-2xl mx-6 py-8">
         <span>&lt;</span>
-        <span className="ml-3 font-sans font-bold">{user2ID}</span>
+        <span className="ml-3 font-sans font-extrabold text-[1.3rem]">
+          {user2ID}
+        </span>
       </div>
-      <div className="w-[312px] h-[4.7rem] flex bg-white bg-opacity-10 text-xs rounded-lg mb-1">
-        <div id="chatdetail">
+      <div className="flex mx-auto w-[20rem] h-[39rem] overscroll-x-none overflow-y-scroll scrollbar-hide touch-pan-y text-xs rounded-lg mb-1">
+        <div id="chatdetail" className="w-[20rem] mx-auto">
           <div>{/* 만약 보낸사람이 내가 아니라면 */}</div>
           <div id="Chat">
             <div>
@@ -150,30 +183,41 @@ function ChatWindow() {
                   <li
                     key={index}
                     className={`my-2 ${
-                      msg.senderId === 1 ? 'text-left' : 'text-right'
+                      msg.senderId === 1 ? 'text-right' : 'text-left'
                     }`}
                   >
                     {msg.senderId === 1 ? (
-                      <>
-                        <span className="">{msg.senderId}</span>
-                        <span className="text-sm mr-2">{msg.content}</span>
-                        <span className="text-xs">
+                      <div className="font-sans ml-28">
+                        <span className="text-[0.5rem] mr-1">
                           {msg.isRead ? '읽음' : '안읽음'}
                         </span>
-                      </>
+                        <span className="bg-[#E1E3EB] p-2 rounded-lg">
+                          <span className="font-sans">{msg.senderId}</span>
+                          <span className="text-sm mr-2 font-sans font-bold">
+                            {msg.content}
+                            오른쪽
+                          </span>
+                        </span>
+                      </div>
                     ) : (
-                      <>
-                        <span className="text-xs">
+                      <div className="w-60 flex">
+                        <div className="w-48 bg-[#E6C9C6] p-2 rounded-lg">
+                          <span className="text-sm mr-2 font-sans font-bold">
+                            왼쪽
+                            {msg.content}
+                          </span>
+                          <span className="">{msg.senderId}</span>
+                        </div>
+                        <span className="text-[0.5rem] ml-1 self-end">
                           {msg.isRead ? '읽음' : '안읽음'}
                         </span>
-                        <span className="text-sm mr-2">{msg.content}</span>
-                        <span className="">{msg.senderId}</span>
-                      </>
+                      </div>
                     )}
                   </li>
                 ))}
               </ul>
-              <div className="flex fixed bottom-0 ml-1">
+
+              <div className="flex fixed bottom-0 ">
                 <button
                   onClick={() => {
                     openModal();

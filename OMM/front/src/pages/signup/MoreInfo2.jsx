@@ -1,20 +1,47 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { moreInfo2 } from '../../store/userSlice';
 
-function MoreInfo2() {
+function MoreInfo2({ setStep }) {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
   const [moreinfo, setMoreInfo] = useState({
-    drinking_style: '',
-    smoking_style: '',
-    military: '',
+    my_drinking_style: '',
+    my_smoking_style: '',
+    my_contact_style: '',
   });
-
+  const prev = () => {
+    setStep(1);
+  };
+  const next = () => {
+    if (
+      moreinfo.my_drinking_style &&
+      moreinfo.my_smoking_style &&
+      moreinfo.my_contact_style
+    ) {
+      setStep(3);
+    } else {
+      alert('모든 정보를 입력해주세요!');
+    }
+  };
+  const sendInfo = () => {
+    const info = {
+      my_drinking_style: moreinfo.my_drinking_style,
+      my_smoking_style: moreinfo.my_smoking_style,
+      my_contact_style: moreinfo.my_contact_style,
+    };
+    console.log(info);
+    dispatch(moreInfo2(info));
+  };
   useEffect(() => {
     console.log(moreinfo);
+    console.log(user);
   }, [moreinfo]);
 
   return (
     <div className="bg-white w-[22.5rem] h-[48.75rem]">
       <img
-        src="/heart-step-4.svg"
+        src="/heart-step-2.svg"
         alt=""
         className="mx-auto w-48 pt-16 pb-10"
       />
@@ -22,6 +49,118 @@ function MoreInfo2() {
       <p className="text-center text-xs text-gray-400 font-sans">
         좋은 사람을 찾기 위해 추가 정보를 넣어주세요
       </p>
+      <div className="my-8 mx-8">
+        <h3 className="text-[#364C63] block mb-5 text-base">
+          당신의 연락 스타일은?
+        </h3>
+        <div className="grid grid-rows-3 grid-flow-col">
+          <div>
+            <input
+              onClick={(e) => {
+                setMoreInfo((prevInfo) => ({
+                  ...prevInfo,
+                  my_contact_style: e.target.value,
+                }));
+              }}
+              id="contact1"
+              type="radio"
+              name="contact"
+              value="PREFER_MSG"
+              className="peer/contact1"
+            />
+            <label
+              htmlFor="contact1"
+              className="peer-checked/contact1:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
+            >
+              카톡 자주하는 편
+            </label>
+          </div>
+          <div>
+            <input
+              onClick={(e) => {
+                setMoreInfo((prevInfo) => ({
+                  ...prevInfo,
+                  my_contact_style: e.target.value,
+                }));
+              }}
+              id="contact3"
+              type="radio"
+              name="contact"
+              value="PREFER_CALL"
+              className="peer/contact3"
+            />
+            <label
+              htmlFor="contact3"
+              className="peer-checked/contact3:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
+            >
+              전화가 좋아요
+            </label>
+          </div>
+          <div>
+            <input
+              onClick={(e) => {
+                setMoreInfo((prevInfo) => ({
+                  ...prevInfo,
+                  my_contact_style: e.target.value,
+                }));
+              }}
+              id="contact5"
+              type="radio"
+              name="contact"
+              value="PREFER_OFFLINE"
+              className="peer/contact5"
+            />
+            <label
+              htmlFor="contact5"
+              className="peer-checked/contact5:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
+            >
+              만나는게 좋아요
+            </label>
+          </div>
+          <div className="ml-2">
+            <input
+              onClick={(e) => {
+                setMoreInfo((prevInfo) => ({
+                  ...prevInfo,
+                  my_contact_style: e.target.value,
+                }));
+              }}
+              id="contact2"
+              type="radio"
+              name="contact"
+              value="NOT_MSG"
+              className="peer/contact2"
+            />
+            <label
+              htmlFor="contact2"
+              className="peer-checked/contact2:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
+            >
+              카톡 안하는 편
+            </label>
+          </div>
+          <div className="ml-2">
+            <input
+              onClick={(e) => {
+                setMoreInfo((prevInfo) => ({
+                  ...prevInfo,
+                  my_contact_style: e.target.value,
+                }));
+              }}
+              id="contact4"
+              type="radio"
+              name="contact"
+              value="PREFER_FACECALL"
+              className="peer/contact4"
+            />
+            <label
+              htmlFor="contact4"
+              className="peer-checked/contact4:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
+            >
+              영상통화가 좋아요
+            </label>
+          </div>
+        </div>
+      </div>
       <div className="my-8 mx-8">
         <h3 className="text-[#364C63] block mb-5 text-base">
           평소에 어느 정도 술을 마시나요?
@@ -32,7 +171,7 @@ function MoreInfo2() {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  drinking_style: e.target.value,
+                  my_drinking_style: e.target.value,
                 }));
               }}
               id="drink1"
@@ -53,7 +192,7 @@ function MoreInfo2() {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  drinking_style: e.target.value,
+                  my_drinking_style: e.target.value,
                 }));
               }}
               id="drink3"
@@ -74,7 +213,7 @@ function MoreInfo2() {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  drinking_style: e.target.value,
+                  my_drinking_style: e.target.value,
                 }));
               }}
               id="drink5"
@@ -95,7 +234,7 @@ function MoreInfo2() {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  drinking_style: e.target.value,
+                  my_drinking_style: e.target.value,
                 }));
               }}
               id="drink2"
@@ -116,7 +255,7 @@ function MoreInfo2() {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  drinking_style: e.target.value,
+                  my_drinking_style: e.target.value,
                 }));
               }}
               id="drink4"
@@ -137,7 +276,7 @@ function MoreInfo2() {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  drinking_style: e.target.value,
+                  my_drinking_style: e.target.value,
                 }));
               }}
               id="drink6"
@@ -165,7 +304,7 @@ function MoreInfo2() {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  smoking_style: e.target.value,
+                  my_smoking_style: e.target.value,
                 }));
               }}
               id="smoke1"
@@ -186,7 +325,7 @@ function MoreInfo2() {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  smoking_style: e.target.value,
+                  my_smoking_style: e.target.value,
                 }));
               }}
               id="smoke3"
@@ -207,7 +346,7 @@ function MoreInfo2() {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  smoking_style: e.target.value,
+                  my_smoking_style: e.target.value,
                 }));
               }}
               id="smoke5"
@@ -228,7 +367,7 @@ function MoreInfo2() {
               onClick={(e) => {
                 setMoreInfo((prevInfo) => ({
                   ...prevInfo,
-                  smoking_style: e.target.value,
+                  my_smoking_style: e.target.value,
                 }));
               }}
               id="smoke2"
@@ -246,115 +385,26 @@ function MoreInfo2() {
           </div>
         </div>
       </div>
-      <div className="mt-8 mb-14 mx-8">
-        <h3 className="text-[#364C63] block mb-5 text-base">
-          병역 관련사항을 선택해주세요.
-        </h3>
-        <div className="grid grid-rows-2 grid-flow-col">
-          <div>
-            <input
-              onClick={(e) => {
-                setMoreInfo((prevInfo) => ({
-                  ...prevInfo,
-                  military: e.target.value,
-                }));
-              }}
-              id="military1"
-              type="radio"
-              name="military"
-              value="NONE"
-              className="peer/military1"
-            />
-            <label
-              htmlFor="military1"
-              className="peer-checked/military1:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
-            >
-              해당사항 없음
-            </label>
-          </div>
-          <div>
-            <input
-              onClick={(e) => {
-                setMoreInfo((prevInfo) => ({
-                  ...prevInfo,
-                  military: e.target.value,
-                }));
-              }}
-              id="military3"
-              type="radio"
-              name="military"
-              value="COMPLETE"
-              className="peer/military3"
-            />
-            <label
-              htmlFor="military3"
-              className="peer-checked/military3:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
-            >
-              군필
-            </label>
-          </div>
-          <div>
-            <input
-              onClick={(e) => {
-                setMoreInfo((prevInfo) => ({
-                  ...prevInfo,
-                  military: e.target.value,
-                }));
-              }}
-              id="military5"
-              type="radio"
-              name="military"
-              value="EXEMPT"
-              className="peer/military5"
-            />
-            <label
-              htmlFor="military5"
-              className="peer-checked/military5:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
-            >
-              면제
-            </label>
-          </div>
-          <div>
-            <input
-              onClick={(e) => {
-                setMoreInfo((prevInfo) => ({
-                  ...prevInfo,
-                  military: e.target.value,
-                }));
-              }}
-              id="military2"
-              type="radio"
-              name="military"
-              value="YET"
-              className="peer/military2"
-            />
-            <label
-              htmlFor="military2"
-              className="peer-checked/military2:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1"
-            >
-              미필
-            </label>
-          </div>
-        </div>
-      </div>
       <div className="flex justify-between mx-8 text-[#364C63] text-lg">
-        <div>&lt; </div>
-        <div
+        <button
+          type="button"
           aria-hidden
           onClick={() => {
-            if (
-              moreinfo.drinking_style &&
-              moreinfo.smoking_style &&
-              moreinfo.military
-            ) {
-              console.log('다음페이지로 이동');
-            } else {
-              alert('정보를 입력해주세요');
-            }
+            prev();
+          }}
+        >
+          &lt;
+        </button>
+        <button
+          type="button"
+          aria-hidden
+          onClick={() => {
+            next();
+            sendInfo();
           }}
         >
           &gt;
-        </div>
+        </button>
       </div>
     </div>
   );

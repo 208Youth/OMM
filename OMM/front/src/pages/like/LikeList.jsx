@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import http from '../../api/http';
 import TestImg from '../../components/assets/images/img_1.jpg';
 import Navbar from '../../components/nav-bar';
 
@@ -8,18 +8,19 @@ function LikeList() {
   const [likes, setLikes] = useState();
 
   const navigate = useNavigate();
+  const token = localStorage.getItem('accesstoken');
 
   async function getLikes() {
-    await axios({
+    await http({
       method: 'get',
-      url: '/api/member/liked',
-      // headers: {
-      //   Authorization: token,
-      // },
+      url: '/member/liked',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then((res) => {
-        console.log(res.liked_list);
-        setLikes(res.liked_list);
+        console.log(res.data.liked_list);
+        setLikes(res.data.liked_list);
       })
       .catch((err) => {
         console.log(err);

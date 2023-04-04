@@ -22,11 +22,11 @@ public class Report {
     @Column(name = "report_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reported_id", nullable = false)
     private Member reported;
 
@@ -34,8 +34,8 @@ public class Report {
     private String reason;
 
     @Lob
-    @JoinColumn(name = "image")
-    private Blob image;
+    @JoinColumn(name = "image", columnDefinition = "Blob")
+    private byte[] image;
 
     @JoinColumn(name = "state", nullable = false)
     private boolean state;

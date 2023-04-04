@@ -6,16 +6,18 @@ import React, { useState, useEffect } from 'react';
 import './Profile.css';
 import CloseBtn from '../../assets/CloseBtn.svg';
 
-function MyinfoSetModal({ setModal }) {
-  const [myinfo, setMyInfo] = useState({
-    height: '',
-    contact_stlye: '',
-    drinking_stlye: '',
-    smoking_stlye: '',
-    military: '',
-    pet: '',
+function MyinfoSetModal(props) {
+  const { setModal, basicInformation } = props;
+  const [myinfo, setMyInfo] = useState(basicInformation);
+  //   height: '',
+  //   contact_stlye: '',
+  //   drinking_stlye: '',
+  //   smoking_stlye: '',
+  //   military: '',
+  //   pet: '',
+  //  mbti: ''
 
-  });
+  // });
   const [mbti, setMbti] = useState(['', '', '', '']);
   const handleMbtiChange = (index, value) => {
     const newMbti = [...mbti];
@@ -23,16 +25,22 @@ function MyinfoSetModal({ setModal }) {
     setMbti(newMbti);
   };
 
-  // const data = {
-  //   height, contact_stlye, drinking_stlye, smoking_stlye, military, pet, MBTI: mbti,
-  // };
-  // const Changeinfo = () => {
-  //   axios.put('/api/member/info', data).then((response) => {
-  //     console.log('Success:', response);
-  //   }).catch((error) => {
-  //     console.log('Error:', error);
-  //   });
-  // };
+  const data = {
+    height: basicInformation.height,
+    contact_stlye: basicInformation.contact_stlye,
+    drinking_stlye: basicInformation.drinking_stlye,
+    smoking_stlye: basicInformation.smoking_stlye,
+    military: basicInformation.military,
+    pet: basicInformation.pet,
+    MBTI: mbti,
+  };
+  const Changeinfo = () => {
+    axios.put('/api/member/info', data).then((response) => {
+      console.log('Success:', response);
+    }).catch((error) => {
+      console.log('Error:', error);
+    });
+  };
   useEffect(() => {
     console.log(myinfo);
     console.log(mbti);

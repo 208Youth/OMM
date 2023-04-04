@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import SockJS from 'sockjs-client/dist/sockjs';
 import Stomp from 'stompjs';
+import jwt_decode from 'jwt-decode';
 import axios from 'axios';
 import Navbar from '../../components/nav-bar';
 import AlertMsg from '../../components/AlertMsg';
+import '../../components/AlertMsg.css';
+import http from '../../api/http';
 
 function Alert() {
-  const [alertlist, setAlertList] = useState();
+  const [alertlist, setAlertList] = useState([]);
+  const token = localStorage.getItem('accesstoken');
   const connect = () => {
     /*
     페이지 렌더링 후 실행되는 connect()
@@ -14,16 +18,29 @@ function Alert() {
     구독한 채널에서 Publish된 메세지가 왔을 때
     처리 (recvRoom())
     */
-    const ws = new SockJS('/api/matching');
+    const ws = new SockJS('http:localhost:5000/api/matching');
     const stompClient = Stomp.over(ws);
+    // 유저 3 토큰
+    const token3 =
+      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIweDA2YTgwMzg5M2IzNTE2NWFhYzJmYmMwYTgyM2M0MDkzNTdlOGVlNmQiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjgwNTg4MzgyfQ.0_7GyqVNQyaVwRd5AiFDzergGyTQuh2Nv7ptcRfLzJkBIby733B4OxiSLrusBPm7lfZTlcK5LSPqvOAkU8nidQ';
+    const decoded = jwt_decode(token3);
+    const headers = {
+      Authorization: import.meta.env.VITE_TOKEN_3, // 유저3 토큰
+    };
     stompClient.connect(
-      {},
+      headers,
       (frame) => {
-        stompClient.subscribe('/sub/matching/noti', (message) => {
-          const recv = JSON.parse(message.body);
-          console.log(recv);
-          // recvRoom(recv);
-        });
+        stompClient.subscribe(
+          `/sub/matching/noti/${decoded.sub}`,
+          (message) => {
+            const recv = JSON.parse(message.body);
+            setAlertList((prev) => {
+              const newList = [recv, ...prev];
+              return newList;
+            });
+          },
+          {},
+        );
       },
       (error) => {
         // 연결이 끊어졌을 때 재연결 시도 부분
@@ -38,17 +55,43 @@ function Alert() {
     );
   };
 
+  const deletemsg = (msg) => {
+    console.log('삭제할거야');
+    setAlertList(alertlist.filter((alert) => alert.id !== msg.id));
+    console.log('삭제보낼거', msg);
+    http({
+      method: 'delete',
+      url: '/matching/noti',
+      data: msg,
+      headers: {
+        Authorization: import.meta.env.VITE_TOKEN_3,
+      },
+    })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   async function getAlerts() {
-    await axios({
+    await http({
       method: 'get',
-      url: '/api/matching/noti',
-      // headers: {
-      //   Authorization: token,
-      // },
-    }).then((res) => {
-      console.log(res.list);
-      setAlertList(res.list);
-    });
+      url: '/matching/noti',
+      headers: {
+        Authorization: import.meta.env.VITE_TOKEN_3,
+      },
+    })
+      .then((res) => {
+        console.log('기존 알림가져옴', res.data.list);
+        if (res.data.list) {
+          setAlertList(res.data.list);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   useEffect(() => {
@@ -56,33 +99,32 @@ function Alert() {
     getAlerts();
   }, []);
 
+  useEffect(() => {
+    console.log('알림변경됨', alertlist);
+  }, [alertlist]);
+
   return (
     <div className="text-[#364C63] w-[22.5rem] h-[48.75rem] mx-auto">
       <div className="text-2xl mx-6 py-8">
         <span>&lt;</span>
-        <span className="ml-3 font-sans font-bold">Notification</span>
+        <span className="font-sans ml-3 font-bold">Notification</span>
       </div>
-      <div className="mx-6 text-lg mb-3">
-        오늘
+      <div className="mx-6 text-lg mb-3" id="msgs">
         <div className="mt-3">
-          {alertlist && alertlist.map((msg) => <AlertMsg msg={msg} />)}
-          <AlertMsg />
-        </div>
-      </div>
-      <div className="mx-6 text-lg mb-3">
-        어제
-        <div className="mt-3">
-          <AlertMsg />
-        </div>
-      </div>
-      <div className="mx-6 text-lg mb-3">
-        이번 주
-        <div className="mt-3">
-          <AlertMsg />
-          <AlertMsg />
-          <AlertMsg />
-          <AlertMsg />
-          <AlertMsg />
+          {alertlist &&
+            alertlist.map((msg) => (
+              <div>
+                <AlertMsg
+                  msg={msg}
+                  deletemsg={(res) => {
+                    if (res) {
+                      deletemsg(res);
+                    }
+                  }}
+                />
+              </div>
+            ))}
+          {/* <AlertMsg deletemsg={false} /> */}
         </div>
       </div>
       <Navbar notiNav />

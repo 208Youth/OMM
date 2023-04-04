@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.sql.Blob;
+import java.util.Map;
 
 @Getter
 @NoArgsConstructor
@@ -15,20 +15,20 @@ import java.sql.Blob;
 @Builder
 public class ReportDto {
 
-    @JsonProperty(value = "report_id")
+    @JsonProperty(value = "reportId")
     private Long reportId;
 
-    @JsonProperty(value = "member_id")
-    private Long memberId;
+    @JsonProperty(value = "memberInfo")
+    private Map<String, Object> memberInfo;
 
-    @JsonProperty(value = "reported_id")
-    private Long targetId;
+    @JsonProperty(value = "reportedMemberInfo")
+    private Map<String, Object> reportedMemberInfo;
 
     @JsonProperty(value = "reason")
     private String reason;
 
     @JsonProperty(value = "image")
-    private Blob image;
+    private byte[] image;
 
     @JsonProperty(value = "state")
     private boolean state;

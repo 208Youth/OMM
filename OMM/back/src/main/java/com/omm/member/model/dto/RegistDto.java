@@ -14,6 +14,6 @@ public class RegistDto {
     private String holderDid;
     private short age;
     private String gender;
-    // 얼굴 정보 추가
+    private String imageUrl;
 
 }

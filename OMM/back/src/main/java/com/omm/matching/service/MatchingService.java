@@ -1,5 +1,6 @@
 package com.omm.matching.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.omm.exception.CustomException;
 import com.omm.matching.model.dto.request.DeleteNotificationRequestDto;
 import com.omm.matching.model.dto.response.NotificationResponseDto;
@@ -24,14 +25,15 @@ public class MatchingService {
     private final MatchingRepository matchingRepository;
     private final MemberRepository memberRepository;
     private final MemberImgRepository memberImgRepository;
+    private final ObjectMapper objectMapper;
 
     /**
      * Topic 반환
      * @param receiverId
      * @return
      */
-    public ChannelTopic getNotificationTopic(Long receiverId) {
-        return matchingRepository.getNotificationTopic(receiverId);
+    public String getReceiverAddr(Long receiverId) {
+        return matchingRepository.getReceiverAddr(receiverId);
     }
 
     /**
@@ -39,12 +41,12 @@ public class MatchingService {
      * @param receiverId
      * @return
      */
-    public Notification createNotification(Long receiverId) {
+    public Notification createNotification(Long receiverId, String user) {
         String id = UUID.randomUUID().toString();
         LocalDateTime createdTime = LocalDateTime.now();
         Notification notification = Notification.builder()
                 .id(id)
-                .senderId(getSender().getId())
+                .senderId(getSender(user).getId())
                 .createdTime(createdTime)
                 .build();
         matchingRepository.createNotification(receiverId, notification);
@@ -59,9 +61,10 @@ public class MatchingService {
         Member member = getSender();
         List<NotificationResponseDto> notificationResponseDtos = new ArrayList<>();
         List<Notification> notifications = matchingRepository.getNotifications(member.getId());
-        notifications.forEach(notification ->  {
+        for(Object notificationObject : notifications) {
+            Notification notification = objectMapper.convertValue(notificationObject, Notification.class);
             notificationResponseDtos.add(getNotificationResponseDto(member, notification));
-        });
+        }
         return notificationResponseDtos;
     }
 
@@ -88,6 +91,12 @@ public class MatchingService {
             throw new CustomException(ErrorCode.INVALID_AUTH_TOKEN);
         });
         return memberRepository.findByDidAddress(didAddress).orElseThrow(() -> {
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        });
+    }
+
+    public Member getSender(String user) {
+        return memberRepository.findByDidAddress(user).orElseThrow(() -> {
             throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         });
     }

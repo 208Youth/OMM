@@ -46,9 +46,12 @@ public class RecommendService {
 
     private final RestTemplate restTemplate;
 
+    private final UrlInfo urlInfo;
+
     public GetRecommendListResponseDto getRecommendList(String currentMemberDidAddress) {
 
 
+        System.out.println(currentMemberDidAddress);
         try {
             Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
                     .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
@@ -83,11 +86,11 @@ public class RecommendService {
             myKNN.put("drinkingStyle", EnumToKNN.filterDrinkingToKNN(myFilter.getDrinkingStyle()));
             myKNN.put("smokingStyle", EnumToKNN.filterSmokingToKNN(myFilter.getSmokingStyle()));
 
-//            System.out.print("Mydata | ");
-//            for ( String key : myKNN.keySet() ) {
-//                System.out.print(key + " : " + myKNN.get(key) + " | ");
-//            }
-//            System.out.println();
+            System.out.print("Mydata | ");
+            for ( String key : myKNN.keySet() ) {
+                System.out.print(key + " : " + myKNN.get(key) + " | ");
+            }
+            System.out.println();
 
             Map<Long, Map<String, Double>> users = new HashMap<>();
             filteredList.forEach((filtMem) -> {
@@ -99,11 +102,11 @@ public class RecommendService {
                 user.put("drinkingStyle", EnumToKNN.infoDrinkingToKNN(filtMem.getDrinkingStyle()));
                 user.put("smokingStyle", EnumToKNN.infoSmokingToKNN(filtMem.getSmokingStyle()));
 
-//                System.out.print("user | ");
-//                for ( String key : user.keySet() ) {
-//                    System.out.print(key + " : " + user.get(key) + " | ");
-//                }
-//                System.out.println();
+                System.out.print("user | ");
+                for ( String key : user.keySet() ) {
+                    System.out.print(key + " : " + user.get(key) + " | ");
+                }
+                System.out.println();
 
                 users.put(filtMem.getMemberId(), user);
 
@@ -114,7 +117,7 @@ public class RecommendService {
             requestBody.put("users", users);
 
             // FastAPI로 전송
-            String url = UrlInfo.getFastUrl() +"/recommend"; // fastAPI url
+            String url = urlInfo.getFastapi() +"/recommend"; // fastAPI url
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -125,8 +128,8 @@ public class RecommendService {
             GetRecommendListResponseDto responseBody = response.getBody();
 
 
-//            List<Long> idList = responseBody.getUserList();
-//            idList.forEach((num) -> System.out.print(num + " "));
+            List<Long> idList = responseBody.getUserList();
+            idList.forEach((num) -> System.out.print(num + " "));
 //            System.out.println(idList.get(0) + idList.get(1));
 
             return responseBody;
@@ -172,12 +175,12 @@ public class RecommendService {
         MyInfo myInfo = myInfoRepository.findByMember(member)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
-        List<MemberImg> memberImgList = memberImgRepository.findAllById(memberId);
+        List<MemberImg> memberImgList = memberImgRepository.findAllByMember(member);
 
         List<InterestList> interestList = interestListRepository.findAllByMember(member);
 
         try {
-            List<Blob> images = new ArrayList<>();
+            List<byte[]> images = new ArrayList<>();
             memberImgList.forEach((memberImg -> {
                 images.add(memberImg.getImageContent());
             }));
