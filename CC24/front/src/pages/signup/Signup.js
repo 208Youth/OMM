@@ -66,6 +66,26 @@ function Signup() {
     for (let key of data.keys()) {
       console.log(key, ':', data.get(key));
     }
+    const didData = {
+      holderDid: localData.did,
+    };
+    const getVC = async () => {
+      await http({
+        // await axios({
+        method: 'post',
+        url: '/credential/did-address',
+        // url: 'http://localhost:4424/api/node/credential/did-address',
+        data: didData,
+      })
+        .then((res) => {
+          console.log('성공!!!!!!!!', res);
+          console.log(res.data.vcJwt);
+          localStorage.setItem('DIDvc', JSON.stringify(res.data.vcJwt));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
 
     await http({
       method: 'post',
@@ -77,6 +97,10 @@ function Signup() {
         console.log('성공!!!!!!!!', res);
         dispatch(idenVC(res.data.vcJwt));
         window.localStorage.setItem('IdenVC', JSON.stringify(res.data.vcJwt));
+      })
+      .then((res) => {
+        console.log(res)
+        getVC()
       })
       .catch((err) => {
         console.log(err);

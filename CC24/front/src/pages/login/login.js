@@ -19,6 +19,7 @@ function Login() {
   const [iden, setIden] = useState(null);
   const [pk, setPK] = useState(null);
   const [isMember, setIsMember] = useState(false);
+  const didVC = JSON.parse(localStorage.getItem('DIDvc'))
   // let ethrDidOnGoerliNamed = '';
   const [ethrDidOnGoerliNamed, setEthrDidOnGoerliNamed] = useState(null);
   useEffect(() => {
@@ -44,42 +45,41 @@ function Login() {
     }
   }, []);
   const [isLoading, setIsLoading] = useState(false);
-  // const [vc, setVC] = useState('');
-  let vc = '';
-  const data = {
-    holderDid: did,
-  };
+  // let vc = '';
+  // const data = {
+  //   holderDid: did,
+  // };
 
-  const getVC = async () => {
-    setIsLoading(true);
-    await http({
-      // await axios({
-      method: 'post',
-      url: '/credential/did-address',
-      // url: 'http://localhost:4424/api/node/credential/did-address',
-      data: data,
-    })
-      .then((res) => {
-        console.log('성공!!!!!!!!', res);
-        console.log(res.data.vcJwt);
-        vc = res.data.vcJwt;
-      })
-      .then((res) => {
-        console.log(res);
-        ommLogin();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    // navigate('/main');
-  };
+  // const getVC = async () => {
+  //   setIsLoading(true);
+  //   await http({
+  //     // await axios({
+  //     method: 'post',
+  //     url: '/credential/did-address',
+  //     // url: 'http://localhost:4424/api/node/credential/did-address',
+  //     data: data,
+  //   })
+  //     .then((res) => {
+  //       console.log('성공!!!!!!!!', res);
+  //       console.log(res.data.vcJwt);
+  //       vc = res.data.vcJwt;
+  //     })
+  //     .then((res) => {
+  //       console.log(res);
+  //       ommLogin();
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  //   // navigate('/main');
+  // };
   const ommLogin = async () => {
-    console.log(vc);
+    console.log(didVC);
     const vpPayload = {
       vp: {
         '@context': ['https://www.w3.org/2018/credentials/v1'],
         type: ['VerifiablePresentation', 'PersonalIdPresentation'],
-        verifiableCredential: vc,
+        verifiableCredential: didVC,
       },
     };
     console.log(vpPayload)
@@ -165,7 +165,7 @@ function Login() {
             setPasswordComplete={(res) => {
               if (res) {
                 setPasswordComplete(true);
-                if (type == 'SIGNIN') getVC();
+                if (type == 'SIGNIN') ommLogin();
               }
             }}
           />

@@ -74,7 +74,8 @@ function ChatWindow() {
     roomId,
   };
 
-  const ws = new SockJS('http://localhost:5000/api/chat');
+  // const ws = new SockJS('http://localhost:5000/api/chat');
+  const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
   const stompClient = Stomp.over(ws);
 
   // 임시값으로 쁘띠재용을 받는다.
@@ -87,20 +88,28 @@ function ChatWindow() {
       headers: {
         Authorization: import.meta.env.VITE_TOKEN,
       },
-    }).then((response) => {
-      console.log('채탱방 정보를 가져옴');
-      console.log(response);
-      setRoom(response.data.roomInfo);
-      console.log(response.data.roomInfo.msgs);
-      setMessages([...response.data.payload]);
-    }).catch((error) => { console.log(error); });
+    })
+      .then((response) => {
+        console.log('채탱방 정보를 가져옴');
+        console.log(response);
+        setRoom(response.data.roomInfo);
+        console.log(response.data.roomInfo.msgs);
+        setMessages([...response.data.payload]);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const sendMessage = () => {
     stompClient.send(
       `/pub/chat/room/${roomId}`,
       headers1,
-      JSON.stringify({ roomId, receiverId: room.other.otherId, content: message }),
+      JSON.stringify({
+        roomId,
+        receiverId: room.other.otherId,
+        content: message,
+      }),
     );
     console.log('메시지 보냄');
     setMessage('');
@@ -147,10 +156,7 @@ function ChatWindow() {
   const recvMessage = (recv) => {
     console.log('받음?');
     console.log(recv);
-    setMessages(() => [
-      ...messages,
-      recv,
-    ]);
+    setMessages(() => [...messages, recv]);
   };
 
   const connect = () => {

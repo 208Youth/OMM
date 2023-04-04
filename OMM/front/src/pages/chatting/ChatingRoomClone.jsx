@@ -12,14 +12,16 @@ function ChatingRoomClone() {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
 
-  const ws = new SockJS('http://localhost:5000/api/chat');
+  // const ws = new SockJS('http://localhost:5000/api/chat');
+  const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
   const stompClient = Stomp.over(ws);
 
   useEffect(() => {
     findRoom();
-    chat.get(`/rooms/${roomId}` + '/messages')
+    chat
+      .get(`/rooms/${roomId}` + '/messages')
 
-    // axios.get(`http://localhost:5000/api/chat/room/${roomId}` + '/messages')
+      // axios.get(`http://localhost:5000/api/chat/room/${roomId}` + '/messages')
       .then(({ data }) => {
         console.log('아래는 유스이펙트시 실행되는 코드');
         console.log(data);
@@ -42,7 +44,11 @@ function ChatingRoomClone() {
 
   const sendMessage = () => {
     stompClient.connect({}, () => {
-      stompClient.send('/api/pub/chat/message', {}, JSON.stringify({ roomId, senderId: sender, content: message }));
+      stompClient.send(
+        '/api/pub/chat/message',
+        {},
+        JSON.stringify({ roomId, senderId: sender, content: message }),
+      );
       setMessage('');
       stompClient.disconnect();
     });
@@ -51,10 +57,7 @@ function ChatingRoomClone() {
   const recvMessage = (recv) => {
     console.log('받음?');
     console.log(recv);
-    setMessages(() => [
-      ...messages,
-      recv,
-    ]);
+    setMessages(() => [...messages, recv]);
   };
 
   const connect = () => {
@@ -64,7 +67,8 @@ function ChatingRoomClone() {
       console.log('stompClient connect');
       stompClient.subscribe('/sub/chat/entrance', (readDto) => {
         // axios.get(`http://localhost:5000/api/chat/room/${roomId}` + '/messages')
-        chat.get(`/room/${roomId}` + '/messages')
+        chat
+          .get(`/room/${roomId}` + '/messages')
           .then(({ data }) => {
             console.log('아래는 유스이펙트시 실행되는 코드');
             console.log(data);
@@ -113,17 +117,17 @@ function ChatingRoomClone() {
       <ul>
         {messages.map((msg, index) => (
           <li key={index}>
-            <span>
-              {msg.senderId}
-              가 보냄:
-              {' '}
-            </span>
+            <span>{msg.senderId}가 보냄: </span>
             <span>{msg.content}</span>
             <h3>{msg.isRead ? '읽음' : '안읽음'}</h3>
           </li>
         ))}
       </ul>
-      <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} />
+      <input
+        type="text"
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+      />
       <button onClick={sendMessage}>Send</button>
     </div>
   );

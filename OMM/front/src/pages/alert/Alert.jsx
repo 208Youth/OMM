@@ -18,7 +18,8 @@ function Alert() {
     구독한 채널에서 Publish된 메세지가 왔을 때
     처리 (recvRoom())
     */
-    const ws = new SockJS('http:localhost:5000/api/matching');
+    // const ws = new SockJS('http:localhost:5000/api/matching');
+    const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/matching`);
     const stompClient = Stomp.over(ws);
     // 유저 3 토큰
     const token3 = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIweDc3ODZjZTVlODQxM2U2YWM3M2JmNGM3MjgzYjIwZjU3NDY0MGRjMTQiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxMDMyMDQ4Mjg0M30.UanoFHotHIJmavfVtJNDrpNZSAtST9aOWenfxI3j-juotGg-ElnRK7s1Tdu4IMQk1cnhXMXTWqh978ituAKGKg';
