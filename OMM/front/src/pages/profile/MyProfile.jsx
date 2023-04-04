@@ -6,7 +6,9 @@ import './Pslider.css';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
 import Modal from 'react-modal';
+import './MyProfile.css';
 import axios from 'axios';
+import ImageUploader from './ImageUploader';
 import CloseBtn from '../../assets/CloseBtn.svg';
 import pencil from '../../assets/pencil.svg';
 import imagesetting from '../../assets/imagesetting.svg';
@@ -31,7 +33,7 @@ import userarrow from '../../assets/userarrow.svg';
 import MyinfoSetModal from './MyinfoSetModal';
 import MyinfoSetModal3 from './MyinfoSetModal3';
 import MyinfoSetModal2 from './MyinfoSetModal2';
-import http from '@/api/http';
+import http from '../../api/http';
 // props를 통해 userid를 받고 claose 버튼을 눌러서 해당 userid의
 // 아니면 메인 페이지에 해당 컴포넌트를 아예 합쳐버릴까
 
@@ -132,6 +134,12 @@ function MyProfile({ profileNav }) {
   };
   const closeMyModal3 = () => {
     setMyIsOpen3(false);
+  };
+  const openImageModal = () => {
+    setuploadImg(true);
+  };
+  const closeImageModal = () => {
+    setuploadImg(false);
   };
   const [new_certinfo, setCert] = useState(certinfo);
   const [interest, setInterest] = useState([]);
@@ -371,7 +379,7 @@ function MyProfile({ profileNav }) {
   // 컴포넌트가 처음 마운트될 때만 useEffect 콜백 함수가 호출되고,
   // 그 이후에는 호출되지 않습니다.
   return (
-    <div className="scroll-smooth">
+    <div className="bg-white w-[22.5rem] h-[48.75rem]">
       <div className="text-center">
         <Modal
           className="MyinfoModal"
@@ -404,13 +412,27 @@ function MyProfile({ profileNav }) {
           <Pslider />
           <div>
             <div
-            // className={isHovered ? 'imagesetting:hover' : 'imagesetting'}
-            // onMouseEnter={handleMouseEnter}
-            // onMouseLeave={handleMouseLeave}
-              className="imagesetting"
+              // className={isHovered ? 'imagesetting:hover' : 'imagesetting'}
+              // onMouseEnter={handleMouseEnter}
+              // onMouseLeave={handleMouseLeave}
+              className=""
+              onClick={() => {
+                openImageModal();
+              }}
+              aria-hidden
             >
               <img src={imagesetting} alt="$" />
             </div>
+            <Modal
+              isOpen={uploadImg}
+              // onAfterOpen={afterOpenModal}
+              onRequestClose={closeImageModal}
+              className="ProfileImgModal"
+              overlayClassName="ProfileImgOverlay"
+              ariaHideApp={false}
+            >
+              <ImageUploader setModal={closeImageModal} />
+            </Modal>
           </div>
 
           <div className="profileinfo">
