@@ -217,6 +217,15 @@ public class MemberController {
     public ResponseEntity<?> getMemberInterestList(@PathVariable("member-id") Long memberId) {
         return new ResponseEntity<>(memberService.getMemberInterestList(memberId), HttpStatus.OK);
     }
+    /**
+     * 현재 유저 관심사 정보 가져오기
+     *
+     * @return
+     */
+    @GetMapping("/interest-list")
+    public ResponseEntity<?> getMyInterestList() {
+        return new ResponseEntity<>(memberService.getMyInterestList(SecurityUtil.getCurrentDidAddress().get()), HttpStatus.OK);
+    }
 
     /**
      * 관심사 정보 삭제
