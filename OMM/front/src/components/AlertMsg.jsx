@@ -24,6 +24,9 @@ function AlertMsg({ msg, deletemsg }) {
       setIsOpen(false);
       setMessage('');
       dispatch(chatInfo(msginfo.senderId));
+      // navigate('/faceRecog/chat', {
+      //   state: { page: 'chat' },
+      // });
       navigate('/loading');
     }, 2000);
   };
