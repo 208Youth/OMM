@@ -554,6 +554,36 @@ public class MemberService {
     }
 
     /**
+     * 현재 유저 관심사 정보 리스트 가져오기
+     *
+     * @param currentMemberDidAddress 멤버 주소 정보
+     * @return
+     */
+    public GetInterestListResponseDto getMyInterestList(String currentMemberDidAddress) {
+        Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        try {
+            List<InterestList> interestList = interestListRepository.findAllByMember(member);
+            List<InterestDto> interestDtos = new ArrayList<>();
+            interestList.forEach((interest) -> {
+                interestDtos.add(
+                        InterestDto.builder()
+                                .interestListId(interest.getId())
+                                .name(interest.getInterest().getName())
+                                .build()
+                );
+            });
+
+            GetInterestListResponseDto getInterestListResponseDto = GetInterestListResponseDto.builder()
+                    .interestList(interestDtos).build();
+            return getInterestListResponseDto;
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
+        }
+    }
+
+    /**
      * 관심사 정보 삭제
      *
      * @param interestListId 관심사 리스트 아이디
