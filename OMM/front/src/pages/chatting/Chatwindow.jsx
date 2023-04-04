@@ -59,6 +59,15 @@ function ChatWindow() {
   const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
   const stompClient = Stomp.over(ws);
 
+  useEffect(
+    () => () => {
+      http.get('/chat/test').then((res) => {
+        console.log('요청함');
+      });
+    },
+    [location, stompClient],
+  );
+
   const connect = () => {
     stompClient.connect(
       headers,

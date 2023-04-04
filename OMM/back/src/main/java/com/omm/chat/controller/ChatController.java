@@ -72,4 +72,9 @@ public class ChatController {
         chatService.exitChatRoom(roomId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping("/chat/test")
+    public ResponseEntity<?> test() {
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
