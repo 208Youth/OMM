@@ -16,6 +16,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -53,5 +54,11 @@ public class ChatController {
         String user = accessor.getUser().getName();
         ChatMessage message = chatService.createMessage(messageDto, user);
         publishService.publishMessage(message);
+    }
+
+    @PutMapping("/chat/room/{room-id}")
+    public ResponseEntity<?> exitChatRoom(@PathVariable("room-id") String roomId) {
+        chatService.exitChatRoom(roomId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
