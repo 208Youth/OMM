@@ -22,10 +22,11 @@ function Alert() {
     const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/matching`);
     const stompClient = Stomp.over(ws);
     // 유저 3 토큰
-    const token3 = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIweDc3ODZjZTVlODQxM2U2YWM3M2JmNGM3MjgzYjIwZjU3NDY0MGRjMTQiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxMDMyMDQ4Mjg0M30.UanoFHotHIJmavfVtJNDrpNZSAtST9aOWenfxI3j-juotGg-ElnRK7s1Tdu4IMQk1cnhXMXTWqh978ituAKGKg';
-    const decoded = jwt_decode(token3);
+    const token = localStorage.getItem('accesstoken');
+    const decoded = jwt_decode(token);
     const headers = {
-      Authorization: import.meta.env.VITE_TOKEN_3, // 유저3 토큰
+      // Authorization: import.meta.env.VITE_TOKEN,
+      Authorization: `Bearer ${token}`,
     };
     stompClient.connect(
       headers,
@@ -64,7 +65,8 @@ function Alert() {
       url: '/matching/noti',
       data: msg,
       headers: {
-        Authorization: import.meta.env.VITE_TOKEN_3,
+        // Authorization: import.meta.env.VITE_TOKEN,
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => {
@@ -80,7 +82,8 @@ function Alert() {
       method: 'get',
       url: '/matching/noti',
       headers: {
-        Authorization: import.meta.env.VITE_TOKEN_3,
+        // Authorization: import.meta.env.VITE_TOKEN,
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => {

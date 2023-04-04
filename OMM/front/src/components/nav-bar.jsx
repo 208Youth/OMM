@@ -70,7 +70,7 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav }) {
     stompClient.send(
       '/pub/matching/noti',
       headers,
-      JSON.stringify({ receiverId: 3 }),
+      JSON.stringify({ receiverId: 503 }),
     );
     console.log(stompClient);
     // stompClient.disconnect();
