@@ -411,7 +411,7 @@ function MyProfile({ profileNav }) {
       </div>
       <div>
         <div className="absolute top-20 left-0 w-full z-5">
-          <Pslider profileImg={profileImg}/>
+          <Pslider profileImg={basicInfomation.profileimgs}/>
           <div>
             <div
               // className={isHovered ? 'imagesetting:hover' : 'imagesetting'}
