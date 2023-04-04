@@ -24,6 +24,8 @@ function ChatWindow() {
   const [reportOpen, setReportOpen] = useState(false);
   const [otherNickname, setOtherNickname] = useState('');
 
+  const [myLastIndex, setMyLastIndex] = useState(0);
+
   const openModal = () => {
     setIsOpen(true);
   };
@@ -60,22 +62,27 @@ function ChatWindow() {
   const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
   const stompClient = Stomp.over(ws);
 
-  useEffect(
-    () => () => {
-      http.get('/chat/test').then((res) => {
-        console.log('요청함');
-      });
-    },
-    [location, stompClient],
-  );
+  // useEffect(
+  //   () => () => {
+  //     http.get('/chat/test').then((res) => {
+  //       console.log('요청함');
+  //     });
+  //   },
+  //   [location, stompClient],
+  // );
 
   const connect = () => {
     stompClient.connect(
       headers,
       (frame) => {
         stompClient.subscribe(
-          `/sub/chat/room/${roomId}/entrance`,
-          (readDto) => {},
+          `/sub/chat/room/${roomId}   /entrance`,
+          (readDto) => {
+            setMessages([...readDto.payload]);
+            setRoom(readDto.roomInfo);
+            setOtherNickname(readDto.roomInfo.other.nickname);
+            setMyLastIndex(readDto.roomInfo.myLastSendIndex);
+          },
         );
 
         stompClient.subscribe(`/sub/chat/room/${roomId}`, (message) => {
@@ -106,10 +113,11 @@ function ChatWindow() {
         console.log('채팅방 정보를 가져옴');
         console.log(response);
         // setRoom(response.data.roomInfo);
-        console.log(response.data.roomInfo.msgs);
+        console.log(response.data.roomInfo);
         setMessages([...response.data.payload]);
         setRoom(response.data.roomInfo);
         setOtherNickname(response.data.roomInfo.other.nickname);
+        setMyLastIndex(response.data.roomInfo.myLastSendIndex);
       })
       .catch((error) => {
         console.log(error);
@@ -142,6 +150,7 @@ function ChatWindow() {
       );
     });
     setMessage('');
+    setMyLastIndex(myLastIndex + 1);
   };
 
   const recvReadDto = (readIndex) => {
@@ -194,9 +203,13 @@ function ChatWindow() {
                   >
                     {msg.senderId != room.other.otherId ? (
                       <div className="font-sans ml-28">
-                        <span className="text-[0.5rem] mr-1">
-                          {msg.read ? '읽음' : '안읽음'}
-                        </span>
+                        {myLastIndex == index + 1 ? (
+                          <span className="text-[0.5rem] mr-1">
+                            {msg.read ? '읽음' : '안읽음'}
+                          </span>
+                        ) : (
+                          <span />
+                        )}
                         <span className="bg-[#E1E3EB] p-2 rounded-lg">
                           <span className="font-sans">{msg.senderId}</span>
                           <span className="text-sm mr-2 font-sans font-bold">
@@ -214,9 +227,7 @@ function ChatWindow() {
                           </span>
                           <span className="">{msg.senderId}</span>
                         </div>
-                        <span className="text-[0.5rem] ml-1 self-end">
-                          {msg.isRead ? '읽음' : '안읽음'}
-                        </span>
+                        <span className="text-[0.5rem] ml-1 self-end" />
                       </div>
                     )}
                   </li>
