@@ -1,5 +1,6 @@
 package com.omm.handler;
 
+import com.google.gson.JsonObject;
 import com.omm.chat.service.ChatPublisherService;
 import com.omm.chat.service.ChatService;
 import com.omm.jwt.TokenProvider;
@@ -36,6 +37,8 @@ public class WebSocketEventListener {
         MessageHeaderAccessor accessor = NativeMessageHeaderAccessor.getAccessor(event.getMessage(), SimpMessageHeaderAccessor.class);
         GenericMessage generic = (GenericMessage) accessor.getHeader("simpConnectMessage");
         Map nativeHeaders = (Map) generic.getHeaders().get("nativeHeaders");
+        System.out.println("내가 보낸 해더");
+        System.out.println(nativeHeaders.get("roomId"));
         String roomId = nativeHeaders.get("roomId") == null ? "" : (String) ((List) nativeHeaders.get("roomId")).get(0);
         Long myId = 0L;
         String authorizationHeader = (String) ((List) nativeHeaders.get("Authorization")).get(0);

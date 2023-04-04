@@ -131,11 +131,12 @@ public class ChatService {
     }
 
     public ChatMessage createMessage(CreateMessageRequestDto messageDto, String user) {
+        System.out.println("메세지 디티오 받음?");
+        System.out.println(messageDto.getRoomId() + " " + messageDto.getReceiverId() + " " + messageDto.getContent());
         Member myInfo = getMember(user);
         ChatMessage message = new ChatMessage();
         Long id = chatRepository.getMessageSize(messageDto.getRoomId()) + 1;
         ChatRoom chatRoom = chatRepository.getRoom(message.getRoomId());
-
         message.setId(id);
         message.setRoomId(messageDto.getRoomId());
         message.setContent(messageDto.getContent());

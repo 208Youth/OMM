@@ -18,9 +18,13 @@ function ChatWindow() {
   const [message, setMessage] = useState('');
   const token = localStorage.getItem('accessoken');
   const headers = {
-    // Authorization: import.meta.env.VITE_TOKEN,
-    Authorization: token, // 매칭 수락한사람의 토큰
+    Authorization: import.meta.env.VITE_TOKEN,
+    // Authorization: token,
   };
+
+  const testuser1 = 1;
+  const testuser3 = 3;
+  const token3 = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIweDc3ODZjZTVlODQxM2U2YWM3M2JmNGM3MjgzYjIwZjU3NDY0MGRjMTQiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxMDMyMDQ4Mjg0M30.UanoFHotHIJmavfVtJNDrpNZSAtST9aOWenfxI3j-juotGg-ElnRK7s1Tdu4IMQk1cnhXMXTWqh978ituAKGKg';
 
   // 임시로 메시지를 저장
   const [messages, setMessages] = useState([
@@ -57,52 +61,112 @@ function ChatWindow() {
   console.log(location);
   const roomId = location.pathname.substring(12, location.pathname.lastIndex);
   console.log(roomId);
+  console.log(localStorage.getItem('wschat.roomId'));
   console.log(sender);
+
+  const headers1 = {
+    Authorization: import.meta.env.VITE_TOKEN,
+    roomId,
+    // Authorization: token,
+  };
+
+  const roomHeader = {
+    roomId,
+  };
 
   const ws = new SockJS('http://localhost:5000/api/chat');
   const stompClient = Stomp.over(ws);
+
   // 임시값으로 쁘띠재용을 받는다.
   const user2ID = '쁘띠재용';
 
   const findRoom = () => {
-    console.log('파인드룸시잗');
-    http
-      .get(`/chat/room/${roomId},`, headers)
-      .then((response) => {
-        setRoom(response.data);
-        console.log('findroom정상실행');
-      })
-      .catch((error) => {
-        console.log(error);
-        console.log('dd');
-      });
+    http({
+      method: 'get',
+      url: `/chat/room/${roomId}`,
+      headers: {
+        Authorization: import.meta.env.VITE_TOKEN,
+      },
+    }).then((response) => {
+      console.log('채탱방 정보를 가져옴');
+      console.log(response);
+      setRoom(response.data.roomInfo);
+      console.log(response.data.roomInfo.msgs);
+      setMessages([...response.data.payload]);
+    }).catch((error) => { console.log(error); });
   };
 
   const sendMessage = () => {
-    // const ws = new SockJS('http://localhost:5000/api/chat');
-    // const stompClient = Stomp.over(ws);
-    stompClient.connect({}, (frame) => {
+    stompClient.send(
+      `/pub/chat/room/${roomId}`,
+      headers1,
+      JSON.stringify({ roomId, receiverId: room.other.otherId, content: message }),
+    );
+    console.log('메시지 보냄');
+    setMessage('');
+  };
+
+  const sendMessage1 = () => {
+    stompClient.connect(headers1, (frame) => {
       stompClient.send(
-        `/api/pub/chat/room/${roomId}`,
-        {},
-        JSON.stringify({ roomId, senderId: sender, content: message }),
+        `/pub/chat/room/${roomId}`,
+        headers,
+        JSON.stringify({ roomId, senderId: testuser1, content: message }),
       );
+      console.log('메시지 보냄');
       setMessage('');
-      stompClient.disconnect();
     });
+  };
+
+  const sendMessage2 = () => {
+    stompClient.connect({ headers1 }, (frame) => {
+      stompClient.send(
+        `/pub/chat/room/${roomId}`,
+        { token3 },
+        JSON.stringify({ roomId, senderId: testuser3, content: message }),
+      );
+      console.log('메시지 보냄');
+      setMessage('');
+    });
+  };
+
+  const recvReadDto = (readIndex) => {
+    const { lastReadIndex } = readIndex;
+    console.log(messages);
+    console.log(`메세지길이.${messages.length}`);
+
+    const copies = [...messages];
+
+    for (let i = lastReadIndex; i < copies.length; i++) {
+      copies[i].isRead = true;
+    }
+
+    setMessages(copies);
+  };
+
+  const recvMessage = (recv) => {
+    console.log('받음?');
+    console.log(recv);
+    setMessages(() => [
+      ...messages,
+      recv,
+    ]);
   };
 
   const connect = () => {
     const reconnect = 0;
     console.log('아래는 메시지');
     console.log(message);
+    console.log('아래는 메시지 길이');
     console.log(messages.length);
+    console.log('위는 메시지 길이');
     stompClient.connect(
-      {},
+      headers1,
       (frame) => {
         stompClient.subscribe('/sub/chat/entrance', (readDto) => {
           const readIndex = JSON.parse(readDto.body);
           recvReadDto(readIndex);
+          console.log('커넥트');
         });
 
         stompClient.subscribe(`/sub/chat/room/${roomId}`, (message) => {
@@ -121,32 +185,8 @@ function ChatWindow() {
     );
   };
 
-  const recvReadDto = (readIndex) => {
-    const { lastReadIndex } = readIndex;
-    console.log(messages);
-    console.log(`메세지길이.${messages.length}`);
-
-    const copies = [...messages];
-
-    for (let i = lastReadIndex; i < copies.length; i++) {
-      copies[i].isRead = true;
-    }
-
-    setMessages(copies);
-  };
-
   useEffect(() => {
     findRoom();
-    http({
-      method: 'get',
-      url: `/chat/room/${roomId}/messages`,
-      headers: {
-        Authorization: import.meta.env.VITE_TOKEN,
-      },
-    }).then((response) => {
-      console.log(response);
-      setMessages([...response]);
-    });
 
     // axios
     //   .get(`http://localhost:5000/api/chat/room/${roomId}/messages`)
@@ -260,6 +300,38 @@ function ChatWindow() {
                   >
                     <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
                   </svg>
+                </button>
+                <button
+                  className="flex justify-center items-center h-12 w-12 relative bg-[#F2EAF2] rounded-full m-1 hover:border"
+                  onClick={sendMessage1}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.25rem"
+                    height="1.25rem"
+                    fill="currentColor"
+                    className="bi bi-send-fill text-[#364C63]"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
+                  </svg>
+                  1
+                </button>
+                <button
+                  className="flex justify-center items-center h-12 w-12 relative bg-[#F2EAF2] rounded-full m-1 hover:border"
+                  onClick={sendMessage2}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1.25rem"
+                    height="1.25rem"
+                    fill="currentColor"
+                    className="bi bi-send-fill text-[#364C63]"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
+                  </svg>
+                  2
                 </button>
               </div>
             </div>
