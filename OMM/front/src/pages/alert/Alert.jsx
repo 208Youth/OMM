@@ -18,7 +18,8 @@ function Alert() {
     구독한 채널에서 Publish된 메세지가 왔을 때
     처리 (recvRoom())
     */
-    const ws = new SockJS('http:localhost:5000/api/matching');
+    // const ws = new SockJS('http:localhost:5000/api/matching');
+    const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/matching`);
     const stompClient = Stomp.over(ws);
     // 유저 3 토큰
     const token3 =

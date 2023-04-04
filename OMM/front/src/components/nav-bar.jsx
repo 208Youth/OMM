@@ -5,9 +5,7 @@ import Stomp from 'stompjs';
 import './nav-bar.scss';
 import { Link } from 'react-router-dom';
 
-function Navbar({
-  profileNav, mainNav, notiNav, chatlistNav, likesNav,
-}) {
+function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav }) {
   let stompClient;
   const token = localStorage.getItem('accesstoken');
   const mainconnect = () => {
@@ -15,7 +13,8 @@ function Navbar({
       // Authorization: import.meta.env.VITE_TOKEN,
       Authorization: `Bearer ${token}`,
     };
-    const ws = new SockJS('http://localhost:5000/api/matching');
+    // const ws = new SockJS('http://localhost:5000/api/matching');
+    const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/matching`);
     stompClient = Stomp.over(ws);
     stompClient.connect(
       headers,
@@ -39,7 +38,8 @@ function Navbar({
       // Authorization: import.meta.env.VITE_TOKEN,
       Authorization: token,
     };
-    const ws = new SockJS('http://localhost:5000/api/chat');
+    // const ws = new SockJS('http://localhost:5000/api/chat');
+    const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
     stompClient = Stomp.over(ws);
     stompClient.connect(
       headers,
