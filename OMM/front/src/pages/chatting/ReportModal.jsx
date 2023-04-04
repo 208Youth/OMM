@@ -8,7 +8,7 @@ function ReportModal({ setReportModal }) {
   const [imgfile, setFile] = useState(null);
   const [imageSrc, setImageSrc] = useState('');
   const [report, setReport] = useState({
-    target_id: 0,
+    targetId: 0,
     reason: '',
     image: '',
     state: false,
@@ -16,7 +16,9 @@ function ReportModal({ setReportModal }) {
   });
   const token = localStorage.getItem('accessToken');
   const encodeFileToBase64 = (fileBlob) => {
-    setFile(fileBlob);
+    let editFile = null;
+    editFile = new File([fileBlob], { type: fileBlob.type });
+    setFile(editFile);
     setReport((prev) => ({
       ...prev,
       image: fileBlob,
@@ -36,18 +38,16 @@ function ReportModal({ setReportModal }) {
 
   async function sendReport() {
     const formData = new FormData();
-    formData.append('target_id', report.target_id);
-    formData.append('reason', report.reason);
+    formData.append('report', JSON.stringify(report));
     formData.append('image', imgfile);
-    formData.append('state', report.state);
-    formData.append('category', report.category);
     console.log(formData);
 
     await http
       .post('/admin/report', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: import.meta.env.VITE_TOKEN,
+          Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkaWQ6ZXRocjpnb2VybGk6MHgwM2RmOGU1NGEzMGUzOTA2ZDI0M2Q3NDAyYzU5YjgyYjVkODU0MjIzYmEzYWU5NjllYTIzZDJjMTJiOGRhNDljNWUiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxMDMyMDYxMTQ3OH0.gFgEZevnWzLvjsmFge6NK9oquTvpjeMiYhJuXnQ3nP4nfWPRsBRxeo1AWAagTY7AyBSOwnXwBHO9VUFv3PaXuQ",
+          // Authorization: import.meta.env.VITE_TOKEN,
           // Authorization: `Bearer ${token}`, // TODO: 임시 토큰 부여
           data: formData,
         },
@@ -64,7 +64,7 @@ function ReportModal({ setReportModal }) {
   useEffect(() => {
     setReport((prev) => ({
       ...prev,
-      target_id: 1,
+      targetId: 1,
     }));
   }, []);
 
