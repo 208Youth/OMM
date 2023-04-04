@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import axios from 'axios';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
@@ -15,31 +15,11 @@ function ChatWindow() {
   const [sender, setSender] = useState(localStorage.getItem('wschat.sender'));
   const [room, setRoom] = useState({});
   const location = useLocation();
+  const [arrivalChat, setArrivalChat] = useState(null); // 도착한 메세지 저장
   const [message, setMessage] = useState('');
-  const token = localStorage.getItem('accessoken');
-  const headers = {
-    Authorization: import.meta.env.VITE_TOKEN,
-    // Authorization: token,
-  };
-
-  const testuser1 = 1;
-  const testuser3 = 3;
-  const token3 = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIweDc3ODZjZTVlODQxM2U2YWM3M2JmNGM3MjgzYjIwZjU3NDY0MGRjMTQiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxMDMyMDQ4Mjg0M30.UanoFHotHIJmavfVtJNDrpNZSAtST9aOWenfxI3j-juotGg-ElnRK7s1Tdu4IMQk1cnhXMXTWqh978ituAKGKg';
-
+  const token = localStorage.getItem('accesstoken');
   // 임시로 메시지를 저장
-  const [messages, setMessages] = useState([
-    { senderId: 1, content: '자나요?', isRead: true },
-    { senderId: 1, content: '술 마실래요', isRead: true },
-    { senderId: 2, content: '저 입이 없어서 술 못마셔요 ㅜㅜ', isRead: true },
-    { senderId: 1, content: '아 네', isRead: false },
-    { senderId: 1, content: '카톡 할래요?', isRead: false },
-    {
-      senderId: 2,
-      content: '저 와이파이가 안되서 카톡 못해요 ㅠㅠ',
-      isRead: false,
-    },
-  ]);
-
+  const [messages, setMessages] = useState([]);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
 
@@ -58,14 +38,15 @@ function ChatWindow() {
   const closeReportModal = () => {
     setReportOpen(false);
   };
-  console.log(location);
+
+  useEffect(() => {
+    arrivalChat && setMessages((prev) => [...prev, arrivalChat]); // 채팅 리스트에 추가
+  }, [arrivalChat]);
+
   const roomId = location.pathname.substring(12, location.pathname.lastIndex);
-  console.log(roomId);
-  console.log(localStorage.getItem('wschat.roomId'));
-  console.log(sender);
 
-  const headers1 = {
-    Authorization: import.meta.env.VITE_TOKEN,
+  const headers = {
+    Authorization: `Bearer ${token}`,
     roomId,
     // Authorization: token,
   };
@@ -74,71 +55,91 @@ function ChatWindow() {
     roomId,
   };
 
-  const headers1 = {
-    Authorization: import.meta.env.VITE_TOKEN,
-    roomId,
-    // Authorization: token,
-  };
-
-  const roomHeader = {
-    roomId,
-  };
-
-  const ws = new SockJS('http://localhost:5000/api/chat');
-  // const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
+  // const ws = new SockJS('http://localhost:5000/api/chat');
+  const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
   const stompClient = Stomp.over(ws);
 
-  // 임시값으로 쁘띠재용을 받는다.
-  const user2ID = '쁘띠재용';
+  useEffect(
+    () => () => {
+      http.get('/chat/test').then((res) => {
+        console.log('요청함');
+      });
+    },
+    [location, stompClient],
+  );
+
+  const connect = () => {
+    stompClient.connect(
+      headers,
+      (frame) => {
+        stompClient.subscribe(
+          `/sub/chat/room/${roomId}/entrance`,
+          (readDto) => {},
+        );
+
+        stompClient.subscribe(`/sub/chat/room/${roomId}`, (message) => {
+          const recv = JSON.parse(message.body);
+          setArrivalChat(recv);
+        });
+      },
+      (error) => {
+        // if(reconnect++ < 5) {
+        //   setTimeout(function() {
+        //     console.log("connection reconnect");
+        //     connect();
+        //   },10*1000);
+        // }
+      },
+    );
+  };
 
   const findRoom = () => {
     http({
       method: 'get',
       url: `/chat/room/${roomId}`,
       headers: {
-        Authorization: import.meta.env.VITE_TOKEN,
+        Authorization: `Bearer ${token}`,
       },
-    }).then((response) => {
-      console.log('채탱방 정보를 가져옴');
-      console.log(response);
-      setRoom(response.data.roomInfo);
-      console.log(response.data.roomInfo.msgs);
-      setMessages([...response.data.payload]);
-    }).catch((error) => { console.log(error); });
+    })
+      .then((response) => {
+        console.log('채팅방 정보를 가져옴');
+        console.log(response);
+        // setRoom(response.data.roomInfo);
+        console.log(response.data.roomInfo.msgs);
+        setMessages([...response.data.payload]);
+        setRoom(response.data.roomInfo);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const waitForConnection = (stompClient, callback) => {
+    setTimeout(() => {
+      // 연결되었을 때 콜백함수 실행
+      if (stompClient.ws.readyState === 1) {
+        callback();
+        // 연결이 안 되었으면 재호출
+      } else {
+        waitForConnection(stompClient, callback);
+      }
+    }, 1); // 밀리초 간격으로 실행
   };
 
   const sendMessage = () => {
-    stompClient.send(
-      `/pub/chat/room/${roomId}`,
-      headers1,
-      JSON.stringify({ roomId, receiverId: room.other.otherId, content: message }),
-    );
-    console.log('메시지 보냄');
-    setMessage('');
-  };
-
-  const sendMessage1 = () => {
-    stompClient.connect(headers1, (frame) => {
+    // stompClient.connect(headers, (frame) => {
+    waitForConnection(stompClient, () => {
       stompClient.send(
         `/pub/chat/room/${roomId}`,
         headers,
-        JSON.stringify({ roomId, senderId: testuser1, content: message }),
+        JSON.stringify({
+          roomId,
+          receiverId: room.other.otherId,
+          content: message,
+        }),
       );
-      console.log('메시지 보냄');
-      setMessage('');
     });
-  };
-
-  const sendMessage2 = () => {
-    stompClient.connect({ headers1 }, (frame) => {
-      stompClient.send(
-        `/pub/chat/room/${roomId}`,
-        { token3 },
-        JSON.stringify({ roomId, senderId: testuser3, content: message }),
-      );
-      console.log('메시지 보냄');
-      setMessage('');
-    });
+    setMessage('');
   };
 
   const recvReadDto = (readIndex) => {
@@ -156,61 +157,13 @@ function ChatWindow() {
   };
 
   const recvMessage = (recv) => {
-    console.log('받음?');
     console.log(recv);
-    setMessages(() => [
-      ...messages,
-      recv,
-    ]);
-  };
-
-  const connect = () => {
-    const reconnect = 0;
-    console.log('아래는 메시지');
-    console.log(message);
-    console.log('아래는 메시지 길이');
-    console.log(messages.length);
-    console.log('위는 메시지 길이');
-    stompClient.connect(
-      headers1,
-      (frame) => {
-        stompClient.subscribe('/sub/chat/entrance', (readDto) => {
-          const readIndex = JSON.parse(readDto.body);
-          recvReadDto(readIndex);
-          console.log('커넥트');
-        });
-
-        stompClient.subscribe(`/sub/chat/room/${roomId}`, (message) => {
-          const recv = JSON.parse(message.body);
-          recvMessage(recv);
-        });
-      },
-      (error) => {
-        // if(reconnect++ < 5) {
-        //   setTimeout(function() {
-        //     console.log("connection reconnect");
-        //     connect();
-        //   },10*1000);
-        // }
-      },
-    );
+    const tempMsgs = [...messages, recv];
+    setMessages([...tempMsgs]);
   };
 
   useEffect(() => {
     findRoom();
-
-    // axios
-    //   .get(`http://localhost:5000/api/chat/room/${roomId}/messages`)
-    //   .then(({ data }) => {
-    //     console.log('아래는 data 정보');
-    //     console.log({ data });
-    //     console.log(...data);
-    //     console.log('위는data 정보');
-    //     setMessages([...data]);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
     connect();
   }, []);
 
@@ -237,10 +190,10 @@ function ChatWindow() {
                       msg.senderId === 1 ? 'text-right' : 'text-left'
                     }`}
                   >
-                    {msg.senderId === 1 ? (
+                    {msg.senderId != room.other.otherId ? (
                       <div className="font-sans ml-28">
                         <span className="text-[0.5rem] mr-1">
-                          {msg.isRead ? '읽음' : '안읽음'}
+                          {msg.read ? '읽음' : '안읽음'}
                         </span>
                         <span className="bg-[#E1E3EB] p-2 rounded-lg">
                           <span className="font-sans">{msg.senderId}</span>
@@ -293,7 +246,9 @@ function ChatWindow() {
                   type="text"
                   className="rounded-md bg-[#F2EAF2] w-60 h-11 self-center"
                   value={message}
-                  onChange={(e) => setMessage(e.target.value)}
+                  onChange={(e) => {
+                    setMessage(e.target.value);
+                  }}
                 />
                 {/* <button onClick={sendMessage}>Send</button> */}
 
@@ -311,38 +266,6 @@ function ChatWindow() {
                   >
                     <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
                   </svg>
-                </button>
-                <button
-                  className="flex justify-center items-center h-12 w-12 relative bg-[#F2EAF2] rounded-full m-1 hover:border"
-                  onClick={sendMessage1}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="1.25rem"
-                    height="1.25rem"
-                    fill="currentColor"
-                    className="bi bi-send-fill text-[#364C63]"
-                    viewBox="0 0 16 16"
-                  >
-                    <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
-                  </svg>
-                  1
-                </button>
-                <button
-                  className="flex justify-center items-center h-12 w-12 relative bg-[#F2EAF2] rounded-full m-1 hover:border"
-                  onClick={sendMessage2}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="1.25rem"
-                    height="1.25rem"
-                    fill="currentColor"
-                    className="bi bi-send-fill text-[#364C63]"
-                    viewBox="0 0 16 16"
-                  >
-                    <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
-                  </svg>
-                  2
                 </button>
               </div>
             </div>

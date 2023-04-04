@@ -15,6 +15,7 @@ import com.omm.model.entity.Report;
 import com.omm.model.entity.enums.ReportCategory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -38,7 +39,8 @@ public class AdminService {
      * @param currentMemberDidAddress         신고자 멤버
      * @return
      */
-    public boolean createReport(CreateReportRequestDto createReportRequestDto, String currentMemberDidAddress) {
+    public boolean createReport(CreateReportRequestDto createReportRequestDto, String currentMemberDidAddress,
+                                MultipartFile image) {
 
         // 현재 등록중인 멤버를 찾는다.
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
@@ -54,7 +56,7 @@ public class AdminService {
                     .member(member)
                     .reported(target)
                     .reason(createReportRequestDto.getReason())
-                    .image(createReportRequestDto.getImage())
+                    .image(image.getBytes())
                     .state(createReportRequestDto.isState())
                     .category(ReportCategory.valueOf(createReportRequestDto.getCategory())).build();
             reportRepository.save(report);
