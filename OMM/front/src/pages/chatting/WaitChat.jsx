@@ -14,7 +14,8 @@ function WaitChat() {
   let stompClient;
 
   const websocket = () => {
-    const ws = new SockJS('http://localhost:5000/api/chat');
+    // const ws = new SockJS('http://localhost:5000/api/chat');
+    const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
     const headers = {
       // Authorization: import.meta.env.VITE_TOKEN,
       Authorization: token, // 매칭 수락한사람의 토큰
