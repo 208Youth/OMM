@@ -30,7 +30,7 @@ router.post('/', async (req, res) => {
     const jsonData = JSON.stringify(data);
 
     const options = {
-      hostname: 'localhost',
+      hostname: process.env.LOCALHOST,
       port: 3324,
       path: '/api/spring/cert',
       method: 'POST',
