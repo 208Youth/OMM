@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
+import { useParams } from 'react-router-dom';
 import http from '../../api/http';
 import CloseBtn from '../../assets/CloseBtn.svg';
 import estate_yes from '../../assets/estate_yes.svg';
@@ -20,45 +21,66 @@ import location from '../../assets/location.svg';
 import Pslider from '../../components/Pslider';
 import './Pslider.css';
 
+function InterestList({ interest }) {
+  return (
+    <div>
+      <div>
+
+        <div />
+      </div>
+
+      {interest.map((item) => (
+        <button key={item.interest_list_id} className="bg-white border border-black rounded-full text-sm px-4">{item.name}</button>
+      ))}
+    </div>
+  );
+}
+
 // props를 통해 userid를 받고 claose 버튼을 눌러서 해당 userid의
 // 아니면 메인 페이지에 해당 컴포넌트를 아예 합쳐버릴까
 function OtherProfile() {
-  const token = localStorage.getItem('accesstoken');
-  const memberId = 2;
-  const certinfo = {
-    university: false,
-    job: true,
-    certificate: false,
-    health: false,
-    estate: false,
-    income: false,
-  };
-  const interest = [
-    {
-      interest_list_id: 1,
-      name: '관심사 이름1',
-    },
-    {
-      interest_list_id: 2,
-      name: '관심사 이름2',
-    },
-    {
-      interest_list_id: 3,
-      name: '관심사 이름3',
-    },
-  ];
+  // const token = localStorage.getItem('accesstoken');
+  // const memberId = 2;
 
-  const [new_certinfo, setCert] = useState(certinfo);
-  const [new_interest, setInterest] = useState(null);
+  const { id } = useParams();
+  console.log(id);
+
+  const memberId = parseInt(id);
+
+  console.log(memberId);
+  console.log(typeof memberId);
+
+  const [new_certinfo, setCert] = useState([]);
+  const [interest, setInterest] = useState([]);
+  const [basicInfomation, setInfo] = useState([]);
   // new_certinfo인지 certinfo인지 axios주고받으면서 확인
+
+  async function Freshinfo() {
+    console.log('멤버아이디', memberId);
+    await http({
+      method: 'get',
+      url: `/member/${memberId}`,
+      headers: {
+        Authorization: import.meta.env.VITE_TOKEN,
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        setInfo(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log(memberId);
+      });
+  }
 
   async function FreshCert() {
     await http({
       method: 'get',
       url: `/member/${memberId}/cert`,
-      // headers: {
-      //   Authorization: import.meta.env.VITE_TOKEN,
-      // },
+      headers: {
+        Authorization: import.meta.env.VITE_TOKEN,
+      },
     })
       .then((res) => {
         console.log(res);
@@ -66,8 +88,6 @@ function OtherProfile() {
       })
       .catch((err) => {
         console.log(err);
-        console.log('왜자꾸안되');
-        console.log(import.meta.env.VITE_TOKEN);
       });
   }
 
@@ -81,25 +101,12 @@ function OtherProfile() {
       .then((response) => setInterest(response.data.interestList))
       .catch((error) => console.error(error));
   };
+
   useEffect(() => {
-    // FreshCert();
-    // FreshInterest();
+    Freshinfo();
+    FreshCert();
+    FreshInterest();
   }, []);
-
-  function InterestList({ interest }) {
-    return (
-      <div>
-        <div>
-
-          <div />
-        </div>
-
-        {interest.map((item) => (
-          <button key={item.interest_list_id} className="bg-white border border-black rounded-full text-sm px-4">{item.name}</button>
-        ))}
-      </div>
-    );
-  }
 
   // useEffect(() => {
   //   axios.get('')
@@ -127,18 +134,19 @@ function OtherProfile() {
             </div>
 
             <span className="text-3xl ml-2">
-              이름
+              {basicInfomation.nickname}
             </span>
-            <span> 나이</span>
+            <span>
+              {' '}
+              {basicInfomation.age}
+            </span>
             <div
               className="text-slate-500 text-sm ml-2"
             >
               <span className="inline-block">
                 <img src={location} alt="" width={10} />
               </span>
-              <span className="mb-1">
-                주소
-              </span>
+              <span className="mb-1" />
 
             </div>
             <div>
@@ -151,9 +159,10 @@ function OtherProfile() {
                 <div
                   className="text-slate-600 text-sm"
                 >
-                  자기소개 내용
+                  {basicInfomation.pr}
                 </div>
               </div>
+
               <hr />
               <div className="text-xl m-3">
                 인증정보
@@ -164,7 +173,7 @@ function OtherProfile() {
               <div>
 
                 <InterestList interest={interest} />
-
+                <hr />
                 <div />
 
               </div>
