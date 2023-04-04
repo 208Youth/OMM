@@ -47,7 +47,7 @@ public class ChatRepository {
     }
 
     public List<ChatMessage> getMessages(String roomId) {
-        return opsListChatMessage.range(roomId, 0, 1);
+        return opsListChatMessage.range(roomId, 0, -1);
     }
 
     public void setRoom(ChatRoom chatRoom) {
@@ -56,5 +56,9 @@ public class ChatRepository {
 
     public void deleteRoom(String roomId) {
         opsHashChatRoom.delete(ROOMS, roomId);
+    }
+
+    public void saveMessage(ChatMessage message) {
+        opsListChatMessage.rightPush(message.getRoomId(), message);
     }
 }

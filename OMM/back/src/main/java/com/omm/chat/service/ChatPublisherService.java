@@ -1,5 +1,7 @@
 package com.omm.chat.service;
 
+import com.google.gson.JsonObject;
+import com.omm.admin.model.response.GetEntraceResponseDto;
 import com.omm.chat.model.dto.ChatRoomDto;
 import com.omm.chat.model.entity.ChatMessage;
 import com.omm.chat.model.entity.ChatRoom;
@@ -79,6 +81,6 @@ public class ChatPublisherService {
     }
 
     public void publishEnter(String roomId) {
-        messagingTemplate.convertAndSend("/sub/chat/room/" + roomId + "/entrance", "입장");
+        messagingTemplate.convertAndSend("/sub/chat/room/" + roomId + "/entrance", new GetEntraceResponseDto());
     }
 }
