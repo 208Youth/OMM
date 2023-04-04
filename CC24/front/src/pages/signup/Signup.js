@@ -70,6 +70,7 @@ function Signup() {
     await http({
       method: 'post',
       url: '/credential/personal-id',
+      headers: { 'Content-Type': 'multipart/form-data' },
       data: data,
     })
       .then((res) => {
