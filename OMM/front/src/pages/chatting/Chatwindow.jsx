@@ -84,9 +84,6 @@ function ChatWindow() {
     );
   };
 
-  // 임시값으로 쁘띠재용을 받는다.
-  const user2ID = '쁘띠재용';
-
   const findRoom = () => {
     http({
       method: 'get',
@@ -151,15 +148,10 @@ function ChatWindow() {
   };
 
   const recvMessage = (recv) => {
-    console.log('받음?');
     console.log(recv);
     const tempMsgs = [...messages, recv];
     setMessages([...tempMsgs]);
   };
-
-  // useLayoutEffect(() => {
-
-  // }, []);
 
   useEffect(() => {
     findRoom();

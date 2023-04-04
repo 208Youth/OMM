@@ -40,7 +40,6 @@ public class WebSocketEventListener {
         MessageHeaderAccessor accessor = NativeMessageHeaderAccessor.getAccessor(event.getMessage(), SimpMessageHeaderAccessor.class);
         GenericMessage generic = (GenericMessage) accessor.getHeader("simpConnectMessage");
         Map nativeHeaders = (Map) generic.getHeaders().get("nativeHeaders");
-        System.out.println("내가 보낸 해더");
         System.out.println(nativeHeaders.get("roomId"));
         String roomId = nativeHeaders.get("roomId") == null ? "" : (String) ((List) nativeHeaders.get("roomId")).get(0);
         Long myId = 0L;
@@ -64,22 +63,9 @@ public class WebSocketEventListener {
 
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
-//        System.out.println("ㅇ벹스소스");
-//        System.out.println(event.getSource());
-//        HttpHeaders headers = session.getHandshakeHeaders();
-//        System.out.println("헤더나오니.");
-//        System.out.println(headers);
-//        System.out.println("이벤트는메세지머냐?");
-//        System.out.println(event.getMessage());
-//        System.out.println(event.getSessionId());
-//        String myAddress = event.getUser().getName();
-//
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-//        System.out.println("헤더엑세서는 머세용");
-//        System.out.println(headerAccessor);
         String sessionId = headerAccessor.getSessionId();
-//        Long myId = chatService.getMember(myAddress).getId();
-        logger.info("[Disconnected] websocket session id : {}", sessionId);
+//        logger.info("[Disconnected] websocket session id : {}", sessionId);
 
 //        chatService.disconnectUser(sessionId, myId);
     }
