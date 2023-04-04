@@ -13,7 +13,7 @@ const sendHttpRequest = (data, options) => {
       });
     });
     req.on('error', (error) => {
-      console.error(error);
+      console.error(error.stack);
       reject(error);
     });
     req.write(data);
