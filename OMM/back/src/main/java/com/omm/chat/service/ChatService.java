@@ -179,4 +179,8 @@ public class ChatService {
         chatRoom.setLastReadIndex(lastReadIndex);
         chatRepository.setRoom(chatRoom);
     }
+
+    public void exitChatRoom(String roomId) {
+        chatRepository.deleteRoom(roomId);
+    }
 }

@@ -12,7 +12,7 @@ import PasswordModal from './PasswordModal';
 import { userInfo, idenVC, certInfo } from '../../store/userSlice';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import http from '../../api/springapi';
+import http from '../../api/nodeapi';
 
 function Signup() {
   const navigate = useNavigate();

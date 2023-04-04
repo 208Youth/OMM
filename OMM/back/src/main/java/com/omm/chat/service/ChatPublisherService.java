@@ -77,4 +77,8 @@ public class ChatPublisherService {
     public void publishMessage(ChatMessage message) {
         messagingTemplate.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
     }
+
+    public void publishEnter(String roomId) {
+        messagingTemplate.convertAndSend("/sub/chat/room/" + roomId + "/entrance", "입장");
+    }
 }
