@@ -59,6 +59,7 @@ function WaitChat() {
       stompClient.send(
         '/pub/chat/room',
         headers,
+        // 나한테 알림 보낸사람 id
         JSON.stringify({ senderId: 502 }),
         console.log('채팅방 만들라구'),
       );

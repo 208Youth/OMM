@@ -11,7 +11,7 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import slide_image_1 from '../../public/defaultimage.png';
 
-function Pslider({ mainImg, profileImg }) {
+function Pslider({ mainImg, profileImg, name, age }) {
   const location = useLocation();
   const [imgs, setImages] = useState([]);
   // let imgs = [];
@@ -57,8 +57,17 @@ function Pslider({ mainImg, profileImg }) {
         {imgs &&
           imgs.map((img) => (
             <div>
-              <SwiperSlide>
+              <SwiperSlide className='static flex content-center'>
                 <img src={img} alt="이미지" />
+                {location.pathname.includes('main') && 
+                  <div className='flex absolute bottom-[10%] left-[5%] w-[50%] h-[10%] mx-auto'>
+                    <div className="flex px-6 h-12 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 my-auto rounded-full my-auto">
+                      <span className="text-xl h-12 mt-2 mx-auto text-white">{name}</span>
+                    </div>
+                    <div className="flex w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full my-auto ml-2">
+                      <span className="text-xl mx-auto my-auto text-white">{age}</span>
+                    </div>
+                  </div>}
               </SwiperSlide>
               ;
             </div>
