@@ -22,7 +22,7 @@ router.post('/', async (req, res) => {
     console.log(subjects);
     res.json({ subjects: subjects });
   } catch (error) {
-    console.log(error.message);
+    console.error(error.stack);
     res.status(400).json({ error: error.message });
   }
 });

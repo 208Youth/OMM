@@ -49,7 +49,7 @@ router.post('/', async (req, res) => {
     );
     res.json({ vcJwt: vcJwt });
   } catch (error) {
-    console.error(error.message);
+    console.error(error.stack);
     res.status(400).json({ error: error.message });
   }
 });
@@ -83,7 +83,7 @@ router.post('/personal-id', upload.single('image'), async (req, res) => {
     // console.log(vcJwt);
     res.json({ vcJwt: vcJwt });
   } catch (error) {
-    console.error(error.message);
+    console.error(error.stack);
     res.status(400).json({ error: error.message });
   }
 });
@@ -103,7 +103,7 @@ router.post('/did-address', async (req, res) => {
 
     res.json({ vcJwt: vcJwt });
   } catch (error) {
-    console.error(error.message);
+    console.error(error.stack);
     res.status(400).json({ error: error.message });
   }
 });
