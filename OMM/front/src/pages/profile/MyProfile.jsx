@@ -107,6 +107,7 @@ function MyProfile({ profileNav }) {
   const [MymodalIsOpen, setMyIsOpen] = useState(false);
   const [MymodalIsOpen2, setMyIsOpen2] = useState(false);
   const [MymodalIsOpen3, setMyIsOpen3] = useState(false);
+  const [uploadImg, setuploadImg] = useState(false);
   // const memberId = localStorage.getItem('member_id');\
   const [disabled, setDisabled] = useState(true);
   const [new_pr, setNew_pr] = useState('');
