@@ -43,10 +43,10 @@ router.post('/', async (req, res) => {
     };
     const response = await http.sendHttpRequest(data, options);
     const responseJson = JSON.parse(response);
+    console.log(responseJson);
     const vcJwt = await did.issueVC(
       holderDid,
       credentialName,
-      // responseJson
       responseJson[Object.keys(responseJson)[0]]
     );
     res.json({ vcJwt: vcJwt });
