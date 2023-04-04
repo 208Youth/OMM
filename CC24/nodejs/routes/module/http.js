@@ -1,4 +1,4 @@
-const http = require("http");
+const http = require('http');
 
 const sendHttpRequest = (data, options) => {
   return new Promise((resolve, reject) => {
@@ -7,11 +7,12 @@ const sendHttpRequest = (data, options) => {
         reject(new Error(`HTTP Error: ${res.statusCode}`));
         return;
       }
-      res.on("data", (data) => {
+      res.on('data', (data) => {
         resolve(data.toString());
       });
     });
-    req.on("error", (error) => {
+    req.on('error', (error) => {
+      console.error(error);
       reject(error);
     });
     req.write(data);
