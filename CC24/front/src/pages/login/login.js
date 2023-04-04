@@ -19,22 +19,28 @@ function Login() {
   const [iden, setIden] = useState(null);
   const [pk, setPK] = useState(null);
   const [isMember, setIsMember] = useState(false);
-  let ethrDidOnGoerliNamed = '';
+  // let ethrDidOnGoerliNamed = '';
+  const [ethrDidOnGoerliNamed, setEthrDidOnGoerliNamed] = useState(null);
   useEffect(() => {
     if (localStorage.getItem('DID') === null) {
       setTimeout(() => {
         navigate('/signup');
       }, 3000);
     } else if (localStorage.getItem('DID') != null) {
+      const PK = JSON.parse(localStorage.getItem('keypair')).privateKey
+      const IDEN = JSON.parse(localStorage.getItem('keypair')).identifier
+      const DID = JSON.parse(localStorage.getItem('DID')).did
       setIsMember(true);
       setDid(JSON.parse(localStorage.getItem('DID')).did);
       setIden(JSON.parse(localStorage.getItem('keypair')).identifier);
       setPK(JSON.parse(localStorage.getItem('keypair')).privateKey);
-      ethrDidOnGoerliNamed = new EthrDID({
-        identifier: JSON.parse(localStorage.getItem('keypair')).identifier,
-        privateKey: JSON.parse(localStorage.getItem('keypair')).privateKey,
+      const ethrDidOnGoerli = new EthrDID({
+        identifier: IDEN,
+        privateKey: PK,
         chainNameOrId: 'goerli',
       });
+      setEthrDidOnGoerliNamed(ethrDidOnGoerli);
+      console.log(ethrDidOnGoerliNamed);
     }
   }, []);
   const [isLoading, setIsLoading] = useState(false);
@@ -65,9 +71,10 @@ function Login() {
       .catch((err) => {
         console.log(err);
       });
-    navigate('/main');
+    // navigate('/main');
   };
   const ommLogin = async () => {
+    console.log(vc);
     const vpPayload = {
       vp: {
         '@context': ['https://www.w3.org/2018/credentials/v1'],
@@ -75,8 +82,8 @@ function Login() {
         verifiableCredential: vc,
       },
     };
-    console.log(did);
-    console.log(vc);
+    console.log(vpPayload)
+    console.log('왜안와', ethrDidOnGoerliNamed);
     const vpJwt = await createVerifiablePresentationJwt(vpPayload, ethrDidOnGoerliNamed);
     console.log(vpJwt);
     const data = {

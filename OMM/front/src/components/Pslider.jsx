@@ -4,18 +4,17 @@ import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-// import './Pslider.css';
+import './Pslider.css';
 
 import { EffectCoverflow, Pagination, Navigation } from 'swiper';
 
 import axios from 'axios';
-import slide_image_1 from './assets/images/img_1.jpg';
+import slide_image_1 from '../../public/ommlogo.png';
 import slide_image_2 from './assets/images/img_2.jpg';
 import slide_image_3 from './assets/images/img_3.jpg';
 import slide_image_4 from './assets/images/img_4.jpg';
 import slide_image_5 from './assets/images/img_5.jpg';
 import slide_image_6 from './assets/images/img_6.jpg';
-// import slide_image_7 from './assets/images/img_7.jpg';
 
 function Pslider({ imgs }) {
   console.log(imgs);
@@ -24,7 +23,6 @@ function Pslider({ imgs }) {
     <div className="pcontainer">
       {/* <h1 className="heading">1222</h1> */}
       <Swiper
-
         effect="coverflow"
         grabCursor
         centeredSlides
@@ -54,7 +52,7 @@ function Pslider({ imgs }) {
           </SwiperSlide>;
         })} */}
         <SwiperSlide>
-          <img src={slide_image_1} alt="slide_image" />
+          <img src={slide_image_1} className="default-image" alt="slide_image" />
         </SwiperSlide>
         <SwiperSlide>
           <img src={slide_image_2} alt="slide_image" />

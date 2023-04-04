@@ -78,6 +78,7 @@ public class MemberService {
      */
     public GetMemberImageUrlResponseDto getUserFaceUrl(String didAddress) {
         return GetMemberImageUrlResponseDto.builder()
+            .didAddress(didAddress)
             .faceUrl(memberRepository.findByDidAddress(didAddress).orElseThrow(
                     () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS))
                 .getImageUrl())

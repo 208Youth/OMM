@@ -4,15 +4,12 @@ import './Signup.css';
 import Modal from 'react-modal';
 import { useDispatch, useSelector } from 'react-redux';
 import { EthrDID } from 'ethr-did';
-// import EthrDidResolver from 'ethr-did-resolver';
-// import { getResolver } from 'ethr-did-resolver';
 import FaceRecogModal from './FaceRecogModal';
 import IdenModal from './IdenModal';
 import PasswordModal from './PasswordModal';
 import { userInfo, idenVC, certInfo } from '../../store/userSlice';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import http from '../../api/springapi';
+import http from '../../api/nodeapi';
 
 function Signup() {
   const navigate = useNavigate();
@@ -59,9 +56,9 @@ function Signup() {
     window.localStorage.setItem('keypair', JSON.stringify(keypair));
     window.localStorage.setItem('DID', JSON.stringify(ethrDidOnGoerliNamed));
     const localData = JSON.parse(localStorage.getItem('DID'));
-    console.log(localData.did);
+    // console.log(localData.did);
+    // console.log(id.personalId);
     const data = new FormData();
-    console.log(id.personalId);
     data.append('holderDid', localData.did);
     data.append('personalId', JSON.stringify(id.personalId));
     data.append('signature', id.signature);
@@ -70,11 +67,10 @@ function Signup() {
       console.log(key, ':', data.get(key));
     }
 
-    // await axios({
     await http({
       method: 'post',
-      // url: 'http://localhost:4424/api/node/credential/personal-id',
       url: '/credential/personal-id',
+      headers: { 'Content-Type': 'multipart/form-data' },
       data: data,
     })
       .then((res) => {
@@ -128,7 +124,9 @@ function Signup() {
         <FaceRecogModal
           setFaceModal={setFaceModal}
           img={(res) => {
-            setImg(res);
+            if (res) {
+              setImg(res);
+            }
           }}
           setFaceComplete={(res) => {
             if (res) {
