@@ -14,17 +14,20 @@ import slide_image_1 from '../../public/defaultimage.png';
 function Pslider({ mainImg, profileImg, name, age }) {
   const location = useLocation();
   const [imgs, setImages] = useState([]);
+  console.log(profileImg);
+  console.log(mainImg);
   // let imgs = [];
   useEffect(() => {
     if (location.pathname.includes('main') && !mainImg) {
       console.log(mainImg);
       setImages(mainImg);
-    } else if (location.pathname.includes('profile') && profileImg) {
+    } else if (location.pathname.includes('profile') && !profileImg) {
       setImages(profileImg);
     } else {
       setImages([slide_image_1]);
     }
     console.log('이미지 와야댐', imgs);
+    console.log(profileImg);
   }, []);
 
   return (
@@ -55,10 +58,11 @@ function Pslider({ mainImg, profileImg, name, age }) {
       >
         {/* 이미지 리스트 들어오는 코드 작성한 후에 아래 주석풀어주세요 */}
         {imgs &&
-          imgs.map((img) => (
-            <div>
+          imgs.map((img, index) => (
+            <div key={index}>
               <SwiperSlide className='static flex content-center'>
-                <img src={img} alt="이미지" />
+                {location.pathname.includes('profile') && <img  src={`data:image/png;base64,${img}`} alt="이미지" />}
+                {!(location.pathname.includes('profile')) && <img src={img} alt="이미지" />}
                 {location.pathname.includes('main') && 
                   <div className='flex absolute bottom-[10%] left-[5%] w-[50%] h-[10%] mx-auto'>
                     <div className="flex px-6 h-12 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 my-auto rounded-full my-auto">
