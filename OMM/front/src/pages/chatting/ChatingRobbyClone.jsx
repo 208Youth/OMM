@@ -10,15 +10,15 @@ function ChatingRobbyClone() {
   const [chatRooms, setChatRooms] = useState([]);
   const [showChat, setShowChat] = useState(false);
 
-  const ws = new SockJS('http://localhost:5000/api/chat');
+  // const ws = new SockJS('http://localhost:5000/api/chat');
+  const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
   const stompClient = Stomp.over(ws);
 
   const findAllRoom = () => {
-    chat.get('/rooms')
-      .then((response) => {
-        console.log('findallRoom 함수 실행됨', response);
-        setChatRooms(response.data);
-      });
+    chat.get('/rooms').then((response) => {
+      console.log('findallRoom 함수 실행됨', response);
+      setChatRooms(response.data);
+    });
   };
   // axios.get('http://localhost:5000/api/chat/rooms')
   //   .then((response) => {
@@ -28,10 +28,7 @@ function ChatingRobbyClone() {
 
   const recvRoom = (recv) => {
     console.log(recv);
-    setChatRooms((chatRooms) => [
-      recv,
-      ...chatRooms,
-    ]);
+    setChatRooms((chatRooms) => [recv, ...chatRooms]);
     console.log('위는 recv, 아래는 chatrooms');
     console.log(chatRooms);
   };
@@ -44,22 +41,26 @@ function ChatingRobbyClone() {
       구독한 채널에서 Publish된 메세지가 왔을 때
       처리 (recvRoom())
     */
-    stompClient.connect({}, (frame) => {
-      stompClient.subscribe('/sub/chat/rooms', (message) => {
-        const recv = JSON.parse(message.body);
-        console.log(recv);
-        recvRoom(recv);
-      });
-    }, (error) => {
-      // 연결이 끊어졌을 때 재연결 시도 부분
-      // 필요할 때 쓰면 될 듯.
-      // if(reconnect++ < 5) {
-      //   setTimeout(function() {
-      //     console.log("connection reconnect");
-      //     connect();
-      //   },10*1000);
-      // }
-    });
+    stompClient.connect(
+      {},
+      (frame) => {
+        stompClient.subscribe('/sub/chat/rooms', (message) => {
+          const recv = JSON.parse(message.body);
+          console.log(recv);
+          recvRoom(recv);
+        });
+      },
+      (error) => {
+        // 연결이 끊어졌을 때 재연결 시도 부분
+        // 필요할 때 쓰면 될 듯.
+        // if(reconnect++ < 5) {
+        //   setTimeout(function() {
+        //     console.log("connection reconnect");
+        //     connect();
+        //   },10*1000);
+        // }
+      },
+    );
   };
 
   useEffect(() => {
@@ -74,7 +75,8 @@ function ChatingRobbyClone() {
       소켓 연결
       /chat으로 가는 요청에 대해 소켓 연결 설정
     */
-    const ws = new SockJS('http://localhost:5000/api/chat');
+    // const ws = new SockJS('http://localhost:5000/api/chat');
+    const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
     const stompClient = Stomp.over(ws);
 
     /*
@@ -82,7 +84,11 @@ function ChatingRobbyClone() {
       {userId: [1, 2]} 객체를 Publish 하겠다.
     */
     stompClient.connect({}, (frame) => {
-      stompClient.send('/api/pub/chat/rooms', {}, JSON.stringify({ userIds: [1, 2] }));
+      stompClient.send(
+        '/api/pub/chat/rooms',
+        {},
+        JSON.stringify({ userIds: [1, 2] }),
+      );
       // stompClient.disconnect();
     });
   };
@@ -96,7 +102,11 @@ function ChatingRobbyClone() {
     if (sender !== '') {
       localStorage.setItem('wschat.sender', sender);
       localStorage.setItem('wschat.roomId', roomId);
-      stompClient.send('/api/pub/chat/entrance', {}, JSON.stringify({ roomId }));
+      stompClient.send(
+        '/api/pub/chat/entrance',
+        {},
+        JSON.stringify({ roomId }),
+      );
 
       setShowChat(true);
     } else return;
@@ -104,7 +114,9 @@ function ChatingRobbyClone() {
 
   return (
     <div>
-      {showChat ? <ChatingRoomClone /> : (
+      {showChat ? (
+        <ChatingRoomClone />
+      ) : (
         <div>
           <h2>"user1"이 "user2"와 같이 채팅하는 방을 만들어용</h2>
           <button onClick={createRoom}>방 생성</button>

@@ -19,64 +19,71 @@ function Login() {
   const [iden, setIden] = useState(null);
   const [pk, setPK] = useState(null);
   const [isMember, setIsMember] = useState(false);
-  let ethrDidOnGoerliNamed = '';
+  const didVC = JSON.parse(localStorage.getItem('DIDvc'))
+  // let ethrDidOnGoerliNamed = '';
+  const [ethrDidOnGoerliNamed, setEthrDidOnGoerliNamed] = useState(null);
   useEffect(() => {
     if (localStorage.getItem('DID') === null) {
       setTimeout(() => {
         navigate('/signup');
       }, 3000);
     } else if (localStorage.getItem('DID') != null) {
+      const PK = JSON.parse(localStorage.getItem('keypair')).privateKey
+      const IDEN = JSON.parse(localStorage.getItem('keypair')).identifier
+      const DID = JSON.parse(localStorage.getItem('DID')).did
       setIsMember(true);
       setDid(JSON.parse(localStorage.getItem('DID')).did);
       setIden(JSON.parse(localStorage.getItem('keypair')).identifier);
       setPK(JSON.parse(localStorage.getItem('keypair')).privateKey);
-      ethrDidOnGoerliNamed = new EthrDID({
-        identifier: JSON.parse(localStorage.getItem('keypair')).identifier,
-        privateKey: JSON.parse(localStorage.getItem('keypair')).privateKey,
+      const ethrDidOnGoerli = new EthrDID({
+        identifier: IDEN,
+        privateKey: PK,
         chainNameOrId: 'goerli',
       });
+      setEthrDidOnGoerliNamed(ethrDidOnGoerli);
+      console.log(ethrDidOnGoerliNamed);
     }
   }, []);
   const [isLoading, setIsLoading] = useState(false);
-  // const [vc, setVC] = useState('');
-  let vc = '';
-  const data = {
-    holderDid: did,
-  };
+  // let vc = '';
+  // const data = {
+  //   holderDid: did,
+  // };
 
-  const getVC = async () => {
-    setIsLoading(true);
-    await http({
-      // await axios({
-      method: 'post',
-      url: '/credential/did-address',
-      // url: 'http://localhost:4424/api/node/credential/did-address',
-      data: data,
-    })
-      .then((res) => {
-        console.log('성공!!!!!!!!', res);
-        console.log(res.data.vcJwt);
-        vc = res.data.vcJwt;
-      })
-      .then((res) => {
-        console.log(res);
-        ommLogin();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    navigate('/main');
-  };
+  // const getVC = async () => {
+  //   setIsLoading(true);
+  //   await http({
+  //     // await axios({
+  //     method: 'post',
+  //     url: '/credential/did-address',
+  //     // url: 'http://localhost:4424/api/node/credential/did-address',
+  //     data: data,
+  //   })
+  //     .then((res) => {
+  //       console.log('성공!!!!!!!!', res);
+  //       console.log(res.data.vcJwt);
+  //       vc = res.data.vcJwt;
+  //     })
+  //     .then((res) => {
+  //       console.log(res);
+  //       ommLogin();
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  //   // navigate('/main');
+  // };
   const ommLogin = async () => {
+    console.log(didVC);
     const vpPayload = {
       vp: {
         '@context': ['https://www.w3.org/2018/credentials/v1'],
         type: ['VerifiablePresentation', 'PersonalIdPresentation'],
-        verifiableCredential: vc,
+        verifiableCredential: didVC,
       },
     };
-    console.log(did);
-    console.log(vc);
+    console.log(vpPayload)
+    console.log('왜안와', ethrDidOnGoerliNamed);
     const vpJwt = await createVerifiablePresentationJwt(vpPayload, ethrDidOnGoerliNamed);
     console.log(vpJwt);
     const data = {
@@ -158,7 +165,7 @@ function Login() {
             setPasswordComplete={(res) => {
               if (res) {
                 setPasswordComplete(true);
-                if (type == 'SIGNIN') getVC();
+                if (type == 'SIGNIN') ommLogin();
               }
             }}
           />

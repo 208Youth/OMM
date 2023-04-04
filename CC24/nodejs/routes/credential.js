@@ -19,7 +19,6 @@ router.post('/', async (req, res) => {
     await did.verifyHolderDid(holderDid);
     const verifiableCredential = await did.verifyVP(vpJwt, holderDid);
     const personalId = await did.getPersonalId(verifiableCredential, holderDid);
-    console.log(personalId);
     if (!personalId) {
       throw new Error('No personalId');
     }
@@ -30,9 +29,8 @@ router.post('/', async (req, res) => {
     });
     const jsonData = JSON.stringify(data);
 
-    // 이거 ... api 가져와서 바꿔주세요 ㅠㅠ
     const options = {
-      hostname: 'localhost',
+      hostname: process.env.LOCALHOST,
       port: 3324,
       path: '/api/spring/cert',
       method: 'POST',
@@ -43,14 +41,15 @@ router.post('/', async (req, res) => {
     };
     const response = await http.sendHttpRequest(data, options);
     const responseJson = JSON.parse(response);
+    console.log(responseJson);
     const vcJwt = await did.issueVC(
       holderDid,
       credentialName,
-      // responseJson
       responseJson[Object.keys(responseJson)[0]]
     );
     res.json({ vcJwt: vcJwt });
   } catch (error) {
+    console.error(error.stack);
     res.status(400).json({ error: error.message });
   }
 });
@@ -84,7 +83,7 @@ router.post('/personal-id', upload.single('image'), async (req, res) => {
     // console.log(vcJwt);
     res.json({ vcJwt: vcJwt });
   } catch (error) {
-    console.error(error.message);
+    console.error(error.stack);
     res.status(400).json({ error: error.message });
   }
 });
@@ -104,7 +103,7 @@ router.post('/did-address', async (req, res) => {
 
     res.json({ vcJwt: vcJwt });
   } catch (error) {
-    console.error(error.message);
+    console.error(error.stack);
     res.status(400).json({ error: error.message });
   }
 });
