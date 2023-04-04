@@ -24,12 +24,12 @@
 
 .menu {
 	position: fixed;
-	bottom: 2rem;
+	bottom: 0;
 	z-index: 6;
 	display: flex;
-	height: 72px;
-	width: 360px;
-	border-radius: 12px;
+	height: 4.5rem;
+	width: 22.5rem;
+	border-radius: 40px;
 	overflow: hidden;
 	background-color: #fff;
 	box-shadow: 0 0 1px 0 rgba(#342ead, 0.25), 0 15px 30px 0 rgba(#342ead, 0.1);
@@ -55,4 +55,45 @@
 		}
 	}
 }
+
+.bi-search-heart {
+	font-size: 22px;
+	line-height: 22px;
+}
+
+.bi-search-heart-fill {
+	font-size: 22px;
+	line-height: 22px;
+}
+
+.bi-chat-heart {
+	font-size: 22px;
+	line-height: 22px;
+}
+
+.bi-chat-heart-fill {
+	font-size: 22px;
+	line-height: 22px;
+}
+
+.bi-bell {
+	font-size: 22px;
+	line-height: 22px;
+}
+
+.bi-bell-fill {
+	font-size: 22px;
+	line-height: 22px;
+}
+
+.bi-person {
+	font-size: 22px;
+	line-height: 22px;
+}
+
+.bi-person-fill {
+	font-size: 22px;
+	line-height: 22px;
+}
+
 

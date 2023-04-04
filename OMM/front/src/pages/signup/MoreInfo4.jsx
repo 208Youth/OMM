@@ -1,11 +1,37 @@
 import React, { useState, useEffect } from 'react';
+import { moreInfo4 } from '../../store/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
-function MoreInfo4() {
+function MoreInfo4({setStep}) {
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.user);
   const [moreinfo, setMoreInfo] = useState({
     contact_style: '',
     drinking_style: '',
     smoking_style: '',
   });
+  const prev = ()=> {
+    setStep(3);
+  }
+  const next = () => { 
+    // if (
+    //   moreinfo.contact_style && 
+    //   moreinfo.drinking_style && 
+    //   moreinfo.smoking_style){
+        setStep(5)
+      // } else {
+      //   alert('모든 정보를 입력해주세요!');
+      // }
+  }
+  const sendInfo = () => {
+    const info = {
+      contact_style: moreinfo.contact_style,
+      drinking_style: moreinfo.drinking_style,
+      smoking_style: moreinfo.smoking_style,
+    };
+    console.log(info);
+    dispatch(moreInfo4(info));
+  };
 
   useEffect(() => {
     console.log(moreinfo);
@@ -14,7 +40,7 @@ function MoreInfo4() {
   return (
     <div className="bg-white w-[22.5rem] h-[48.75rem]">
       <img
-        src="/heart-step-6.svg"
+        src="/heart-step-4.svg"
         alt=""
         className="mx-auto w-48 pt-16 pb-10"
       />
@@ -298,23 +324,23 @@ function MoreInfo4() {
         </div>
       </div>
       <div className="flex justify-between mx-8 text-[#364C63] text-lg">
-        <div>&lt; </div>
-        <div
-          aria-hidden
-          onClick={() => {
-            if (
-              moreinfo.contact_style &&
-              moreinfo.drinking_style &&
-              moreinfo.smoking_style
-            ) {
-              console.log('다음페이지로 이동');
-            } else {
-              alert('정보를 입력해주세요');
-            }
-          }}
-        >
-          &gt;
-        </div>
+        <button
+            type="button"
+            aria-hidden
+            onClick={() => {prev()}}
+          >
+            &lt;
+          </button>
+          <button
+            type="button"
+            aria-hidden
+            onClick={() => {
+              next()
+              sendInfo()
+            }}
+          >
+            &gt;
+        </button>
       </div>
     </div>
   );

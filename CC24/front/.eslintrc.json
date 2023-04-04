@@ -18,7 +18,8 @@
         "react"
     ],
     "rules": {
-        "linebreak-style": ["error", "windows"],
+        "linebreak-style": 0,
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
         "react/prop-types": "off",
         "react/button-has-type": "off",
         "jsx-a11y/label-has-associated-control": [
@@ -27,6 +28,7 @@
                 "labelAttributes": ["htmlFor"]
             }
         ],
-        "no-console": "off"
+        "no-console": "off",
+        "prefer-const": "off"
     }
 }

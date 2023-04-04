@@ -21,11 +21,11 @@ public class MemberImg {
     @Column(name = "image_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @Lob
     @Column(name = "image_content", nullable = false)
-    private Blob imageContent;
+    private byte[] imageContent;
 }

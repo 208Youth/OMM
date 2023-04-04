@@ -1,0 +1,46 @@
+.report-select {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+
+  width: 18rem;;
+
+}
+
+.report-select:hover {
+  border-color: #364C63;
+}
+
+.report-select:focus {
+  border-color: #364C63;
+  box-shadow: 0 0 1px 3px rgba(59, 153, 252, .7);
+  box-shadow: 0 0 0 3px -moz-mac-focusring;
+  color: #222;
+  outline: none;
+}
+
+.BottomModal {
+  position: absolute;
+  /* top: ; */
+  /* left: 40px;
+  right: 40px; */
+  bottom: 0;
+  background-color: rgba(242, 234, 242, 1);
+  border-radius: 20px;
+  padding: 1.5rem;
+  width: 100%;
+  min-height: 18rem;
+}
+
+.BottomOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(245, 245, 245, 0.495);
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

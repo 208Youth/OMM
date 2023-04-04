@@ -1,8 +1,9 @@
 package com.omm.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.omm.model.entity.enums.Authority;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
@@ -22,17 +23,15 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
+    @JsonIgnore
     @Column(name = "is_black")
     @ColumnDefault("false")
-    private boolean isBlack = false;
+    private boolean isBlack;
 
-    @Column(name = "grade")
-    @ColumnDefault("'role_user'")
-    private String grade = "role_user";
-
-    @Column(name = "nickname", nullable = false, unique = true)
+    @Column(name = "nickname")
     private String nickname;
 
+    @JsonIgnore
     @Column(name = "suspend_date")
     private LocalDate suspendDate;
 
@@ -41,4 +40,16 @@ public class Member {
 
     @Column(name = "gender", nullable = false)
     private String gender;
+
+    @Column(name = "did_address", nullable = false, unique = true)
+    private String didAddress;
+
+    @Column(name = "image_url", columnDefinition = "LONGTEXT", nullable = false, unique = true)
+    private String imageUrl;
+
+    @Column(name = "authority")
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'ROLE_USER'")
+    private Authority authority;
+
 }

@@ -12,7 +12,19 @@ import SignupComplete from './pages/signup/SignupComplete';
 import MyinfoSetModal from './pages/profile/MyinfoSetModal';
 import OtherProfile from './pages/profile/OtherProfile';
 import MyProfile from './pages/profile/MyProfile';
+import Alert from './pages/alert/Alert';
+import ChatList from './pages/alert/ChatList';
+import Admin from './pages/admin/Admin';
+import Detail from './pages/admin/Detail';
 import Main from './pages/main/Main';
+import Chatwindow from './pages/chatting/Chatwindow';
+// import ChatingRoomClone from './pages/chatting/ChatingRoomClone';
+import ChatingRobbyClone from './pages/chatting/ChatingRobbyClone';
+import ImageUploader from './pages/profile/ImageUploader';
+import Login from './pages/login/login';
+import LikeList from './pages/like/LikeList';
+import WaitChat from './pages/chatting/WaitChat';
+import ImageGetTest from './pages/profile/ImageGetTest';
 
 const router = createBrowserRouter([
   {
@@ -20,7 +32,7 @@ const router = createBrowserRouter([
     element: <Index />,
   },
   {
-    path: '/faceRecog',
+    path: '/faceRecog/:page',
     element: <FaceRecog />,
   },
   {
@@ -28,7 +40,7 @@ const router = createBrowserRouter([
     element: <Signup />,
   },
   {
-    path: '/OtherProfile',
+    path: '/OtherProfile/:id',
     element: <OtherProfile />,
   },
   {
@@ -62,6 +74,58 @@ const router = createBrowserRouter([
   {
     path: '/signupcomplete',
     element: <SignupComplete />,
+  },
+  {
+    path: '/notification',
+    element: <Alert />,
+  },
+  {
+    path: '/chattings',
+    element: <ChatList />,
+  },
+  {
+    path: '/Chatwindow/:id',
+    element: <Chatwindow />,
+  },
+  {
+    path: '/admin',
+    element: <Admin />,
+  },
+  {
+    path: '/admin/detail/:id',
+    element: <Detail />,
+  },
+  {
+    path: '/ImageUploader',
+    element: <ImageUploader />,
+  },
+  {
+    path: '/login',
+    element: <Login />,
+  },
+  {
+    path: '/likes',
+    element: <LikeList />,
+  },
+  {
+    path: '/ImageUploader',
+    element: <ImageUploader />,
+  },
+  {
+    path: '/ChatingRobbyClone',
+    element: <ChatingRobbyClone />,
+  },
+  // {
+  //   path: '/ChatingRoomClone',
+  //   element: <ChatingRoomClone />,
+  // },
+  {
+    path: '/loading',
+    element: <WaitChat />,
+  },
+  {
+    path: '/imagetest',
+    element: <ImageGetTest />,
   },
 ]);
 

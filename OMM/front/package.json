@@ -9,19 +9,29 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@esbuild/win32-x64": "^0.17.14",
     "@reduxjs/toolkit": "^1.9.3",
+    "@stomp/stompjs": "^7.0.0",
     "axios": "^1.3.4",
     "bootstrap-icons": "^1.10.3",
     "face-api.js": "^0.22.2",
+    "jwt-decode": "^3.1.2",
+    "otp-input-react": "^0.3.0",
     "rc-slider": "^10.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-dropzone": "^14.2.3",
+    "react-kakao-maps-sdk": "^1.1.7",
     "react-modal": "^3.16.1",
     "react-redux": "^8.0.5",
-    "react-router-dom": "^6.9.0",
+    "react-router-dom": "^6.10.0",
+    "react-tooltip": "^5.10.4",
+    "redux-persist": "^6.0.0",
     "sass": "^1.60.0",
+    "sockjs-client": "^1.6.1",
+    "stompjs": "^2.3.3",
     "swiper": "^9.1.1",
-    "redux-persist": "^6.0.0"
+    "websocket": "^1.0.34"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './Pslider.css';
 import axios from 'axios';
 import CloseBtn from '../../assets/CloseBtn.svg';
 import estate_yes from '../../assets/estate_yes.svg';
@@ -16,6 +15,7 @@ import certificate_yes from '../../assets/certificate_yes.svg';
 import certificate_no from '../../assets/certificate_no.svg';
 import location from '../../assets/location.svg';
 import Pslider from '../../components/Pslider';
+import './Pslider.css';
 
 // props를 통해 userid를 받고 claose 버튼을 눌러서 해당 userid의
 // 아니면 메인 페이지에 해당 컴포넌트를 아예 합쳐버릴까
@@ -47,12 +47,12 @@ function OtherProfile() {
   const [new_interest, setInterest] = useState(null);
   // new_certinfo인지 certinfo인지 axios주고받으면서 확인
   const FreshCert = () => {
-    axios.get('https://example.com/api/data')
+    http.get(`member/${memberId}/cert`)
       .then((response) => setCert(response.data))
       .catch((error) => console.error(error));
   };
   const FreshInterest = () => {
-    axios.get('')
+    http.get(`/member/${memberId}/interest-list`)
       .then((response) => setInterest(response.data.interestList))
       .catch((error) => console.error(error));
   };
@@ -133,8 +133,18 @@ function OtherProfile() {
               <div className="text-xl m-3">
                 인증정보
               </div>
+              <div className="text-xl">
+                Oh my my
+              </div>
               <div>
-                <div className="my-2">
+
+                <InterestList interest={interest} />
+
+                <div />
+
+              </div>
+              <div>
+                <div className="my-5 ml-5">
                   <div className="inline-block">
                     <img src={new_certinfo.health === true ? health_yes : health_no} alt="#" className="badges" />
                   </div>
@@ -156,16 +166,7 @@ function OtherProfile() {
                 </div>
               </div>
               <hr />
-              <div className="text-xl">
-                Oh my my
-              </div>
-              <div>
 
-                <InterestList interest={interest} />
-
-                <div />
-
-              </div>
             </div>
 
           </div>
