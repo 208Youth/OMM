@@ -1,11 +1,14 @@
 /*eslint-disable*/
 import { Link } from 'react-router-dom';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Navbar() {
+  const navigate = useNavigate();
   const withdraw = function() {
     if (confirm("탈퇴하면 인증된 정보가 모두 사라집니다. 탈퇴하시겠습니까?")) {
       window.localStorage.clear();
+      navigate('/')
     }else{
       return
     }

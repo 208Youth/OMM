@@ -92,6 +92,10 @@ function Main() {
       });
   };
 
+  const toOther = function () {
+    console.log('남의집');
+    navigate(`/OtherProfile/${id}`);
+  }
   return (
     <div className="flex flex-col">
       <div onClick={() => { dislike(); }} className="z-20 w-16 h-16 transition duration-500 hover:scale-110 bg-red-100 rounded-full shadow-md justify-center mx-auto mt-5">
@@ -101,7 +105,7 @@ function Main() {
           alt=""
         />
       </div>
-      <div className="">
+      <div className="" onClick={() => {toOther()}}>
         <Pslider
           mainImg={img}
           name={name}
