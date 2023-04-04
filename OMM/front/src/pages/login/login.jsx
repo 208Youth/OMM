@@ -2,7 +2,7 @@ import React from 'react';
 
 function Login() {
   const test = () => {
-    window.location.replace('http://localhost:3000/login');
+    window.location.replace(`${import.meta.env.VITE_CC24_URL}/login`);
   };
   return (
     <div>

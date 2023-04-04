@@ -59,7 +59,8 @@ function ChatWindow() {
   console.log(roomId);
   console.log(sender);
 
-  const ws = new SockJS('http://localhost:5000/api/chat');
+  // const ws = new SockJS('http://localhost:5000/api/chat');
+  const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
   const stompClient = Stomp.over(ws);
   // 임시값으로 쁘띠재용을 받는다.
   const user2ID = '쁘띠재용';
