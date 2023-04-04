@@ -13,7 +13,7 @@ function MoreInfo3({setStep}) {
     height_min: 160,
     height_max: 180,
     range_min: 3,
-    range_max: 80,
+    range_max: 20,
   });
   const prev = ()=> {
     setStep(2);
