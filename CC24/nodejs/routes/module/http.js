@@ -1,10 +1,10 @@
 const http = require('http');
 
 const sendHttpRequest = (data, options) => {
+  console.log(options);
   return new Promise((resolve, reject) => {
     const req = http.request(options, (res) => {
       if (res.statusCode < 200 || res.statusCode >= 300) {
-        console.log(res.statusCode, res.statusMessage);
         reject(new Error(`HTTP Error: ${res.statusCode}`));
         return;
       }
