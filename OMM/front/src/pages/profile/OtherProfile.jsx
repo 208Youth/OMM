@@ -162,6 +162,7 @@ function OtherProfile() {
                   {basicInfomation.pr}
                 </div>
               </div>
+
               <hr />
               <div className="text-xl m-3">
                 인증정보

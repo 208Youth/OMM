@@ -104,9 +104,9 @@ function MyProfile({ profileNav }) {
     setMyIsOpen3(false);
   };
   const [new_certinfo, setCert] = useState(certinfo);
-  const [new_interest, setInterest] = useState(null);
-  const [basicInfomation, setInfo] = useState(null);
-  const [filterInfomation, setFilter] = useState(null);
+  const [interest, setInterest] = useState([]);
+  const [basicInfomation, setInfo] = useState([]);
+  const [filterInfomation, setFilter] = useState([]);
 
   // const [isHovered, setIsHovered] = useState(false);
   // const handleMouseEnter = () => {
@@ -290,83 +290,7 @@ function MyProfile({ profileNav }) {
                   </span>
                 </div>
                 <hr className="thickhr" />
-                <div className="font-light">
-                  <div className="text-2xl m-3 font-light">내 정보</div>
-                  <div className="flex justify-between m-3">
-                    <div className="">
-                      <span>키</span>
-                    </div>
-                    <div>
-                      <div className="flex items-center">
-                        <span className="">
-                          {basicInfomation.height}
-                          {' '}
-                          cm
-                        </span>
-                        <div
-                          onClick={() => {
-                            openMyModal();
-                          }}
-                        >
-                          <img src={userarrow} alt="" className="w-3 ml-2" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <hr />
-
-                  <div className="flex justify-between m-3">
-                    <div className="">
-                      <span>음주 스타일</span>
-                    </div>
-                    <div>
-                      <div className="flex items-center">
-                        <span className="">{basicInfomation.drinking_stlye}</span>
-                        <div
-                          onClick={() => {
-                            openMyModal();
-                          }}
-                        >
-                          <img src={userarrow} alt="" className="w-3 ml-2" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <hr />
-                  <div className="flex justify-between m-3">
-                    <div className="">
-                      <span>고등학교</span>
-                    </div>
-                    <div>
-                      <div className="flex items-center">
-                        <span className="">{basicInfomation.highschool}</span>
-                        <div
-                          onClick={() => {
-                            openMyModal();
-                          }}
-                        >
-                          <img src={userarrow} alt="" className="w-3 ml-2" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <hr />
-                  <div className="flex justify-between m-3">
-                    <div className="">
-                      <span>연락 스타일</span>
-                    </div>
-                    <div>
-                      <div className="flex items-center">
-                        <span className="">{basicInfomation.conteact_stlye}</span>
-                        <div
-                          onClick={() => {
-                            openMyModal();
-                          }}
-                        >
-                          <img src={userarrow} alt="" className="w-3 ml-2" />
-                        </div>
-                      </div>
-                    </div>
+                
                   </div>
                   <hr />
                   <div className="flex justify-between m-3">
