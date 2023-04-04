@@ -15,4 +15,5 @@ public class ChatRoomDto {
     private String content;
     private Map<String, Object> other;
     private Long myNotReadIndex;
+    private Long myLastSendIndex;
 }

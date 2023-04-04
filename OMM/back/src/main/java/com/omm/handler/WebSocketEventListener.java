@@ -1,6 +1,8 @@
 package com.omm.handler;
 
 import com.google.gson.JsonObject;
+import com.omm.chat.model.dto.ChatRoomDto;
+import com.omm.chat.model.dto.response.GetRoomResponseDto;
 import com.omm.chat.model.entity.ChatRoom;
 import com.omm.chat.service.ChatPublisherService;
 import com.omm.chat.service.ChatService;
@@ -53,9 +55,10 @@ public class WebSocketEventListener {
                 if (!roomId.equals("")) {
                     String sessionId = (String) generic.getHeaders().get("simpSessionId");
                     logger.info("[Connected] room id : {} | websocket session id : {}", roomId, sessionId);
-//                    chatService.connectUser(roomId, sessionId, myId);
+                    chatService.connectUser(roomId, sessionId, myId);
                     ChatRoom chatRoom = chatService.enterRoom(roomId, myId);
-                    publisherService.publishEnter(roomId);
+                    GetRoomResponseDto chatRoomDto = chatService.getRoom(roomId);
+                    publisherService.publishEnter(roomId, chatRoomDto);
                 }
             }
         }
@@ -65,8 +68,8 @@ public class WebSocketEventListener {
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String sessionId = headerAccessor.getSessionId();
-//        logger.info("[Disconnected] websocket session id : {}", sessionId);
+        logger.info("[Disconnected] websocket session id : {}", sessionId);
 
-//        chatService.disconnectUser(sessionId, myId);
+        chatService.disconnectUser(sessionId);
     }
 }

@@ -4,11 +4,13 @@ import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import './nav-bar.scss';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { likey } from '../store/recSlice';
 import http from '../api/http';
-import { useDispatch, useSelector } from 'react-redux';
 
-function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav, id }) {
+function Navbar({
+  profileNav, mainNav, notiNav, chatlistNav, likesNav, id,
+}) {
   let stompClient;
   const token = localStorage.getItem('accesstoken');
   const dispatch = useDispatch();
@@ -75,7 +77,7 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav, id }) {
       '/pub/matching/noti',
       headers,
       // 좋아요 할 사람 id
-      JSON.stringify({ receiverId: id }),
+      JSON.stringify({ receiverId: 503 }),
     );
     console.log(stompClient);
     // stompClient.disconnect();
@@ -93,23 +95,23 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav, id }) {
   // };
   const like = async function () {
     const data = {
-      'sender_id': id,
-      'favor': true,
-    }
+      sender_id: id,
+      favor: true,
+    };
     await http({
       method: 'post',
       url: '/recommend',
-      headers: {Authorization: `Bearer ${token}`}, 
-      data: data,
+      headers: { Authorization: `Bearer ${token}` },
+      data,
     })
-    .then((res) => {
-      console.log('조아요오오오',res)
-      dispatch(likey(id));
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  }
+      .then((res) => {
+        console.log('조아요오오오', res);
+        dispatch(likey(id));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   useEffect(() => {
     if (mainNav) {
@@ -161,7 +163,7 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav, id }) {
               alt=""
               onClick={() => {
                 sendMatch();
-                like()
+                like();
               }}
               aria-hidden="true"
             />

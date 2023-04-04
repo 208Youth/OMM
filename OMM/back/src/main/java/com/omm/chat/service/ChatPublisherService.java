@@ -3,6 +3,7 @@ package com.omm.chat.service;
 import com.google.gson.JsonObject;
 import com.omm.admin.model.response.GetEntraceResponseDto;
 import com.omm.chat.model.dto.ChatRoomDto;
+import com.omm.chat.model.dto.response.GetRoomResponseDto;
 import com.omm.chat.model.entity.ChatMessage;
 import com.omm.chat.model.entity.ChatRoom;
 import com.omm.exception.CustomException;
@@ -80,7 +81,7 @@ public class ChatPublisherService {
         messagingTemplate.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
     }
 
-    public void publishEnter(String roomId) {
-        messagingTemplate.convertAndSend("/sub/chat/room/" + roomId + "/entrance", new GetEntraceResponseDto());
+    public void publishEnter(String roomId, GetRoomResponseDto message) {
+        messagingTemplate.convertAndSend("/sub/chat/room/" + roomId + "/entrance", message);
     }
 }
