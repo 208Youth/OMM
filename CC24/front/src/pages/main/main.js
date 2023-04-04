@@ -16,6 +16,7 @@ function Main() {
   const [change, setChange] = useState(true);
   const contentList = [];
   let certList = [];
+  let imageUrl = '';
   // if (localStorage.getItem('IdenVC')) {
   //   console.log(localStorage.getItem('IdenVC'));
   //   certList.push('신분증');
@@ -29,12 +30,14 @@ function Main() {
   if (localStorage.getItem('IdenVC')) {
     console.log(localStorage.getItem('IdenVC'));
     certList.push('신분증');
+    let decoded = jwt_decode(localStorage.getItem('IdenVC')).vc.credentialSubject;
+    console.log(decoded);
     let id = `
-    ${user.name} ${user.gender}\n
-    ${user.year}-${user.month}-${user.day}
+    ${decoded.personalId.name} ${decoded.personalId.gender == 'FEMALE' ? '여' : '남'}\n
+    ${decoded.personalId.birthdate}
     `;
-    console.log(id);
     contentList.push(id);
+    imageUrl = decoded.personalId.imageUrl;
     // contentList.push(jwt_decode(localStorage.getItem('IdenVC')));
   }
   if (localStorage.getItem('VC')) {
@@ -43,39 +46,44 @@ function Main() {
       for (let [key, value] of Object.entries(element)) {
         let decoded = jwt_decode(value).vc.credentialSubject;
         let data = '';
+        let cert_name ='';
         switch (key) {
           case 'UniversityCredential':
             data = decoded.university.name;
+            cert_name = '대학교';
             break;
           case 'JobCredential':
             data = decoded.job.name;
+            cert_name = '직업';
             break;
           case 'IncomeCredential':
-            data = `${decoded.income.income} 원`;
+            data = `${decoded.income.income.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원`;
+            cert_name = '소득';
             break;
           case 'EstateCredential':
             let res = 0;
             decoded.estate.estates.forEach((amount) => {
               res += amount;
             });
-            data = `${res} 원`;
+            data = `${res.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원`;
+            cert_name = '부동산';
             break;
           case 'HealthCredential':
             data = decoded.health.date;
+            cert_name = '건강';
             break;
           case 'CertificateCredential':
             data = decoded.certificate.name;
+            cert_name = '자격증';
             break;
           default:
             break;
         }
+        certList.push(cert_name);
         contentList.push(data);
-        console.log(data);
       }
     });
   }
-  certList.push(...cert);
-  // console.log(certList);
 
   return (
     <div className="flex px-10">
@@ -94,9 +102,9 @@ function Main() {
           </p>
           <br />
         </div>
-        <Swiper effect={'cards'} grabCursor={true} modules={[EffectCards]} className="mySwiper">
+        <Swiper effect={'cards'} grabCursor={true} modules={[EffectCards]} className="mySwiper" onSlideChange={() => setChange(true)}>
           {certList.map((cert, index) => (
-            <SwiperSlide key={index} onClick={() => setChange(!change)}>
+            <SwiperSlide key={index} onClick={() => setChange(!change)} className={change ? 'name' : 'description'}>
               {change && (
                 <div>
                   <p className="text-3xl text-left leading-relaxed flex justify-start t-0">
@@ -121,7 +129,11 @@ function Main() {
               )}
               {!change && (
                 <div>
-                  <p className="text-3xl text-left leading-relaxed flex justify-start t-0">
+                  <p>
+                    {certList[index] == '신분증' ? 
+                    <img src={imageUrl} width='80%' style={{ display: 'block', margin: '0 auto' }} /> : <div />}
+                  </p>
+                  <p className="text- leading-relaxed flex justify-start t-0">
                     {contentList[index]}
                   </p>
                 </div>
