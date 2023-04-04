@@ -134,12 +134,20 @@ public class ChatService {
         Member myInfo = getMember(user);
         ChatMessage message = new ChatMessage();
         Long id = chatRepository.getMessageSize(messageDto.getRoomId()) + 1;
-        ChatRoom chatRoom = chatRepository.getRoom(message.getRoomId());
+
+        ChatRoom chatRoom = chatRepository.getRoom(messageDto.getRoomId());
+        chatRoom.setMsgs(id);
+        chatRoom.setContent(messageDto.getContent());
+        Map<Long, Long> lastReadIndex = chatRoom.getLastReadIndex();
+        lastReadIndex.put(myInfo.getId(), id);
+        LocalDateTime nowTime = LocalDateTime.now();
+        chatRoom.setLastMsgTime(nowTime);
+        chatRepository.setRoom(chatRoom);
 
         message.setId(id);
         message.setRoomId(messageDto.getRoomId());
         message.setContent(messageDto.getContent());
-        message.setCreatedTime(LocalDateTime.now());
+        message.setCreatedTime(nowTime);
         message.setSenderId(myInfo.getId());
         message.setReceiverId(messageDto.getReceiverId());
         message.setRead(false);
@@ -150,7 +158,7 @@ public class ChatService {
                 message.setRead(true);
             }
         }
-
+        chatRepository.saveMessage(message);
         return message;
     }
 
@@ -171,13 +179,14 @@ public class ChatService {
         }
     }
 
-    public void enterRoom(String roomId, Long myId) {
+    public ChatRoom enterRoom(String roomId, Long myId) {
         ChatRoom chatRoom = chatRepository.getRoom(roomId);
         Map<Long, Long> lastReadIndex = chatRoom.getLastReadIndex();
         Long msgSize = chatRepository.getMessageSize(roomId);
         lastReadIndex.put(myId, msgSize);
         chatRoom.setLastReadIndex(lastReadIndex);
         chatRepository.setRoom(chatRoom);
+        return chatRoom;
     }
 
     public void exitChatRoom(String roomId) {

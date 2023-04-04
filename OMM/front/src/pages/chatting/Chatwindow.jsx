@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import axios from 'axios';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
@@ -15,27 +15,11 @@ function ChatWindow() {
   const [sender, setSender] = useState(localStorage.getItem('wschat.sender'));
   const [room, setRoom] = useState({});
   const location = useLocation();
+  const [arrivalChat, setArrivalChat] = useState(null); // 도착한 메세지 저장
   const [message, setMessage] = useState('');
-  const token = localStorage.getItem('accessoken');
-  const headers = {
-    // Authorization: import.meta.env.VITE_TOKEN,
-    Authorization: token, // 매칭 수락한사람의 토큰
-  };
-
+  const token = localStorage.getItem('accesstoken');
   // 임시로 메시지를 저장
-  const [messages, setMessages] = useState([
-    { senderId: 1, content: '자나요?', isRead: true },
-    { senderId: 1, content: '술 마실래요', isRead: true },
-    { senderId: 2, content: '저 입이 없어서 술 못마셔요 ㅜㅜ', isRead: true },
-    { senderId: 1, content: '아 네', isRead: false },
-    { senderId: 1, content: '카톡 할래요?', isRead: false },
-    {
-      senderId: 2,
-      content: '저 와이파이가 안되서 카톡 못해요 ㅠㅠ',
-      isRead: false,
-    },
-  ]);
-
+  const [messages, setMessages] = useState([]);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
 
@@ -54,61 +38,48 @@ function ChatWindow() {
   const closeReportModal = () => {
     setReportOpen(false);
   };
-  console.log(location);
+
+  useEffect(() => {
+    arrivalChat && setMessages((prev) => [...prev, arrivalChat]); // 채팅 리스트에 추가
+  }, [arrivalChat]);
+
   const roomId = location.pathname.substring(12, location.pathname.lastIndex);
-  console.log(roomId);
-  console.log(sender);
+
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    roomId,
+    // Authorization: token,
+  };
+
+  const roomHeader = {
+    roomId,
+  };
 
   // const ws = new SockJS('http://localhost:5000/api/chat');
   const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
   const stompClient = Stomp.over(ws);
-  // 임시값으로 쁘띠재용을 받는다.
-  const user2ID = '쁘띠재용';
 
-  const findRoom = () => {
-    console.log('파인드룸시잗');
-    http
-      .get(`/chat/room/${roomId},`, headers)
-      .then((response) => {
-        setRoom(response.data);
-        console.log('findroom정상실행');
-      })
-      .catch((error) => {
-        console.log(error);
-        console.log('dd');
+  useEffect(
+    () => () => {
+      http.get('/chat/test').then((res) => {
+        console.log('요청함');
       });
-  };
-
-  const sendMessage = () => {
-    // const ws = new SockJS('http://localhost:5000/api/chat');
-    // const stompClient = Stomp.over(ws);
-    stompClient.connect({}, (frame) => {
-      stompClient.send(
-        `/api/pub/chat/room/${roomId}`,
-        {},
-        JSON.stringify({ roomId, senderId: sender, content: message }),
-      );
-      setMessage('');
-      stompClient.disconnect();
-    });
-  };
+    },
+    [location, stompClient],
+  );
 
   const connect = () => {
-    const reconnect = 0;
-    console.log('아래는 메시지');
-    console.log(message);
-    console.log(messages.length);
     stompClient.connect(
-      {},
+      headers,
       (frame) => {
-        stompClient.subscribe('/sub/chat/entrance', (readDto) => {
-          const readIndex = JSON.parse(readDto.body);
-          recvReadDto(readIndex);
-        });
+        stompClient.subscribe(
+          `/sub/chat/room/${roomId}/entrance`,
+          (readDto) => {},
+        );
 
         stompClient.subscribe(`/sub/chat/room/${roomId}`, (message) => {
           const recv = JSON.parse(message.body);
-          recvMessage(recv);
+          setArrivalChat(recv);
         });
       },
       (error) => {
@@ -120,6 +91,55 @@ function ChatWindow() {
         // }
       },
     );
+  };
+
+  const findRoom = () => {
+    http({
+      method: 'get',
+      url: `/chat/room/${roomId}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        console.log('채팅방 정보를 가져옴');
+        console.log(response);
+        // setRoom(response.data.roomInfo);
+        console.log(response.data.roomInfo.msgs);
+        setMessages([...response.data.payload]);
+        setRoom(response.data.roomInfo);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const waitForConnection = (stompClient, callback) => {
+    setTimeout(() => {
+      // 연결되었을 때 콜백함수 실행
+      if (stompClient.ws.readyState === 1) {
+        callback();
+        // 연결이 안 되었으면 재호출
+      } else {
+        waitForConnection(stompClient, callback);
+      }
+    }, 1); // 밀리초 간격으로 실행
+  };
+
+  const sendMessage = () => {
+    // stompClient.connect(headers, (frame) => {
+    waitForConnection(stompClient, () => {
+      stompClient.send(
+        `/pub/chat/room/${roomId}`,
+        headers,
+        JSON.stringify({
+          roomId,
+          receiverId: room.other.otherId,
+          content: message,
+        }),
+      );
+    });
+    setMessage('');
   };
 
   const recvReadDto = (readIndex) => {
@@ -136,31 +156,14 @@ function ChatWindow() {
     setMessages(copies);
   };
 
+  const recvMessage = (recv) => {
+    console.log(recv);
+    const tempMsgs = [...messages, recv];
+    setMessages([...tempMsgs]);
+  };
+
   useEffect(() => {
     findRoom();
-    http({
-      method: 'get',
-      url: `/chat/room/${roomId}/messages`,
-      headers: {
-        Authorization: import.meta.env.VITE_TOKEN,
-      },
-    }).then((response) => {
-      console.log(response);
-      setMessages([...response]);
-    });
-
-    // axios
-    //   .get(`http://localhost:5000/api/chat/room/${roomId}/messages`)
-    //   .then(({ data }) => {
-    //     console.log('아래는 data 정보');
-    //     console.log({ data });
-    //     console.log(...data);
-    //     console.log('위는data 정보');
-    //     setMessages([...data]);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
     connect();
   }, []);
 
@@ -187,10 +190,10 @@ function ChatWindow() {
                       msg.senderId === 1 ? 'text-right' : 'text-left'
                     }`}
                   >
-                    {msg.senderId === 1 ? (
+                    {msg.senderId != room.other.otherId ? (
                       <div className="font-sans ml-28">
                         <span className="text-[0.5rem] mr-1">
-                          {msg.isRead ? '읽음' : '안읽음'}
+                          {msg.read ? '읽음' : '안읽음'}
                         </span>
                         <span className="bg-[#E1E3EB] p-2 rounded-lg">
                           <span className="font-sans">{msg.senderId}</span>
@@ -243,7 +246,9 @@ function ChatWindow() {
                   type="text"
                   className="rounded-md bg-[#F2EAF2] w-60 h-11 self-center"
                   value={message}
-                  onChange={(e) => setMessage(e.target.value)}
+                  onChange={(e) => {
+                    setMessage(e.target.value);
+                  }}
                 />
                 {/* <button onClick={sendMessage}>Send</button> */}
 

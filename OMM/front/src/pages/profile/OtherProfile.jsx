@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Tooltip } from 'react-tooltip';
+import 'react-tooltip/dist/react-tooltip.css';
+import http from '../../api/http';
 import CloseBtn from '../../assets/CloseBtn.svg';
 import estate_yes from '../../assets/estate_yes.svg';
 import estate_no from '../../assets/estate_no.svg';
@@ -20,6 +23,8 @@ import './Pslider.css';
 // props를 통해 userid를 받고 claose 버튼을 눌러서 해당 userid의
 // 아니면 메인 페이지에 해당 컴포넌트를 아예 합쳐버릴까
 function OtherProfile() {
+  const token = localStorage.getItem('accesstoken');
+  const memberId = 2;
   const certinfo = {
     university: false,
     job: true,
@@ -46,19 +51,39 @@ function OtherProfile() {
   const [new_certinfo, setCert] = useState(certinfo);
   const [new_interest, setInterest] = useState(null);
   // new_certinfo인지 certinfo인지 axios주고받으면서 확인
-  const FreshCert = () => {
-    http.get(`member/${memberId}/cert`)
-      .then((response) => setCert(response.data))
-      .catch((error) => console.error(error));
-  };
+
+  async function FreshCert() {
+    await http({
+      method: 'get',
+      url: `/member/${memberId}/cert`,
+      // headers: {
+      //   Authorization: import.meta.env.VITE_TOKEN,
+      // },
+    })
+      .then((res) => {
+        console.log(res);
+        setCert(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log('왜자꾸안되');
+        console.log(import.meta.env.VITE_TOKEN);
+      });
+  }
+
+  // const FreshCert = () => {
+  //   http.get(`member/${memberId}/cert`, { headers: { Authorization: `Bearer ${token}` } })
+  //     .then((response) => setCert(response.data))
+  //     .catch((error) => console.error(error));
+  // };
   const FreshInterest = () => {
     http.get(`/member/${memberId}/interest-list`)
       .then((response) => setInterest(response.data.interestList))
       .catch((error) => console.error(error));
   };
   useEffect(() => {
-    FreshCert();
-    FreshInterest();
+    // FreshCert();
+    // FreshInterest();
   }, []);
 
   function InterestList({ interest }) {
@@ -146,22 +171,59 @@ function OtherProfile() {
               <div>
                 <div className="my-5 ml-5">
                   <div className="inline-block">
-                    <img src={new_certinfo.health === true ? health_yes : health_no} alt="#" className="badges" />
+                    <Tooltip id="my-tooltip" />
+                    <img
+                      src={new_certinfo.health === true ? health_yes : health_no}
+                      alt="#"
+                      className="badges"
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={`건강데이터넣을것임 ${new_certinfo.health}`}
+                    />
                   </div>
                   <div className="inline-block">
-                    <img src={new_certinfo.university === true ? university_yes : university_no} alt="#" className="badges" />
+                    <img
+                      src={new_certinfo.university === true ? university_yes : university_no}
+                      alt="#"
+                      className="badges"
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={`${new_certinfo.university}`}
+                    />
                   </div>
                   <div className="inline-block">
-                    <img src={new_certinfo.job === true ? job_yes : job_no} alt="#" className="badges" />
+                    <img
+                      src={new_certinfo.job === true ? job_yes : job_no}
+                      alt="#"
+                      className="badges"
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={`${new_certinfo.job}`}
+                    />
                   </div>
                   <div className="inline-block">
-                    <img src={new_certinfo.certificate === true ? certificate_yes : certificate_no} alt="#" className="badges" />
+                    <img
+                      src={new_certinfo.certificate === true ? certificate_yes : certificate_no}
+                      alt="#"
+                      className="badges"
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={` ${new_certinfo.certificate}`}
+                    />
                   </div>
                   <div className="inline-block">
-                    <img src={new_certinfo.estate === true ? estate_yes : estate_no} alt="#" className="badges" />
+                    <img
+                      src={new_certinfo.estate === true ? estate_yes : estate_no}
+                      alt="#"
+                      className="badges"
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={` ${new_certinfo.estate}`}
+                    />
                   </div>
                   <div className="inline-block">
-                    <img src={new_certinfo.income === true ? income_yes : income_no} alt="#" className="badges" />
+                    <img
+                      src={new_certinfo.income === true ? income_yes : income_no}
+                      alt="#"
+                      className="badges"
+                      data-tooltip-id="my-tooltip"
+                      data-tooltip-content={` ${new_certinfo.income}`}
+                    />
                   </div>
                 </div>
               </div>

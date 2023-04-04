@@ -33,14 +33,12 @@ public class RmeSessionChannelInterceptor implements ChannelInterceptor {
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-        if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-            String authorizationHeader = accessor.getFirstNativeHeader("Authorization");
-            if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
-                String jwt = authorizationHeader.substring(7);
-                if (jwtTokenProvider.validateToken(jwt)) {
-                    Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
-                    accessor.setUser(authentication);
-                }
+        String authorizationHeader = accessor.getFirstNativeHeader("Authorization");
+        if (StringUtils.hasText(authorizationHeader) && authorizationHeader.startsWith("Bearer ")) {
+            String jwt = authorizationHeader.substring(7);
+            if (jwtTokenProvider.validateToken(jwt)) {
+                Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
+                accessor.setUser(authentication);
             }
         }
         return message;

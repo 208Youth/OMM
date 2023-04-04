@@ -35,30 +35,55 @@ import http from '@/api/http';
 function MyProfile({ profileNav }) {
   profileNav = true;
   const certinfo = {
-    university: false,
+    university: null,
     job: true,
-    certificate: false,
-    health: false,
-    estate: false,
-    income: false,
+    certificate: '잘했어요일기장',
+    health: null,
+    estate: null,
+    income: null,
   };
-  const interest = [
-    {
-      interest_list_id: 1,
-      name: '관심사 이름1',
-    },
-    {
-      interest_list_id: 2,
-      name: '관심사 이름2',
-    },
-    {
-      interest_list_id: 3,
-      name: '관심사 이름3',
-    },
-  ];
+  // const interest = [
+  //   {
+  //     interest_list_id: 1,
+  //     name: '관심사 이름1',
+  //   },
+  //   {
+  //     interest_list_id: 2,
+  //     name: '관심사 이름2',
+  //   },
+  //   {
+  //     interest_list_id: 3,
+  //     name: '관심사 이름3',
+  //   },
+  // ];
+  // const basicInfomation = [{
+  //   nickname: '12',
+  //   age: 20,
+  //   pr: 1,
+  //   height: 180,
+  //   drinking_stlye: 1,
+  //   highschool: 1,
+  //   contact_stlye: 1,
+  //   military: 1,
+  //   mbti: 1,
+  //   interest: null,
+  //   pet: null,
+  // },
+  // ];
+  // const filterInfomation = [{
+  //   age_min: 1,
+  //   age_max: 100,
+  //   range_min: 1,
+  //   range_max: 100,
+  //   height_min: 1,
+  //   height_max: 100,
+  // }];
+
   const [MymodalIsOpen, setMyIsOpen] = useState(false);
   const [MymodalIsOpen2, setMyIsOpen2] = useState(false);
-  const [MymodalIsOpen3, setMyIsOpen3] = useState(true);
+  const [MymodalIsOpen3, setMyIsOpen3] = useState(false);
+  // const memberId = localStorage.getItem('member_id');
+  const memberId = 1;
   const token = localStorage.getItem('accesstoken');
   const openMyModal = () => {
     setMyIsOpen(true);
@@ -80,6 +105,9 @@ function MyProfile({ profileNav }) {
   };
   const [new_certinfo, setCert] = useState(certinfo);
   const [new_interest, setInterest] = useState(null);
+  const [basicInfomation, setInfo] = useState(null);
+  const [filterInfomation, setFilter] = useState(null);
+
   // const [isHovered, setIsHovered] = useState(false);
   // const handleMouseEnter = () => {
   //   setIsHovered(true);
@@ -88,12 +116,62 @@ function MyProfile({ profileNav }) {
   //   setIsHovered(false);
   // };
   // new_certinfo인지 certinfo인지 axios주고받으면서 확인
-  const FreshCert = () => {
-    http
-      .get('/member/certificate')
-      .then((response) => setCert(response.data))
-      .catch((error) => console.error(error));
-  };
+  // const GetuserInfo = () => {
+  //   http
+  //   .get(`/api/member/${memberId}`)
+  // }
+  async function Freshinfo() {
+    await http({
+      method: 'get',
+      url: '/member',
+      headers: {
+        Authorization: import.meta.env.VITE_TOKEN,
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        setInfo(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log('왜자꾸안되');
+        console.log(import.meta.env.VITE_TOKEN);
+      });
+  }
+
+  async function FreshCert() {
+    await http({
+      method: 'get',
+      url: `/member/${memberId}/cert`,
+      headers: {
+        Authorization: import.meta.env.VITE_TOKEN,
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        setCert(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  async function FreshFilter() {
+    await http({
+      method: 'get',
+      url: '/member/filtering',
+      headers: {
+        Authorization: import.meta.env.VITE_TOKEN,
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        setFilter(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   const FreshInterest = () => {
     http
       .get('/member/interest')
@@ -103,6 +181,8 @@ function MyProfile({ profileNav }) {
   useEffect(() => {
     FreshCert();
     FreshInterest();
+    FreshFilter();
+    Freshinfo();
   }, []);
 
   async function toCert() {
@@ -140,7 +220,7 @@ function MyProfile({ profileNav }) {
           isOpen={MymodalIsOpen}
           onRequestClose={closeMyModal}
         >
-          <MyinfoSetModal setModal={closeMyModal} />
+          <MyinfoSetModal setModal={closeMyModal} basicInfomation={basicInfomation} />
         </Modal>
       </div>
       <div className="text-center">
@@ -185,14 +265,17 @@ function MyProfile({ profileNav }) {
                 />
               </div>
 
-              <span className="text-3xl ml-2">이름</span>
-              <span> 나이</span>
+              <span className="text-3xl ml-2">{basicInfomation.nickname}</span>
+              <span>
+                {' '}
+                {basicInfomation.age}
+              </span>
               <div className="text-slate-500 text-sm ml-2">
                 <span className="inline-block">
                   <img src={location} alt="" width={10} />
                 </span>
                 <div className="flex justify-between">
-                  <span className="mb-1">주소</span>
+                  <span className="mb-1">{basicInfomation.lat}</span>
                   <span className="flex justify-end">위치수정</span>
                 </div>
               </div>
@@ -201,7 +284,7 @@ function MyProfile({ profileNav }) {
                 <div className="my-1">
                   <div className="text-2xl m-3">자기소개</div>
                   {/* 아이콘을 누르면 input이 가능하게 바꾸기 */}
-                  <div className="text-slate-600 text-sm">자기소개 내용</div>
+                  <div className="text-slate-600 text-sm">{basicInfomation.pr}</div>
                   <span className="flex justify-end">
                     <img src={pencil} alt="" />
                   </span>
@@ -215,7 +298,11 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="">180 cm</span>
+                        <span className="">
+                          {basicInfomation.height}
+                          {' '}
+                          cm
+                        </span>
                         <div
                           onClick={() => {
                             openMyModal();
@@ -234,7 +321,7 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="">{}</span>
+                        <span className="">{basicInfomation.drinking_stlye}</span>
                         <div
                           onClick={() => {
                             openMyModal();
@@ -252,7 +339,7 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="">{}</span>
+                        <span className="">{basicInfomation.highschool}</span>
                         <div
                           onClick={() => {
                             openMyModal();
@@ -270,7 +357,7 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="">{}</span>
+                        <span className="">{basicInfomation.conteact_stlye}</span>
                         <div
                           onClick={() => {
                             openMyModal();
@@ -288,7 +375,7 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="">{}</span>
+                        <span className="">{basicInfomation.smoking_stlye}</span>
                         <div
                           onClick={() => {
                             openMyModal();
@@ -306,7 +393,7 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="">{}</span>
+                        <span className="">{basicInfomation.mbti}</span>
                         <div
                           onClick={() => {
                             openMyModal();
@@ -364,7 +451,16 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className=""> - 살</span>
+                      <span className="">
+                        {' '}
+                        {filterInfomation.age_min}
+                        {' '}
+                        -
+                        {' '}
+                        {filterInfomation.age_max}
+                        {' '}
+                        살
+                      </span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
                       </div>
@@ -378,7 +474,14 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className=""> - cm</span>
+                      <span className="">
+                        {filterInfomation.height_min}
+                        {' '}
+                        -
+                        {' '}
+                        {filterInfomation.max}
+                        cm
+                      </span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
                       </div>
@@ -392,7 +495,16 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className=""> - km</span>
+                      <span className="">
+                        {' '}
+                        {filterInfomation.range_min}
+                        {' '}
+                        -
+                        {' '}
+                        {filterInfomation.range_max}
+                        {' '}
+                        km
+                      </span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
                       </div>
@@ -406,7 +518,7 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="">{}</span>
+                      <span className="">{filterInfomation.contact_stlye}</span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
                       </div>
@@ -420,7 +532,7 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="">{}</span>
+                      <span className="">{filterInfomation.drinking_stlye}</span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
                       </div>
@@ -434,7 +546,7 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="">{}</span>
+                      <span className="">{filterInfomation.smoking_stlye}</span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
                       </div>
@@ -457,70 +569,56 @@ function MyProfile({ profileNav }) {
                     <div className="inline-block">
                       <Tooltip id="my-tooltip" />
                       <img
-                        src={
-                        new_certinfo.health === true ? health_yes : health_no
-                      }
+                        src={new_certinfo.health !== null ? health_yes : health_no}
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={`건강데이터넣을것임 ${new_certinfo.health}`}
+                        data-tooltip-content={`${new_certinfo.health}`}
                       />
                     </div>
                     <div className="inline-block">
                       <img
-                        src={
-                        new_certinfo.university === true
-                          ? university_yes
-                          : university_no
-                      }
+                        src={new_certinfo.university !== null ? university_yes : university_no}
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={` ${''}`}
+                        data-tooltip-content={`${new_certinfo.university}`}
                       />
                     </div>
                     <div className="inline-block">
                       <img
-                        src={new_certinfo.job === true ? job_yes : job_no}
+                        src={new_certinfo.job !== null ? job_yes : job_no}
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={` ${''}`}
+                        data-tooltip-content={`${new_certinfo.job}`}
                       />
                     </div>
                     <div className="inline-block">
                       <img
-                        src={
-                        new_certinfo.certificate === true
-                          ? certificate_yes
-                          : certificate_no
-                      }
+                        src={new_certinfo.certificate !== null ? certificate_yes : certificate_no}
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={` ${''}`}
+                        data-tooltip-content={` ${new_certinfo.certificate}`}
                       />
                     </div>
                     <div className="inline-block">
                       <img
-                        src={
-                        new_certinfo.estate === true ? estate_yes : estate_no
-                      }
+                        src={new_certinfo.estate !== null ? estate_yes : estate_no}
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={` ${''}`}
+                        data-tooltip-content={` ${new_certinfo.estate}`}
                       />
                     </div>
                     <div className="inline-block">
                       <img
-                        src={
-                        new_certinfo.income === true ? income_yes : income_no
-                      }
+                        src={new_certinfo.income !== null ? income_yes : income_no}
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={` ${''}`}
+                        data-tooltip-content={` ${new_certinfo.income}`}
                       />
                     </div>
                   </div>
