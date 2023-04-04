@@ -29,14 +29,27 @@ public class MemberController {
 
     /**
      * 회원 신규 등록
+     *
      * @param authDto 인증을 위해서 필요한 정보, did 주소와 vp jwt를 받는다.
      * @return
      */
     @PostMapping
-    public ResponseEntity<?> addMember(@RequestBody AuthDto authDto){
+    public ResponseEntity<?> addMember(@RequestBody AuthDto authDto) {
         RegistDto registDto = authService.registAuth(authDto);
         memberService.addMember(registDto);
         return new ResponseEntity<>("회원 가입 성공", HttpStatus.OK);
+    }
+
+    /**
+     * 현재 유저의 사진 정보 조희 (인증용)
+     *
+     * @return
+     */
+    @GetMapping("/face-url")
+    public ResponseEntity<?> getMyFaceUrl() {
+        SecurityUtil.getCurrentDidAddress();
+        return new ResponseEntity<>(
+            memberService.getUserFaceUrl(SecurityUtil.getCurrentDidAddress().get()), HttpStatus.OK);
     }
 
     /**
@@ -46,8 +59,10 @@ public class MemberController {
      * @return
      */
     @PostMapping("/info")
-    public ResponseEntity<?> initMemberInfo(@RequestBody InitMemberInfoRequestDto initMemberInfoRequestDto) {
-        memberService.initMemberInfo(SecurityUtil.getCurrentDidAddress().get(), initMemberInfoRequestDto);
+    public ResponseEntity<?> initMemberInfo(
+        @RequestBody InitMemberInfoRequestDto initMemberInfoRequestDto) {
+        memberService.initMemberInfo(SecurityUtil.getCurrentDidAddress().get(),
+            initMemberInfoRequestDto);
         return new ResponseEntity<>("회원 등록 성공", HttpStatus.OK);
     }
 
@@ -58,8 +73,10 @@ public class MemberController {
      * @return
      */
     @PostMapping("/filtering")
-    public ResponseEntity<?> initMemberFiltering(@RequestBody MemberFilteringDto memberFilteringDto) {
-        memberService.initMemberFiltering(SecurityUtil.getCurrentDidAddress().get(), memberFilteringDto);
+    public ResponseEntity<?> initMemberFiltering(
+        @RequestBody MemberFilteringDto memberFilteringDto) {
+        memberService.initMemberFiltering(SecurityUtil.getCurrentDidAddress().get(),
+            memberFilteringDto);
         return new ResponseEntity<>("선호 상대 정보 등록 성공", HttpStatus.OK);
     }
 
@@ -70,7 +87,8 @@ public class MemberController {
      */
     @GetMapping
     public ResponseEntity<?> getMyInfo() {
-        return new ResponseEntity<>(memberService.getMyInfo(SecurityUtil.getCurrentDidAddress().get()), HttpStatus.OK);
+        return new ResponseEntity<>(
+            memberService.getMyInfo(SecurityUtil.getCurrentDidAddress().get()), HttpStatus.OK);
     }
 
     /**
@@ -91,22 +109,28 @@ public class MemberController {
      */
     @GetMapping("/filtering")
     public ResponseEntity<?> getMemberFiltering() {
-        return new ResponseEntity<>(memberService.getMemberFiltering(SecurityUtil.getCurrentDidAddress().get()), HttpStatus.OK);
+        return new ResponseEntity<>(
+            memberService.getMemberFiltering(SecurityUtil.getCurrentDidAddress().get()),
+            HttpStatus.OK);
     }
 
     /**
      * 유저 이미지 업로드 (사용하지 말 것)
+     *
      * @param images 이미지 정보
      * @return
      * @throws IOException
      */
     @PostMapping("/img")
-    public ResponseEntity<?> postMemberImages(@RequestParam("images") List<MultipartFile> images) throws IOException {
+    public ResponseEntity<?> postMemberImages(@RequestParam("images") List<MultipartFile> images)
+        throws IOException {
         List<byte[]> data = new ArrayList<>();
 
         for (MultipartFile image : images) {
             byte[] imageData = image.getBytes();
-            if(imageData == null) break;
+            if (imageData == null) {
+                break;
+            }
             data.add(imageData);
         }
 
@@ -117,23 +141,26 @@ public class MemberController {
 
     /**
      * 유저 이미지 교체
+     *
      * @param images 이미지 정보
      * @return
      * @throws IOException
      */
     @PutMapping("/img")
-    public ResponseEntity<?> putMemberImages(@RequestParam("images") List<MultipartFile> images) throws IOException {
+    public ResponseEntity<?> putMemberImages(@RequestParam("images") List<MultipartFile> images)
+        throws IOException {
         List<byte[]> data = new ArrayList<>();
 
         for (MultipartFile image : images) {
             byte[] imageData = image.getBytes();
-            if(imageData == null) break;
+            if (imageData == null) {
+                break;
+            }
             data.add(imageData);
         }
         memberService.putMemberImages(SecurityUtil.getCurrentDidAddress().get(), data);
         return new ResponseEntity<>("사진 교체에 성공했습니다.", HttpStatus.OK);
     }
-
 
 
     /**
@@ -143,8 +170,10 @@ public class MemberController {
      * @return
      */
     @PutMapping("/info")
-    public ResponseEntity<?> putMemberInfo(@RequestBody PutMemberInfoRequestDto putMemberInfoRequestDto) {
-        memberService.putMemberInfo(SecurityUtil.getCurrentDidAddress().get(), putMemberInfoRequestDto);
+    public ResponseEntity<?> putMemberInfo(
+        @RequestBody PutMemberInfoRequestDto putMemberInfoRequestDto) {
+        memberService.putMemberInfo(SecurityUtil.getCurrentDidAddress().get(),
+            putMemberInfoRequestDto);
         return new ResponseEntity<>("유저 정보 수정에 성공했습니다.", HttpStatus.OK);
     }
 
@@ -155,8 +184,10 @@ public class MemberController {
      * @return
      */
     @PutMapping("/filtering")
-    public ResponseEntity<?> putMemberFiltering(@RequestBody MemberFilteringDto memberFilteringDto) {
-        memberService.putMemberFiltering(SecurityUtil.getCurrentDidAddress().get(), memberFilteringDto);
+    public ResponseEntity<?> putMemberFiltering(
+        @RequestBody MemberFilteringDto memberFilteringDto) {
+        memberService.putMemberFiltering(SecurityUtil.getCurrentDidAddress().get(),
+            memberFilteringDto);
         return new ResponseEntity<>("유저 필터링 정보 수정에 성공했습니다.", HttpStatus.OK);
     }
 
@@ -167,8 +198,10 @@ public class MemberController {
      * @return
      */
     @PutMapping("/location")
-    public ResponseEntity<?> putMemberLocation(@RequestBody PutMemberLocationRequestDto putMemberLocationRequestDto) {
-        memberService.putMemberLocation(SecurityUtil.getCurrentDidAddress().get(), putMemberLocationRequestDto);
+    public ResponseEntity<?> putMemberLocation(
+        @RequestBody PutMemberLocationRequestDto putMemberLocationRequestDto) {
+        memberService.putMemberLocation(SecurityUtil.getCurrentDidAddress().get(),
+            putMemberLocationRequestDto);
         return new ResponseEntity<>("유저 위치 정보 수정에 성공했습니다.", HttpStatus.OK);
     }
 
@@ -191,7 +224,9 @@ public class MemberController {
      */
     @GetMapping("/certificate")
     public ResponseEntity<?> getMemberCertificate() {
-        return new ResponseEntity<>(memberService.getMemberCertificate(SecurityUtil.getCurrentDidAddress().get()), HttpStatus.OK);
+        return new ResponseEntity<>(
+            memberService.getMemberCertificate(SecurityUtil.getCurrentDidAddress().get()),
+            HttpStatus.OK);
     }
 
     /**
@@ -203,7 +238,8 @@ public class MemberController {
     @PutMapping("/certificate")
     public ResponseEntity<?> putMemberCertificate(@RequestBody MemberCertDto memberCertDto) {
         // 인증서 가져오는 정보... 프론트에서 가져오는게 맞을까
-        memberService.putMemberCertificate(SecurityUtil.getCurrentDidAddress().get(), memberCertDto);
+        memberService.putMemberCertificate(SecurityUtil.getCurrentDidAddress().get(),
+            memberCertDto);
         return new ResponseEntity<>("유저 인증정보 수정에 성공했습니다.", HttpStatus.OK);
     }
 
@@ -225,32 +261,41 @@ public class MemberController {
      * @return
      */
     @DeleteMapping("/interest")
-    public ResponseEntity<?> deleteInterest(@RequestBody DeleteInterestRequestDto deleteInterestRequestDto) {
+    public ResponseEntity<?> deleteInterest(
+        @RequestBody DeleteInterestRequestDto deleteInterestRequestDto) {
         memberService.deleteInterest(deleteInterestRequestDto.getInterestListId());
         return new ResponseEntity<>("관심사 삭제에 성공했습니다.", HttpStatus.OK);
     }
 
     /**
      * 관심사 새로 등록
+     *
      * @param postInterestRequestDto 관심사 정보 객체
      * @return
      */
     @PostMapping("/interest")
-    public ResponseEntity<?> addInterest(@RequestBody PostInterestRequestDto postInterestRequestDto) {
-        return new ResponseEntity<>(memberService.addInterest(SecurityUtil.getCurrentDidAddress().get(), postInterestRequestDto.getName()), HttpStatus.OK);
+    public ResponseEntity<?> addInterest(
+        @RequestBody PostInterestRequestDto postInterestRequestDto) {
+        return new ResponseEntity<>(
+            memberService.addInterest(SecurityUtil.getCurrentDidAddress().get(),
+                postInterestRequestDto.getName()), HttpStatus.OK);
     }
 
     /**
      * 좋아요 한 유저들 목록 가져오기
+     *
      * @return
      */
     @GetMapping("/liked")
-    public ResponseEntity<?> getLikedMembers(){
-        return new ResponseEntity<>(memberService.getLikedMembers(SecurityUtil.getCurrentDidAddress().get()), HttpStatus.OK);
+    public ResponseEntity<?> getLikedMembers() {
+        return new ResponseEntity<>(
+            memberService.getLikedMembers(SecurityUtil.getCurrentDidAddress().get()),
+            HttpStatus.OK);
     }
 
     /**
      * 유저 인증 정보 가져오기
+     *
      * @param memberId
      * @return
      */
