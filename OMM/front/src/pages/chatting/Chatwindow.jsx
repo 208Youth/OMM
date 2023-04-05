@@ -105,7 +105,7 @@ function ChatWindow() {
             setMessages([...readDto.payload]);
             setRoom(readDto.roomInfo);
             setOtherNickname(readDto.roomInfo.other.nickname);
-            setMyLastIndex(readDto.roomInfo.myLastSendIndex);
+            setLastchatindex(readDto.roomInfo.myLastSendIndex);
           },
         );
 
@@ -175,7 +175,7 @@ function ChatWindow() {
       );
     });
     setMessage('');
-    setMyLastIndex(myLastIndex + 1);
+    setLastchatindex(lastchatindex + 1);
   };
 
   const recvReadDto = (readIndex) => {

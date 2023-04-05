@@ -65,11 +65,7 @@ function Alert() {
     http({
       method: 'delete',
       url: '/matching/noti',
-      data: {
-        id : msg.id,
-        senderId : msg.sender.memberId,
-        createdTime: msg.createdTime
-      },
+      data: msg,
       headers: {
         // Authorization: import.meta.env.VITE_TOKEN,
         Authorization: `Bearer ${token}`,

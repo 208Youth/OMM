@@ -27,6 +27,11 @@ public class MemberController {
     private final MemberService memberService;
     private final AuthService authService;
 
+    @PostMapping("/nickname")
+    public ResponseEntity<?> changeNickname(@RequestBody NicknameRequestDto nicknameRequestDto){
+        memberService.changeNickname(SecurityUtil.getCurrentDidAddress().get(),nicknameRequestDto.getNickname());
+        return new ResponseEntity<>("닉네임 변경 성공", HttpStatus.OK);
+    }
     /**
      * 회원 신규 등록
      *
