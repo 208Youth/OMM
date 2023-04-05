@@ -15,11 +15,11 @@ import http from '../../api/nodeapi';
 function Signup() {
   const navigate = useNavigate();
   const [faceModal, setFaceModal] = useState(false);
-  const [faceComplete, setFaceComplete] = useState(false);
+  const [faceComplete, setFaceComplete] = useState(true);
   const [idenModal, setIdenModal] = useState(false);
-  const [idenComplete, setIdenComplete] = useState(false);
+  const [idenComplete, setIdenComplete] = useState(true);
   const [passwordModal, setPasswordModal] = useState(false);
-  const [passwordComplete, setPasswordComplete] = useState(false);
+  const [passwordComplete, setPasswordComplete] = useState(true);
   const [name, setName] = useState(null);
   const [year, setYear] = useState('1980');
   const [month, setMonth] = useState('1');
@@ -45,7 +45,7 @@ function Signup() {
 
   console.log(localStorage.getItem('DID'));
   if (localStorage.getItem('DID')) {
-    navigate('/main');
+    setTimeout(() => {navigate('/main');}, 3000)  
   }
   const sendInfo = () => {
     const info = {
@@ -120,8 +120,8 @@ function Signup() {
       .catch((err) => {
         console.log(err);
       });
-    navigate('/main');
-    console.log(img);
+      setAlertModal(true); 
+      setTimeout(() => {navigate('/main');}, 3000)  
   };
 
   useEffect(() => {
@@ -469,7 +469,7 @@ function Signup() {
                 </button>
               )}
               {faceComplete && idenComplete && passwordComplete && (
-                <button onClick={() => {signup(); setAlertModal(true);}} type="button" className="btn">
+                <button onClick={() => { signup(); }} type="button" className="btn">
                   회원 가입
                 </button>
               )}
