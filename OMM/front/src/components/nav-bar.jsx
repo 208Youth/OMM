@@ -42,7 +42,7 @@ function Navbar({
   const chatlistconnect = () => {
     const headers = {
       // Authorization: import.meta.env.VITE_TOKEN,
-      Authorization: token,
+      Authorization: `Bearer ${token}`,
     };
     // const ws = new SockJS('http://localhost:5000/api/chat');
     const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
@@ -78,6 +78,7 @@ function Navbar({
       headers,
       // 좋아요 할 사람 id
       JSON.stringify({ receiverId: id }),
+      // JSON.stringify({ receiverId: 503 }),
     );
     console.log(stompClient);
     // stompClient.disconnect();
