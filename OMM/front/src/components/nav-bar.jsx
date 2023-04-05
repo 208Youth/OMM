@@ -12,28 +12,53 @@ import http from '@/api/http.js';
 function Navbar({
   profileNav, mainNav, notiNav, chatlistNav, likesNav, id,
 }) {
-  let stompClient;
   const token = localStorage.getItem('accesstoken');
   const decoded = jwt_decode(token);
   const dispatch = useDispatch();
+  const [stompClient, setStompClient] = useState(null);
   /**
    * 채팅 알림, 좋아요 알림 useState
    */
   const [chatAlert, setChatAlert] = useState(false);
   const [notiAlert, setNotiAlert] = useState(false);
 
-  const mainconnect = async () => {
+  const mainconnect = () => {
     const headers = {
       // Authorization: import.meta.env.VITE_TOKEN,
       Authorization: `Bearer ${token}`,
     };
     // const ws = new SockJS('http://localhost:5000/api/matching');
     const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/matching`);
-    stompClient = Stomp.over(ws);
-    await stompClient.connect(
+    let client = Stomp.over(ws);
+    client.connect(
       headers,
       (frame) => {
         console.log('mainconnect');
+        client.subscribe(
+          `/sub/matching/chatalert/${decoded.sub}`,
+          (message) => {
+            /**
+             * TODO : 채팅 알림 있는지
+             * 안읽은 채팅 존재 여부 -> setChatAlert
+             */
+            if(message.alert) console.log('나 안읽은 채팅이 있다요')
+            setChatAlert(message.alert);
+          },
+          {},
+        );
+
+        client.subscribe(
+          `/sub/matching/notialert/${decoded.sub}`,
+          (message) => {
+            /**
+             * TODO : 알림 있는지
+             * 알림 존재 여부 -> setnotiAlert
+             */
+            if(message.alert) console.log('나 받은 알림이 있다요')
+            setNotiAlert(message.alert)
+          },
+          {},
+        );
       },
       (error) => {
         // 연결이 끊어졌을 때 재연결 시도 부분
@@ -46,20 +71,45 @@ function Navbar({
         // }
       },
     );
-    alertConnect(headers);
+    setStompClient(client);
   };
-  const chatlistconnect = async () => {
+  const chatlistconnect = () => {
     const headers = {
       // Authorization: import.meta.env.VITE_TOKEN,
       Authorization: `Bearer ${token}`,
     };
     // const ws = new SockJS('http://localhost:5000/api/chat');
     const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
-    stompClient = Stomp.over(ws);
-    await stompClient.connect(
+    let client = Stomp.over(ws);
+    client.connect(
       headers,
       (frame) => {
         console.log('chatlistconnect');
+        client.subscribe(
+          `/sub/matching/chatalert/${decoded.sub}`,
+          (message) => {
+            /**
+             * TODO : 채팅 알림 있는지
+             * 안읽은 채팅 존재 여부 -> setChatAlert
+             */
+            if(message.alert) console.log('나 안읽은 채팅이 있다요')
+            setChatAlert(message.alert);
+          },
+          {},
+        );
+
+        client.subscribe(
+          `/sub/matching/notialert/${decoded.sub}`,
+          (message) => {
+            /**
+             * TODO : 알림 있는지
+             * 알림 존재 여부 -> setnotiAlert
+             */
+            if(message.alert) console.log('나 받은 알림이 있다요')
+            setNotiAlert(message.alert)
+          },
+          {},
+        );
       },
       (error) => {
         // 연결이 끊어졌을 때 재연결 시도 부분
@@ -72,7 +122,7 @@ function Navbar({
         // }
       },
     );
-    alertConnect(headers);
+    setStompClient(client);
   };
 
   const sendMatch = () => {
@@ -83,7 +133,7 @@ function Navbar({
       Authorization: `Bearer ${token}`,
     };
     console.log(stompClient);
-    stompClient?.send(
+    stompClient.send(
       '/pub/matching/noti',
       headers,
       // 좋아요 할 사람 id
@@ -128,31 +178,7 @@ function Navbar({
     stompClient.connect(
       headers,
       (frame) => {
-        stompClient.subscribe(
-          `/sub/matching/chatalert/${decoded.sub}`,
-          (message) => {
-            /**
-             * TODO : 채팅 알림 있는지
-             * 안읽은 채팅 존재 여부 -> setChatAlert
-             */
-            if(message.alert) console.log('나 안읽은 채팅이 있다요')
-            setChatAlert(message.alert);
-          },
-          {},
-        );
-
-        stompClient.subscribe(
-          `/sub/matching/notialert/${decoded.sub}`,
-          (message) => {
-            /**
-             * TODO : 알림 있는지
-             * 알림 존재 여부 -> setnotiAlert
-             */
-            if(message.alert) console.log('나 받은 알림이 있다요')
-            setNotiAlert(message.alert)
-          },
-          {},
-        );
+        
       },
       (error) => {
       },
