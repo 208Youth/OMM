@@ -83,7 +83,7 @@ function Navbar({
       Authorization: `Bearer ${token}`,
     };
     console.log(stompClient);
-    stompClient.send(
+    stompClient?.send(
       '/pub/matching/noti',
       headers,
       // 좋아요 할 사람 id
