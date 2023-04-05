@@ -159,17 +159,15 @@ function FaceRecog({ setStep }) {
         drawBox.draw(canvas);
         if (result._distance > 0.4 || result._label === 'unknown') {
           setRecog(true);
-          setisRight(false);
           console.log('다른사람인디.');
-          setNotice('얼굴인증에 실패하였습니다.');
-        } else {
+        } else if (result.label === myinfo.didAddress) {
           console.log(result.label, result._distance);
           setRecog(true);
           setisRight(true);
           setNotice('인증 완료!');
-          navigate('/loading');
-          setTimeout(() => {
-          }, 1000);
+        } else {
+          setRecog(true);
+          console.log('다른사람인디.');
         }
       });
     };
@@ -206,23 +204,38 @@ function FaceRecog({ setStep }) {
       const stream = videoRef.current.srcObject;
       const tracks = stream.getTracks();
 
+      const video = document.querySelector('video');
+      const canvas = document.querySelector('canvas');
       setTimeout(() => {
-        const video = document.querySelector('video');
-        const canvas = document.querySelector('canvas');
+        tracks.forEach((track) => {
+          track.stop();
+        });
         video.remove();
         canvas.remove();
-        setTimeout(() => {
-          tracks.forEach((track) => {
-            track.stop();
-          });
-        }, 2000);
-        if (whatpage === 'chat') {
-          console.log('대기로 이동');
-          navigate('/loading');
-        } else {
-          setStep(true);
-        }
-      }, 3000);
+      }, 2000);
+      if (whatpage === 'chat') {
+        console.log('대기로 이동');
+        navigate('/loading');
+      } else {
+        setStep(true);
+      }
+    } else if (recog && !isRight) {
+      const stream = videoRef.current.srcObject;
+      const tracks = stream.getTracks();
+
+      const video = document.querySelector('video');
+      const canvas = document.querySelector('canvas');
+      setTimeout(() => {
+        tracks.forEach((track) => {
+          track.stop();
+        });
+        video.remove();
+        canvas.remove();
+      }, 2000);
+      setNotice('인증에 실패하였습니다.');
+      setTimeout(() => {
+        navigate('/main');
+      }, 2000);
     }
   }, [recog]);
 
