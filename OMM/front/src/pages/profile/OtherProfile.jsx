@@ -274,17 +274,7 @@ function OtherProfile() {
                   </div>
                 </div>
                 <hr />
-                <div className="flex justify-between m-3">
-                  <div className="">
-                    <span>고등학교</span>
-                  </div>
-                  <div>
-                    <div className="flex items-center">
-                      <span className="">{basicInfomation.highschool}</span>
 
-                    </div>
-                  </div>
-                </div>
                 <hr />
                 <div className="flex justify-between m-3">
                   <div className="">
