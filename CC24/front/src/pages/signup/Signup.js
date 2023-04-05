@@ -7,6 +7,7 @@ import { EthrDID } from 'ethr-did';
 import FaceRecogModal from './FaceRecogModal';
 import IdenModal from './IdenModal';
 import PasswordModal from './PasswordModal';
+import AlertModal from '../../components/AlertModal';
 import { userInfo, idenVC, certInfo } from '../../store/userSlice';
 import { useNavigate } from 'react-router-dom';
 import http from '../../api/nodeapi';
@@ -26,7 +27,21 @@ function Signup() {
   const [gender, setGender] = useState(null);
   const [img, setImg] = useState(null);
   const dispatch = useDispatch();
+  const [alertModal, setAlertModal] = useState(false);
   const id = useSelector((state) => state.user.id);
+  const customStyles = {
+    content: {
+      borderRadius: '20px',
+      width:'300px',
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+      overflow: 'hidden',
+    },
+  };
 
   console.log(localStorage.getItem('DID'));
   if (localStorage.getItem('DID')) {
@@ -195,6 +210,19 @@ function Signup() {
               setPasswordComplete(true);
             }
           }}
+        />
+      </Modal>
+      <Modal
+        isOpen={alertModal}
+        onRequestClose={() => setAlertModal(false)}
+        ariaHideApp={false}
+        overlayClassName="Overlay"
+        style={customStyles}
+      >
+        <AlertModal
+          setAlertModal={setAlertModal}
+          alertTitle="회원가입 완료"
+          alertMessage="환영합니다"
         />
       </Modal>
       <div className="flex-col w-80 mx-auto">
@@ -441,7 +469,7 @@ function Signup() {
                 </button>
               )}
               {faceComplete && idenComplete && passwordComplete && (
-                <button onClick={signup} type="button" className="btn">
+                <button onClick={() => {signup(); setAlertModal(true);}} type="button" className="btn">
                   회원 가입
                 </button>
               )}

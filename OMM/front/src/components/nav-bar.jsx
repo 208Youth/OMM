@@ -269,7 +269,7 @@ function Navbar({
         </div>
         <div className="menu-item">
           {!profileNav && (
-            <Link to="/Myprofile" className="menu-item">
+            <Link to="/myprofile" className="menu-item">
               <i className="bi bi-person transition duration-300 hover:scale-125" />
             </Link>
           )}

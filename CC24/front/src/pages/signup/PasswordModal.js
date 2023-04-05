@@ -1,7 +1,6 @@
 /* eslint-disable */
 import React, { useState } from 'react';
-import CloseBtn from '../../assets/CloseBtn.svg';
-import './PasswordModal.css';
+import CloseBtn from '../../assets/CloseBtn.svg';;
 
 function PasswordModal({ setPasswordModal, setPasswordComplete }) {
   const [pw, setPw] = useState('');
