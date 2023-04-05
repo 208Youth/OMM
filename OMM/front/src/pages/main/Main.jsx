@@ -25,6 +25,22 @@ function Main() {
   }
   const token = localStorage.getItem('accesstoken');
   console.log(people);
+  const firstPerson = async () => {
+    await http({
+      method: 'get',
+      url: `/recommend/member/${firstperson}`,
+      headers: {
+        // Authorization: import.meta.env.VITE_TOKEN,
+        Authorization: `Bearer ${token}`,
+      },
+    }).then((res) => {
+      console.log('첫번째 사람 정보', res);
+      setImage(res.data.imageList);
+      setName(res.data.nickname);
+      setAge(res.data.age);
+      setId(res.data.memberId);
+    });
+  };
   useEffect(() => {
     // 추천알고리즘 으로 나온 상대방 id 리스트 axios 요청
     console.log(localStorage.getItem('accesstoken'));
@@ -41,11 +57,13 @@ function Main() {
       },
     })
       .then((res) => {
+        console.log(res);
         console.log(res.data.userList);
         setUserList(res.data.userList);
         console.log(userlist);
         dispatch(lists(res.data.userList));
         console.log(firstperson);
+        firstPerson();
       })
       .catch((err) => {
         console.log(err);
@@ -54,24 +72,6 @@ function Main() {
         }
       });
   }, []);
-
-  useEffect(() => {
-    http({
-      method: 'get',
-      url: `/recommend/member/${firstperson}`,
-      headers: {
-        // Authorization: import.meta.env.VITE_TOKEN,
-        Authorization: `Bearer ${token}`,
-      },
-    }).then((res) => {
-      console.log('첫번째 사람 정보', res);
-      setImage(res.data.imageList);
-      setName(res.data.nickname);
-      setAge(res.data.age);
-      setId(res.data.memberId);
-    });
-  }, [firstperson]);
-
   const dislike = async function () {
     const data = {
       sender_id: id,
@@ -95,22 +95,28 @@ function Main() {
   const toOther = function () {
     console.log('남의집');
     navigate(`/OtherProfile/${id}`);
-  }
+  };
   return (
     <div className="flex flex-col">
-      <div onClick={() => { dislike(); }} className="z-20 w-16 h-16 transition duration-500 hover:scale-110 bg-red-100 rounded-full shadow-md justify-center mx-auto mt-5">
+      <div
+        onClick={() => {
+          dislike();
+        }}
+        className="z-20 w-16 h-16 transition duration-500 hover:scale-110 bg-red-100 rounded-full shadow-md justify-center mx-auto mt-5"
+      >
         <img
           className="w-10 h-10 mx-auto mt-3 flex"
           src="/reverseheart.png"
           alt=""
         />
       </div>
-      <div className="" onClick={() => {toOther()}}>
-        <Pslider
-          mainImg={img}
-          name={name}
-          age={age}
-        />
+      <div
+        className=""
+        onClick={() => {
+          toOther();
+        }}
+      >
+        <Pslider mainImg={img} name={name} age={age} />
       </div>
       {/* <Navbar mainNav={firstperson} /> */}
       <Navbar mainNav id={id} />
