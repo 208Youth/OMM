@@ -9,8 +9,8 @@ function ChatList() {
   const token = localStorage.getItem('accesstoken');
   const navigate = useNavigate();
 
-  function getChatList() {
-    http({
+  async function getChatList() {
+    await http({
       method: 'get',
       url: `/chat/room`,
       headers: {
