@@ -1,13 +1,11 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
-import axios from 'axios';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import Modal from 'react-modal';
-import { useLocation, Link } from 'react-router-dom';
-import chat from '../../api/chat';
-import http from '../../api/http';
-import BottomModal from './BottomModal';
-import ReportModal from './ReportModal';
+import { useLocation, Link } from 'react-router-dom';;
+import http from '@/api/http.js';
+import BottomModal from '@/pages/chatting/BottomModal.jsx';
+import ReportModal from '@/pages/chatting/ReportModal.jsx';
 import './ChatModal.css';
 
 function ChatWindow() {

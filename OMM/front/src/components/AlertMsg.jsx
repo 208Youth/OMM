@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import Modal from 'react-modal';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { chatInfo } from '../store/chatSlice';
-import Img from '../assets/testprofile.png';
+import { chatInfo } from '@/store/chatSlice.jsx';
+import Img from '@/assets/testprofile.png';
 
 function AlertMsg({ msg, deletemsg }) {
   const [modalIsOpen, setIsOpen] = useState(false);

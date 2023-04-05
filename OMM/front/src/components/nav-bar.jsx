@@ -5,8 +5,8 @@ import Stomp from 'stompjs';
 import './nav-bar.scss';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { likey } from '../store/recSlice';
-import http from '../api/http';
+import { likey } from '@/store/recSlice.jsx';
+import http from '@/api/http.js';
 
 function Navbar({
   profileNav, mainNav, notiNav, chatlistNav, likesNav, id,
