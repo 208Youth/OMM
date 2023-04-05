@@ -167,6 +167,9 @@ function FaceRecog({ setStep }) {
           setRecog(true);
           setisRight(true);
           setNotice('인증 완료!');
+          navigate('/loading');
+          setTimeout(() => {
+          }, 1000);
         }
       });
     };
