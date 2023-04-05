@@ -8,8 +8,8 @@ function ChatRoom({ chat, moveTo }) {
   useEffect(() => {
     const now = new Date();
     const compareTime = new Date(chat.lastMsgTime);
-    const timeDiff = now.getTime() - compareTime.getTime(); // 밀리초 단위의 차이
-    const minutesDiff = Math.floor(timeDiff / 1000 / 60); // 분 단위의 차이
+    let timeDiff = now.getTime() - compareTime.getTime() + 9 * 60 * 1000; // 밀리초 단위의 차이
+    let minutesDiff = Math.floor(timeDiff / 1000 / 60); // 분 단위의 차이
     if (minutesDiff >= 60) {
       const hourDiff = Math.floor(minutesDiff / 60);
       if (hourDiff >= 24 && hourDiff <= 72) {
