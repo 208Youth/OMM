@@ -147,8 +147,9 @@ public class MemberController {
      * @throws IOException
      */
     @PutMapping("/img")
-    public ResponseEntity<?> putMemberImages(@RequestParam("images") List<MultipartFile> images)
+    public ResponseEntity<?> putMemberImages(@RequestPart("images") List<MultipartFile> images)
         throws IOException {
+
         List<byte[]> data = new ArrayList<>();
 
         for (MultipartFile image : images) {
