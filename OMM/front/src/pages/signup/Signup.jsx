@@ -10,7 +10,7 @@ import SignupComplete from './SignupComplete';
 import FaceRecog from './FaceRecog';
 
 function Signup() {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(1);
 
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -39,15 +39,6 @@ function Signup() {
 
   return (
     <div className="bg-white w-[22.5rem] h-[48.75rem]">
-      {step === 0 && (
-        <FaceRecog
-          setStep={(res) => {
-            if (res) {
-              setStep(1);
-            }
-          }}
-        />
-      )}
       {step === 1 && <MoreInfo setStep={setStep} />}
       {step === 2 && <MoreInfo2 setStep={setStep} />}
       {step === 3 && <MoreInfo3 setStep={setStep} />}
