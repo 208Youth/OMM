@@ -450,7 +450,7 @@ function MyProfile({ profileNav }) {
                 </div>
               </div>
 
-              <span className="text-3xl ml-2">{user.nickname}</span>
+              <span className="text-3xl ml-2">{basicInfomation.nickname}</span>
               <span>
                 {' '}
                 {basicInfomation.age}
