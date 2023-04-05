@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import Modal from 'react-modal';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { chatInfo } from '@/store/chatSlice.jsx';
-import Img from '@/assets/testprofile.png';
+import { chatInfo } from '../store/chatSlice';
 
 function AlertMsg({ msg, deletemsg }) {
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -32,13 +31,12 @@ function AlertMsg({ msg, deletemsg }) {
   };
   return (
     <div className="w-[312px] h-[4.7rem] flex p-3 bg-white bg-opacity-60 text-xs rounded-lg mb-1">
-      <div className="w-10 h-10 self-center rounded-full">
-        {/* <img src={msg.sender.imageContent} alt="사진" /> */}
-        <img src={Img} alt="사진" />
+      <div className="w-10 h-10 self-center rounded-full object-cover">
+        <img src={msg.sender.imageContent} alt="사진" />
       </div>
       <div className="self-center w-40 ml-3 font-sans">
-        <span className="font-sans font-bold text-ellipsis overflow-hidden ...">
-          da;sdfj;alsdkfjaskld fjka;fj asl;djf;akjdfjkasf
+        <span className="font-sans font-bold inline-block whitespace-nowrap overflow-hidden text-ellipsis">
+          {msg.sender.nickname}
         </span>
         님이 당신에게 옴
       </div>
