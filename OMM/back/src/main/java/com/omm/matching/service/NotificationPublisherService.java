@@ -1,7 +1,6 @@
 package com.omm.matching.service;
 
 import com.omm.matching.model.dto.response.NotificationResponseDto;
-import com.omm.matching.model.entity.Notification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
