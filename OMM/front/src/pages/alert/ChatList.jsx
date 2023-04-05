@@ -9,10 +9,10 @@ function ChatList() {
   const token = localStorage.getItem('accesstoken');
   const navigate = useNavigate();
 
-  async function getChatList() {
-    await http({
+  function getChatList() {
+    http({
       method: 'get',
-      url: '/chat/room',
+      url: `/chat/room`,
       headers: {
         // Authorization: import.meta.env.VITE_TOKEN,
         Authorization: `Bearer ${token}`,
@@ -28,7 +28,7 @@ function ChatList() {
   }
 
   const gotoChatwindow = (id) => {
-    navigate(`/Chatwindow/:${id}`);
+    navigate(`/Chatwindow/${id}`);
     console.log('가자');
   };
 
