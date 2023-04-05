@@ -8,8 +8,8 @@ function ChatRoom({ chat, moveTo }) {
   useEffect(() => {
     const now = new Date();
     const compareTime = new Date(chat.lastMsgTime);
-    const timeDiff = now.getTime() - compareTime.getTime(); // 밀리초 단위의 차이
-    const minutesDiff = Math.floor(timeDiff / 1000 / 60); // 분 단위의 차이
+    let timeDiff = now.getTime() - compareTime.getTime() + 9 * 60 * 1000; // 밀리초 단위의 차이
+    let minutesDiff = Math.floor(timeDiff / 1000 / 60); // 분 단위의 차이
     if (minutesDiff >= 60) {
       const hourDiff = Math.floor(minutesDiff / 60);
       if (hourDiff >= 24 && hourDiff <= 72) {
@@ -51,7 +51,7 @@ function ChatRoom({ chat, moveTo }) {
       className="w-[312px] h-[4.7rem] flex p-3 bg-white bg-opacity-60 text-xs rounded-lg mb-1"
     >
       <div className="w-10 h-10 self-center rounded-full">
-        <img src={chat.other.image} alt="사진" />
+        <img src={`data:image/png;base64,${chat.other.image}`} alt="사진" />
         {/* <img src={Img} alt="사진" /> */}
       </div>
       <div className="self-center w-40 ml-3">
