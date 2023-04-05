@@ -11,21 +11,6 @@
 
 } */
 
-.profileinfo {
-
-  position:relative;
-  top: 30rem;
-  margin:  10rem auto;
-  width: 24rem;
-  /* height: 500px; */
-  border-radius: 30px;
-  background-color: aliceblue;
-  border:  1px solid;
-  text-align: left;
-  box-sizing: border-box;
-  z-index: 4;
-  
-}
 
 .myprofileinfo {
 

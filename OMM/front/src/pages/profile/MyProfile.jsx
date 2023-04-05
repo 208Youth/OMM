@@ -1,32 +1,26 @@
 // 변경
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import './Pslider.css';
 // import './Profile.css';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
 import Modal from 'react-modal';
 import './MyProfile.css';
-import axios from 'axios';
-import { useSelector } from 'react-redux';
 import ImageUploader from './ImageUploader';
-import CloseBtn from '../../assets/CloseBtn.svg';
 import pencil from '../../assets/pencil.svg';
 import imagesetting from '../../assets/imagesetting.svg';
-import estate_yes from '../../assets/estate_yes.svg';
-import estate_no from '../../assets/estate_no.svg';
-import car_yes from '../../assets/car_yes.svg';
-import car_no from '../../assets/car_no.svg';
-import job_yes from '../../assets/job_yes.svg';
-import job_no from '../../assets/job_no.svg';
-import income_yes from '../../assets/income_yes.svg';
-import income_no from '../../assets/income_no.svg';
-import health_yes from '../../assets/health_yes.svg';
-import health_no from '../../assets/health_no.svg';
-import university_yes from '../../assets/university_yes.svg';
-import university_no from '../../assets/university_no.svg';
-import certificate_yes from '../../assets/certificate_yes.svg';
-import certificate_no from '../../assets/certificate_no.svg';
+import estateYes from '../../assets/estate_yes.svg';
+import estateNo from '../../assets/estate_no.svg';
+import jobYes from '../../assets/job_yes.svg';
+import jobNo from '../../assets/job_no.svg';
+import incomeYes from '../../assets/income_yes.svg';
+import incomeNo from '../../assets/income_no.svg';
+import healthYes from '../../assets/health_yes.svg';
+import healthNo from '../../assets/health_no.svg';
+import universityYes from '../../assets/university_yes.svg';
+import universityNo from '../../assets/university_no.svg';
+import certificateYes from '../../assets/certificate_yes.svg';
+import certificateNo from '../../assets/certificate_no.svg';
 import location from '../../assets/location.svg';
 import Pslider from '../../components/Pslider';
 import Navbar from '../../components/nav-bar';
@@ -58,9 +52,7 @@ function InterestList({ interest }) {
 }
 
 function MyProfile({ profileNav }) {
-  profileNav = true;
   const certinfo = {
-    university: false,
     university: false,
     job: false,
     certificate: false,
@@ -106,21 +98,23 @@ function MyProfile({ profileNav }) {
   //   height_max: 100,
   // }];
   const whereLoca = async () => {
-    await fetch('https://dapi.kakao.com/v2/local/geo/coord2address.json?x=126.8115825&y=35.205739&input_coord=WGS84')
+    await fetch(
+      'https://dapi.kakao.com/v2/local/geo/coord2address.json?x=126.8115825&y=35.205739&input_coord=WGS84',
+    )
       .then((res) => {
         console.log('장소가져옴', res);
-      }).catch((err) => {
+      })
+      .catch((err) => {
         console.log('실패', err);
       });
   };
-  const navigate = useNavigate();
   const [MymodalIsOpen, setMyIsOpen] = useState(false);
   const [MymodalIsOpen2, setMyIsOpen2] = useState(false);
   const [MymodalIsOpen3, setMyIsOpen3] = useState(false);
   const [uploadImg, setuploadImg] = useState(false);
   // const memberId = localStorage.getItem('member_id');\
   const [disabled, setDisabled] = useState(true);
-  const [new_pr, setNew_pr] = useState('');
+  const [newPr, setnewPr] = useState('');
 
   const token = localStorage.getItem('accesstoken');
 
@@ -151,11 +145,10 @@ function MyProfile({ profileNav }) {
   const closeImageModal = () => {
     setuploadImg(false);
   };
-  const [new_certinfo, setCert] = useState(certinfo);
+  const [newCertinfo, setCert] = useState(certinfo);
   const [interest, setInterest] = useState([]);
   const [basicInfomation, setInfo] = useState([]);
   const [filterInfomation, setFilter] = useState([]);
-  const [profileImg, setProfileImg] = useState([]);
 
   // const [isHovered, setIsHovered] = useState(false);
   // const handleMouseEnter = () => {
@@ -164,7 +157,7 @@ function MyProfile({ profileNav }) {
   // const handleMouseLeave = () => {
   //   setIsHovered(false);
   // };
-  // new_certinfo인지 certinfo인지 axios주고받으면서 확인
+  // newCertinfo인지 certinfo인지 axios주고받으면서 확인
   // const GetuserInfo = () => {
   //   http
   //   .get(`/api/member/${memberId}`)
@@ -179,11 +172,11 @@ function MyProfile({ profileNav }) {
     })
       .then((res) => {
         console.log(res);
-        setInfo(res.data);
+        setInfo('내정보', res.data);
       })
       .catch((err) => {
         console.log(err);
-        console.log('왜자꾸안되');
+        console.log('내기본정보 실패');
         console.log();
       });
   }
@@ -198,7 +191,7 @@ function MyProfile({ profileNav }) {
     })
       .then((res) => {
         console.log(res);
-        setCert(res.data);
+        setCert('인증정보', res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -211,15 +204,15 @@ function MyProfile({ profileNav }) {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      data: { pr: new_pr },
+      data: { pr: newPr },
     })
       .then((res) => {
         console.log(res);
-        console.log(new_pr);
+        console.log('새로 보낼 정보', newPr);
       })
       .catch((err) => {
-        console.log(new_pr);
-        console.log(typeof new_pr);
+        console.log(newPr);
+        console.log(typeof newPr);
         console.log(err);
       });
   }
@@ -234,7 +227,7 @@ function MyProfile({ profileNav }) {
     })
       .then((res) => {
         console.log(res);
-        setFilter(res.data);
+        setFilter('새로 보낼 필터 정보', res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -269,13 +262,13 @@ function MyProfile({ profileNav }) {
   }, []);
 
   async function toCert() {
-    await http
-      .get('/sign/certificate', {
-        headers: {
-          // Authorization: import.meta.env.VITE_TOKEN,
-          Authorization: `Bearer ${token}`, // TODO: 임시 토큰 부여
-        },
-      })
+    await http({
+      method: 'get',
+      url: '/sign/certificate',
+      headers: {
+        Authorization: `Bearer ${token}`, // TODO: 임시 토큰 부여
+      },
+    })
       .then((res) => {
         console.log(res);
         window.location.href = res.data;
@@ -389,7 +382,7 @@ function MyProfile({ profileNav }) {
   // 컴포넌트가 처음 마운트될 때만 useEffect 콜백 함수가 호출되고,
   // 그 이후에는 호출되지 않습니다.
   return (
-    <div>
+    <div className="relative">
       <div className="text-center">
         <Modal
           className="MyinfoModal"
@@ -435,12 +428,11 @@ function MyProfile({ profileNav }) {
               <ImageUploader setModal={closeImageModal} />
             </Modal>
           </div>
-
-          <div className="profileinfo">
+          <div className="mx-auto sm:w-[37rem] w-96 rounded-3xl bg-white text-left z-10 shadow-lg border-t">
             <div className="infodetail">
               <div className="text-right">
                 <div
-                  className="inline-block object-right"
+                  className="inline-block object-right mt-5"
                   onClick={() => {
                     openImageModal();
                   }}
@@ -451,10 +443,7 @@ function MyProfile({ profileNav }) {
               </div>
 
               <span className="text-3xl ml-2">{basicInfomation.nickname}</span>
-              <span>
-                {' '}
-                {basicInfomation.age}
-              </span>
+              <span> {basicInfomation.age}</span>
               <div className="text-slate-500 text-sm ml-2">
                 <span className="inline-block">
                   <img src={location} alt="" width={10} />
@@ -467,19 +456,18 @@ function MyProfile({ profileNav }) {
               <div>
                 <hr className="thickhr" />
                 <div className="my-1">
-                  <div className="text-2xl m-3">자기소개</div>
-                  {/* 아이콘을 누르면 input이 가능하게 바꾸기 */}
+                  <div className="text-2xl m-3 text-[#364C63]">자기소개</div>
                   <div />
                   <div>
                     <textarea
                       maxLength={40}
                       disabled={disabled}
-                      className=" break-words h-20 resize-none overflow-hidden focus:ring-2 focus:ring-blue-300 text-slate-600 text-sm bg-transparent border-none outline-none w-full"
+                      className=" break-words h-20 resize-none overflow-hidden focus:ring-2 focus:ring-blue-300 text-slate-600 text-sm bg-transparent border-none outline-none w-full font-sans"
                       type="text"
-                      value={new_pr}
+                      value={newPr}
                       onChange={(e) => {
-                        setNew_pr(e.target.value);
-                        console.log(new_pr);
+                        setnewPr(e.target.value);
+                        console.log(newPr);
                       }}
                     />
                   </div>
@@ -487,35 +475,45 @@ function MyProfile({ profileNav }) {
                     {disabled && (
                       <button>
                         {' '}
-                        <img onClick={handleClick} src={pencil} alt="" />
+                        <img
+                          onClick={handleClick}
+                          src={pencil}
+                          alt=""
+                          aria-hidden
+                        />
                       </button>
                     )}
                     {!disabled && (
                       <button>
                         {' '}
-                        <span onClick={sendPr}>변경완료</span>
+                        <span onClick={sendPr} aria-hidden>
+                          변경완료
+                        </span>
                       </button>
                     )}
                   </span>
                 </div>
                 <hr className="thickhr" />
                 <div className="font-light">
-                  <div className="text-2xl m-3 font-light">내 정보</div>
+                  <div className="text-2xl m-3 font-light mb-8 text-[#364C63]">
+                    내 정보
+                  </div>
                   <div className="flex justify-between m-3">
                     <div className="">
-                      <span>키</span>
+                      <span className="font-sans font-semibold text-black">
+                        키
+                      </span>
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="hover:cursor-pointer">
-                          {basicInfomation.height}
-                          {' '}
-                          cm
+                        <span className="hover:cursor-pointer font-sans font-semibold text-black">
+                          {basicInfomation.height} cm
                         </span>
                         <div
                           onClick={() => {
                             openMyModal();
                           }}
+                          aria-hidden
                         >
                           <img src={userarrow} alt="" className="w-3 ml-2" />
                         </div>
@@ -526,18 +524,20 @@ function MyProfile({ profileNav }) {
 
                   <div className="flex justify-between m-3">
                     <div className="">
-                      <span>음주 스타일</span>
+                      <span className="font-sans font-semibold text-black">
+                        음주 스타일
+                      </span>
                     </div>
                     <div>
                       <div className="flex items-center">
-                        {/* <span className="hover:cursor-pointer">{basicInfomation.drinking_style}</span> */}
-                        <span className="hover:cursor-pointer">
+                        <span className="hover:cursor-pointer font-sans font-semibold text-black">
                           {drinkingStyleText}
                         </span>
                         <div
                           onClick={() => {
                             openMyModal();
                           }}
+                          aria-hidden
                         >
                           <img src={userarrow} alt="" className="w-3 ml-2" />
                         </div>
@@ -547,15 +547,20 @@ function MyProfile({ profileNav }) {
                   <hr />
                   <div className="flex justify-between m-3">
                     <div className="">
-                      <span>고등학교</span>
+                      <span className="font-sans font-semibold text-black">
+                        고등학교
+                      </span>
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="">{basicInfomation.highschool}</span>
+                        <span className="font-sans font-semibold text-black">
+                          {basicInfomation.highschool}
+                        </span>
                         <div
                           onClick={() => {
                             openMyModal();
                           }}
+                          aria-hidden
                         >
                           <img src={userarrow} alt="" className="w-3 ml-2" />
                         </div>
@@ -565,17 +570,20 @@ function MyProfile({ profileNav }) {
                   <hr />
                   <div className="flex justify-between m-3">
                     <div className="">
-                      <span>연락 스타일</span>
+                      <span className="font-sans font-semibold text-black">
+                        연락 스타일
+                      </span>
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="hover:cursor-pointer">
+                        <span className="hover:cursor-pointer font-sans font-semibold text-black">
                           {contactStyleText}
                         </span>
                         <div
                           onClick={() => {
                             openMyModal();
                           }}
+                          aria-hidden
                         >
                           <img src={userarrow} alt="" className="w-3 ml-2" />
                         </div>
@@ -585,17 +593,20 @@ function MyProfile({ profileNav }) {
                   <hr />
                   <div className="flex justify-between m-3">
                     <div className="">
-                      <span>흡연 스타일</span>
+                      <span className="font-sans font-semibold text-black">
+                        흡연 스타일
+                      </span>
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="hover:cursor-pointer">
+                        <span className="hover:cursor-pointer font-sans font-semibold text-black">
                           {smokingStyleText}
                         </span>
                         <div
                           onClick={() => {
                             openMyModal();
                           }}
+                          aria-hidden
                         >
                           <img src={userarrow} alt="" className="w-3 ml-2" />
                         </div>
@@ -605,17 +616,20 @@ function MyProfile({ profileNav }) {
                   <hr />
                   <div className="flex justify-between m-3">
                     <div className="">
-                      <span>MBTI</span>
+                      <span className="font-sans font-semibold text-black">
+                        MBTI
+                      </span>
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="hover:cursor-pointer">
+                        <span className="hover:cursor-pointer font-sans font-semibold text-black">
                           {basicInfomation.MBTI}
                         </span>
                         <div
                           onClick={() => {
                             openMyModal();
                           }}
+                          aria-hidden
                         >
                           <img src={userarrow} alt="" className="w-3 ml-2" />
                         </div>
@@ -625,16 +639,21 @@ function MyProfile({ profileNav }) {
                   <hr />
                   <div className="flex justify-between m-3">
                     <div className="">
-                      <span>관심사</span>
+                      <span className="font-sans font-semibold text-black">
+                        관심사
+                      </span>
                     </div>
                     <div
                       onClick={() => {
                         openMyModal3();
                       }}
+                      aria-hidden
                     >
                       <div className="flex items-center hover:cursor-pointer">
-                        <span className="hover:cursor-pointer">{}</span>
-                        설정하기
+                        <span className="hover:cursor-pointer font-sans font-semibold text-black hover:text-[#F59FB1]">
+                          설정
+                        </span>
+
                         <div>
                           <img src={userarrow} alt="" className="w-3 ml-2" />
                         </div>
@@ -644,15 +663,20 @@ function MyProfile({ profileNav }) {
                   <hr />
                   <div className="flex justify-between m-3">
                     <div className="">
-                      <span>반려동물</span>
+                      <span className="font-sans font-semibold text-black">
+                        반려동물
+                      </span>
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="">{petText}</span>
+                        <span className="font-sans font-semibold text-black">
+                          {petText}
+                        </span>
                         <div
                           onClick={() => {
                             openMyModal();
                           }}
+                          aria-hidden
                         >
                           <img src={userarrow} alt="" className="w-3 ml-2" />
                         </div>
@@ -660,17 +684,22 @@ function MyProfile({ profileNav }) {
                     </div>
                   </div>
                   <hr />
-                  <div className="flex justify-between m-3">
+                  <div className="flex justify-between m-3 mb-8">
                     <div className="">
-                      <span>병역여부</span>
+                      <span className="font-sans font-semibold text-black">
+                        병역여부
+                      </span>
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="">{militaryText}</span>
+                        <span className="font-sans font-semibold text-black">
+                          {militaryText}
+                        </span>
                         <div
                           onClick={() => {
                             openMyModal();
                           }}
+                          aria-hidden
                         >
                           <img src={userarrow} alt="" className="w-3 ml-2" />
                         </div>
@@ -681,21 +710,20 @@ function MyProfile({ profileNav }) {
                 </div>
                 <hr className="thickhr" />
 
-                <div className="text-2xl m-3 ">선호하는 상대정보</div>
-                <div className="flex justify-between m-3">
+                <div className="text-2xl m-3 text-[#364C63]">
+                  선호하는 상대정보
+                </div>
+                <div className="flex justify-between m-3 mt-8">
                   <div className="">
-                    <span>나이범위</span>
+                    <span className="font-sans font-semibold text-black">
+                      나이범위
+                    </span>
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="hover:cursor-pointer">
+                      <span className="hover:cursor-pointer font-sans font-semibold text-black">
                         {' '}
-                        {filterInfomation.age_min}
-                        {' '}
-                        -
-                        {' '}
-                        {filterInfomation.age_max}
-                        {' '}
+                        {filterInfomation.age_min} - {filterInfomation.age_max}{' '}
                         살
                       </span>
                       <div>
@@ -707,16 +735,14 @@ function MyProfile({ profileNav }) {
                 <hr />
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span>키범위</span>
+                    <span className="font-sans font-semibold text-black">
+                      키범위
+                    </span>
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="">
-                        {filterInfomation.height_min}
-                        {' '}
-                        -
-                        {' '}
-                        {filterInfomation.max}
+                      <span className="font-sans font-semibold text-black">
+                        {filterInfomation.height_min} - {filterInfomation.max}
                         cm
                       </span>
                       <div>
@@ -728,19 +754,16 @@ function MyProfile({ profileNav }) {
                 <hr />
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span>거리 반경</span>
+                    <span className="font-sans font-semibold text-black">
+                      거리 반경
+                    </span>
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="">
+                      <span className="font-sans font-semibold text-black">
                         {' '}
-                        {filterInfomation.range_min}
-                        {' '}
-                        -
-                        {' '}
-                        {filterInfomation.range_max}
-                        {' '}
-                        km
+                        {filterInfomation.range_min} -{' '}
+                        {filterInfomation.range_max} km
                       </span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
@@ -751,11 +774,15 @@ function MyProfile({ profileNav }) {
                 <hr />
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span>연락 스타일</span>
+                    <span className="font-sans font-semibold text-black">
+                      연락 스타일
+                    </span>
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="">{contactStyleText2}</span>
+                      <span className="font-sans font-semibold text-black">
+                        {contactStyleText2}
+                      </span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
                       </div>
@@ -765,11 +792,15 @@ function MyProfile({ profileNav }) {
                 <hr />
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span>음주 스타일</span>
+                    <span className="font-sans font-semibold text-black">
+                      음주 스타일
+                    </span>
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="">{drinkingStyleText2}</span>
+                      <span className="font-sans font-semibold text-black">
+                        {drinkingStyleText2}
+                      </span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
                       </div>
@@ -779,11 +810,15 @@ function MyProfile({ profileNav }) {
                 <hr className="" />
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span>흡연여부</span>
+                    <span className="font-sans font-semibold text-black">
+                      흡연여부
+                    </span>
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="">{smokingStyleText2}</span>
+                      <span className="font-sans font-semibold text-black">
+                        {smokingStyleText2}
+                      </span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
                       </div>
@@ -792,93 +827,99 @@ function MyProfile({ profileNav }) {
                 </div>
                 <hr className="" />
                 <div className="flex justify-between">
-                  <span className="text-xl m-3 ">인증정보</span>
-                  <div onClick={toCert} className="flex items-center m-2">
-                    <span className="hover:cursor-pointer">설정하기</span>
+                  <span className="text-2xl m-3 text-[#364C63]">인증정보</span>
+                  <div
+                    onClick={toCert}
+                    aria-hidden
+                    className="flex items-center m-2"
+                  >
+                    <span className="hover:cursor-pointer font-sans font-semibold text-black hover:text-[#F59FB1]">
+                      설정
+                    </span>
                     <div>
                       <img src={userarrow} alt="" className="w-3 ml-2" />
                     </div>
                   </div>
                 </div>
 
-                <div>
+                <div className="mb-16">
                   <div className="my-5 ml-10">
                     <div className="inline-block">
                       <Tooltip id="my-tooltip" />
                       <img
                         src={
-                          new_certinfo.health !== false ? health_yes : health_no
+                          newCertinfo.health !== false ? healthYes : healthNo
                         }
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={`${new_certinfo.health_info}`}
+                        data-tooltip-content={`${newCertinfo.health_info}`}
                       />
                     </div>
                     <div className="inline-block">
                       <img
                         src={
-                          new_certinfo.university !== false
-                            ? university_yes
-                            : university_no
+                          newCertinfo.university !== false
+                            ? universityYes
+                            : universityNo
                         }
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={`${new_certinfo.university_name}`}
+                        data-tooltip-content={`${newCertinfo.university_name}`}
                       />
                     </div>
                     <div className="inline-block">
                       <img
-                        src={new_certinfo.job !== false ? job_yes : job_no}
+                        src={newCertinfo.job !== false ? jobYes : jobNo}
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={`${new_certinfo.job_name}`}
-                      />
-                    </div>
-                    <div className="inline-block">
-                      <img
-                        src={
-                          new_certinfo.certificate !== false
-                            ? certificate_yes
-                            : certificate_no
-                        }
-                        alt="#"
-                        className="badges"
-                        data-tooltip-id="my-tooltip"
-                        data-tooltip-content={` ${new_certinfo.certificate_names}`}
+                        data-tooltip-content={`${newCertinfo.job_name}`}
                       />
                     </div>
                     <div className="inline-block">
                       <img
                         src={
-                          new_certinfo.estate !== false ? estate_yes : estate_no
+                          newCertinfo.certificate !== false
+                            ? certificateYes
+                            : certificateNo
                         }
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={` ${new_certinfo.estate_amount}`}
+                        data-tooltip-content={` ${newCertinfo.certificate_names}`}
                       />
                     </div>
                     <div className="inline-block">
                       <img
                         src={
-                          new_certinfo.income !== false ? income_yes : income_no
+                          newCertinfo.estate !== false ? estateYes : estateNo
                         }
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={` ${new_certinfo.income_amount}`}
+                        data-tooltip-content={` ${newCertinfo.estate_amount}`}
+                      />
+                    </div>
+                    <div className="inline-block">
+                      <img
+                        src={
+                          newCertinfo.income !== false ? incomeYes : incomeNo
+                        }
+                        alt="#"
+                        className="badges"
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content={` ${newCertinfo.income_amount}`}
                       />
                     </div>
                   </div>
                 </div>
-                <hr />
-                <div className="text-xl">관심사</div>
+                {/* <hr /> */}
+                {/* <div className="text-2xl">관심사</div>
                 <div>
                   <InterestList interest={interest} />
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
