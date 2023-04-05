@@ -770,6 +770,7 @@ public class MemberService {
         try {
             MyInfo myInfo = MyInfo.builder()
                 .member(member)
+                .mbti(InfoMBTI.SECRET)
                 .build();
             myInfoRepository.save(myInfo);
         } catch (Exception e) {
