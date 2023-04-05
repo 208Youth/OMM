@@ -4,7 +4,6 @@ import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import Modal from 'react-modal';
 import { useLocation, Link } from 'react-router-dom';
-import { resolveDynamicComponent } from 'vue';
 import chat from '../../api/chat';
 import http from '../../api/http';
 import BottomModal from './BottomModal';
