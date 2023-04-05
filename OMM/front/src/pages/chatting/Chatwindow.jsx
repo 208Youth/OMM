@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import Modal from 'react-modal';
-import { useLocation, Link } from 'react-router-dom';;
+import { useLocation, Link } from 'react-router-dom';
 import http from '@/api/http.js';
 import BottomModal from '@/pages/chatting/BottomModal.jsx';
 import ReportModal from '@/pages/chatting/ReportModal.jsx';
@@ -99,12 +99,7 @@ function ChatWindow() {
       (frame) => {
         stompClient.subscribe(
           `/sub/chat/room/${roomId}/entrance`,
-          (readDto) => {
-            setMessages([...readDto.payload]);
-            setRoom(readDto.roomInfo);
-            setOtherNickname(readDto.roomInfo.other.nickname);
-            setLastchatindex(readDto.roomInfo.myLastSendIndex);
-          },
+          (readDto) => {},
         );
 
         stompClient.subscribe(`/sub/chat/room/${roomId}`, (message) => {
@@ -173,7 +168,6 @@ function ChatWindow() {
       );
     });
     setMessage('');
-    setLastchatindex(lastchatindex + 1);
   };
 
   const recvReadDto = (readIndex) => {
@@ -224,6 +218,7 @@ function ChatWindow() {
                   <li
                     key={index}
                     className={`my-2 ${
+                      // 아래 코드 주의
                       msg.senderId === 1 ? 'text-right' : 'text-left'
                     } ${lastchatindex === index ? '' : ''}`}
                   >
@@ -285,7 +280,7 @@ function ChatWindow() {
                 ))}
               </ul>
 
-              <div className="flex fixed bottom-0 ml-[0.2rem]">
+              <div className="flex fixed bottom-0 ml-[0.2rem] pt-5">
                 <button
                   onClick={() => {
                     openModal();
