@@ -27,6 +27,7 @@
                 "labelAttributes": ["htmlFor"]
             }
         ],
-        "no-console": "off"
+        "no-console": "off",
+        "prefer-const": "off"
     }
 }
