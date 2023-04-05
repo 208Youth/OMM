@@ -98,7 +98,7 @@ function ChatWindow() {
       headers,
       (frame) => {
         stompClient.subscribe(
-          `/sub/chat/room/${roomId}   /entrance`,
+          `/sub/chat/room/${roomId}/entrance`,
           (readDto) => {
             setMessages([...readDto.payload]);
             setRoom(readDto.roomInfo);
