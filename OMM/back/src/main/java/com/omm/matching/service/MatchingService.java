@@ -115,7 +115,7 @@ public class MatchingService {
         sender.put("memberId", member.getId());
         sender.put("nickname", member.getNickname());
         sender.put("imageContent", profileImg);
-
+        System.out.println("Service [SENDER_ID] : " + member.getId());
 
         return NotificationResponseDto.builder()
                 .id(notification.getId())
