@@ -80,7 +80,7 @@ function FaceRecog({ setStep }) {
         }
         const images = await faceapi.fetchImage(imageUrl);
 
-        const descriptions = [];
+        let descriptions = [];
 
         const detections = await faceapi
           .detectSingleFace(images)
