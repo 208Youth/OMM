@@ -8,6 +8,7 @@ import 'react-tooltip/dist/react-tooltip.css';
 import Modal from 'react-modal';
 import './MyProfile.css';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 import ImageUploader from './ImageUploader';
 import CloseBtn from '../../assets/CloseBtn.svg';
 import pencil from '../../assets/pencil.svg';
@@ -59,7 +60,7 @@ function InterestList({ interest }) {
 function MyProfile({ profileNav }) {
   profileNav = true;
   const certinfo = {
-    university:false,
+    university: false,
     job: false,
     certificate: false,
     health: false,
@@ -103,6 +104,7 @@ function MyProfile({ profileNav }) {
   //   height_min: 1,
   //   height_max: 100,
   // }];
+  const user = useSelector((state) => state.user);
   const navigate = useNavigate();
   const [MymodalIsOpen, setMyIsOpen] = useState(false);
   const [MymodalIsOpen2, setMyIsOpen2] = useState(false);
@@ -167,7 +169,6 @@ function MyProfile({ profileNav }) {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-
     })
       .then((res) => {
         console.log(res);
@@ -185,7 +186,7 @@ function MyProfile({ profileNav }) {
       method: 'get',
       url: '/member/certificate',
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => {
@@ -204,7 +205,6 @@ function MyProfile({ profileNav }) {
         Authorization: `Bearer ${token}`,
       },
       data: { pr: new_pr },
-
     })
       .then((res) => {
         console.log(res);
@@ -222,7 +222,7 @@ function MyProfile({ profileNav }) {
       method: 'get',
       url: '/member/filtering',
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => {
@@ -239,7 +239,7 @@ function MyProfile({ profileNav }) {
       method: 'get',
       url: '/member/interest-list',
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => {
@@ -388,7 +388,10 @@ function MyProfile({ profileNav }) {
           isOpen={MymodalIsOpen}
           onRequestClose={closeMyModal}
         >
-          <MyinfoSetModal setModal={closeMyModal} basicInfomation={basicInfomation} />
+          <MyinfoSetModal
+            setModal={closeMyModal}
+            basicInfomation={basicInfomation}
+          />
         </Modal>
       </div>
       <div className="text-center">
@@ -411,20 +414,8 @@ function MyProfile({ profileNav }) {
       </div>
       <div>
         <div className="absolute top-20 left-0 w-full z-5">
-          <Pslider profileImg={basicInfomation.profileimgs}/>
+          <Pslider profileImg={basicInfomation.profileimgs} />
           <div>
-            <div
-              // className={isHovered ? 'imagesetting:hover' : 'imagesetting'}
-              // onMouseEnter={handleMouseEnter}
-              // onMouseLeave={handleMouseLeave}
-              className=""
-              onClick={() => {
-                openImageModal();
-              }}
-              aria-hidden
-            >
-              <img src={imagesetting} alt="$" />
-            </div>
             <Modal
               isOpen={uploadImg}
               // onAfterOpen={afterOpenModal}
@@ -440,23 +431,19 @@ function MyProfile({ profileNav }) {
           <div className="profileinfo">
             <div className="infodetail">
               <div className="text-right">
-                {/* 아래는 온클릭시 함수의 결과가 바로 도출되는 코드 */}
-                {/* <button onClick={navigate('/main')}> */}
-                <button onClick={() => navigate('/main')}>
-                  <img
-                    src={CloseBtn}
-                    alt="closbtn"
-                    className="w-8 h-8 inline-block object-right"
-
-                  />
-                </button>
+                <div
+                  className="inline-block object-right"
+                  onClick={() => {
+                    openImageModal();
+                  }}
+                  aria-hidden
+                >
+                  <img src={imagesetting} alt="$" />
+                </div>
               </div>
 
-              <span className="text-3xl ml-2">{basicInfomation.nickname}</span>
-              <span>
-                {' '}
-                {basicInfomation.age}
-              </span>
+              <span className="text-3xl ml-2">{user.nickname}</span>
+              <span> {basicInfomation.age}</span>
               <div className="text-slate-500 text-sm ml-2">
                 <span className="inline-block">
                   <img src={location} alt="" width={10} />
@@ -483,25 +470,21 @@ function MyProfile({ profileNav }) {
                         setNew_pr(e.target.value);
                         console.log(new_pr);
                       }}
-
                     />
-
                   </div>
                   <span className="flex justify-end">
-
                     {disabled && (
-                    <button>
-                      {' '}
-                      <img onClick={handleClick} src={pencil} alt="" />
-                    </button>
+                      <button>
+                        {' '}
+                        <img onClick={handleClick} src={pencil} alt="" />
+                      </button>
                     )}
                     {!disabled && (
-                    <button>
-                      {' '}
-                      <span onClick={sendPr}>변경완료</span>
-                    </button>
+                      <button>
+                        {' '}
+                        <span onClick={sendPr}>변경완료</span>
+                      </button>
                     )}
-
                   </span>
                 </div>
                 <hr className="thickhr" />
@@ -514,9 +497,7 @@ function MyProfile({ profileNav }) {
                     <div>
                       <div className="flex items-center">
                         <span className="hover:cursor-pointer">
-                          {basicInfomation.height}
-                          {' '}
-                          cm
+                          {basicInfomation.height} cm
                         </span>
                         <div
                           onClick={() => {
@@ -537,7 +518,9 @@ function MyProfile({ profileNav }) {
                     <div>
                       <div className="flex items-center">
                         {/* <span className="hover:cursor-pointer">{basicInfomation.drinking_style}</span> */}
-                        <span className="hover:cursor-pointer">{drinkingStyleText}</span>
+                        <span className="hover:cursor-pointer">
+                          {drinkingStyleText}
+                        </span>
                         <div
                           onClick={() => {
                             openMyModal();
@@ -573,7 +556,9 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="hover:cursor-pointer">{contactStyleText}</span>
+                        <span className="hover:cursor-pointer">
+                          {contactStyleText}
+                        </span>
                         <div
                           onClick={() => {
                             openMyModal();
@@ -591,7 +576,9 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="hover:cursor-pointer">{smokingStyleText}</span>
+                        <span className="hover:cursor-pointer">
+                          {smokingStyleText}
+                        </span>
                         <div
                           onClick={() => {
                             openMyModal();
@@ -609,7 +596,9 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="hover:cursor-pointer">{basicInfomation.MBTI}</span>
+                        <span className="hover:cursor-pointer">
+                          {basicInfomation.MBTI}
+                        </span>
                         <div
                           onClick={() => {
                             openMyModal();
@@ -688,12 +677,7 @@ function MyProfile({ profileNav }) {
                     <div className="flex items-center">
                       <span className="hover:cursor-pointer">
                         {' '}
-                        {filterInfomation.age_min}
-                        {' '}
-                        -
-                        {' '}
-                        {filterInfomation.age_max}
-                        {' '}
+                        {filterInfomation.age_min} - {filterInfomation.age_max}{' '}
                         살
                       </span>
                       <div>
@@ -710,11 +694,7 @@ function MyProfile({ profileNav }) {
                   <div>
                     <div className="flex items-center">
                       <span className="">
-                        {filterInfomation.height_min}
-                        {' '}
-                        -
-                        {' '}
-                        {filterInfomation.max}
+                        {filterInfomation.height_min} - {filterInfomation.max}
                         cm
                       </span>
                       <div>
@@ -732,13 +712,8 @@ function MyProfile({ profileNav }) {
                     <div className="flex items-center">
                       <span className="">
                         {' '}
-                        {filterInfomation.range_min}
-                        {' '}
-                        -
-                        {' '}
-                        {filterInfomation.range_max}
-                        {' '}
-                        km
+                        {filterInfomation.range_min} -{' '}
+                        {filterInfomation.range_max} km
                       </span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
@@ -804,7 +779,9 @@ function MyProfile({ profileNav }) {
                     <div className="inline-block">
                       <Tooltip id="my-tooltip" />
                       <img
-                        src={new_certinfo.health !== false ? health_yes : health_no}
+                        src={
+                          new_certinfo.health !== false ? health_yes : health_no
+                        }
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
@@ -813,7 +790,11 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div className="inline-block">
                       <img
-                        src={new_certinfo.university !== false ? university_yes : university_no}
+                        src={
+                          new_certinfo.university !== false
+                            ? university_yes
+                            : university_no
+                        }
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
@@ -831,7 +812,11 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div className="inline-block">
                       <img
-                        src={new_certinfo.certificate !== false ? certificate_yes : certificate_no}
+                        src={
+                          new_certinfo.certificate !== false
+                            ? certificate_yes
+                            : certificate_no
+                        }
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
@@ -840,7 +825,9 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div className="inline-block">
                       <img
-                        src={new_certinfo.estate !== false ? estate_yes : estate_no}
+                        src={
+                          new_certinfo.estate !== false ? estate_yes : estate_no
+                        }
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
@@ -849,7 +836,9 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div className="inline-block">
                       <img
-                        src={new_certinfo.income !== false ? income_yes : income_no}
+                        src={
+                          new_certinfo.income !== false ? income_yes : income_no
+                        }
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
@@ -862,7 +851,6 @@ function MyProfile({ profileNav }) {
                 <div className="text-xl">Oh my my</div>
                 <div>
                   <InterestList interest={interest} />
-
                 </div>
               </div>
             </div>

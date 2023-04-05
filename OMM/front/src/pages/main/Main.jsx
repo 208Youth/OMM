@@ -24,6 +24,9 @@ function Main() {
   }
   const token = localStorage.getItem('accesstoken');
   console.log(people);
+  useEffect(() => {
+    firstPerson();
+  }, [firstperson]);
   const firstPerson = async () => {
     await http({
       method: 'get',
