@@ -73,7 +73,7 @@ function FaceRecog({ setStep }) {
         let images;
         if (label === myinfo.didAddress) {
           // if (label === '사용자 did 주소') {
-          imageUrl = fetch(myinfo.faceUrl);
+          imageUrl = (await fetch(myinfo.faceUrl)).blob;
           // imageUrl =
           //   'https://storage.googleapis.com/cc24-3d5b1.appspot.com/9f34f632-4fa2-4686-afbb-dd163b3c0d1b-boyoung-p7ijrk9wj3f8pnz8dwq47kbr3a.jpg?GoogleAccessId=firebase-adminsdk-flw87%40cc24-3d5b1.iam.gserviceaccount.com&Expires=1711965112&Signature=ck6lIcmkALOR5K6ql8%2FjfpbLZRmHP2JYnkrJl%2BJoTBXgeJWmRlfVv9Goh2fkoQnhDOQUQemXDkiN3Hya8CMcwhljY1SdcBW4DWpeJaXx4C9bMRmPgiPIKOaGypXyh8HHgsp6V2oO6Pk17yectcNJoRIRk%2BFayBGrNt94U4aR2mrg768%2BKvZY%2F%2FtfAeiWtisGiymv848E0PGi7Qsi08CbpxY88EUOq4C4wwyAqLyuW2CxkNlsq0H8aCTZxoLU1NuIFLfej82aIw8w61D6EFu9dsC7BAfa%2FSE113tnfWS%2FWSKO6%2BujnKCn2zLRHjMh6Uv9wfj5q3lVfwiutKL082yisQ%3D%3D';
         } else {
