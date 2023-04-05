@@ -236,11 +236,7 @@ function ChatWindow() {
                             {msg.read ? '읽음' : '안읽음'}
                           </span>
                         )} */}
-                        {msg === latestMyChat && (
-                        <span className="text-[0.5rem] ml-1 self-end">
-                          {msg.isRead ? '읽음' : '안읽음'}
-                        </span>
-                        )}
+
                         <div className="max-w-[12.5rem]  inline-block bg-gray-200 p-2 rounded-lg">
 
                           <span className="text-sm font-sans font-bold break-words whitespace-pre-line">
@@ -336,7 +332,7 @@ function ChatWindow() {
               ariaHideApp={false}
             >
               <BottomModal
-                targetId={room.other.otherId}
+                targetId={room?.other?.otherId}
                 setModal={() => {
                   closeModal();
                 }}

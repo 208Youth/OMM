@@ -13,7 +13,6 @@ import com.omm.repository.MemberRepository;
 import com.omm.util.SecurityUtil;
 import com.omm.util.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -46,7 +45,7 @@ public class MatchingService {
         LocalDateTime createdTime = LocalDateTime.now();
         Notification notification = Notification.builder()
                 .id(id)
-                .senderId(getSender(user).getId())
+                .senderId(getMember(user).getId())
                 .createdTime(createdTime)
                 .build();
         matchingRepository.createNotification(receiverId, notification);
@@ -58,7 +57,7 @@ public class MatchingService {
      * @return
      */
     public List<NotificationResponseDto> getNotifications() {
-        Member member = getSender();
+        Member member = getMember();
         List<NotificationResponseDto> notificationResponseDtos = new ArrayList<>();
         List<Notification> notifications = matchingRepository.getNotifications(member.getId());
         for(Object notificationObject : notifications) {
@@ -78,7 +77,7 @@ public class MatchingService {
                 .senderId(deleteNotificationRequestDto.getSenderId())
                 .createdTime(deleteNotificationRequestDto.getCreatedTime())
                 .build();
-        Member member = getSender();
+        Member member = getMember();
         matchingRepository.deleteNotification(member.getId(), notification);
     }
 
@@ -86,7 +85,7 @@ public class MatchingService {
      * 로그인한 사용자 객체 반환
      * @return
      */
-    public Member getSender() {
+    public Member getMember() {
         String didAddress = SecurityUtil.getCurrentDidAddress().orElseThrow(() -> {
             throw new CustomException(ErrorCode.INVALID_AUTH_TOKEN);
         });
@@ -95,13 +94,13 @@ public class MatchingService {
         });
     }
 
-    public Member getSender(String user) {
+    public Member getMember(String user) {
         return memberRepository.findByDidAddress(user).orElseThrow(() -> {
             throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         });
     }
 
-    public Member getSender(Long id) {
+    public Member getMember(Long id) {
         return memberRepository.findById(id).orElseThrow(() -> {
             throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         });
@@ -113,16 +112,13 @@ public class MatchingService {
      * @return
      */
     public NotificationResponseDto getNotificationResponseDto(Notification notification) {
-        Member member = getSender(notification.getSenderId());
+        Member member = getMember(notification.getSenderId());
         List<MemberImg> memberImgs = memberImgRepository.findAllById(member.getId());
         MemberImg profileImg = memberImgs.isEmpty() ? null : memberImgs.get(0);
         Map<String, Object> sender = new HashMap<>();
         sender.put("memberId", member.getId());
         sender.put("nickname", member.getNickname());
         sender.put("imageContent", profileImg);
-        System.out.println("=========================================");
-        System.out.println("SENDER ID 뭐냐??????????: " + member.getId());
-        System.out.println("=========================================");
         return NotificationResponseDto.builder()
                 .id(notification.getId())
                 .sender(sender)

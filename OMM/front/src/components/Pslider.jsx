@@ -55,12 +55,12 @@ function Pslider({ mainImg, profileImg, name, age }) {
         className="swiper_container"
       >
         {/* 이미지 리스트 들어오는 코드 작성한 후에 아래 주석풀어주세요 */}
-        {location.pathname.includes('main') && (
+        {!mainImg && location.pathname.includes('main') && (
           <SwiperSlide className="static flex content-center">
             <img src={slide_image_1} alt="slide_image" />
-            <div className="flex absolute bottom-[10%] left-[5%] w-[50%] h-[10%] mx-auto">
+            <div className="flex absolute bottom-[10%] left-[5%] w-fit h-[10%] mx-auto">
               <div className="flex px-6 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full my-auto">
-                <span className="text-xl h-12 mt-2 mx-auto text-white">
+                <span className="text-xl max-sm:w-28 h-12 mt-2 mx-auto text-white inline-block whitespace-nowrap overflow-hidden text-ellipsis">
                   {name}
                 </span>
               </div>
@@ -73,45 +73,51 @@ function Pslider({ mainImg, profileImg, name, age }) {
           </SwiperSlide>
         )}
         {mainImg &&
-          mainImg.map((img, index) => (
-            <div key={index}>
-              <p>이미지</p>
-              <SwiperSlide className="static flex content-center">
-                <img src={`data:image/png;base64,${img}`} alt={img} />
-                {location.pathname.includes('main') && (
-                  <div className="flex absolute bottom-[10%] left-[5%] w-[50%] h-[10%] mx-auto">
-                    <div className="flex px-6 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full my-auto">
-                      <span className="text-xl h-12 mt-2 mx-auto text-white">
-                        {name}
-                      </span>
-                    </div>
-                    <div className="flex w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full my-auto ml-2">
-                      <span className="text-xl mx-auto my-auto text-white">
-                        {age}
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </SwiperSlide>
-              ;
-            </div>
+          location.pathname.includes('main') &&
+          mainImg.map((img, i) => (
+            <SwiperSlide className="static flex content-center" key={i}>
+              <img src={`data:image/png;base64,${img}`} alt="slide_image" />
+              <div className="flex absolute bottom-[10%] left-[5%] w-fit h-[10%] mx-auto">
+                <div className="flex px-6 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full my-auto">
+                  <span className="text-xl max-sm:w-28 h-12 mt-2 mx-auto text-white inline-block whitespace-nowrap overflow-hidden text-ellipsis">
+                    {name}
+                  </span>
+                </div>
+                <div className="flex w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full my-auto ml-2">
+                  <span className="text-xl mx-auto my-auto text-white">
+                    {age}
+                  </span>
+                </div>
+              </div>
+            </SwiperSlide>
           ))}
+        {!profileImg && location.pathname.includes('profile') && (
+          <SwiperSlide className="static flex content-center">
+            <img src={slide_image_1} alt="slide_image" />
+            <div className="flex absolute bottom-[10%] left-[5%] w-fit h-[10%] mx-auto">
+              <div className="flex px-6 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full my-auto">
+                <span className="text-xl max-sm:w-28 h-12 mt-2 mx-auto text-white inline-block whitespace-nowrap overflow-hidden text-ellipsis">
+                  {name}
+                </span>
+              </div>
+              <div className="flex w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full my-auto ml-2">
+                <span className="text-xl mx-auto my-auto text-white">
+                  {age}
+                </span>
+              </div>
+            </div>
+          </SwiperSlide>
+        )}
         {profileImg &&
+          location.pathname.includes('profile') &&
           profileImg.map((img, index) => (
             <div key={index}>
               <SwiperSlide className="static flex content-center">
-                {location.pathname.includes('rofile') && (
-                  <img src={`data:image/png;base64,${img}`} alt="이미지" />
-                )}
+                <img src={`data:image/png;base64,${img}`} alt="이미지" />
               </SwiperSlide>
               ;
             </div>
           ))}
-        {!profileImg && location.pathname.includes('rofile') && (
-          <SwiperSlide>
-            <img src={slide_image_1} alt="slide_image" />
-          </SwiperSlide>
-        )}
         {/* <div className="slider-controler">
           <div className="swiper-button-prev slider-arrow">
             <ion-icon name="arrow-back-outline" />

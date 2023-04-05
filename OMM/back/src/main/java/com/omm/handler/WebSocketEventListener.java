@@ -1,12 +1,12 @@
 package com.omm.handler;
 
-import com.google.gson.JsonObject;
-import com.omm.chat.model.dto.ChatRoomDto;
+import com.omm.alert.service.AlertPublishService;
 import com.omm.chat.model.dto.response.GetRoomResponseDto;
 import com.omm.chat.model.entity.ChatRoom;
 import com.omm.chat.service.ChatPublisherService;
 import com.omm.chat.service.ChatService;
 import com.omm.jwt.TokenProvider;
+import com.omm.model.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,6 @@ import org.springframework.messaging.support.NativeMessageHeaderAccessor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
@@ -36,6 +35,7 @@ public class WebSocketEventListener {
 
     private final ChatService chatService;
     private final ChatPublisherService publisherService;
+    private final AlertPublishService alertPublishService;
 
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
@@ -51,7 +51,8 @@ public class WebSocketEventListener {
             if (jwtTokenProvider.validateToken(jwt)) {
                 Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
                 String user = authentication.getName();
-                myId = chatService.getMember(user).getId();
+                Member myInfo = chatService.getMember(user);
+                myId = myInfo.getId();
                 if (!roomId.equals("")) {
                     String sessionId = (String) generic.getHeaders().get("simpSessionId");
                     logger.info("[Connected] room id : {} | websocket session id : {}", roomId, sessionId);
@@ -59,6 +60,7 @@ public class WebSocketEventListener {
                     ChatRoom chatRoom = chatService.enterRoom(roomId, myId);
                     GetRoomResponseDto chatRoomDto = chatService.getRoom(roomId);
                     publisherService.publishEnter(roomId, chatRoomDto);
+                    alertPublishService.publishChatAlert(myInfo);
                 }
             }
         }

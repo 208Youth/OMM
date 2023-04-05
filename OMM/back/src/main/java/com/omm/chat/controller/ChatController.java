@@ -1,5 +1,6 @@
 package com.omm.chat.controller;
 
+import com.omm.alert.service.AlertPublishService;
 import com.omm.chat.model.dto.ChatRoomDto;
 import com.omm.chat.model.dto.request.CreateRoomRequestDto;
 import com.omm.chat.model.dto.request.CreateMessageRequestDto;
@@ -9,7 +10,7 @@ import com.omm.chat.model.entity.ChatRoom;
 import com.omm.chat.service.ChatService;
 import com.omm.chat.service.ChatPublisherService;
 import com.omm.jwt.TokenProvider;
-import com.omm.util.SecurityUtil;
+import com.omm.model.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,7 @@ public class ChatController {
     private final TokenProvider tokenProvider;
     private final ChatService chatService;
     private final ChatPublisherService publishService;
+    private final AlertPublishService alertPublishService;
 
     /**
      * 채팅방 생성 이벤트 수신
@@ -65,6 +67,9 @@ public class ChatController {
         String didAddress = details.getUsername();
         ChatMessage message = chatService.createMessage(messageDto, didAddress);
         publishService.publishMessage(message);
+
+        Member otherInfo = chatService.getMember(messageDto.getReceiverId());
+        alertPublishService.publishChatAlert(otherInfo);
     }
 
     @PutMapping("/chat/room/{room-id}")

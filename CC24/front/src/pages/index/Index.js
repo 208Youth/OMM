@@ -1,7 +1,7 @@
 import './Index.css';
 import { Link } from 'react-router-dom';
 import React from 'react';
-import CC24Logo from '../../assets/CC24.svg';
+import CC24Logo from '../../assets/cc24trans.svg';
 
 function Index() {
   return (

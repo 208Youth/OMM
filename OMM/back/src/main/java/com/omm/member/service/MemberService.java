@@ -329,9 +329,9 @@ public class MemberService {
         try {
             List<MemberImg> memberImages = memberImgRepository.findAllByMember(member);
 
-            memberImages.forEach((img) -> {
-                System.out.println(img.toString());
-            });
+//            memberImages.forEach((img) -> {
+//                System.out.println(img.toString());
+//            });
 
             memberImgRepository.deleteAll(memberImages);
         } catch (Exception e) {

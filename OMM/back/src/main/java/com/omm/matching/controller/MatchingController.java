@@ -1,5 +1,6 @@
 package com.omm.matching.controller;
 
+import com.omm.alert.service.AlertPublishService;
 import com.omm.matching.model.dto.request.CreateNotificationRequestDto;
 import com.omm.matching.model.dto.request.DeleteNotificationRequestDto;
 import com.omm.matching.model.dto.response.GetNotificationsResponseDto;
@@ -25,6 +26,7 @@ import java.util.List;
 public class MatchingController {
     private final MatchingService matchingService;
     private final NotificationPublisherService publisherService;
+    private final AlertPublishService alertPublishService;
 
     /**
      * 알림 생성
@@ -37,6 +39,9 @@ public class MatchingController {
         String receiverAddr = matchingService.getReceiverAddr(createNotificationRequestDto.getReceiverId());
         NotificationResponseDto notificationResponseDto = matchingService.getNotificationResponseDto(notification);
         publisherService.publishNotification(receiverAddr, notificationResponseDto);
+
+        Member receiver = matchingService.getMember(receiverAddr);
+        alertPublishService.publishNotiAlert(receiver);
     }
 
     /**
@@ -57,6 +62,8 @@ public class MatchingController {
     @DeleteMapping("/matching/noti")
     public ResponseEntity<?> deleteNotification(@RequestBody DeleteNotificationRequestDto deleteNotificationRequestDto) {
         matchingService.deleteNotification(deleteNotificationRequestDto);
+        Member myInfo = matchingService.getMember();
+        alertPublishService.publishNotiAlert(myInfo);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
