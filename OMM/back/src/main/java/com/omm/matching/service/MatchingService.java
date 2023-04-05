@@ -63,7 +63,7 @@ public class MatchingService {
         List<Notification> notifications = matchingRepository.getNotifications(member.getId());
         for(Object notificationObject : notifications) {
             Notification notification = objectMapper.convertValue(notificationObject, Notification.class);
-            notificationResponseDtos.add(getNotificationResponseDto(member, notification));
+            notificationResponseDtos.add(getNotificationResponseDto(notification));
         }
         return notificationResponseDtos;
     }
@@ -101,22 +101,28 @@ public class MatchingService {
         });
     }
 
+    public Member getSender(Long id) {
+        return memberRepository.findById(id).orElseThrow(() -> {
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        });
+    }
+
     /**
      * Notification을 NotificationResponseDto로 반환
-     * @param member
      * @param notification
      * @return
      */
-    public NotificationResponseDto getNotificationResponseDto(Member member, Notification notification) {
+    public NotificationResponseDto getNotificationResponseDto(Notification notification) {
+        Member member = getSender(notification.getSenderId());
         List<MemberImg> memberImgs = memberImgRepository.findAllById(member.getId());
         MemberImg profileImg = memberImgs.isEmpty() ? null : memberImgs.get(0);
-
         Map<String, Object> sender = new HashMap<>();
         sender.put("memberId", member.getId());
         sender.put("nickname", member.getNickname());
         sender.put("imageContent", profileImg);
-
-
+        System.out.println("=========================================");
+        System.out.println("SENDER ID 뭐냐??????????: " + member.getId());
+        System.out.println("=========================================");
         return NotificationResponseDto.builder()
                 .id(notification.getId())
                 .sender(sender)

@@ -4,10 +4,16 @@ import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import './nav-bar.scss';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { likey } from '../store/recSlice';
+import http from '../api/http';
 
-function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav }) {
+function Navbar({
+  profileNav, mainNav, notiNav, chatlistNav, likesNav, id,
+}) {
   let stompClient;
   const token = localStorage.getItem('accesstoken');
+  const dispatch = useDispatch();
   const mainconnect = () => {
     const headers = {
       // Authorization: import.meta.env.VITE_TOKEN,
@@ -70,7 +76,8 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav }) {
     stompClient.send(
       '/pub/matching/noti',
       headers,
-      JSON.stringify({ receiverId: 3 }),
+      // 좋아요 할 사람 id
+      JSON.stringify({ receiverId: id }),
     );
     console.log(stompClient);
     // stompClient.disconnect();
@@ -86,6 +93,25 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav }) {
   //       console.log(error);
   //     });
   // };
+  const like = async function () {
+    const data = {
+      sender_id: id,
+      favor: true,
+    };
+    await http({
+      method: 'post',
+      url: '/recommend',
+      headers: { Authorization: `Bearer ${token}` },
+      data,
+    })
+      .then((res) => {
+        console.log('조아요오오오', res);
+        dispatch(likey(id));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   useEffect(() => {
     if (mainNav) {
@@ -137,6 +163,7 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav }) {
               alt=""
               onClick={() => {
                 sendMatch();
+                like();
               }}
               aria-hidden="true"
             />

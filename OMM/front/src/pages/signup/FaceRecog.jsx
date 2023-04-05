@@ -2,9 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { TinyFaceDetectorOptions } from 'face-api.js';
 import * as faceapi from 'face-api.js';
 import './FaceRecog.css';
-import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import http from '../../api/http';
 
 const MODEL_URL = '/models';
 // 비디오 사이즈 설정
@@ -17,36 +17,35 @@ const constraints = {
   audio: false,
 };
 
-function FaceRecog() {
+function FaceRecog({ setStep }) {
   const wrapRef = useRef(null);
   const videoRef = useRef(null);
   const [isStartDetect, setIsStartDetect] = useState(false);
   const [modelsLoaded, setModelsLoaded] = useState(false);
+  const [myinfo, setInfo] = useState(null);
   const [notice, setNotice] = useState('');
   const [recog, setRecog] = useState(false);
   const [whatpage, setPage] = useState('');
+  const [isRight, setisRight] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
-  const fromPage = location.state.page;
-  console.log(fromPage);
 
   // axios 로 fastapi 에 사진 요청보내기
   // 이미지 받아오기
+  const token = localStorage.getItem('accesstoken');
   async function getImg() {
     // axios로 fastapi 에 이미지 보내기
-    await axios({
+    await http({
       method: 'get',
-      url: 'http://localhost:8000/image',
-      data: {
-        getname: 'c최윤하',
+      url: '/face-url',
+      headers: {
+        Authorization: token,
       },
-      // headers: {
-      //   'Content-Type': 'multipart/form-data',
-      // },
     })
       .then((res) => {
         console.log(res);
+        setInfo(res.data);
         console.log('이미지를 받았습니다.');
       })
       .catch((err) => {
@@ -60,29 +59,33 @@ function FaceRecog() {
     // const labels = [name];
 
     // 학습시키기 위한 데이터셋 라벨들 넣기
-    const labels = ['boyoung'];
+    let labels = [];
+    for (let i = 1; i <= 32; i += 1) {
+      labels.push(i.toString());
+    }
 
-    // 내이름 추가
+    labels.push(myinfo.didAddress);
+    // labels.push('사용자 did 주소');
+
     return Promise.all(
       labels.map(async (label) => {
-        // const images = await faceapi.fetchImage(didaddress 에 있는 firebase url 주소 가져오기);
-        const images = await faceapi.fetchImage(
-          'https://storage.googleapis.com/cc24-3d5b1.appspot.com/9f34f632-4fa2-4686-afbb-dd163b3c0d1b-boyoung-p7ijrk9wj3f8pnz8dwq47kbr3a.jpg?GoogleAccessId=firebase-adminsdk-flw87%40cc24-3d5b1.iam.gserviceaccount.com&Expires=1711965112&Signature=ck6lIcmkALOR5K6ql8%2FjfpbLZRmHP2JYnkrJl%2BJoTBXgeJWmRlfVv9Goh2fkoQnhDOQUQemXDkiN3Hya8CMcwhljY1SdcBW4DWpeJaXx4C9bMRmPgiPIKOaGypXyh8HHgsp6V2oO6Pk17yectcNJoRIRk%2BFayBGrNt94U4aR2mrg768%2BKvZY%2F%2FtfAeiWtisGiymv848E0PGi7Qsi08CbpxY88EUOq4C4wwyAqLyuW2CxkNlsq0H8aCTZxoLU1NuIFLfej82aIw8w61D6EFu9dsC7BAfa%2FSE113tnfWS%2FWSKO6%2BujnKCn2zLRHjMh6Uv9wfj5q3lVfwiutKL082yisQ%3D%3D',
-        );
-        const descriptions = [];
-        // const tyniOptions = new faceapi.TinyFaceDetectorOptions({
-        //   inputSize: 700,
-        //   scoreThreshold: 0.5,
-        // });
-        const detectionOptions = new faceapi.SsdMobilenetv1Options({
-          minConfidence: 0.8,
-        });
+        let imageUrl;
+        if (label === myinfo.didAddress) {
+        // if (label === '사용자 did 주소') {
+          imageUrl = myinfo.faceUrl;
+          // imageUrl =
+          //   'https://storage.googleapis.com/cc24-3d5b1.appspot.com/9f34f632-4fa2-4686-afbb-dd163b3c0d1b-boyoung-p7ijrk9wj3f8pnz8dwq47kbr3a.jpg?GoogleAccessId=firebase-adminsdk-flw87%40cc24-3d5b1.iam.gserviceaccount.com&Expires=1711965112&Signature=ck6lIcmkALOR5K6ql8%2FjfpbLZRmHP2JYnkrJl%2BJoTBXgeJWmRlfVv9Goh2fkoQnhDOQUQemXDkiN3Hya8CMcwhljY1SdcBW4DWpeJaXx4C9bMRmPgiPIKOaGypXyh8HHgsp6V2oO6Pk17yectcNJoRIRk%2BFayBGrNt94U4aR2mrg768%2BKvZY%2F%2FtfAeiWtisGiymv848E0PGi7Qsi08CbpxY88EUOq4C4wwyAqLyuW2CxkNlsq0H8aCTZxoLU1NuIFLfej82aIw8w61D6EFu9dsC7BAfa%2FSE113tnfWS%2FWSKO6%2BujnKCn2zLRHjMh6Uv9wfj5q3lVfwiutKL082yisQ%3D%3D';
+        } else {
+          imageUrl = `/imgs/${label}.jpg`;
+        }
+        const images = await faceapi.fetchImage(imageUrl);
+
+        let descriptions = [];
+
         const detections = await faceapi
-          // .detectAllFaces(videoRef.current, detectionOptions)
-          .detectSingleFace(images, detectionOptions)
+          .detectSingleFace(images)
           .withFaceLandmarks()
           .withFaceDescriptor();
-        console.log('얼굴 감지', detections);
         descriptions.push(detections.descriptor);
 
         return new faceapi.LabeledFaceDescriptors(label, descriptions);
@@ -106,13 +109,12 @@ function FaceRecog() {
   const onPlay = async () => {
     setNotice('마스크를 벗고 정면을 바라봐주세요.');
     // 이미지 정보를 기반으로 canvas 요소 생성
-    // console.log('캔버스 그리기 시작');
-    // const canvas = faceapi.createCanvasFromMedia(videoRef.current);
-    // console.log(canvas);
-    // wrapRef.current.append(canvas);
-    // const setSizeCanvas = document.querySelector('canvas');
-    // console.log(setSizeCanvas);
-    // setSizeCanvas.className = 'recog-canvas';
+    const canvas = faceapi.createCanvasFromMedia(videoRef.current);
+    console.log(canvas);
+    wrapRef.current.append(canvas);
+    const setSizeCanvas = document.querySelector('canvas');
+    console.log(setSizeCanvas);
+    setSizeCanvas.className = 'w-64 mx-auto my-10 rounded-3xl absolute left-7'; // 비디오 크기, 위치 맞춰 다시 설정
 
     // 영상 사이즈를 canvas에 맞추기 위한 설정
     const displaySize = {
@@ -121,66 +123,50 @@ function FaceRecog() {
     };
 
     // canvas 사이즈를 맞춤
-    // faceapi.matchDimensions(canvas, displaySize);
+    faceapi.matchDimensions(canvas, displaySize);
 
     // 로컬 대조 이미지 가져오기
-    const labeledFaceDescriptors = await loadImage();
+    const imgDescriptors = await loadImage();
 
     // 안면 인식 부분
     const faceDetecting = async () => {
-      const detectionOptions = new faceapi.SsdMobilenetv1Options({
-        minConfidence: 0.8,
-      });
+      // setNotice(['인', '증', '중', '입', '니', '다']);
+      setNotice('인증 중입니다.');
       const detections = await faceapi
-        // .detectAllFaces(videoRef.current, new TinyFaceDetectorOptions())
-        .detectAllFaces(videoRef.current, detectionOptions)
+        .detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions())
         .withFaceLandmarks()
+        .withAgeAndGender()
         .withFaceDescriptors();
       const resizedDetections = faceapi.resizeResults(detections, displaySize);
 
       // canvas 초기화
-      // canvas
-      //   .getContext('2d')
-      //   .clearRect(0, 0, displaySize.width, displaySize.height);
+      canvas
+        .getContext('2d')
+        .clearRect(0, 0, displaySize.width, displaySize.height);
 
-      const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.6);
+      const faceMatcher = new faceapi.FaceMatcher(imgDescriptors, 0.6);
 
-      const results = resizedDetections.map((d) =>
-        faceMatcher.findBestMatch(d.descriptor),
-      );
+      resizedDetections.forEach((d) => faceMatcher.findBestMatch(d.descriptor));
 
-      results.forEach((result, i) => {
-        if (result.distance < 0.6) {
-          console.log(`동일한 사람임 ${result.label}!`);
-          // const { box } = result.detection;
-          // const label = result.distance.toString();
-          // const drawBox = new faceapi.draw.DrawBox(box, {
-          //   label,
-          // });
-          // drawBox.draw(canvas);
-          setNotice('인증 완료!');
+      resizedDetections.forEach((detection, i) => {
+        const matched = resizedDetections[i];
+        const { box } = matched.detection;
+        // const label = faceMatcher.findBestMatch(matched.descriptor).toString();
+        const result = faceMatcher.findBestMatch(matched.descriptor);
+        const drawBox = new faceapi.draw.DrawBox(box);
+        drawBox.draw(canvas);
+        if (result._distance > 0.4 || result._label === 'unknown') {
           setRecog(true);
-        } else {
+          setisRight(false);
           console.log('다른사람인디.');
           setNotice('얼굴인증에 실패하였습니다.');
-          // 다시 메인으로 보내기
-          navigate('/main');
+        } else {
+          console.log(result.label, result._distance);
+          setRecog(true);
+          setisRight(true);
+          setNotice('인증 완료!');
         }
       });
-      // resizedDetections.forEach((detection, i) => {
-      //   const matched = resizedDetections[i];
-      //   const { box } = matched.detection;
-      //   const label = faceMatcher.findBestMatch(matched.descriptor).toString();
-      //   const bestMatch = faceMatcher.findBestMatch(matched.descriptor);
-
-      // console.log(
-      //   '가장 잘맞는 사람 라벨:',
-      //   bestMatch.label,
-      //   '일치 수치:',
-      //   bestMatch.distance,
-      // );
-
-      // });
     };
 
     const loop = () => {
@@ -190,37 +176,16 @@ function FaceRecog() {
     setTimeout(loop, 1);
   };
 
-  // const startDetecting = async () => {
-  //   // model load
-  //   // const btn = document.querySelector('#startbtn');
-  //   // btn.style.display = 'none';
-  //   const loadModels = async () => {
-  //     Promise.all([
-  //       faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
-  //       faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
-  //       faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
-  //       faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
-  //       // video 에서 로드된 이미지 매칭 시 아래 모델이 필요 함.
-  //       faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL),
-  //       // faceapi.nets.ageGenderNet.loadFromUri(MODEL_URL),
-  //     ]).then(() => {
-  //       setModelsLoaded(true);
-  //       startVideo();
-  //     });
-  //   };
-
-  //   loadModels();
-  // };
-
-  useEffect(() => {
-    setPage(fromPage);
+  const startDetecting = async () => {
+    // model load
     const loadModels = async () => {
       Promise.all([
         faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
         faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
         faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+        // video 에서 로드된 이미지 매칭 시 아래 모델이 필요 함.
         faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL),
-        faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
+        faceapi.nets.ageGenderNet.loadFromUri(MODEL_URL),
       ]).then(() => {
         setModelsLoaded(true);
         startVideo();
@@ -228,10 +193,10 @@ function FaceRecog() {
     };
 
     loadModels();
-  }, []);
+  };
 
   useEffect(() => {
-    if (recog) {
+    if (recog && isRight) {
       console.log('얼굴인식 완료, 영상 끄기');
       const stream = videoRef.current.srcObject;
       const tracks = stream.getTracks();
@@ -239,23 +204,31 @@ function FaceRecog() {
       setTimeout(() => {
         const video = document.querySelector('video');
         const canvas = document.querySelector('canvas');
-        tracks.forEach((track) => {
-          track.stop();
-        });
         video.remove();
         canvas.remove();
+        setTimeout(() => {
+          tracks.forEach((track) => {
+            track.stop();
+          });
+        }, 2000);
         if (whatpage === 'chat') {
           console.log('대기로 이동');
           navigate('/loading');
         } else {
-          navigate('/moreinfo');
+          setStep(true);
         }
       }, 3000);
     }
   }, [recog]);
 
   useEffect(() => {
+    if (location.pathname === '/faceRecog/chat') {
+      setPage('chat');
+    } else {
+      setPage('signup');
+    }
     getImg();
+    startDetecting();
   }, []);
 
   return (
@@ -289,17 +262,9 @@ function FaceRecog() {
           본인이 맞는지 얼굴을 확인해요
         </p>
         <div className="flex-col w-80 mx-auto">
-          <div ref={wrapRef} className="h-fit">
+          <div ref={wrapRef} className="h-fit relative">
             {!isStartDetect && (
-              <img
-                src="/FaceId.svg"
-                className="w-64 mt-10 mx-auto"
-                onClick={() => {
-                  startDetecting();
-                }}
-                alt=""
-                aria-hidden
-              />
+              <img src="/FaceId.svg" className="w-64 mt-10 mx-auto" alt="" />
             )}
             <video
               ref={videoRef}
@@ -310,20 +275,20 @@ function FaceRecog() {
               }}
               width={300}
               height={300}
-              className="w-64 mx-auto my-10 rounded-3xl"
+              className="w-64 mx-auto my-10 rounded-3xl absolute left-7"
             />
           </div>
-          {isStartDetect && notice && (
-            <div className="text-center text-[#364C63]">{notice}</div>
-          )}
-          {/* {whatpage !== 'chat' && (
-            <div className="flex justify-between mx-8 text-[#364C63] text-lg">
-              <div>&lt; </div>
-              <div aria-hidden onClick={() => {}}>
-                &gt;
+          {/* {isStartDetect &&
+            notice &&
+            Array.isArray(notice) &&
+            notice.map((one) => (
+              <div className="text-center text-[#364C63] mt-5 bouncing-text">
+                <div className={one}>{one}</div>
               </div>
-            </div>
-          )} */}
+            ))} */}
+          {isStartDetect && notice && (
+            <div className="text-center text-[#364C63] mt-5">{notice}</div>
+          )}
         </div>
       </div>
     </div>

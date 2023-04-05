@@ -5,6 +5,7 @@ import CloseBtn from '../../assets/CloseBtn.svg';
 
 function ImageUploader({ setModal }) {
   const [images, setImages] = useState(Array(6).fill(null));
+  const token = localStorage.getItem('accesstoken');
 
   const onDrop = (acceptedFiles, index) => {
     const file = acceptedFiles[0];
@@ -42,7 +43,7 @@ function ImageUploader({ setModal }) {
       url: '/member/img',
       headers: {
         'Content-Type': 'multipart/form-data',
-        Authorization: import.meta.env.VITE_TOKEN,
+        Authorization: `Bearer ${token}`,
       },
       data: formData,
     }).then((response) => {
@@ -68,7 +69,8 @@ function ImageUploader({ setModal }) {
       <div className="overflow-x-scroll uploadimg-croll mt-5">
         <div className="flex flex-row w-fit">
           {images.map((image, index) => (
-            <div
+            <div0
+              key={index}
               className={
                 image
                   ? 'flex w-28 h-56 m-3 cursor-pointer bg-opacity-25 rounded-2xl shadow-lg'
@@ -99,7 +101,7 @@ function ImageUploader({ setModal }) {
                   Click to upload
                 </div>
               )}
-            </div>
+            </div0>
           ))}
         </div>
       </div>

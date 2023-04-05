@@ -4,12 +4,14 @@ import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import jwt_decode from 'jwt-decode';
 import { useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
 
 function WaitChat() {
   // const [load, setLoad] = useState(null);
   const [chatid, setChatId] = useState(null);
   const token = localStorage.getItem('accesstoken');
   const navigate = useNavigate();
+  const senderId = useSelector((state) => state.chat.memberId);
 
   let stompClient;
 
@@ -18,7 +20,7 @@ function WaitChat() {
     const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
     const headers = {
       // Authorization: import.meta.env.VITE_TOKEN,
-      Authorization: token, // 매칭 수락한사람의 토큰
+      Authorization: `Bearer ${token}`,
     };
     stompClient = Stomp.over(ws);
 
@@ -46,22 +48,21 @@ function WaitChat() {
       Authorization: `Bearer ${token}`, // 매칭 수락한사람의 토큰
     };
     console.log(stompClient);
-    const token1 =
-      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkaWQ6ZXRocjpnb2VybGk6MHgwM2RmOGU1NGEzMGUzOTA2ZDI0M2Q3NDAyYzU5YjgyYjVkODU0MjIzYmEzYWU5NjllYTIzZDJjMTJiOGRhNDljNWUiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjgwNDM3MzI0fQ.8mpP75fhreoO6sKLCjQ_JzGLRmgO7TjsQu0C8T20zHOzTdb212aB9nIXldAcDjr0j3vGwbYGjE3JiDWaOEA3oA';
-    const decoded = jwt_decode(token1);
+    const decoded = jwt_decode(token);
     stompClient.connect(headers, (frame) => {
       stompClient.subscribe(`/sub/chat/room/${decoded.sub}`, (message) => {
         console.log(message);
         const recv = JSON.parse(message.body);
         console.log(recv);
         console.log('채팅 내용 수신', recv.id);
-        navigate(`/Chatwindow/:${recv.id}`);
+        navigate(`/Chatwindow/${recv.id}`);
         // 리다이렉트 또는 다른 작업 수행
       });
       stompClient.send(
         '/pub/chat/room',
         headers,
-        JSON.stringify({ senderId: 3 }),
+        // 나한테 알림 보낸사람 id
+        JSON.stringify({ senderId }),
         console.log('채팅방 만들라구'),
       );
     });
@@ -110,7 +111,7 @@ function WaitChat() {
   // };
   const subconnect = () => {
     const headers = {
-      Authorization: import.meta.env.VITE_TOKEN_3,
+      Authorization: `Bearer ${token}`,
     };
 
     stompClient.connect(

@@ -25,7 +25,7 @@ public class MyInfo {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", unique = true)
+    @JoinColumn(name = "member_id", nullable = false, unique = true)
     private Member member;
 
     @Column(name = "lat")
@@ -57,6 +57,7 @@ public class MyInfo {
 
     @Column(name = "military")
     @Enumerated(EnumType.STRING)
+    @ColumnDefault("'NONE'")
     private InfoMilitary military;
 
     @Column(name = "pet")
@@ -66,6 +67,7 @@ public class MyInfo {
 
     @Column(name = "mbti")
     @Enumerated(EnumType.STRING)
+    @ColumnDefault("'SECRET'")
     private InfoMBTI mbti;
 
     @Column(name = "pr")

@@ -152,8 +152,9 @@ public class MemberController {
      * @throws IOException
      */
     @PutMapping("/img")
-    public ResponseEntity<?> putMemberImages(@RequestParam("images") List<MultipartFile> images)
+    public ResponseEntity<?> putMemberImages(@RequestPart("images") List<MultipartFile> images)
         throws IOException {
+
         List<byte[]> data = new ArrayList<>();
 
         for (MultipartFile image : images) {
@@ -230,8 +231,18 @@ public class MemberController {
     @GetMapping("/certificate")
     public ResponseEntity<?> getMemberCertificate() {
         return new ResponseEntity<>(
-            memberService.getMemberCertificate(SecurityUtil.getCurrentDidAddress().get()),
+            memberService.getMyCertificate(SecurityUtil.getCurrentDidAddress().get()),
             HttpStatus.OK);
+    }
+
+    /**
+     * 다른 유저 인증정보 가져오기
+     * @param memberId
+     * @return
+     */
+    @GetMapping("/{member-id}/certificate")
+    public ResponseEntity<?> getMemberCertificate(@PathVariable("member-id") Long memberId) {
+        return new ResponseEntity<>(memberService.getMemberCertificate(memberId),HttpStatus.OK);
     }
 
     /**
@@ -258,6 +269,8 @@ public class MemberController {
     public ResponseEntity<?> getMemberInterestList(@PathVariable("member-id") Long memberId) {
         return new ResponseEntity<>(memberService.getMemberInterestList(memberId), HttpStatus.OK);
     }
+
+
     /**
      * 현재 유저 관심사 정보 가져오기
      *

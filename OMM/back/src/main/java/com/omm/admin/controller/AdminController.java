@@ -1,5 +1,6 @@
 package com.omm.admin.controller;
 
+import com.google.gson.Gson;
 import com.omm.admin.model.dto.ReportDto;
 import com.omm.admin.model.request.CreateReportRequestDto;
 import com.omm.admin.model.request.PunishMemberRequestDto;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/admin")
@@ -24,14 +26,15 @@ public class AdminController {
      * 채팅방에서 새로운 신고 내역을 생성하는 함수
      * 회원 로직 생성 후 추가 수정 필요
      *
-     * @param createReportRequestDto 신고내역정보가 담긴 객체
      * @return
      */
     @PostMapping("/report")
-    public ResponseEntity<?> createReport(@RequestBody CreateReportRequestDto createReportRequestDto) {
+    public ResponseEntity<?> createReport(@RequestPart("image") MultipartFile image, @RequestParam("report") String reportJson) {
+        Gson gson = new Gson();
+        CreateReportRequestDto createReportRequestDto = gson.fromJson(reportJson, CreateReportRequestDto.class);
         // JWT 생성하고 현재 로그인 유저, 타겟 로그인유저 정보 알아와야 함
         // 결과에 따라
-        if (adminService.createReport(createReportRequestDto, SecurityUtil.getCurrentDidAddress().get())) {
+        if (adminService.createReport(createReportRequestDto, SecurityUtil.getCurrentDidAddress().get(), image)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             throw new ReportRuntimeException(ReportExceptionCode.REPORT_POST_SAVE_EXCEPTION);

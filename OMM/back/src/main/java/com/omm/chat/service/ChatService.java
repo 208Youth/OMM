@@ -16,6 +16,7 @@ import com.omm.repository.MemberRepository;
 import com.omm.util.SecurityUtil;
 import com.omm.util.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -25,19 +26,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ChatService {
     private final ChatRepository chatRepository;
     private final MemberRepository memberRepository;
     private final MemberImgRepository memberImgRepository;
     private final ObjectMapper objectMapper;
-    private Map<Long, String> sessionIdFromMemberId;
-    private Map<String, String> roomIdFromSessionId;
-
-    @PostConstruct
-    private void init() {
-        this.roomIdFromSessionId = new ConcurrentHashMap<>();
-        this.sessionIdFromMemberId = new ConcurrentHashMap<>();
-    }
+    private HashMap<String, Long> sessionidWithUserId = new HashMap<>();
+    private HashMap<Long, String> userIdWithSessionId = new HashMap<>();
+    private HashMap<String, String> sessionidWithChatroomId = new HashMap<>();
 
     /**
      * 채팅방 생성
@@ -89,6 +86,7 @@ public class ChatService {
         chatRoomDto.setMyNotReadIndex(room.getLastReadIndex().get(myInfo.getId()));
         chatRoomDto.setLastMsgTime(room.getLastMsgTime());
         chatRoomDto.setOther(getOtherInfo(room.getUserIds(), myInfo, room));
+        chatRoomDto.setMyLastSendIndex(room.getLastSendIndex().get(myInfo.getId()));
         return chatRoomDto;
     }
 
@@ -134,50 +132,76 @@ public class ChatService {
         Member myInfo = getMember(user);
         ChatMessage message = new ChatMessage();
         Long id = chatRepository.getMessageSize(messageDto.getRoomId()) + 1;
-        ChatRoom chatRoom = chatRepository.getRoom(message.getRoomId());
+
+        ChatRoom chatRoom = chatRepository.getRoom(messageDto.getRoomId());
+        chatRoom.setMsgs(id);
+        chatRoom.setContent(messageDto.getContent());
+        Map<Long, Long> lastReadIndex = chatRoom.getLastReadIndex();
+        lastReadIndex.put(myInfo.getId(), id);
+
+        Map<Long, Long> lastSendIndex = chatRoom.getLastSendIndex();
+        lastSendIndex.put(myInfo.getId(), id);
+
+        LocalDateTime nowTime = LocalDateTime.now();
+        chatRoom.setLastMsgTime(nowTime);
 
         message.setId(id);
         message.setRoomId(messageDto.getRoomId());
         message.setContent(messageDto.getContent());
-        message.setCreatedTime(LocalDateTime.now());
+        message.setCreatedTime(nowTime);
         message.setSenderId(myInfo.getId());
         message.setReceiverId(messageDto.getReceiverId());
         message.setRead(false);
 
-        if(sessionIdFromMemberId.get(messageDto.getReceiverId()) != null) {
-            String sessionId = sessionIdFromMemberId.get(messageDto.getReceiverId());
-            if (roomIdFromSessionId.get(sessionId).equals(chatRoom.getId())) {
+        Map<String, Object> otherInfo = getOtherInfo(chatRoom.getUserIds(), myInfo, chatRoom);
+        Long otherId = (Long) otherInfo.get("otherId");
+        String sessionId = userIdWithSessionId.get(otherId);
+        if(sessionId != null && sessionidWithChatroomId.get(sessionId) != null) {
+            if(sessionidWithChatroomId.get(sessionId).equals(messageDto.getRoomId())) {
                 message.setRead(true);
             }
         }
 
+        chatRepository.setRoom(chatRoom);
+        chatRepository.saveMessage(message);
         return message;
     }
 
     public void connectUser(String roomId, String websocketSessionId, Long myId) {
-        if(sessionIdFromMemberId.get(myId) != null) {
-            roomIdFromSessionId.remove(sessionIdFromMemberId.get(myId));
-        }
-        roomIdFromSessionId.put(websocketSessionId, roomId);
-        sessionIdFromMemberId.put(myId, websocketSessionId);
+        sessionidWithChatroomId.put(websocketSessionId, roomId);
+        sessionidWithUserId.put(websocketSessionId, myId);
+        userIdWithSessionId.put(myId, websocketSessionId);
     }
 
-    public void disconnectUser(String websocketSessionId, Long myId) {
-        if(roomIdFromSessionId.get(websocketSessionId) != null) {
-            roomIdFromSessionId.remove(websocketSessionId);
+    public void disconnectUser(String key) {
+        String chatroomId = sessionidWithChatroomId.get(key);
+        if (chatroomId == null) {
+            log.error(" have to exist but not sessionId=" + key + " userId=" + sessionidWithUserId.get(key));
+        } else {
+            Long userId = sessionidWithUserId.get(key);
+            if (userId == null) log.error("no user found");
+            else {
+                ChatRoom chatRoom = chatRepository.getRoom(chatroomId);
+                Map<Long, Long> lastReadIndex = chatRoom.getLastReadIndex();
+                lastReadIndex.put(userId, chatRoom.getMsgs());
+                chatRepository.setRoom(chatRoom);
+
+                log.debug("remove the user from Redis joining members because of disconnection");
+                userIdWithSessionId.remove(userId);
+            }
         }
-        if(sessionIdFromMemberId.get(myId) != null) {
-            sessionIdFromMemberId.remove(myId);
-        }
+        sessionidWithUserId.remove(key);
+        sessionidWithChatroomId.remove(key);
     }
 
-    public void enterRoom(String roomId, Long myId) {
+    public ChatRoom enterRoom(String roomId, Long myId) {
         ChatRoom chatRoom = chatRepository.getRoom(roomId);
         Map<Long, Long> lastReadIndex = chatRoom.getLastReadIndex();
         Long msgSize = chatRepository.getMessageSize(roomId);
         lastReadIndex.put(myId, msgSize);
         chatRoom.setLastReadIndex(lastReadIndex);
         chatRepository.setRoom(chatRoom);
+        return chatRoom;
     }
 
     public void exitChatRoom(String roomId) {

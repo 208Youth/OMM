@@ -476,13 +476,47 @@ public class MemberService {
     }
 
     /**
-     * 유저 인증정보 가져오기
+     * 현재 유저 인증정보 가져오기
      *
      * @param currentMemberDidAddress 현재 로그인 유저
      * @return
      */
-    public MemberCertDto getMemberCertificate(String currentMemberDidAddress) {
+    public MemberCertDto getMyCertificate(String currentMemberDidAddress) {
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
+            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        MemberCert memberCert = memberCertRepository.findByMember(member)
+            .orElseThrow(
+                () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+
+        try {
+            MemberCertDto memberCertDto = MemberCertDto.builder()
+                .university(memberCert.isUniversity())
+                .universityName(memberCert.getUniversityName())
+                .job(memberCert.isJob())
+                .jobNames(memberCert.getJobNames())
+                .certificate(memberCert.isCertificate())
+                .certificateNames(memberCert.getCertificateNames())
+                .health(memberCert.isHealth())
+                .healthInfo(memberCert.getHealthInfo())
+                .estate(memberCert.isEstate())
+                .estateAmount(memberCert.getEstateAmount())
+                .income(memberCert.isIncome())
+                .incomeAmount(memberCert.getIncomeAmount())
+                .build();
+            return memberCertDto;
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
+        }
+    }
+
+    /**
+     * 다른 유저 데이터 가져오기
+     * @param memberId
+     * @return
+     */
+    public MemberCertDto getMemberCertificate(Long memberId) {
+        Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         MemberCert memberCert = memberCertRepository.findByMember(member)

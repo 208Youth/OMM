@@ -22,11 +22,11 @@ function Alert() {
     const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/matching`);
     const stompClient = Stomp.over(ws);
     // 유저 3 토큰
-    const token3 =
-      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIweDA2YTgwMzg5M2IzNTE2NWFhYzJmYmMwYTgyM2M0MDkzNTdlOGVlNmQiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjgwNTg4MzgyfQ.0_7GyqVNQyaVwRd5AiFDzergGyTQuh2Nv7ptcRfLzJkBIby733B4OxiSLrusBPm7lfZTlcK5LSPqvOAkU8nidQ';
-    const decoded = jwt_decode(token3);
+    const token = localStorage.getItem('accesstoken');
+    const decoded = jwt_decode(token);
     const headers = {
-      Authorization: import.meta.env.VITE_TOKEN_3, // 유저3 토큰
+      // Authorization: import.meta.env.VITE_TOKEN,
+      Authorization: `Bearer ${token}`,
     };
     stompClient.connect(
       headers,
@@ -35,6 +35,8 @@ function Alert() {
           `/sub/matching/noti/${decoded.sub}`,
           (message) => {
             const recv = JSON.parse(message.body);
+            console.log("내가 받은 메세지: ")
+            console.log(recv)
             setAlertList((prev) => {
               const newList = [recv, ...prev];
               return newList;
@@ -65,7 +67,8 @@ function Alert() {
       url: '/matching/noti',
       data: msg,
       headers: {
-        Authorization: import.meta.env.VITE_TOKEN_3,
+        // Authorization: import.meta.env.VITE_TOKEN,
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => {
@@ -81,7 +84,8 @@ function Alert() {
       method: 'get',
       url: '/matching/noti',
       headers: {
-        Authorization: import.meta.env.VITE_TOKEN_3,
+        // Authorization: import.meta.env.VITE_TOKEN,
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => {
@@ -112,8 +116,8 @@ function Alert() {
       </div>
       <div className="mx-6 text-lg mb-3" id="msgs">
         <div className="mt-3">
-          {alertlist &&
-            alertlist.map((msg) => (
+          {alertlist
+            && alertlist.map((msg) => (
               <div>
                 <AlertMsg
                   msg={msg}

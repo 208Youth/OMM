@@ -57,9 +57,14 @@ def detect_text(path, inputday, inputname, inputyear, inputmonth, inputgender):
     texts = response.text_annotations
     parcingdata = texts[0].description.splitlines()
     doc_type = (parcingdata[0])[:5]
+    print(doc_type)
     name = (parcingdata[1])[: name_len]
+    print(name)
     birthday = (parcingdata[2])[:6]
+    print(birthday)
     gender = int((parcingdata[2])[7:8])
+    print(gender)
+
     if (gender == 1 or gender == 3):
         gender = 'MALE'
     elif (gender == 2 or gender == 4):

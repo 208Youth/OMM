@@ -80,7 +80,7 @@ function Detail() {
       <div className="flex justify-center">
         <img
           className="w-[20rem] h-[10rem]"
-          src="../../../public/ommheart.png"
+          src={`data:image/png;base64,${report.image}`}
           alt=""
         />
       </div>

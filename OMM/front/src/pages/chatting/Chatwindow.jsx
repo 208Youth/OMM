@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import axios from 'axios';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import Modal from 'react-modal';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import chat from '../../api/chat';
 import http from '../../api/http';
 import BottomModal from './BottomModal';
@@ -15,30 +15,35 @@ function ChatWindow() {
   const [sender, setSender] = useState(localStorage.getItem('wschat.sender'));
   const [room, setRoom] = useState({});
   const location = useLocation();
+  const [arrivalChat, setArrivalChat] = useState(null); // 도착한 메세지 저장
   const [message, setMessage] = useState('');
-  const token = localStorage.getItem('accessoken');
-  const headers = {
-    // Authorization: import.meta.env.VITE_TOKEN,
-    Authorization: token, // 매칭 수락한사람의 토큰
-  };
-
+  const token = localStorage.getItem('accesstoken');
   // 임시로 메시지를 저장
-  const [messages, setMessages] = useState([
-    { senderId: 1, content: '자나요?', isRead: true },
-    { senderId: 1, content: '술 마실래요', isRead: true },
-    { senderId: 2, content: '저 입이 없어서 술 못마셔요 ㅜㅜ', isRead: true },
-    { senderId: 1, content: '아 네', isRead: false },
-    { senderId: 1, content: '카톡 할래요?', isRead: false },
-    {
-      senderId: 2,
-      content: '저 와이파이가 안되서 카톡 못해요 ㅠㅠ',
-      isRead: false,
-    },
-  ]);
-
+  const [messages, setMessages] = useState([]);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
+  const [otherNickname, setOtherNickname] = useState('');
+  const [otherImage, setOtherImage] = useState('');
 
+  function setrecenctmes() {
+    // 태그의 클래스를 이용하여 선택하기
+    const chatBox = document.querySelector('#recentChat');
+
+    // 스크롤을 마지막으로 이동하기
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+  // 내가 보낸 채팅만 읽음 안읽음 처리하기 위한 로직
+  // 1.채팅 목록을 역순으로 정렬합니다.
+  // 2. 반복문을 사용하여 채팅 목록을 출력합니다.
+  // 3. 내가 보낸 채팅 중에서 가장 최근에 보낸 채팅을 찾습니다.
+  // 4. 내가 보낸 채팅이면서 가장 최근에 보낸 채팅인 경우에만 "읽음" 혹은 "안읽음" 정보를 보여줍니다.
+
+  const myChatList = messages.filter((chat1) => chat1.senderId !== room.other.otherId);
+  console.log(messages);
+  console.log(myChatList);
+
+  const latestMyChat = myChatList.find((chat1) => chat1.read === false);
+  console.log(latestMyChat);
   const openModal = () => {
     setIsOpen(true);
   };
@@ -54,61 +59,59 @@ function ChatWindow() {
   const closeReportModal = () => {
     setReportOpen(false);
   };
-  console.log(location);
+  const [lastchatindex, setLastchatindex] = useState(-1);
+
+  useEffect(() => {
+    arrivalChat && setMessages((prev) => [...prev, arrivalChat]);
+    setTimeout(() => {
+      setrecenctmes();
+    }, 1);
+    setLastchatindex(messages.length);
+    // 채팅 리스트에 추가
+  }, [arrivalChat]);
+
   const roomId = location.pathname.substring(12, location.pathname.lastIndex);
-  console.log(roomId);
-  console.log(sender);
+
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    roomId,
+    // Authorization: token,
+  };
+
+  const roomHeader = {
+    roomId,
+  };
 
   // const ws = new SockJS('http://localhost:5000/api/chat');
   const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
   const stompClient = Stomp.over(ws);
-  // 임시값으로 쁘띠재용을 받는다.
-  const user2ID = '쁘띠재용';
 
-  const findRoom = () => {
-    console.log('파인드룸시잗');
-    http
-      .get(`/chat/room/${roomId},`, headers)
-      .then((response) => {
-        setRoom(response.data);
-        console.log('findroom정상실행');
-      })
-      .catch((error) => {
-        console.log(error);
-        console.log('dd');
-      });
-  };
-
-  const sendMessage = () => {
-    // const ws = new SockJS('http://localhost:5000/api/chat');
-    // const stompClient = Stomp.over(ws);
-    stompClient.connect({}, (frame) => {
-      stompClient.send(
-        `/api/pub/chat/room/${roomId}`,
-        {},
-        JSON.stringify({ roomId, senderId: sender, content: message }),
-      );
-      setMessage('');
-      stompClient.disconnect();
-    });
-  };
+  // useEffect(
+  //   () => () => {
+  //     http.get('/chat/test').then((res) => {
+  //       console.log('요청함');
+  //     });
+  //   },
+  //   [location, stompClient],
+  // );
 
   const connect = () => {
-    const reconnect = 0;
-    console.log('아래는 메시지');
-    console.log(message);
-    console.log(messages.length);
     stompClient.connect(
-      {},
+      headers,
       (frame) => {
-        stompClient.subscribe('/sub/chat/entrance', (readDto) => {
-          const readIndex = JSON.parse(readDto.body);
-          recvReadDto(readIndex);
-        });
+        stompClient.subscribe(
+          `/sub/chat/room/${roomId}   /entrance`,
+          (readDto) => {
+            setMessages([...readDto.payload]);
+            setRoom(readDto.roomInfo);
+            setOtherNickname(readDto.roomInfo.other.nickname);
+            setLastchatindex(readDto.roomInfo.myLastSendIndex);
+          },
+        );
 
         stompClient.subscribe(`/sub/chat/room/${roomId}`, (message) => {
           const recv = JSON.parse(message.body);
-          recvMessage(recv);
+          setArrivalChat(recv);
         });
       },
       (error) => {
@@ -120,6 +123,59 @@ function ChatWindow() {
         // }
       },
     );
+  };
+
+  const findRoom = () => {
+    http({
+      method: 'get',
+      url: `/chat/room/${roomId}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        console.log('채팅방 정보를 가져옴');
+        console.log(response);
+        // setRoom(response.data.roomInfo);
+        console.log(response.data.roomInfo.msgs);
+        console.log(response.data.roomInfo);
+        setMessages([...response.data.payload]);
+        setRoom(response.data.roomInfo);
+        setOtherNickname(response.data.roomInfo.other.nickname);
+        setOtherImage(response.data.roomInfo.other.image);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const waitForConnection = (stompClient, callback) => {
+    setTimeout(() => {
+      // 연결되었을 때 콜백함수 실행
+      if (stompClient.ws.readyState === 1) {
+        callback();
+        // 연결이 안 되었으면 재호출
+      } else {
+        waitForConnection(stompClient, callback);
+      }
+    }, 1); // 밀리초 간격으로 실행
+  };
+
+  const sendMessage = () => {
+    // stompClient.connect(headers, (frame) => {
+    waitForConnection(stompClient, () => {
+      stompClient.send(
+        `/pub/chat/room/${roomId}`,
+        headers,
+        JSON.stringify({
+          roomId,
+          receiverId: room.other.otherId,
+          content: message,
+        }),
+      );
+    });
+    setMessage('');
+    setLastchatindex(myLastIndex + 1);
   };
 
   const recvReadDto = (readIndex) => {
@@ -136,48 +192,34 @@ function ChatWindow() {
     setMessages(copies);
   };
 
+  const recvMessage = (recv) => {
+    console.log(recv);
+    const tempMsgs = [...messages, recv];
+    setMessages([...tempMsgs]);
+  };
+
   useEffect(() => {
     findRoom();
-    http({
-      method: 'get',
-      url: `/chat/room/${roomId}/messages`,
-      headers: {
-        Authorization: import.meta.env.VITE_TOKEN,
-      },
-    }).then((response) => {
-      console.log(response);
-      setMessages([...response]);
-    });
-
-    // axios
-    //   .get(`http://localhost:5000/api/chat/room/${roomId}/messages`)
-    //   .then(({ data }) => {
-    //     console.log('아래는 data 정보');
-    //     console.log({ data });
-    //     console.log(...data);
-    //     console.log('위는data 정보');
-    //     setMessages([...data]);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
     connect();
   }, []);
 
   return (
     <div className=" text-[#364C63] w-[22.5rem] h-[48.75rem] mx-auto">
       <div className="text-2xl mx-6 py-8">
-        <span>&lt;</span>
+        <Link to="/main" className="">
+          <span>&lt;</span>
+        </Link>
         <span className="ml-3 font-sans font-extrabold text-[1.3rem]">
-          {user2ID}
+          {otherNickname}
         </span>
       </div>
-      <div className="flex mx-auto w-[20rem] h-[39rem] overscroll-x-none overflow-y-scroll scrollbar-hide touch-pan-y text-xs rounded-lg mb-1">
+      <div id="recentChat" className="flex mx-auto w-[20rem] h-[39rem] overscroll-x-none overflow-y-scroll scrollbar-hide touch-pan-y text-xs rounded-lg mb-1">
         <div id="chatdetail" className="w-[20rem] mx-auto">
           <div>{/* 만약 보낸사람이 내가 아니라면 */}</div>
           <div id="Chat">
             <div>
               {}
+              <div>{room.id}</div>
               <div>{room.id}</div>
               <ul>
                 {messages.map((msg, index) => (
@@ -185,32 +227,59 @@ function ChatWindow() {
                     key={index}
                     className={`my-2 ${
                       msg.senderId === 1 ? 'text-right' : 'text-left'
-                    }`}
+                    } ${lastchatindex === index ? '' : ''}`}
                   >
-                    {msg.senderId === 1 ? (
-                      <div className="font-sans ml-28">
-                        <span className="text-[0.5rem] mr-1">
-                          {msg.isRead ? '읽음' : '안읽음'}
+                    {msg.senderId != room.other.otherId ? (
+                      <div className="w-60 flex font-sans ml-20 justify-end">
+
+                        {lastchatindex === index && (
+                        <span id="readen" className="text-[0.5rem] mr-1 self-end">
+                          {msg.read ? '' : '안읽음'}
                         </span>
-                        <span className="bg-[#E1E3EB] p-2 rounded-lg">
-                          <span className="font-sans">{msg.senderId}</span>
-                          <span className="text-sm mr-2 font-sans font-bold">
-                            {msg.content}
-                            오른쪽
+                        )}
+
+                        {/* {msg === latestMyChat && (
+                          <span className="text-[0.5rem] ml-1 self-end">
+                            {msg.read ? '읽음' : '안읽음'}
                           </span>
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="w-60 flex">
-                        <div className="w-48 bg-[#E6C9C6] p-2 rounded-lg">
-                          <span className="text-sm mr-2 font-sans font-bold">
-                            왼쪽
-                            {msg.content}
-                          </span>
-                          <span className="">{msg.senderId}</span>
-                        </div>
+                        )} */}
+                        {msg === latestMyChat && (
                         <span className="text-[0.5rem] ml-1 self-end">
                           {msg.isRead ? '읽음' : '안읽음'}
+                        </span>
+                        )}
+                        <div className="max-w-[12.5rem]  inline-block bg-gray-200 p-2 rounded-lg">
+
+                          <span className="text-sm font-sans font-bold break-words whitespace-pre-line">
+                            {msg.content}
+                            {' '}
+
+                          </span>
+
+                        </div>
+                        {/* <span className="font-sans">{msg.senderId}</span> */}
+                      </div>
+                    ) : (
+                      <div className="w-60 ">
+                        <div>
+                          <span className="">{msg.senderId}</span>
+                          <span className="">{otherImage}</span>
+                        </div>
+
+                        <div className="max-w-[12.5rem] inline-block bg-[#E6C9C6] p-2 rounded-lg">
+                          <span className="text-sm mr-2 font-sans font-bold break-words ">
+
+                            {msg.content}
+                          </span>
+
+                        </div>
+
+                        <span className="text-[0.5rem] ml-1 self-end">
+                          {/* {msg.isRead ? '' : (
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-check" viewBox="0 0 16 16">
+                              <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
+                            </svg>
+                          )} */}
                         </span>
                       </div>
                     )}
@@ -218,7 +287,7 @@ function ChatWindow() {
                 ))}
               </ul>
 
-              <div className="flex fixed bottom-0 ">
+              <div className="flex fixed bottom-0 ml-[0.2rem]">
                 <button
                   onClick={() => {
                     openModal();
@@ -243,7 +312,9 @@ function ChatWindow() {
                   type="text"
                   className="rounded-md bg-[#F2EAF2] w-60 h-11 self-center"
                   value={message}
-                  onChange={(e) => setMessage(e.target.value)}
+                  onChange={(e) => {
+                    setMessage(e.target.value);
+                  }}
                 />
                 {/* <button onClick={sendMessage}>Send</button> */}
 

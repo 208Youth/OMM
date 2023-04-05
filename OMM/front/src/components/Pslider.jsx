@@ -1,23 +1,32 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import './Pslider.css';
-
+import { useLocation } from 'react-router-dom';
 import { EffectCoverflow, Pagination, Navigation } from 'swiper';
-
+import { useSelector } from 'react-redux';
 import axios from 'axios';
-import slide_image_1 from '../../public/ommlogo.png';
-import slide_image_2 from './assets/images/img_2.jpg';
-import slide_image_3 from './assets/images/img_3.jpg';
-import slide_image_4 from './assets/images/img_4.jpg';
-import slide_image_5 from './assets/images/img_5.jpg';
-import slide_image_6 from './assets/images/img_6.jpg';
+import slide_image_1 from '../../public/defaultimage.png';
 
-function Pslider({ imgs }) {
-  console.log(imgs);
+function Pslider({ mainImg, profileImg, name, age }) {
+  const location = useLocation();
+  console.log(profileImg);
+  console.log(mainImg);
+  // console.log(imgs);
+  // // let imgs = [];
+  // useEffect(() => {
+  //   if (location.pathname.includes('main') && mainImg) {
+  //     setImages(mainImg);
+  //   }
+  //   console.log(mainImg);
+  // }, []);
+
+  console.log('이름', name);
+  console.log(age);
+  console.log(mainImg);
 
   return (
     <div className="pcontainer">
@@ -27,7 +36,7 @@ function Pslider({ imgs }) {
         grabCursor
         centeredSlides
         freeMode
-        loop
+        // loop
         slidesPerView="auto"
         // spaceBetween={-1500} // 슬라이드 요소간 간격을 20px로 설정
         coverflowEffect={{
@@ -46,30 +55,63 @@ function Pslider({ imgs }) {
         className="swiper_container"
       >
         {/* 이미지 리스트 들어오는 코드 작성한 후에 아래 주석풀어주세요 */}
-        {/* {imgs.map((img, i) => {
-          <SwiperSlide key={i}>
-            <img src={img} alt="이미지" />
-          </SwiperSlide>;
-        })} */}
-        <SwiperSlide>
-          <img src={slide_image_1} className="default-image" alt="slide_image" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src={slide_image_2} alt="slide_image" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src={slide_image_3} alt="slide_image" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src={slide_image_4} alt="slide_image" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src={slide_image_5} alt="slide_image" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src={slide_image_6} alt="slide_image" />
-        </SwiperSlide>
-
+        {location.pathname.includes('main') && (
+          <SwiperSlide className="static flex content-center">
+            <img src={slide_image_1} alt="slide_image" />
+            <div className="flex absolute bottom-[10%] left-[5%] w-[50%] h-[10%] mx-auto">
+              <div className="flex px-6 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full my-auto">
+                <span className="text-xl h-12 mt-2 mx-auto text-white">
+                  {name}
+                </span>
+              </div>
+              <div className="flex w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full my-auto ml-2">
+                <span className="text-xl mx-auto my-auto text-white">
+                  {age}
+                </span>
+              </div>
+            </div>
+          </SwiperSlide>
+        )}
+        {mainImg &&
+          mainImg.map((img, index) => (
+            <div key={index}>
+              <p>이미지</p>
+              <SwiperSlide className="static flex content-center">
+                <img src={`data:image/png;base64,${img}`} alt={img} />
+                {location.pathname.includes('main') && (
+                  <div className="flex absolute bottom-[10%] left-[5%] w-[50%] h-[10%] mx-auto">
+                    <div className="flex px-6 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full my-auto">
+                      <span className="text-xl h-12 mt-2 mx-auto text-white">
+                        {name}
+                      </span>
+                    </div>
+                    <div className="flex w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full my-auto ml-2">
+                      <span className="text-xl mx-auto my-auto text-white">
+                        {age}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </SwiperSlide>
+              ;
+            </div>
+          ))}
+        {profileImg &&
+          profileImg.map((img, index) => (
+            <div key={index}>
+              <SwiperSlide className="static flex content-center">
+                {location.pathname.includes('rofile') && (
+                  <img src={`data:image/png;base64,${img}`} alt="이미지" />
+                )}
+              </SwiperSlide>
+              ;
+            </div>
+          ))}
+        {!profileImg && location.pathname.includes('rofile') && (
+          <SwiperSlide>
+            <img src={slide_image_1} alt="slide_image" />
+          </SwiperSlide>
+        )}
         {/* <div className="slider-controler">
           <div className="swiper-button-prev slider-arrow">
             <ion-icon name="arrow-back-outline" />

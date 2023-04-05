@@ -23,13 +23,16 @@ public class ChatRoom implements Serializable {
     private String content;
 
     private static final String START_MSG = "채팅을 시작해주세요!";
+    private Map<Long, Long> lastSendIndex;
 
     public ChatRoom(Set<Long> userIds) {
         this.id = UUID.randomUUID().toString();
         this.userIds = userIds;
         this.lastReadIndex = new HashMap<>();
+        this.lastSendIndex = new HashMap<>();
         userIds.forEach(userId -> {
             lastReadIndex.put(userId, 0L);
+            lastSendIndex.put(userId, 0L);
         });
         this.msgs = 0L;
         this.lastMsgTime = LocalDateTime.now();

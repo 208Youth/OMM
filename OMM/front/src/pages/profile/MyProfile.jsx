@@ -1,10 +1,15 @@
+// 변경
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Pslider.css';
 // import './Profile.css';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
 import Modal from 'react-modal';
+import './MyProfile.css';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
+import ImageUploader from './ImageUploader';
 import CloseBtn from '../../assets/CloseBtn.svg';
 import pencil from '../../assets/pencil.svg';
 import imagesetting from '../../assets/imagesetting.svg';
@@ -29,37 +34,92 @@ import userarrow from '../../assets/userarrow.svg';
 import MyinfoSetModal from './MyinfoSetModal';
 import MyinfoSetModal3 from './MyinfoSetModal3';
 import MyinfoSetModal2 from './MyinfoSetModal2';
-import http from '@/api/http';
+import http from '../../api/http';
 // props를 통해 userid를 받고 claose 버튼을 눌러서 해당 userid의
 // 아니면 메인 페이지에 해당 컴포넌트를 아예 합쳐버릴까
+
+function InterestList({ interest }) {
+  return (
+    <div>
+      <div>
+        <div />
+      </div>
+
+      {interest.map((item) => (
+        <button
+          key={item.interest_list_id}
+          className="bg-white border border-black rounded-full text-sm px-4"
+        >
+          {item.name}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 function MyProfile({ profileNav }) {
   profileNav = true;
   const certinfo = {
     university: false,
-    job: true,
+    job: false,
     certificate: false,
     health: false,
     estate: false,
     income: false,
   };
-  const interest = [
-    {
-      interest_list_id: 1,
-      name: '관심사 이름1',
-    },
-    {
-      interest_list_id: 2,
-      name: '관심사 이름2',
-    },
-    {
-      interest_list_id: 3,
-      name: '관심사 이름3',
-    },
-  ];
+
+  // const interest = [
+  //   {
+  //     interest_list_id: 1,
+  //     name: '관심사 이름1',
+  //   },
+  //   {
+  //     interest_list_id: 2,
+  //     name: '관심사 이름2',
+  //   },
+  //   {
+  //     interest_list_id: 3,
+  //     name: '관심사 이름3',
+  //   },
+  // ];
+  // const basicInfomation = [{
+  //   nickname: '12',
+  //   age: 20,
+  //   pr: 1,
+  //   height: 180,
+  //   drinking_stlye: 1,
+  //   highschool: 1,
+  //   contact_stlye: 1,
+  //   military: 1,
+  //   mbti: 1,
+  //   interest: null,
+  //   pet: null,
+  // },
+  // ];
+  // const filterInfomation = [{
+  //   age_min: 1,
+  //   age_max: 100,
+  //   range_min: 1,
+  //   range_max: 100,
+  //   height_min: 1,
+  //   height_max: 100,
+  // }];
+  const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
   const [MymodalIsOpen, setMyIsOpen] = useState(false);
   const [MymodalIsOpen2, setMyIsOpen2] = useState(false);
-  const [MymodalIsOpen3, setMyIsOpen3] = useState(true);
+  const [MymodalIsOpen3, setMyIsOpen3] = useState(false);
+  const [uploadImg, setuploadImg] = useState(false);
+  // const memberId = localStorage.getItem('member_id');\
+  const [disabled, setDisabled] = useState(true);
+  const [new_pr, setNew_pr] = useState('');
+
+  const memberId = 1;
   const token = localStorage.getItem('accesstoken');
+
+  const handleClick = () => {
+    setDisabled(false);
+  };
   const openMyModal = () => {
     setMyIsOpen(true);
   };
@@ -78,8 +138,18 @@ function MyProfile({ profileNav }) {
   const closeMyModal3 = () => {
     setMyIsOpen3(false);
   };
+  const openImageModal = () => {
+    setuploadImg(true);
+  };
+  const closeImageModal = () => {
+    setuploadImg(false);
+  };
   const [new_certinfo, setCert] = useState(certinfo);
-  const [new_interest, setInterest] = useState(null);
+  const [interest, setInterest] = useState([]);
+  const [basicInfomation, setInfo] = useState([]);
+  const [filterInfomation, setFilter] = useState([]);
+  const [profileImg, setProfileImg] = useState([]);
+
   // const [isHovered, setIsHovered] = useState(false);
   // const handleMouseEnter = () => {
   //   setIsHovered(true);
@@ -88,21 +158,106 @@ function MyProfile({ profileNav }) {
   //   setIsHovered(false);
   // };
   // new_certinfo인지 certinfo인지 axios주고받으면서 확인
-  const FreshCert = () => {
-    http
-      .get('/member/certificate')
-      .then((response) => setCert(response.data))
-      .catch((error) => console.error(error));
-  };
-  const FreshInterest = () => {
-    http
-      .get('/member/interest')
-      .then((response) => setInterest(response.data.interestList))
-      .catch((error) => console.error(error));
-  };
+  // const GetuserInfo = () => {
+  //   http
+  //   .get(`/api/member/${memberId}`)
+  // }
+  async function Freshinfo() {
+    await http({
+      method: 'get',
+      url: '/member',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        setInfo(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log('왜자꾸안되');
+        console.log();
+      });
+  }
+
+  async function FreshCert() {
+    await http({
+      method: 'get',
+      url: '/member/certificate',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        setCert(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  async function sendPr() {
+    await http({
+      method: 'put',
+      url: '/member/pr',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      data: { pr: new_pr },
+    })
+      .then((res) => {
+        console.log(res);
+        console.log(new_pr);
+      })
+      .catch((err) => {
+        console.log(new_pr);
+        console.log(typeof new_pr);
+        console.log(err);
+      });
+  }
+
+  async function FreshFilter() {
+    await http({
+      method: 'get',
+      url: '/member/filtering',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        setFilter(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  async function FreshInterest() {
+    await http({
+      method: 'get',
+      url: '/member/interest-list',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        console.log('관심사성공');
+        setInterest(res.data.interestList);
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log('관심사실패');
+      });
+  }
+
   useEffect(() => {
     FreshCert();
     FreshInterest();
+    FreshFilter();
+    Freshinfo();
   }, []);
 
   async function toCert() {
@@ -121,6 +276,99 @@ function MyProfile({ profileNav }) {
         console.log(err);
       });
   }
+  let drinkingStyleText;
+  if (basicInfomation.drinking_style === 'NOT') {
+    drinkingStyleText = '논 알코올';
+  } else if (basicInfomation.drinking_style === 'SOMETIMES') {
+    drinkingStyleText = '가끔';
+  } else if (basicInfomation.drinking_style === 'OFTEN') {
+    drinkingStyleText = '자주';
+  } else if (basicInfomation.drinking_style === 'EVERYDAY') {
+    drinkingStyleText = '술고래';
+  } else if (basicInfomation.drinking_style === 'ONLY_FRIENDS') {
+    drinkingStyleText = '친구들이랑';
+  } else if (basicInfomation.drinking_style === 'STOPPING') {
+    drinkingStyleText = '금주령';
+  }
+  let drinkingStyleText2;
+  if (filterInfomation.drinking_style === 'NONE') {
+    drinkingStyleText2 = '상관없음';
+  } else if (filterInfomation.drinking_style === 'PREFER_NO') {
+    drinkingStyleText2 = '안마셨으면';
+  } else if (filterInfomation.drinking_style === 'PREFER_YES') {
+    drinkingStyleText2 = '잘마셨으면';
+  }
+  let smokingStyleText;
+  if (basicInfomation.smoking_style === 'NOT') {
+    smokingStyleText = '비흡연자';
+  } else if (basicInfomation.smoking_style === 'SOMETIMES') {
+    smokingStyleText = '가끔';
+  } else if (basicInfomation.smoking_style === 'OFTEN') {
+    smokingStyleText = '자주';
+  } else if (basicInfomation.smoking_style === 'STOPPING') {
+    smokingStyleText = '금연중';
+  }
+  let smokingStyleText2;
+  if (filterInfomation.smoking_style === 'NONE') {
+    smokingStyleText2 = '상관없음';
+  } else if (filterInfomation.smoking_style === 'PREFER_NO') {
+    smokingStyleText2 = '비흡연자 선호';
+  } else if (filterInfomation.smoking_style === 'PREFER_YES') {
+    smokingStyleText2 = '흡연자 선호';
+  }
+  let contactStyleText;
+  if (basicInfomation.contact_style === 'PREFER_MSG') {
+    contactStyleText = '카톡러';
+  } else if (basicInfomation.contact_style === 'PREFER_CALL') {
+    contactStyleText = '전화선호';
+  } else if (basicInfomation.contact_style === 'PREFER_FACECALL') {
+    contactStyleText = '영상통화선호';
+  } else if (basicInfomation.contact_style === 'NOT_MSG') {
+    contactStyleText = '카톡 안보는 편';
+  } else if (basicInfomation.contact_style === 'PREFER_OFFLINE') {
+    contactStyleText = '직접 만나는거 선호';
+  }
+  let contactStyleText2;
+  if (filterInfomation.contact_style === 'PREFER_MSG') {
+    contactStyleText2 = '카톡러';
+  } else if (filterInfomation.contact_style === 'PREFER_CALL') {
+    contactStyleText2 = '전화선호';
+  } else if (filterInfomation.contact_style === 'NONE') {
+    contactStyleText2 = '상관없음';
+  } else if (filterInfomation.contact_style === 'PREFER_FACECALL') {
+    contactStyleText2 = '영상통화선호';
+  } else if (filterInfomation.contact_style === 'NOT_MSG') {
+    contactStyleText2 = '카톡 안보는 편';
+  } else if (filterInfomation.contact_style === 'PREFER_OFFLINE') {
+    contactStyleText2 = '직접 만나는거 선호';
+  }
+
+  let petText;
+  if (basicInfomation.pet === 'NOT') {
+    petText = '안키움';
+  } else if (basicInfomation.pet === 'DOG') {
+    petText = '강아지';
+  } else if (basicInfomation.pet === 'CAT') {
+    petText = '고양이';
+  } else if (basicInfomation.pet === 'HAMSTER') {
+    petText = '햄스터';
+  } else if (basicInfomation.pet === 'LIZARD') {
+    petText = '도마뱀';
+  } else if (basicInfomation.pet === 'ETC') {
+    petText = '기타';
+  }
+
+  let militaryText;
+  if (basicInfomation.military === 'NONE') {
+    militaryText = '해당없음';
+  } else if (basicInfomation.military === 'EXEMPT') {
+    militaryText = '면제';
+  } else if (basicInfomation.military === 'COMPLETE') {
+    militaryText = '군필';
+  } else if (basicInfomation.military === 'YET') {
+    militaryText = '미필';
+  }
+
   // useEffect(() => {
   //   axios.get('')
   //     .then((response) => setInterest(response.data.interestList))
@@ -133,14 +381,17 @@ function MyProfile({ profileNav }) {
   // 컴포넌트가 처음 마운트될 때만 useEffect 콜백 함수가 호출되고,
   // 그 이후에는 호출되지 않습니다.
   return (
-    <div className="scroll-smooth">
+    <div>
       <div className="text-center">
         <Modal
           className="MyinfoModal"
           isOpen={MymodalIsOpen}
           onRequestClose={closeMyModal}
         >
-          <MyinfoSetModal setModal={closeMyModal} />
+          <MyinfoSetModal
+            setModal={closeMyModal}
+            basicInfomation={basicInfomation}
+          />
         </Modal>
       </div>
       <div className="text-center">
@@ -163,36 +414,42 @@ function MyProfile({ profileNav }) {
       </div>
       <div>
         <div className="absolute top-20 left-0 w-full z-5">
-          <Pslider />
+          <Pslider profileImg={basicInfomation.profileimgs} />
           <div>
-            <div
-            // className={isHovered ? 'imagesetting:hover' : 'imagesetting'}
-            // onMouseEnter={handleMouseEnter}
-            // onMouseLeave={handleMouseLeave}
-              className="imagesetting"
+            <Modal
+              isOpen={uploadImg}
+              // onAfterOpen={afterOpenModal}
+              onRequestClose={closeImageModal}
+              className="ProfileImgModal"
+              overlayClassName="ProfileImgOverlay"
+              ariaHideApp={false}
             >
-              <img src={imagesetting} alt="$" />
-            </div>
+              <ImageUploader setModal={closeImageModal} />
+            </Modal>
           </div>
 
           <div className="profileinfo">
             <div className="infodetail">
               <div className="text-right">
-                <img
-                  src={CloseBtn}
-                  alt="closbtn"
-                  className="w-8 h-8 inline-block object-right"
-                />
+                <div
+                  className="inline-block object-right"
+                  onClick={() => {
+                    openImageModal();
+                  }}
+                  aria-hidden
+                >
+                  <img src={imagesetting} alt="$" />
+                </div>
               </div>
 
-              <span className="text-3xl ml-2">이름</span>
-              <span> 나이</span>
+              <span className="text-3xl ml-2">{user.nickname}</span>
+              <span> {basicInfomation.age}</span>
               <div className="text-slate-500 text-sm ml-2">
                 <span className="inline-block">
                   <img src={location} alt="" width={10} />
                 </span>
                 <div className="flex justify-between">
-                  <span className="mb-1">주소</span>
+                  <span className="mb-1">{basicInfomation.lat}</span>
                   <span className="flex justify-end">위치수정</span>
                 </div>
               </div>
@@ -201,9 +458,33 @@ function MyProfile({ profileNav }) {
                 <div className="my-1">
                   <div className="text-2xl m-3">자기소개</div>
                   {/* 아이콘을 누르면 input이 가능하게 바꾸기 */}
-                  <div className="text-slate-600 text-sm">자기소개 내용</div>
+                  <div />
+                  <div>
+                    <textarea
+                      maxLength={40}
+                      disabled={disabled}
+                      className=" break-words h-20 resize-none overflow-hidden focus:ring-2 focus:ring-blue-300 text-slate-600 text-sm bg-transparent border-none outline-none w-full"
+                      type="text"
+                      value={new_pr}
+                      onChange={(e) => {
+                        setNew_pr(e.target.value);
+                        console.log(new_pr);
+                      }}
+                    />
+                  </div>
                   <span className="flex justify-end">
-                    <img src={pencil} alt="" />
+                    {disabled && (
+                      <button>
+                        {' '}
+                        <img onClick={handleClick} src={pencil} alt="" />
+                      </button>
+                    )}
+                    {!disabled && (
+                      <button>
+                        {' '}
+                        <span onClick={sendPr}>변경완료</span>
+                      </button>
+                    )}
                   </span>
                 </div>
                 <hr className="thickhr" />
@@ -215,7 +496,9 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="">180 cm</span>
+                        <span className="hover:cursor-pointer">
+                          {basicInfomation.height} cm
+                        </span>
                         <div
                           onClick={() => {
                             openMyModal();
@@ -234,7 +517,10 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="">{}</span>
+                        {/* <span className="hover:cursor-pointer">{basicInfomation.drinking_style}</span> */}
+                        <span className="hover:cursor-pointer">
+                          {drinkingStyleText}
+                        </span>
                         <div
                           onClick={() => {
                             openMyModal();
@@ -252,7 +538,7 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="">{}</span>
+                        <span className="">{basicInfomation.highschool}</span>
                         <div
                           onClick={() => {
                             openMyModal();
@@ -270,7 +556,9 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="">{}</span>
+                        <span className="hover:cursor-pointer">
+                          {contactStyleText}
+                        </span>
                         <div
                           onClick={() => {
                             openMyModal();
@@ -288,7 +576,9 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="">{}</span>
+                        <span className="hover:cursor-pointer">
+                          {smokingStyleText}
+                        </span>
                         <div
                           onClick={() => {
                             openMyModal();
@@ -306,7 +596,9 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="">{}</span>
+                        <span className="hover:cursor-pointer">
+                          {basicInfomation.MBTI}
+                        </span>
                         <div
                           onClick={() => {
                             openMyModal();
@@ -327,8 +619,9 @@ function MyProfile({ profileNav }) {
                         openMyModal3();
                       }}
                     >
-                      <div className="flex items-center">
-                        <span className="">{}</span>
+                      <div className="flex items-center hover:cursor-pointer">
+                        <span className="hover:cursor-pointer">{}</span>
+                        설정하기
                         <div>
                           <img src={userarrow} alt="" className="w-3 ml-2" />
                         </div>
@@ -342,7 +635,25 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="">{}</span>
+                        <span className="">{petText}</span>
+                        <div
+                          onClick={() => {
+                            openMyModal();
+                          }}
+                        >
+                          <img src={userarrow} alt="" className="w-3 ml-2" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                  <div className="flex justify-between m-3">
+                    <div className="">
+                      <span>병역여부</span>
+                    </div>
+                    <div>
+                      <div className="flex items-center">
+                        <span className="">{militaryText}</span>
                         <div
                           onClick={() => {
                             openMyModal();
@@ -364,7 +675,11 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className=""> - 살</span>
+                      <span className="hover:cursor-pointer">
+                        {' '}
+                        {filterInfomation.age_min} - {filterInfomation.age_max}{' '}
+                        살
+                      </span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
                       </div>
@@ -378,7 +693,10 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className=""> - cm</span>
+                      <span className="">
+                        {filterInfomation.height_min} - {filterInfomation.max}
+                        cm
+                      </span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
                       </div>
@@ -392,7 +710,11 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className=""> - km</span>
+                      <span className="">
+                        {' '}
+                        {filterInfomation.range_min} -{' '}
+                        {filterInfomation.range_max} km
+                      </span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
                       </div>
@@ -406,7 +728,7 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="">{}</span>
+                      <span className="">{contactStyleText2}</span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
                       </div>
@@ -420,7 +742,7 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="">{}</span>
+                      <span className="">{drinkingStyleText2}</span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
                       </div>
@@ -434,7 +756,7 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="">{}</span>
+                      <span className="">{smokingStyleText2}</span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
                       </div>
@@ -445,7 +767,7 @@ function MyProfile({ profileNav }) {
                 <div className="flex justify-between">
                   <span className="text-xl m-3 ">인증정보</span>
                   <div onClick={toCert} className="flex items-center m-2">
-                    <span className="">설정하기</span>
+                    <span className="hover:cursor-pointer">설정하기</span>
                     <div>
                       <img src={userarrow} alt="" className="w-3 ml-2" />
                     </div>
@@ -453,74 +775,74 @@ function MyProfile({ profileNav }) {
                 </div>
 
                 <div>
-                  <div className="my-5 ml-5">
+                  <div className="my-5 ml-10">
                     <div className="inline-block">
                       <Tooltip id="my-tooltip" />
                       <img
                         src={
-                        new_certinfo.health === true ? health_yes : health_no
-                      }
+                          new_certinfo.health !== false ? health_yes : health_no
+                        }
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={`건강데이터넣을것임 ${new_certinfo.health}`}
+                        data-tooltip-content={`${new_certinfo.health_info}`}
                       />
                     </div>
                     <div className="inline-block">
                       <img
                         src={
-                        new_certinfo.university === true
-                          ? university_yes
-                          : university_no
-                      }
+                          new_certinfo.university !== false
+                            ? university_yes
+                            : university_no
+                        }
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={` ${''}`}
+                        data-tooltip-content={`${new_certinfo.university_name}`}
                       />
                     </div>
                     <div className="inline-block">
                       <img
-                        src={new_certinfo.job === true ? job_yes : job_no}
+                        src={new_certinfo.job !== false ? job_yes : job_no}
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={` ${''}`}
-                      />
-                    </div>
-                    <div className="inline-block">
-                      <img
-                        src={
-                        new_certinfo.certificate === true
-                          ? certificate_yes
-                          : certificate_no
-                      }
-                        alt="#"
-                        className="badges"
-                        data-tooltip-id="my-tooltip"
-                        data-tooltip-content={` ${''}`}
+                        data-tooltip-content={`${new_certinfo.job_name}`}
                       />
                     </div>
                     <div className="inline-block">
                       <img
                         src={
-                        new_certinfo.estate === true ? estate_yes : estate_no
-                      }
+                          new_certinfo.certificate !== false
+                            ? certificate_yes
+                            : certificate_no
+                        }
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={` ${''}`}
+                        data-tooltip-content={` ${new_certinfo.certificate_names}`}
                       />
                     </div>
                     <div className="inline-block">
                       <img
                         src={
-                        new_certinfo.income === true ? income_yes : income_no
-                      }
+                          new_certinfo.estate !== false ? estate_yes : estate_no
+                        }
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={` ${''}`}
+                        data-tooltip-content={` ${new_certinfo.estate_amount}`}
+                      />
+                    </div>
+                    <div className="inline-block">
+                      <img
+                        src={
+                          new_certinfo.income !== false ? income_yes : income_no
+                        }
+                        alt="#"
+                        className="badges"
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content={` ${new_certinfo.income_amount}`}
                       />
                     </div>
                   </div>
@@ -529,8 +851,6 @@ function MyProfile({ profileNav }) {
                 <div className="text-xl">Oh my my</div>
                 <div>
                   <InterestList interest={interest} />
-
-                  <div />
                 </div>
               </div>
             </div>
@@ -538,25 +858,6 @@ function MyProfile({ profileNav }) {
           <Navbar profileNav={profileNav} />
         </div>
       </div>
-    </div>
-  );
-}
-
-function InterestList({ interest }) {
-  return (
-    <div>
-      <div>
-        <div />
-      </div>
-
-      {interest.map((item) => (
-        <button
-          key={item.interest_list_id}
-          className="bg-white border border-black rounded-full text-sm px-4"
-        >
-          {item.name}
-        </button>
-      ))}
     </div>
   );
 }

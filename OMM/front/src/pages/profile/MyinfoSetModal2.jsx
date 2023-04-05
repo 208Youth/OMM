@@ -63,16 +63,16 @@ function MyinfoSetModal2({ setModal }) {
     }));
   };
 
-  // const data = {
-  //   height, contact_stlye, drinking_stlye, smoking_stlye, military, pet, MBTI: mbti,
-  // };
-  // const Changeinfo = () => {
-  //   axios.put('/api/member/filtering', data).then((response) => {
-  //     console.log('Success:', response);
-  //   }).catch((error) => {
-  //     console.log('Error:', error);
-  //   });
-  // };
+  const data = {
+    height, contact_stlye, drinking_stlye, smoking_stlye, military, pet, MBTI: mbti,
+  };
+  const Changeinfo = () => {
+    axios.put('/api/member/filtering', data).then((response) => {
+      console.log('Success:', response);
+    }).catch((error) => {
+      console.log('Error:', error);
+    });
+  };
   useEffect(() => {
     console.log(myinfo);
     // console.log(mbti);

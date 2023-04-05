@@ -42,8 +42,8 @@ function LikeList() {
         <span className="ml-3 font-sans font-bold">OMM List</span>
       </div>
       <div className="mx-6 grid grid-cols-2 gap-y-4">
-        {likes &&
-          likes.map((person) => (
+        {likes
+          && likes.map((person) => (
             <div
               className="relative"
               onClick={() => {
