@@ -15,11 +15,11 @@ import http from '../../api/nodeapi';
 function Signup() {
   const navigate = useNavigate();
   const [faceModal, setFaceModal] = useState(false);
-  const [faceComplete, setFaceComplete] = useState(true);
+  const [faceComplete, setFaceComplete] = useState(false);
   const [idenModal, setIdenModal] = useState(false);
-  const [idenComplete, setIdenComplete] = useState(true);
+  const [idenComplete, setIdenComplete] = useState(false);
   const [passwordModal, setPasswordModal] = useState(false);
-  const [passwordComplete, setPasswordComplete] = useState(true);
+  const [passwordComplete, setPasswordComplete] = useState(false);
   const [name, setName] = useState(null);
   const [year, setYear] = useState('1980');
   const [month, setMonth] = useState('1');
