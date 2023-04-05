@@ -219,10 +219,10 @@ function ChatWindow() {
                     key={index}
                     className={`my-2 ${
                       // 아래 코드 주의
-                      msg.senderId === 1 ? 'text-right' : 'text-left'
+                      msg.senderId !== room.other.otherId ? 'text-right' : 'text-left'
                     } ${lastchatindex === index ? '' : ''}`}
                   >
-                    {msg.senderId != room.other.otherId ? (
+                    {msg.senderId !== room.other.otherId ? (
                       <div className="w-60 flex font-sans ml-20 justify-end">
 
                         {lastchatindex === index && (
@@ -336,7 +336,6 @@ function ChatWindow() {
               ariaHideApp={false}
             >
               <BottomModal
-                targetId={room.other.otherId}
                 setModal={() => {
                   closeModal();
                 }}
