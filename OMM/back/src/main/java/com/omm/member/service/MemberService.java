@@ -34,6 +34,17 @@ public class MemberService {
 
     private final InterestListRepository interestListRepository;
 
+    public void changeNickname(String currentMemberDidAddress,String nickname) {
+        Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
+            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        try {
+            member.setNickname(nickname);
+            memberRepository.save(member);
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
+        }
+    }
     /**
      * did address 중복 체크 함수
      *
@@ -98,6 +109,9 @@ public class MemberService {
             .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         try {
+            member.setNickname(initMemberInfoRequestDto.getNickname());
+            memberRepository.save(member);
+
             MyInfo myInfo = myInfoRepository.findByMember(member)
                 .orElseThrow(
                     () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
@@ -771,4 +785,6 @@ public class MemberService {
             .build();
 
     }
+
+
 }
