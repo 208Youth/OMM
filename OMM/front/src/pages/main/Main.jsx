@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from '../../api/http';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/nav-bar';
 import Pslider from '../../components/Pslider';
 import http from '../../api/http';
 import './Main.css';
 import { lists, dis } from '../../store/recSlice';
-import { useNavigate } from 'react-router-dom';
 
 function Main() {
   const navigate = useNavigate();
@@ -41,14 +40,14 @@ function Main() {
       setId(res.data.memberId);
     });
   };
-  useEffect(() => {
+  useEffect(async () => {
     // 추천알고리즘 으로 나온 상대방 id 리스트 axios 요청
     console.log(localStorage.getItem('accesstoken'));
     if (localStorage.getItem('accesstoken') === null) {
       navigate('/');
     }
     console.log(token);
-    http({
+    await http({
       method: 'get',
       url: '/recommend',
       headers: {
@@ -72,7 +71,7 @@ function Main() {
         }
       });
   }, []);
-  const dislike = async function () {
+  const dislike = async () => {
     const data = {
       sender_id: id,
       favor: false,
@@ -92,7 +91,7 @@ function Main() {
       });
   };
 
-  const toOther = function () {
+  const toOther = () => {
     console.log('남의집');
     navigate(`/OtherProfile/${id}`);
   };
@@ -102,6 +101,7 @@ function Main() {
         onClick={() => {
           dislike();
         }}
+        aria-hidden
         className="z-20 w-16 h-16 transition duration-500 hover:scale-110 bg-red-100 rounded-full shadow-md justify-center mx-auto mt-5"
       >
         <img
@@ -115,6 +115,7 @@ function Main() {
         onClick={() => {
           toOther();
         }}
+        aria-hidden
       >
         <Pslider mainImg={img} name={name} age={age} />
       </div>
