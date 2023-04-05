@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 @Getter
-public class CheckNicknameRequestDto {
+public class NicknameRequestDto {
 
     @JsonProperty(value = "nickname")
     private String nickname;
