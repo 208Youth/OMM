@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ChatRoom from '../../components/ChatRoom';
-import Navbar from '../../components/nav-bar';
-import http from '../../api/http';
+import ChatRoom from '@/components/ChatRoom.jsx';
+import Navbar from '@/components/nav-bar.jsx';
+import http from '@/api/http.js';
 
 function ChatList() {
   const [chats, setChats] = useState([]);
