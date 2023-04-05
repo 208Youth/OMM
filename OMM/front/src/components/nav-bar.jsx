@@ -1,4 +1,5 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
+import jwt_decode from 'jwt-decode';
 import SockJS from 'sockjs-client';
 // import SockJS from 'sockjs-client/dist/sockjs';
 import Stomp from 'stompjs';
@@ -13,19 +14,26 @@ function Navbar({
 }) {
   let stompClient;
   const token = localStorage.getItem('accesstoken');
+  const decoded = jwt_decode(token);
   const dispatch = useDispatch();
-  const mainconnect = () => {
+  /**
+   * 채팅 알림, 좋아요 알림 useState
+   */
+  const [chatAlert, setChatAlert] = useState(false);
+  const [notiAlert, setNotiAlert] = useState(false);
+
+  const mainconnect = async () => {
     const headers = {
       // Authorization: import.meta.env.VITE_TOKEN,
       Authorization: `Bearer ${token}`,
     };
     // const ws = new SockJS('http://localhost:5000/api/matching');
-    const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/matching`);
+    const ws = new SockJS('http://localhost:5000/api/matching');
     stompClient = Stomp.over(ws);
-    stompClient.connect(
+    await stompClient.connect(
       headers,
       (frame) => {
-        console.log('연결성공');
+        console.log('mainconnect');
       },
       (error) => {
         // 연결이 끊어졌을 때 재연결 시도 부분
@@ -38,8 +46,9 @@ function Navbar({
         // }
       },
     );
+    alertConnect(headers);
   };
-  const chatlistconnect = () => {
+  const chatlistconnect = async () => {
     const headers = {
       // Authorization: import.meta.env.VITE_TOKEN,
       Authorization: `Bearer ${token}`,
@@ -47,10 +56,10 @@ function Navbar({
     // const ws = new SockJS('http://localhost:5000/api/chat');
     const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
     stompClient = Stomp.over(ws);
-    stompClient.connect(
+    await stompClient.connect(
       headers,
       (frame) => {
-        console.log('연결성공');
+        console.log('chatlistconnect');
       },
       (error) => {
         // 연결이 끊어졌을 때 재연결 시도 부분
@@ -63,6 +72,7 @@ function Navbar({
         // }
       },
     );
+    alertConnect(headers);
   };
 
   const sendMatch = () => {
@@ -114,13 +124,92 @@ function Navbar({
       });
   };
 
+  const alertConnect = (headers) => {
+    stompClient.connect(
+      headers,
+      (frame) => {
+        stompClient.subscribe(
+          `/sub/matching/chatalert/${decoded.sub}`,
+          (message) => {
+            /**
+             * TODO : 채팅 알림 있는지
+             * 안읽은 채팅 존재 여부 -> setChatAlert
+             */
+            if(message.alert) console.log('나 안읽은 채팅이 있다요')
+            setChatAlert(message.alert);
+          },
+          {},
+        );
+
+        stompClient.subscribe(
+          `/sub/matching/notialert/${decoded.sub}`,
+          (message) => {
+            /**
+             * TODO : 알림 있는지
+             * 알림 존재 여부 -> setnotiAlert
+             */
+            if(message.alert) console.log('나 받은 알림이 있다요')
+            setNotiAlert(message.alert)
+          },
+          {},
+        );
+      },
+      (error) => {
+      },
+    );
+  };
+
+  /**
+   * 처음 렌더링 시 내 안읽은 채팅 있는지 확인
+   */
+  const getChatAlert = async () => {
+    await http({
+      method: 'get',
+      url: '/alert/chat',
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then((res) => {
+        console.log('출력해보렴', res);
+        setChatAlert(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  /**
+   * 처음 렌더링 시 내 알림 있는지 확인
+   */
+  const getLikeAlert = async () => {
+    await http({
+      method: 'get',
+      url: '/alert/noti',
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then((res) => {
+        console.log('출력해보렴', res);
+        setNotiAlert(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
+    /**
+     * 내게 온 채팅 알림 초기화
+     */
+    getChatAlert();
+    /**
+     * 내게 온 알림 초기화
+     */
+    getLikeAlert();
     if (mainNav) {
       mainconnect();
     } else if (chatlistNav) {
       chatlistconnect();
     }
-  });
+  }, []);
 
   return (
     <div className="flex justify-center">
