@@ -5,12 +5,13 @@ import { useSelector } from 'react-redux';
 import { EthrDID } from 'ethr-did';
 import ommapi from '../../api/ommapi';
 
-function Agree({setIsLoading}) {
+function Agree({ setIsLoading }) {
   const [checkedList, setCheckedList] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
   const searchParams = new URLSearchParams(window.location.search);
   const type = searchParams.get('type');
-  const vc = JSON.parse(localStorage.getItem('IdenVC'));
+  const idvc = JSON.parse(localStorage.getItem('IdenVC'));
+  const didvc = JSON.parse(localStorage.getItem('DIDvc'));
   const [did, setDid] = useState(null);
   const [iden, setIden] = useState(null);
   const [pk, setPK] = useState(null);
@@ -29,7 +30,7 @@ function Agree({setIsLoading}) {
       });
       setEthrDidOnGoerliNamed(ethrDidOnGoerli);
     }
-  }, [])
+  }, []);
 
   const checkedItemHandler = (value: string, isChecked: boolean) => {
     if (isChecked) {
@@ -47,14 +48,14 @@ function Agree({setIsLoading}) {
     checkedItemHandler(e.target.checked);
     console.log(e.target.checked);
   };
-  
+
   const toOMM = async () => {
-    console.log(vc);
+
     const vpPayload = {
       vp: {
         '@context': ['https://www.w3.org/2018/credentials/v1'],
         type: ['VerifiablePresentation', 'PersonalIdPresentation'],
-        verifiableCredential: vc,
+        verifiableCredential: [idvc, didvc],
       },
     };
     console.log(did);
@@ -66,17 +67,16 @@ function Agree({setIsLoading}) {
       type: type,
       holderDid: did,
       vpJwt: vpJwt,
-    }
+    };
     if (isChecked) {
-      setIsLoading(true)
+      setIsLoading(true);
       await ommapi
         .post(`/sign/${type}`, data)
         .then((res) => {
           console.log(res);
-          
-          setIsLoading(false)
+
+          setIsLoading(false);
           window.location.href = res.data;
-          
         })
         .catch((err) => {
           console.log(err);

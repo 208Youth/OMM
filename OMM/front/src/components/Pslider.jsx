@@ -13,22 +13,20 @@ import slide_image_1 from '../../public/defaultimage.png';
 
 function Pslider({ mainImg, profileImg, name, age }) {
   const location = useLocation();
-  const [imgs, setImages] = useState([]);
   console.log(profileImg);
   console.log(mainImg);
-  // let imgs = [];
-  useEffect(() => {
-    if (location.pathname.includes('main') && !mainImg) {
-      console.log(mainImg);
-      setImages(mainImg);
-    } else if (location.pathname.includes('profile') && !profileImg) {
-      setImages(profileImg);
-    } else {
-      setImages([slide_image_1]);
-    }
-    console.log('이미지 와야댐', imgs);
-    console.log(profileImg);
-  }, []);
+  // console.log(imgs);
+  // // let imgs = [];
+  // useEffect(() => {
+  //   if (location.pathname.includes('main') && mainImg) {
+  //     setImages(mainImg);
+  //   }
+  //   console.log(mainImg);
+  // }, []);
+
+  console.log('이름', name);
+  console.log(age);
+  console.log(mainImg);
 
   return (
     <div className="pcontainer">
@@ -57,30 +55,63 @@ function Pslider({ mainImg, profileImg, name, age }) {
         className="swiper_container"
       >
         {/* 이미지 리스트 들어오는 코드 작성한 후에 아래 주석풀어주세요 */}
-        {imgs &&
-          imgs.map((img, index) => (
+        {location.pathname.includes('main') && (
+          <SwiperSlide className="static flex content-center">
+            <img src={slide_image_1} alt="slide_image" />
+            <div className="flex absolute bottom-[10%] left-[5%] w-[50%] h-[10%] mx-auto">
+              <div className="flex px-6 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full my-auto">
+                <span className="text-xl h-12 mt-2 mx-auto text-white">
+                  {name}
+                </span>
+              </div>
+              <div className="flex w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full my-auto ml-2">
+                <span className="text-xl mx-auto my-auto text-white">
+                  {age}
+                </span>
+              </div>
+            </div>
+          </SwiperSlide>
+        )}
+        {mainImg &&
+          mainImg.map((img, index) => (
             <div key={index}>
-              <SwiperSlide className='static flex content-center'>
-                {location.pathname.includes('profile') && <img  src={`data:image/png;base64,${img}`} alt="이미지" />}
-                {!(location.pathname.includes('profile')) && <img src={img} alt="이미지" />}
-                {location.pathname.includes('main') && 
-                  <div className='flex absolute bottom-[10%] left-[5%] w-[50%] h-[10%] mx-auto'>
-                    <div className="flex px-6 h-12 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 my-auto rounded-full my-auto">
-                      <span className="text-xl h-12 mt-2 mx-auto text-white">{name}</span>
+              <p>이미지</p>
+              <SwiperSlide className="static flex content-center">
+                <img src={`data:image/png;base64,${img}`} alt={img} />
+                {location.pathname.includes('main') && (
+                  <div className="flex absolute bottom-[10%] left-[5%] w-[50%] h-[10%] mx-auto">
+                    <div className="flex px-6 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full my-auto">
+                      <span className="text-xl h-12 mt-2 mx-auto text-white">
+                        {name}
+                      </span>
                     </div>
                     <div className="flex w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full my-auto ml-2">
-                      <span className="text-xl mx-auto my-auto text-white">{age}</span>
+                      <span className="text-xl mx-auto my-auto text-white">
+                        {age}
+                      </span>
                     </div>
-                  </div>}
+                  </div>
+                )}
               </SwiperSlide>
               ;
             </div>
           ))}
-        {/* {imgs && (
+        {profileImg &&
+          profileImg.map((img, index) => (
+            <div key={index}>
+              <SwiperSlide className="static flex content-center">
+                {location.pathname.includes('rofile') && (
+                  <img src={`data:image/png;base64,${img}`} alt="이미지" />
+                )}
+              </SwiperSlide>
+              ;
+            </div>
+          ))}
+        {!profileImg && location.pathname.includes('rofile') && (
           <SwiperSlide>
-            <img src="/public/defaultimage.png" alt="slide_image" />
+            <img src={slide_image_1} alt="slide_image" />
           </SwiperSlide>
-        )} */}
+        )}
         {/* <div className="slider-controler">
           <div className="swiper-button-prev slider-arrow">
             <ion-icon name="arrow-back-outline" />

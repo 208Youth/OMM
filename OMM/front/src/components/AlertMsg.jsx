@@ -23,7 +23,7 @@ function AlertMsg({ msg, deletemsg }) {
     setTimeout(() => {
       setIsOpen(false);
       setMessage('');
-      dispatch(chatInfo(msginfo.senderId));
+      dispatch(chatInfo(msginfo.sender.memberId));
       // navigate('/faceRecog/chat', {
       //   state: { page: 'chat' },
       // });

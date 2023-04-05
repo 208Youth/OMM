@@ -4,12 +4,14 @@ import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import jwt_decode from 'jwt-decode';
 import { useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
 
 function WaitChat() {
   // const [load, setLoad] = useState(null);
   const [chatid, setChatId] = useState(null);
   const token = localStorage.getItem('accesstoken');
   const navigate = useNavigate();
+  const senderId = useSelector((state) => state.chat.memberId);
 
   let stompClient;
 
@@ -60,7 +62,7 @@ function WaitChat() {
         '/pub/chat/room',
         headers,
         // 나한테 알림 보낸사람 id
-        JSON.stringify({ senderId: 502 }),
+        JSON.stringify({ senderId }),
         console.log('채팅방 만들라구'),
       );
     });

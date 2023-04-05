@@ -35,6 +35,8 @@ function Alert() {
           `/sub/matching/noti/${decoded.sub}`,
           (message) => {
             const recv = JSON.parse(message.body);
+            console.log("내가 받은 메세지: ")
+            console.log(recv)
             setAlertList((prev) => {
               const newList = [recv, ...prev];
               return newList;
@@ -63,7 +65,11 @@ function Alert() {
     http({
       method: 'delete',
       url: '/matching/noti',
-      data: msg,
+      data: {
+        id : msg.id,
+        senderId : msg.sender.memberId,
+        createdTime: msg.createdTime
+      },
       headers: {
         // Authorization: import.meta.env.VITE_TOKEN,
         Authorization: `Bearer ${token}`,
