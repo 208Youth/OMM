@@ -38,9 +38,9 @@ function FaceRecog({ setStep }) {
     // axios로 fastapi 에 이미지 보내기
     await http({
       method: 'get',
-      url: '/face-url',
+      url: '/member/face-url',
       headers: {
-        Authorization: token,
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => {
@@ -59,7 +59,7 @@ function FaceRecog({ setStep }) {
     // const labels = [name];
 
     // 학습시키기 위한 데이터셋 라벨들 넣기
-    let labels = [];
+    const labels = [];
     for (let i = 1; i <= 32; i += 1) {
       labels.push(i.toString());
     }
@@ -71,7 +71,7 @@ function FaceRecog({ setStep }) {
       labels.map(async (label) => {
         let imageUrl;
         if (label === myinfo.didAddress) {
-        // if (label === '사용자 did 주소') {
+          // if (label === '사용자 did 주소') {
           imageUrl = myinfo.faceUrl;
           // imageUrl =
           //   'https://storage.googleapis.com/cc24-3d5b1.appspot.com/9f34f632-4fa2-4686-afbb-dd163b3c0d1b-boyoung-p7ijrk9wj3f8pnz8dwq47kbr3a.jpg?GoogleAccessId=firebase-adminsdk-flw87%40cc24-3d5b1.iam.gserviceaccount.com&Expires=1711965112&Signature=ck6lIcmkALOR5K6ql8%2FjfpbLZRmHP2JYnkrJl%2BJoTBXgeJWmRlfVv9Goh2fkoQnhDOQUQemXDkiN3Hya8CMcwhljY1SdcBW4DWpeJaXx4C9bMRmPgiPIKOaGypXyh8HHgsp6V2oO6Pk17yectcNJoRIRk%2BFayBGrNt94U4aR2mrg768%2BKvZY%2F%2FtfAeiWtisGiymv848E0PGi7Qsi08CbpxY88EUOq4C4wwyAqLyuW2CxkNlsq0H8aCTZxoLU1NuIFLfej82aIw8w61D6EFu9dsC7BAfa%2FSE113tnfWS%2FWSKO6%2BujnKCn2zLRHjMh6Uv9wfj5q3lVfwiutKL082yisQ%3D%3D';
@@ -80,7 +80,7 @@ function FaceRecog({ setStep }) {
         }
         const images = await faceapi.fetchImage(imageUrl);
 
-        let descriptions = [];
+        const descriptions = [];
 
         const detections = await faceapi
           .detectSingleFace(images)
