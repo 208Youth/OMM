@@ -4,7 +4,7 @@ import './ChatModal.css';
 import CloseBtn from '../../assets/CloseBtn.svg';
 import UploadIcon from '../../assets/fileuploadicon.png';
 
-function ReportModal({ setReportModal }) {
+function ReportModal({ setReportModal, targetId }) {
   const [imgfile, setFile] = useState(null);
   const [imageSrc, setImageSrc] = useState('');
   const [report, setReport] = useState({
@@ -46,7 +46,7 @@ function ReportModal({ setReportModal }) {
       .post('/admin/report', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkaWQ6ZXRocjpnb2VybGk6MHgwM2RmOGU1NGEzMGUzOTA2ZDI0M2Q3NDAyYzU5YjgyYjVkODU0MjIzYmEzYWU5NjllYTIzZDJjMTJiOGRhNDljNWUiLCJhdXRoIjoiUk9MRV9VU0VSIiwiZXhwIjoxMDMyMDYxMTQ3OH0.gFgEZevnWzLvjsmFge6NK9oquTvpjeMiYhJuXnQ3nP4nfWPRsBRxeo1AWAagTY7AyBSOwnXwBHO9VUFv3PaXuQ",
+          Authorization: `Bearer ${token}`,
           // Authorization: import.meta.env.VITE_TOKEN,
           // Authorization: `Bearer ${token}`, // TODO: 임시 토큰 부여
           data: formData,
@@ -64,7 +64,7 @@ function ReportModal({ setReportModal }) {
   useEffect(() => {
     setReport((prev) => ({
       ...prev,
-      targetId: 1,
+      targetId,
     }));
   }, []);
 
