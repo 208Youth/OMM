@@ -38,80 +38,84 @@ def detect_text(path, inputday, inputname, inputyear, inputmonth, inputgender):
     #     if filename.endswith(image_extensions):
     #         image_files.append(filename)
 
-    filenames = os.listdir('./iden_img')
+    try:
+        filenames = os.listdir('./iden_img')
 
-    filename = filenames[-1]
-    path = os.path.join('./iden_img', filename)
+        filename = filenames[-1]
+        path = os.path.join('./iden_img', filename)
 
-    # Loads the image into memory
-    with io.open(path, 'rb') as image_file:
-        content = image_file.read()
+        # Loads the image into memory
+        with io.open(path, 'rb') as image_file:
+            content = image_file.read()
 
-    # Creates a Vision API Image object
-    image = types.Image(content=content)
+        # Creates a Vision API Image object
+        image = types.Image(content=content)
 
-    name_len = len(inputname)
+        name_len = len(inputname)
 
-    # Performs text detection on the image
-    response = client.text_detection(image=image)
-    texts = response.text_annotations
-    parcingdata = texts[0].description.splitlines()
-    doc_type = (parcingdata[0])[:5]
-    print(doc_type)
-    name = (parcingdata[1])[: name_len]
-    print(name)
-    birthday = (parcingdata[2])[:6]
-    print(birthday)
-    gender = int((parcingdata[2])[7:8])
-    print(gender)
+        # Performs text detection on the image
+        response = client.text_detection(image=image)
+        texts = response.text_annotations
+        parcingdata = texts[0].description.splitlines()
+        doc_type = (parcingdata[0])[:5]
+        print(doc_type)
+        name = (parcingdata[1])[: name_len]
+        print(name)
+        birthday = (parcingdata[2])[:6]
+        print(birthday)
+        gender = int((parcingdata[2])[7:8])
+        print(gender)
 
-    if (gender == 1 or gender == 3):
-        gender = 'MALE'
-    elif (gender == 2 or gender == 4):
-        gender = 'FEMALE'
+        if (gender == 1 or gender == 3):
+            gender = 'MALE'
+        elif (gender == 2 or gender == 4):
+            gender = 'FEMALE'
 
-    if inputgender == '여':
-        inputgender = 'FEMALE'
-    elif inputgender == '남':
-        inputgender = 'MALE'
+        if inputgender == '여':
+            inputgender = 'FEMALE'
+        elif inputgender == '남':
+            inputgender = 'MALE'
 
-    # print(doc_type)
-    # print(name)
-    # print(birthday)
-    # print(gender)
-    # print(inputgender)
-    # print(inputname)
-    # print(inputmonth)
+        # print(doc_type)
+        # print(name)
+        # print(birthday)
+        # print(gender)
+        # print(inputgender)
+        # print(inputname)
+        # print(inputmonth)
+        if len(filenames) > 0:
+            last_file = os.path.join('./iden_img', filenames[-1])  # 마지막 파일의 경로
+            os.remove(last_file)  # 마지막 파일 삭제
 
-    if len(filenames) > 0:
-        last_file = os.path.join('./iden_img', filenames[-1])  # 마지막 파일의 경로
-        os.remove(last_file)  # 마지막 파일 삭제
+        if doc_type == '주민등록증' and \
+                int(birthday[:2]) == int(inputyear) % 100 and \
+                int(birthday[2:4]) == int(inputmonth) and \
+                int(birthday[4:6]) == int(inputday) and \
+                name == inputname and \
+                inputgender == gender:
 
-    if doc_type == '주민등록증' and \
-            int(birthday[:2]) == int(inputyear) % 100 and \
-            int(birthday[2:4]) == int(inputmonth) and \
-            int(birthday[4:6]) == int(inputday) and \
-            name == inputname and \
-            inputgender == gender:
+            personalId = {
+                "name": name,
+                "birthdate": str(inputyear) + '-' + str(birthday[2:4]) + '-' + str(birthday[4:6]),
+                "gender": gender
+            }
 
-        personalId = {
-            "name": name,
-            "birthdate": str(inputyear) + '-' + str(birthday[2:4]) + '-' + str(birthday[4:6]),
-            "gender": gender
-        }
-
-        json_string = json.dumps(
-            personalId, separators=(",", ":"), ensure_ascii=False)
-        # print(json_string)
-        hashed = hmac.new(
-            "1234".encode(), json_string.encode(), hashlib.sha256)
-        signature = base64.urlsafe_b64encode(
-            hashed.digest()).decode().rstrip('=')
-        # print(signature)
-        return {'personalId': personalId, 'signature': signature, 'valid': True}
-    else:
-        print('message: 인증 정보가 일치하지 않습니다.')
-        return {'message': "인증 정보가 일치하지 않습니다.", 'valid': False}
+            json_string = json.dumps(
+                personalId, separators=(",", ":"), ensure_ascii=False)
+            # print(json_string)
+            hashed = hmac.new(
+                "1234".encode(), json_string.encode(), hashlib.sha256)
+            signature = base64.urlsafe_b64encode(
+                hashed.digest()).decode().rstrip('=')
+            # print(signature)
+            return {'personalId': personalId, 'signature': signature, 'valid': True}
+        else:
+            print('message: 인증 정보가 일치하지 않습니다.')
+            return {'message': "인증 정보가 일치하지 않습니다.", 'valid': False}
+    except:
+        if len(filenames) > 0:
+            last_file = os.path.join('./iden_img', filenames[-1])  # 마지막 파일의 경로
+            os.remove(last_file)  # 마지막 파일 삭제
     # for file in filenames:
     #     os.remove(os.path.join('./iden_img', file))
 
