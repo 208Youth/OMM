@@ -28,7 +28,7 @@ function Index() {
           />
         </div>
       </div>
-      <div className="buttons">
+      <div className="buttons mx-auto">
         <div className="grid justify-items-center">
           <h1 className="text-white text-3xl">맞소사.</h1>
           <h1 className="text-white text-3xl mt-2 mb-20">Oh My Match</h1>
