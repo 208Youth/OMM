@@ -1,12 +1,16 @@
 /* eslint-disable */
 import React, { useState } from 'react';
 import './AlertModal.css';
+import { useNavigate } from 'react-router-dom';
 
 function AlertModal({ setAlertModal, alertTitle, alertMessage }) {
-  
+  const navigate = useNavigate();  
   const fn = () => {
     if (location.pathname === '/signup' || location.pathname === '/register') {
       setAlertModal(false);
+    } else if (location.pathname === '/main') {
+      window.localStorage.clear();
+      navigate('/')
     }
   }
   return (

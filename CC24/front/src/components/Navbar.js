@@ -1,19 +1,53 @@
 /*eslint-disable*/
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import Modal from 'react-modal';
+import AlertModal from './AlertModal';
+
 
 function Navbar() {
   const navigate = useNavigate();
+  const [alertModal, setAlertModal] = useState(false);
+  const customStyles = {
+    content: {
+      borderRadius: '20px',
+      width:'300px',
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+      overflow: 'hidden',
+      overlay: {zIndex: 1000}
+    },
+  };
   const withdraw = function() {
-    if (confirm("탈퇴하면 인증된 정보가 모두 사라집니다. 탈퇴하시겠습니까?")) {
-      window.localStorage.clear();
-      navigate('/')
-    }else{
-      return
-    }
+    setAlertModal(true)
+    // if (confirm("탈퇴하면 인증된 정보가 모두 사라집니다. 탈퇴하시겠습니까?")) {
+    //   window.localStorage.clear();
+    //   navigate('/')
+    // }else{
+    //   return
+    // }
   }
   return (
+    <>
+      <Modal 
+        isOpen={alertModal}
+        onRequestClose={() => setAlertModal(false)}
+        ariaHideApp={false}
+        overlayClassName="Overlay"
+        style={customStyles}
+      >
+        <AlertModal 
+          setAlertModal={setAlertModal}
+          alertTitle="회원 탈퇴"
+          alertMessage="탈퇴하면 인증된 정보가 모두 사라집니다. 탈퇴하시겠습니까?"
+        />
+      </Modal>
+    
     <nav className="flex justify-evenly bg-white px-2 sm:px-4 py-2.5 dark:bg-gray-900 fixed w-full z-20 bottom-0 left-0 border-t border-gray-200 dark:border-gray-600">
       <Link to="/main">
         <div className="mt-2 grid justify-items-center">
@@ -74,6 +108,7 @@ function Navbar() {
         <p className="text-[#4654a3]">Resign</p>
       </div>
     </nav>
+    </>
   );
 }
 

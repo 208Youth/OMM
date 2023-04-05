@@ -131,7 +131,7 @@ function IdenModal({
         <p className="text-3xl text-left ml-9 leading-relaxed" style={{ marginLeft: '1rem' }}>
           확인
         </p>
-        <h4 className="ml-3 mt-5">신분증 사진을 올려주세요.</h4>
+        <h4 className="ml-3 mt-5">주민등록증 사진을 올려주세요.</h4>
         <br />
       </div>
       <div className="mx-auto text-center flex">

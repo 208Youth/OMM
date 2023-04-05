@@ -45,6 +45,7 @@ body {
 .swiper {
   width: 240px;
   height: 320px;
+  z-index: 1;
 }
 
 .swiper-slide {

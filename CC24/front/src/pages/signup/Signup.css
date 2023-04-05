@@ -41,6 +41,7 @@
   padding: 1.5rem;
   width: 100%;
   min-height: 30rem;
+  z-index:10;
 }
 
 .Overlay {
