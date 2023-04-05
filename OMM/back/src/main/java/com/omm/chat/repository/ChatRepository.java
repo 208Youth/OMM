@@ -61,4 +61,15 @@ public class ChatRepository {
     public void saveMessage(ChatMessage message) {
         opsListChatMessage.rightPush(message.getRoomId(), message);
     }
+
+    public boolean findAllAlert(Long id) {
+        List<ChatRoom> rooms = opsHashChatRoom.values(ROOMS);
+        for(ChatRoom room : rooms) {
+            if(room.isMyRoom(id)) {
+                Long cnt = room.getMsgs() - room.getLastReadIndex().get(id);
+                if(cnt > 0) return true;
+            }
+        }
+        return false;
+    }
 }
