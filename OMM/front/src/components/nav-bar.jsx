@@ -77,7 +77,7 @@ function Navbar({
       '/pub/matching/noti',
       headers,
       // 좋아요 할 사람 id
-      JSON.stringify({ receiverId: 503 }),
+      JSON.stringify({ receiverId: id }),
     );
     console.log(stompClient);
     // stompClient.disconnect();
