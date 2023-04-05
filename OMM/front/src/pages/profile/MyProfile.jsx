@@ -61,6 +61,7 @@ function MyProfile({ profileNav }) {
   profileNav = true;
   const certinfo = {
     university: false,
+    university: false,
     job: false,
     certificate: false,
     health: false,
@@ -104,7 +105,14 @@ function MyProfile({ profileNav }) {
   //   height_min: 1,
   //   height_max: 100,
   // }];
-  const user = useSelector((state) => state.user);
+  const whereLoca = async () => {
+    await fetch('https://dapi.kakao.com/v2/local/geo/coord2address.json?x=126.8115825&y=35.205739&input_coord=WGS84')
+      .then((res) => {
+        console.log('장소가져옴', res);
+      }).catch((err) => {
+        console.log('실패', err);
+      });
+  };
   const navigate = useNavigate();
   const [MymodalIsOpen, setMyIsOpen] = useState(false);
   const [MymodalIsOpen2, setMyIsOpen2] = useState(false);
@@ -114,7 +122,6 @@ function MyProfile({ profileNav }) {
   const [disabled, setDisabled] = useState(true);
   const [new_pr, setNew_pr] = useState('');
 
-  const memberId = 1;
   const token = localStorage.getItem('accesstoken');
 
   const handleClick = () => {
@@ -258,6 +265,7 @@ function MyProfile({ profileNav }) {
     FreshInterest();
     FreshFilter();
     Freshinfo();
+    whereLoca();
   }, []);
 
   async function toCert() {
@@ -443,7 +451,10 @@ function MyProfile({ profileNav }) {
               </div>
 
               <span className="text-3xl ml-2">{user.nickname}</span>
-              <span> {basicInfomation.age}</span>
+              <span>
+                {' '}
+                {basicInfomation.age}
+              </span>
               <div className="text-slate-500 text-sm ml-2">
                 <span className="inline-block">
                   <img src={location} alt="" width={10} />
@@ -497,7 +508,9 @@ function MyProfile({ profileNav }) {
                     <div>
                       <div className="flex items-center">
                         <span className="hover:cursor-pointer">
-                          {basicInfomation.height} cm
+                          {basicInfomation.height}
+                          {' '}
+                          cm
                         </span>
                         <div
                           onClick={() => {
@@ -677,7 +690,12 @@ function MyProfile({ profileNav }) {
                     <div className="flex items-center">
                       <span className="hover:cursor-pointer">
                         {' '}
-                        {filterInfomation.age_min} - {filterInfomation.age_max}{' '}
+                        {filterInfomation.age_min}
+                        {' '}
+                        -
+                        {' '}
+                        {filterInfomation.age_max}
+                        {' '}
                         살
                       </span>
                       <div>
@@ -694,7 +712,11 @@ function MyProfile({ profileNav }) {
                   <div>
                     <div className="flex items-center">
                       <span className="">
-                        {filterInfomation.height_min} - {filterInfomation.max}
+                        {filterInfomation.height_min}
+                        {' '}
+                        -
+                        {' '}
+                        {filterInfomation.max}
                         cm
                       </span>
                       <div>
@@ -712,8 +734,13 @@ function MyProfile({ profileNav }) {
                     <div className="flex items-center">
                       <span className="">
                         {' '}
-                        {filterInfomation.range_min} -{' '}
-                        {filterInfomation.range_max} km
+                        {filterInfomation.range_min}
+                        {' '}
+                        -
+                        {' '}
+                        {filterInfomation.range_max}
+                        {' '}
+                        km
                       </span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
@@ -848,7 +875,7 @@ function MyProfile({ profileNav }) {
                   </div>
                 </div>
                 <hr />
-                <div className="text-xl">Oh my my</div>
+                <div className="text-xl">관심사</div>
                 <div>
                   <InterestList interest={interest} />
                 </div>
