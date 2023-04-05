@@ -366,7 +366,7 @@ function MoreInfo5({ setStep }) {
               F
             </label>
           </div>
-          <div>
+          <div className="ml-1">
             <input
               onClick={(e) => {
                 setMBTI3(e.target.value);
@@ -408,7 +408,7 @@ function MoreInfo5({ setStep }) {
               J
             </label>
           </div>
-          <div>
+          <div className="ml-1">
             <input
               onClick={(e) => {
                 setMBTI4(e.target.value);
@@ -432,7 +432,7 @@ function MoreInfo5({ setStep }) {
           </div>
         </div>
       </div>
-      <div className="flex justify-between mx-8 text-[#364C63] text-lg">
+      <div className="flex mt-32 justify-between mx-8 text-[#364C63] text-lg">
         <button
           type="button"
           aria-hidden
