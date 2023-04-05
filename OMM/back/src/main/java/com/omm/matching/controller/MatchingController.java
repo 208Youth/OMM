@@ -35,8 +35,7 @@ public class MatchingController {
         String user = accessor.getUser().getName();
         Notification notification = matchingService.createNotification(createNotificationRequestDto.getReceiverId(), user);
         String receiverAddr = matchingService.getReceiverAddr(createNotificationRequestDto.getReceiverId());
-        Member sender = matchingService.getSender(user);
-        NotificationResponseDto notificationResponseDto = matchingService.getNotificationResponseDto(sender, notification);
+        NotificationResponseDto notificationResponseDto = matchingService.getNotificationResponseDto(notification);
         publisherService.publishNotification(receiverAddr, notificationResponseDto);
     }
 
