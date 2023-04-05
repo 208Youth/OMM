@@ -10,7 +10,10 @@ import { EffectCards } from 'swiper';
 import { useState } from 'react';
 import jwt_decode from 'jwt-decode';
 
+import {useNavigate} from 'react-router-dom';
+
 function Main() {
+  
   const user = useSelector((state) => state.user);
   const cert = useSelector((state) => state.user.cert);
   const [change, setChange] = useState(true);
@@ -88,6 +91,7 @@ function Main() {
 
   return (
     <div className="flex px-10">
+      
       <div className="flex-col w-80 mx-auto">
         <div>
           <p
@@ -103,7 +107,10 @@ function Main() {
           </p>
           <br />
         </div>
-        <Swiper
+        <div className='z-3'>
+
+        
+        <Swiper 
           effect={'cards'}
           grabCursor={true}
           modules={[EffectCards]}
@@ -166,8 +173,9 @@ function Main() {
             </SwiperSlide>
           ))}
         </Swiper>
+        </div>
       </div>
-      <Navbar className="fixed" />
+      <Navbar className="fixed z-100" />
     </div>
   );
 }
