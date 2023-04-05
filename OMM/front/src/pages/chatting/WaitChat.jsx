@@ -11,9 +11,7 @@ function WaitChat() {
   const [chatid, setChatId] = useState(null);
   const token = localStorage.getItem('accesstoken');
   const navigate = useNavigate();
-  const senderId = useSelector((state) => {
-    return state.chat.memberId;
-  })
+  const senderId = useSelector((state) => state.chat.memberId);
 
   let stompClient;
 
@@ -64,7 +62,7 @@ function WaitChat() {
         '/pub/chat/room',
         headers,
         // 나한테 알림 보낸사람 id
-        JSON.stringify({ senderId: senderId }),
+        JSON.stringify({ senderId }),
         console.log('채팅방 만들라구'),
       );
     });
