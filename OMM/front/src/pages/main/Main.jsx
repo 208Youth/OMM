@@ -43,7 +43,7 @@ function Main() {
       setId(res.data.memberId);
     });
   };
-  useEffect(async () => {
+  const getRecommend = async () => {
     // 추천알고리즘 으로 나온 상대방 id 리스트 axios 요청
     console.log(localStorage.getItem('accesstoken'));
     if (localStorage.getItem('accesstoken') === null) {
@@ -70,10 +70,15 @@ function Main() {
       .catch((err) => {
         console.log(err);
         if (err.message === 'Request failed with status code 400') {
-          window.location.href = '/';
+          // window.location.href = '/';
         }
       });
+  };
+
+  useEffect(() => {
+    getRecommend();
   }, []);
+
   const dislike = async () => {
     const data = {
       sender_id: id,
