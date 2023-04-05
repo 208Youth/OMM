@@ -2,7 +2,9 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import Modal from 'react-modal';
-import { useLocation, Link } from 'react-router-dom';
+import {
+  useLocation, useNavigate,
+} from 'react-router-dom';
 import http from '@/api/http.js';
 import BottomModal from '@/pages/chatting/BottomModal.jsx';
 import ReportModal from '@/pages/chatting/ReportModal.jsx';
@@ -45,7 +47,10 @@ function ChatWindow() {
   const openModal = () => {
     setIsOpen(true);
   };
-
+  const navigate = useNavigate();
+  function handleGoBack() {
+    navigate(-1);
+  }
   const closeModal = () => {
     setIsOpen(false);
   };
@@ -79,6 +84,11 @@ function ChatWindow() {
   const roomHeader = {
     roomId,
   };
+  // 아래는 read처리를 위한 fastapi의 조언, 저 함수는 다른 유자거 들어 올떄 실행되야함
+  const markAsRead = (messageId) => {
+    const updatedMessages = messages.map((message) => (message.id === messageId ? { ...message, read: true } : message));
+    setMessages(updatedMessages);
+  };
 
   // const ws = new SockJS('http://localhost:5000/api/chat');
   const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
@@ -94,6 +104,7 @@ function ChatWindow() {
   // );
 
   const connect = () => {
+    console.log('connect');
     stompClient.connect(
       headers,
       (frame) => {
@@ -191,16 +202,21 @@ function ChatWindow() {
   };
 
   useEffect(() => {
+    const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
+    const stompClient = Stomp.over(ws);
+    ws.onmes = () => {
+      console.log('WebSocket connected!!!');
+    };
     findRoom();
     connect();
   }, []);
 
   return (
     <div className=" text-[#364C63] w-[22.5rem] h-[48.75rem] mx-auto">
-      <div className="text-2xl mx-6 py-8">
-        <Link to="/main" className="">
-          <span>&lt;</span>
-        </Link>
+      <div onClick={handleGoBack} className="text-2xl mx-6 py-8 hover:cursor-pointer ">
+
+        <span>&lt;</span>
+
         <span className="ml-3 font-sans font-extrabold text-[1.3rem]">
           {otherNickname}
         </span>
@@ -211,8 +227,8 @@ function ChatWindow() {
           <div id="Chat">
             <div>
               {}
-              <div>{room.id}</div>
-              <div>{room.id}</div>
+              {/* <div>{room.id}</div>
+              <div>{room.id}</div> */}
               <ul>
                 {messages.map((msg, index) => (
                   <li
@@ -227,8 +243,10 @@ function ChatWindow() {
 
                         {lastchatindex === index && (
                         <span id="readen" className="text-[0.5rem] mr-1 self-end">
+
                           {msg.read ? '' : '안읽음'}
                         </span>
+
                         )}
 
                         {/* {msg === latestMyChat && (

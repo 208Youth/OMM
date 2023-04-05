@@ -8,11 +8,14 @@ function ChatList() {
   const [chats, setChats] = useState([]);
   const token = localStorage.getItem('accesstoken');
   const navigate = useNavigate();
+  function handleGoBack() {
+    navigate(-1);
+  }
 
   async function getChatList() {
     await http({
       method: 'get',
-      url: `/chat/room`,
+      url: '/chat/room',
       headers: {
         // Authorization: import.meta.env.VITE_TOKEN,
         Authorization: `Bearer ${token}`,
@@ -43,12 +46,15 @@ function ChatList() {
   return (
     <div className="text-[#364C63] w-[22.5rem] h-[48.75rem] mx-auto">
       <div className="text-2xl mx-6 py-8">
-        <span>&lt;</span>
-        <span className="ml-3 font-sans font-bold">Chattings</span>
+        <span onClick={handleGoBack} className="hover:cursor-pointer ">
+          <span>&lt;</span>
+          <span className="ml-3 font-sans font-bold">Chattings</span>
+        </span>
+
       </div>
       <div className="mx-6">
-        {chats &&
-          chats.map((chat) => (
+        {chats
+          && chats.map((chat) => (
             <ChatRoom
               chat={chat}
               moveTo={(res) => {
