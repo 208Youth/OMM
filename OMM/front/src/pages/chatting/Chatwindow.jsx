@@ -175,7 +175,7 @@ function ChatWindow() {
       );
     });
     setMessage('');
-    setLastchatindex(myLastIndex + 1);
+    setLastchatindex(lastchatindex + 1);
   };
 
   const recvReadDto = (readIndex) => {
