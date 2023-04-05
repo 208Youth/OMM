@@ -336,7 +336,7 @@ function ChatWindow() {
               ariaHideApp={false}
             >
               <BottomModal
-                targetId={room.other.otherId}
+                targetId={room?.other?.otherId}
                 setModal={() => {
                   closeModal();
                 }}
