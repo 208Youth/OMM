@@ -16,7 +16,7 @@ function Main() {
   const [change, setChange] = useState(true);
   const contentList = [];
   let certList = [];
-  let imageUrl = '';
+  let personalId = {};
   // if (localStorage.getItem('IdenVC')) {
   //   console.log(localStorage.getItem('IdenVC'));
   //   certList.push('신분증');
@@ -31,13 +31,14 @@ function Main() {
     console.log(localStorage.getItem('IdenVC'));
     certList.push('신분증');
     let decoded = jwt_decode(localStorage.getItem('IdenVC')).vc.credentialSubject;
-    console.log(decoded);
-    let id = `
-    ${decoded.personalId.name} ${decoded.personalId.gender == 'FEMALE' ? '여' : '남'}\n
-    ${decoded.personalId.birthdate}
-    `;
-    contentList.push(id);
-    imageUrl = decoded.personalId.imageUrl;
+    contentList.push(null);
+    // let id = `
+    //   ${decoded.personalId.name} ${decoded.personalId.gender == 'FEMALE' ? '여' : '남'}
+    //   ${decoded.personalId.birthdate}
+    // `;
+    // contentList.push(id);
+    // imageUrl = decoded.personalId.imageUrl;
+    personalId = decoded.personalId;
     // contentList.push(jwt_decode(localStorage.getItem('IdenVC')));
   }
   if (localStorage.getItem('VC')) {
@@ -46,7 +47,7 @@ function Main() {
       for (let [key, value] of Object.entries(element)) {
         let decoded = jwt_decode(value).vc.credentialSubject;
         let data = '';
-        let cert_name ='';
+        let cert_name = '';
         switch (key) {
           case 'UniversityCredential':
             data = decoded.university.name;
@@ -102,9 +103,19 @@ function Main() {
           </p>
           <br />
         </div>
-        <Swiper effect={'cards'} grabCursor={true} modules={[EffectCards]} className="mySwiper" onSlideChange={() => setChange(true)}>
+        <Swiper
+          effect={'cards'}
+          grabCursor={true}
+          modules={[EffectCards]}
+          className="mySwiper"
+          onSlideChange={() => setChange(true)}
+        >
           {certList.map((cert, index) => (
-            <SwiperSlide key={index} onClick={() => setChange(!change)} className={change ? 'name' : 'description'}>
+            <SwiperSlide
+              key={index}
+              onClick={() => setChange(!change)}
+              className={change ? 'name' : 'description'}
+            >
               {change && (
                 <div>
                   <p className="text-3xl text-left leading-relaxed flex justify-start t-0">
@@ -128,14 +139,28 @@ function Main() {
                 </div>
               )}
               {!change && (
-                <div>
-                  <p>
-                    {certList[index] == '신분증' ? 
-                    <img src={imageUrl} width='80%' style={{ display: 'block', margin: '0 auto' }} /> : <div />}
-                  </p>
-                  <p className="text- leading-relaxed flex justify-start t-0">
-                    {contentList[index]}
-                  </p>
+                <div className="text-xl text-left leading-relaxed justify-start t-0">
+                  {certList[index] == '신분증' ? (
+                    <div className="m-3">
+                      <img
+                        src={personalId.imageUrl}
+                        width="100%"
+                        style={{
+                          display: 'block',
+                          margin: '0 auto',
+                          borderRadius: '40%',
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="m-3 text-3xl">{contentList[index]}</div>
+                  )}
+                  <div className="mx-5">
+                    <p className="text-2xl">
+                      {personalId.name} {personalId.gender == 'FEMALE' ? '여' : '남'}
+                    </p>
+                    <p>{personalId.birthdate}</p>
+                  </div>
                 </div>
               )}
             </SwiperSlide>
