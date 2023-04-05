@@ -120,7 +120,9 @@ public class MatchingService {
         sender.put("memberId", member.getId());
         sender.put("nickname", member.getNickname());
         sender.put("imageContent", profileImg);
-
+        System.out.println("=========================================");
+        System.out.println("SENDER ID 뭐냐??????????: " + member.getId());
+        System.out.println("=========================================");
         return NotificationResponseDto.builder()
                 .id(notification.getId())
                 .sender(sender)
