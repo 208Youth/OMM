@@ -67,6 +67,7 @@ public class MyInfo {
 
     @Column(name = "mbti")
     @Enumerated(EnumType.STRING)
+    @ColumnDefault("'SECRET'")
     private InfoMBTI mbti;
 
     @Column(name = "pr")
