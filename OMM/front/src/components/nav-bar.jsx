@@ -28,7 +28,7 @@ function Navbar({
       Authorization: `Bearer ${token}`,
     };
     // const ws = new SockJS('http://localhost:5000/api/matching');
-    const ws = new SockJS('http://localhost:5000/api/matching');
+    const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/matching`);
     stompClient = Stomp.over(ws);
     await stompClient.connect(
       headers,
