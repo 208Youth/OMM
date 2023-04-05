@@ -51,7 +51,7 @@ function LikeList() {
               aria-hidden
             >
               <img
-                src={person.image_main}
+                src={`data:image/png;base64,${person.image_main}`}
                 alt=""
                 className="w-36 h-56 rounded-2xl"
               />
