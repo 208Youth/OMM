@@ -62,4 +62,8 @@ public class MatchingRepository {
     public void deleteNotification(Long receiverId, Notification notification) {
         opsListNotification.remove(String.valueOf(receiverId), 1, notification);
     }
+
+    public boolean findAllAlert(Long id) {
+        return opsListNotification.size(String.valueOf(id)) > 0;
+    }
 }
