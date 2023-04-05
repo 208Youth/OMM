@@ -18,7 +18,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     boolean existsByDidAddress(String didAddress);
 
-    @Query(value = "select m.id, m.nickname, m.age from Member m left outer join Favor f on f.toMember.id = m.id " +
-            "where f.fromMember.id = :id and f.value = true ")
+    @Query(value = "select * from member m left outer join favor f on f.to_id = m.member_id " +
+            "where f.from_id = :id and f.value = true ", nativeQuery = true)
     List<Member> getMembersByFavoredInfo(Long id);
 }
