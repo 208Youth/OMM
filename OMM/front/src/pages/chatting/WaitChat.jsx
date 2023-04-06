@@ -70,7 +70,9 @@ function WaitChat() {
     };
     console.log(stompClient);
     const decoded = jwt_decode(token);
-    waitForConnection(stompClient, () => {
+    stompClient.connect(
+      headers,
+      (frame) => {
       stompClient.send(
         '/pub/chat/room',
         headers,
