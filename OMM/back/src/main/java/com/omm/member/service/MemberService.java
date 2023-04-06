@@ -611,24 +611,33 @@ public class MemberService {
      * @param currentMemberDidAddress 멤버 주소 정보
      * @return
      */
-    public GetInterestListResponseDto getMyInterestList(String currentMemberDidAddress) {
+//    public GetInterestListResponseDto getMyInterestList(String currentMemberDidAddress) {
+    public GetInterestNamesResponseDto getMyInterestList(String currentMemberDidAddress) {
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         try {
             List<InterestList> interestList = interestListRepository.findAllByMember(member);
-            List<InterestDto> interestDtos = new ArrayList<>();
+//            List<InterestDto> interestDtos = new ArrayList<>();
+//            interestList.forEach((interest) -> {
+//                interestDtos.add(
+//                        InterestDto.builder()
+//                                .interestListId(interest.getId())
+//                                .name(interest.getInterest().getName())
+//                                .build()
+//                );
+//            });
+
+            List<String> interestDtos = new ArrayList<>();
             interestList.forEach((interest) -> {
-                interestDtos.add(
-                        InterestDto.builder()
-                                .interestListId(interest.getId())
-                                .name(interest.getInterest().getName())
-                                .build()
-                );
+                interestDtos.add(interest.getInterest().getName());
             });
 
-            GetInterestListResponseDto getInterestListResponseDto = GetInterestListResponseDto.builder()
-                    .interestList(interestDtos).build();
+//            GetInterestListResponseDto getInterestListResponseDto = GetInterestListResponseDto.builder()
+//                    .interestList(interestDtos).build();
+            GetInterestNamesResponseDto getInterestListResponseDto = GetInterestNamesResponseDto.builder()
+                    .interestList(interestDtos)
+                    .build();
             return getInterestListResponseDto;
         } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
