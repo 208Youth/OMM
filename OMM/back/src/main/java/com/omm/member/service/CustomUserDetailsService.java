@@ -4,6 +4,7 @@ import com.omm.exception.CustomException;
 import com.omm.model.entity.Member;
 import com.omm.repository.MemberRepository;
 import com.omm.util.error.ErrorCode;
+import java.time.LocalDate;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -36,6 +37,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     private User createUser(Member member) {
         if (member.isBlack()) {
             throw new CustomException(ErrorCode.BLACKLIST_MEMBER);
+        } else if (member.getSuspendDate() != null & member.getSuspendDate().isAfter(LocalDate.now())) {
+            throw new CustomException(ErrorCode.SUSPEND_MEMBER);
         }
 
         List<GrantedAuthority> grantedAuthorities = Collections.singletonList(
