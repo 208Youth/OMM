@@ -7,23 +7,29 @@ import CloseBtn from '../../assets/CloseBtn.svg';
 import http from '../../api/http';
 
 function MyinfoSetModal3({ setModal }) {
+  const token = localStorage.getItem('accesstoken');
   // const [interests, setInterests] = useState([]);
-  const [interests, setInterests] = useState(['잠자기', '밥먹기', '술마시기', '눕기', '유투브보기', '간식먹기']);
+  const [interests, setInterests] = useState([]);
   const [newInterest, setNewInterest] = useState('');
   const memberId = 1;
+  const interestList = interests.map((interest, index) => ({
+    interest_list_id: index + 1,
+    name: interest,
+  }));
 
   // API에서 관심사 리스트를 가져오는 함수
   async function fetchInterests() {
     await http({
       method: 'get',
       url: `/member/${memberId}/interest-list`,
-      // headers: {
-      //   Authorization: import.meta.env.VITE_TOKEN,
-      // },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then((res) => {
         console.log(res);
-        setInterests(res.data);
+        console.log(res.data.interestList);
+        setInterests(res.data.interestList);
       })
       .catch((err) => {
         console.log(err);
@@ -31,26 +37,52 @@ function MyinfoSetModal3({ setModal }) {
   }
 
   // 관심사 리스트를 API로 보내는 함수
-  async function sendInterests() {
-    const interestList = interests.map((interest, index) => ({
-      interest_list_id: index + 1,
-      name: interest,
-    }));
-    console.log(interestList);
-    await http.put(`/member/${memberId}}/interest-list`, interests);
-    alert('관심사가 저장되었습니다.');
-    setModal(true);
-  }
+  // async function sendInterests() {
+  //   const interestList = interests.map((interest, index) => ({
+  //     interest_list_id: index + 1,
+  //     name: interest,
+  //   }));
+  //   console.log(interestList);
+  //   // await http.put(`/member/${memberId}/interest-list`, interests, `Bearer ${token}`);
+  //   alert('관심사가 저장되었습니다.');
+  //   setModal(true);
+  // }
+
+  const sendInterests = async () => {
+    await http({
+      method: 'PUT',
+      url: '/member/interest-list',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+
+      // data: interestList,
+      // data: 'interestList:'{interestList},
+      data: {
+        interestList,
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        alert('관심사가 저장되었습니다.');
+        setModal(true);
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log(interestList);
+      });
+  };
 
   // 추가 버튼 클릭 시, 관심사를 추가하는 함수
-  function handleAddInterest() {
+  async function handleAddInterest() {
     if (newInterest.trim() && (interests.length) < 6) {
-      setInterests([...interests, newInterest.trim()]);
+      await setInterests([...interests, newInterest.trim()]);
+      console.log(interests);
       setNewInterest('');
     }
   }
 
-  // 삭제 버튼 클릭 시, 관심사를 삭제하는 함수
+  // 해당 버튼 클릭 시, 관심사를 삭제하는 함수
   function handleRemoveInterest(index) {
     const updatedInterests = [...interests];
     updatedInterests.splice(index, 1);
