@@ -27,7 +27,7 @@ function LikeList() {
   }
 
   const gotoProfile = (id) => {
-    navigate(`/OtherProfile/${id}`, { state: { id: `${id}` } });
+    navigate(`/otherprofile/${id}`, { state: { id: `${id}` } });
   };
 
   useEffect(() => {
