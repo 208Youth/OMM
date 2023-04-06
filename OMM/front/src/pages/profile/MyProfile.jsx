@@ -290,23 +290,23 @@ function MyProfile({ profileNav }) {
   } else if (basicInfomation.drinking_style === 'ONLY_FRIENDS') {
     drinkingStyleText = '친구들 만날 떄만';
   } else if (basicInfomation.drinking_style === 'STOPPING') {
-    drinkingStyleText = '금주 중';
+    drinkingStyleText = '금주중';
   }
   let drinkingStyleText2;
   if (filterInfomation.drinking_style === 'NONE') {
     drinkingStyleText2 = '상관없음';
   } else if (filterInfomation.drinking_style === 'PREFER_NO') {
-    drinkingStyleText2 = '안 마셨으면 좋겠음';
+    drinkingStyleText2 = '안마셨으면 좋겠음';
   } else if (filterInfomation.drinking_style === 'PREFER_YES') {
-    drinkingStyleText2 = '잘 마셨으면 좋겠음';
+    drinkingStyleText2 = '잘마셨으면 좋겠음';
   }
   let smokingStyleText;
   if (basicInfomation.smoking_style === 'NOT') {
-    smokingStyleText = '비흡연자';
+    smokingStyleText = '안함';
   } else if (basicInfomation.smoking_style === 'SOMETIMES') {
-    smokingStyleText = '진짜 가끔';
+    smokingStyleText = '가끔';
   } else if (basicInfomation.smoking_style === 'OFTEN') {
-    smokingStyleText = '자주 핌';
+    smokingStyleText = '자주';
   } else if (basicInfomation.smoking_style === 'STOPPING') {
     smokingStyleText = '금연중';
   }
@@ -322,9 +322,9 @@ function MyProfile({ profileNav }) {
   if (basicInfomation.contact_style === 'PREFER_MSG') {
     contactStyleText = '카톡자주하는편';
   } else if (basicInfomation.contact_style === 'PREFER_CALL') {
-    contactStyleText = '전화 선호';
+    contactStyleText = '전화선호';
   } else if (basicInfomation.contact_style === 'PREFER_FACECALL') {
-    contactStyleText = '영상통화 선호';
+    contactStyleText = '영상통화선호';
   } else if (basicInfomation.contact_style === 'NOT_MSG') {
     contactStyleText = '카톡 별로 안하는 편';
   } else if (basicInfomation.contact_style === 'PREFER_OFFLINE') {
@@ -334,11 +334,11 @@ function MyProfile({ profileNav }) {
   if (filterInfomation.contact_style === 'PREFER_MSG') {
     contactStyleText2 = '카톡자주하는편';
   } else if (filterInfomation.contact_style === 'PREFER_CALL') {
-    contactStyleText2 = '전화 선호';
+    contactStyleText2 = '전화선호';
   } else if (filterInfomation.contact_style === 'NONE') {
     contactStyleText2 = '상관없음';
   } else if (filterInfomation.contact_style === 'PREFER_FACECALL') {
-    contactStyleText2 = '영상통화 선호';
+    contactStyleText2 = '영상통화선호';
   } else if (filterInfomation.contact_style === 'NOT_MSG') {
     contactStyleText2 = '카톡 별로 안하는 편';
   } else if (filterInfomation.contact_style === 'PREFER_OFFLINE') {
@@ -464,7 +464,7 @@ function MyProfile({ profileNav }) {
                     <textarea
                       maxLength={40}
                       disabled={disabled}
-                      className="m-3 break-words h-20 resize-none overflow-hidden focus:ring-2 focus:ring-blue-300 text-slate-600 text-sm bg-transparent border-none outline-none w-full font-sans"
+                      className="m-3 break-words h-20 resize-none overflow-hidden focus:ring-2 focus:ring-blue-200 text-slate-600 text-sm bg-transparent border-none outline-none w-full font-sans"
                       type="text"
                       value={newPr}
                       placeholder={
@@ -953,7 +953,7 @@ function MyProfile({ profileNav }) {
                 </div>
 
                 <div className="mb-16">
-                  <div className="my-5 ml-10">
+                  <div className="my-5 ml-10 flex flex-wrap">
                     <div className="inline-block">
                       <Tooltip id="my-tooltip" />
                       <img
@@ -961,7 +961,7 @@ function MyProfile({ profileNav }) {
                           newCertinfo.health !== false ? healthYes : healthNo
                         }
                         alt="#"
-                        className="badges"
+                        className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
                         data-tooltip-id="my-tooltip"
                         data-tooltip-content={`${
                           newCertinfo.health_info
@@ -978,7 +978,7 @@ function MyProfile({ profileNav }) {
                             : universityNo
                         }
                         alt="#"
-                        className="badges"
+                        className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
                         data-tooltip-id="my-tooltip"
                         data-tooltip-content={`${
                           newCertinfo.unversity_name
@@ -991,7 +991,7 @@ function MyProfile({ profileNav }) {
                       <img
                         src={newCertinfo.job !== false ? jobYes : jobNo}
                         alt="#"
-                        className="badges"
+                        className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
                         data-tooltip-id="my-tooltip"
                         data-tooltip-content={`${
                           newCertinfo.job_name ? newCertinfo.job_name : '정보 없음'
@@ -1006,7 +1006,7 @@ function MyProfile({ profileNav }) {
                             : certificateNo
                         }
                         alt="#"
-                        className="badges"
+                        className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
                         data-tooltip-id="my-tooltip"
                         data-tooltip-content={`${
                           newCertinfo.certificate
@@ -1021,7 +1021,7 @@ function MyProfile({ profileNav }) {
                           newCertinfo.estate !== false ? estateYes : estateNo
                         }
                         alt="#"
-                        className="badges"
+                        className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
                         data-tooltip-id="my-tooltip"
                         data-tooltip-content={`${
                           newCertinfo.astate_amount
@@ -1036,7 +1036,7 @@ function MyProfile({ profileNav }) {
                           newCertinfo.income !== false ? incomeYes : incomeNo
                         }
                         alt="#"
-                        className="badges"
+                        className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
                         data-tooltip-id="my-tooltip"
                         data-tooltip-content={`${
                           newCertinfo.income_amount
