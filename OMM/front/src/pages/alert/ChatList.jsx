@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import AOS from 'aos';
 import ChatRoom from '../../components/ChatRoom';
 import Navbar from '../../components/nav-bar';
@@ -8,6 +8,7 @@ import http from '../../api/http';
 function ChatList() {
   const [chats, setChats] = useState([]);
   const token = localStorage.getItem('accesstoken');
+  const location = useLocation();
   const navigate = useNavigate();
   function handleGoBack() {
     navigate(-1);
@@ -36,7 +37,6 @@ function ChatList() {
   };
 
   useEffect(() => {
-    location.reload();
     getChatList();
   }, []);
 
@@ -47,6 +47,10 @@ function ChatList() {
   useEffect(() => {
     console.log('바꼇니', chats);
   }, [chats]);
+
+  useEffect(() => {
+    window.location.reload();
+  }, [location]);
 
   return (
     <div className="text-[#364C63] w-[22.5rem] h-[48.75rem] mx-auto">
