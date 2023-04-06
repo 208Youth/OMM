@@ -133,7 +133,14 @@ function Alert() {
                 />
               </div>
             ))}
-          {/* <AlertMsg deletemsg={false} /> */}
+          {alertlist.length === 0 && (
+            <div className="h-[22.5rem] flex justify-center" data-aos="zoom-in">
+              <div className="flex-col my-auto text-center text-md">
+                <div>메인에서 아래의 하트를 눌러</div>
+                <div>매칭을 보내보세요!</div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
       <Navbar notiNav />
