@@ -3,6 +3,7 @@ import Modal from 'react-modal';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { chatInfo } from '../store/chatSlice';
+import ommheart from '../assets/ommheart.png';
 
 function AlertMsg({ msg, deletemsg }) {
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -38,7 +39,7 @@ function AlertMsg({ msg, deletemsg }) {
             alt="사진"
           />
         ) : (
-          <img src="../assets/ommheart.png" alt="사진" />
+          <img src={ommheart} alt="사진" />
         )}
       </div>
       <div className="self-center w-40 ml-3 font-sans">
