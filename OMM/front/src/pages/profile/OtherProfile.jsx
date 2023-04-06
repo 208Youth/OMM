@@ -390,8 +390,8 @@ function OtherProfile() {
                           data-tooltip-id="my-tooltip"
                           data-tooltip-content={
                             newCertinfo.health
-                              ? `${newCertinfo.health}`
-                              : '없음'
+                              ? `건강검진날짜 ${newCertinfo.health_info}`
+                              : '정보 없음'
                           }
                         />
                       </div>
@@ -405,7 +405,11 @@ function OtherProfile() {
                           alt="#"
                           className="badges"
                           data-tooltip-id="my-tooltip"
-                          data-tooltip-content={`${newCertinfo.university}`}
+                          data-tooltip-content={
+                            newCertinfo.university
+                              ? `${newCertinfo.university_name}`
+                              : '정보 없음'
+                          }
                         />
                       </div>
                       <div className="inline-block">
@@ -414,7 +418,9 @@ function OtherProfile() {
                           alt="#"
                           className="badges"
                           data-tooltip-id="my-tooltip"
-                          data-tooltip-content={`${newCertinfo.job}`}
+                          data-tooltip-content={
+                            newCertinfo.job ? `${newCertinfo.job_name}` : '무직'
+                          }
                         />
                       </div>
                       <div className="inline-block">
@@ -427,7 +433,11 @@ function OtherProfile() {
                           alt="#"
                           className="badges"
                           data-tooltip-id="my-tooltip"
-                          data-tooltip-content={` ${newCertinfo.certificate}`}
+                          data-tooltip-content={
+                            newCertinfo.certificate
+                              ? `${newCertinfo.certificate_names}`
+                              : '정보 없음'
+                          }
                         />
                       </div>
                       <div className="inline-block">
@@ -438,7 +448,11 @@ function OtherProfile() {
                           alt="#"
                           className="badges"
                           data-tooltip-id="my-tooltip"
-                          data-tooltip-content={` ${newCertinfo.estate}`}
+                          data-tooltip-content={
+                            newCertinfo.estate
+                              ? `${newCertinfo.estate_amount}`
+                              : '정보 없음'
+                          }
                         />
                       </div>
                       <div className="inline-block">
@@ -449,7 +463,7 @@ function OtherProfile() {
                           alt="#"
                           className="badges"
                           data-tooltip-id="my-tooltip"
-                          data-tooltip-content={` ${newCertinfo.income}`}
+                          data-tooltip-content={newCertinfo.income ? `${newCertinfo.income_amount}` : '정보 없음'}
                         />
                       </div>
                     </div>
