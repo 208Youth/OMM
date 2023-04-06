@@ -88,6 +88,7 @@ function FaceRecogModal({ setFaceModal, setFaceComplete, name, img }) {
           onClick={() => {
             sendImg();
           }}
+          disabled={!completed}
           className={completed ? 'btn-active' : 'btn-inactive'}
         >
           인증 완료

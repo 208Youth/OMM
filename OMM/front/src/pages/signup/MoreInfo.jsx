@@ -50,15 +50,15 @@ function MoreInfo({ setStep }) {
   const openModal = () => {
     setIsOpen(true);
   };
-  
+
   // const afterOpenModal = () => {
-    //   subtitle.style.color = '#f00';
+  //   subtitle.style.color = '#f00';
   // };
-  
+
   const closeModal = () => {
     setIsOpen(false);
   };
-  
+
   // const onChangeHandler = (e) => {
   //   setMoreInfo(() => {
   //     return {
@@ -105,7 +105,7 @@ function MoreInfo({ setStep }) {
                 nickname: e.target.value,
               }));
             }}
-            // value = { moreinfo.nickname } 
+            // value = { moreinfo.nickname }
             // onChange={ onChangeHandlerId }
             type="text"
             id="nickname"
@@ -132,7 +132,7 @@ function MoreInfo({ setStep }) {
           id="height"
           type="text"
           placeholder="키"
-          // value = { moreinfo.height } 
+          // value = { moreinfo.height }
           // onChange={ onChangeHandlerId }
           className="w-20 h-10 font-sans font-semibold text-[#364C63] bg-white border-2 border-[#f59fb277] focus:border-[#F094A7] placeholder-[#f59fb277] text-sm text-center rounded-3xl block p-2.5 drop-shadow-md"
         />
@@ -190,7 +190,7 @@ function MoreInfo({ setStep }) {
           id="highschool"
           type="text"
           placeholder="싸피"
-          // value = { moreinfo.highschool } 
+          // value = { moreinfo.highschool }
           // onChange={ onChangeHandlerId }
           className="w-20 h-10 font-sans font-semibold text-[#364C63] bg-white border-2 border-[#f59fb277] focus:border-[#F094A7] placeholder-[#f59fb277] text-sm text-center rounded-3xl block p-2.5 drop-shadow-md"
         />
@@ -214,7 +214,7 @@ function MoreInfo({ setStep }) {
               id="military1"
               type="radio"
               name="military"
-              value="NONE" 
+              value="NONE"
               // checked={moreinfo.military === 'NONE'}
               // onChange={onChangeHandler}
               className="peer/military1"
