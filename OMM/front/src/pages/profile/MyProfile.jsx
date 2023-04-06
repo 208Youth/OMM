@@ -771,7 +771,12 @@ function MyProfile({ profileNav }) {
                     <div className="flex items-center">
                       <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
                         {' '}
-                        {filterInfomation.age_min} - {filterInfomation.age_max}{' '}
+                        {filterInfomation.age_min}
+                        {' '}
+                        -
+                        {' '}
+                        {filterInfomation.age_max}
+                        {' '}
                         살
                       </span>
                       <div>
@@ -790,7 +795,11 @@ function MyProfile({ profileNav }) {
                   <div>
                     <div className="flex items-center">
                       <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
-                        {filterInfomation.height_min} - {filterInfomation.max}
+                        {filterInfomation.height_min}
+                        {' '}
+                        -
+                        {' '}
+                        {filterInfomation.max}
                         cm
                       </span>
                       <div>
@@ -810,8 +819,13 @@ function MyProfile({ profileNav }) {
                     <div className="flex items-center">
                       <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
                         {' '}
-                        {filterInfomation.range_min} -{' '}
-                        {filterInfomation.range_max} km
+                        {filterInfomation.range_min}
+                        {' '}
+                        -
+                        {' '}
+                        {filterInfomation.range_max}
+                        {' '}
+                        km
                       </span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
@@ -932,7 +946,9 @@ function MyProfile({ profileNav }) {
                         className="badges"
                         data-tooltip-id="my-tooltip"
                         data-tooltip-content={`${
-                          newCertinfo.job_name ? newCertinfo.job_name : '정보 없음'
+                          newCertinfo.job_name
+                            ? newCertinfo.job_name
+                            : '정보 없음'
                         }`}
                       />
                     </div>
@@ -993,7 +1009,7 @@ function MyProfile({ profileNav }) {
               </div>
             </div>
           </div>
-          <Navbar profileNav={profileNav} />
+          <Navbar profileNav />
         </div>
       </div>
     </div>
