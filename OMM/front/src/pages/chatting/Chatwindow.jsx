@@ -86,9 +86,7 @@ function ChatWindow() {
   };
   // 아래는 read처리를 위한 fastapi의 조언, 저 함수는 다른 유자거 들어 올떄 실행되야함
   const markAsRead = (messageId) => {
-    const updatedMessages = messages.map((message) =>
-      message.id === messageId ? { ...message, read: true } : message,
-    );
+    const updatedMessages = messages.map((message) => (message.id === messageId ? { ...message, read: true } : message));
     setMessages(updatedMessages);
   };
 
@@ -269,7 +267,8 @@ function ChatWindow() {
 
                         <div className="max-w-[12.5rem]  inline-block bg-gray-200 p-2 rounded-lg">
                           <span className="text-sm font-sans font-bold break-words whitespace-pre-line">
-                            {msg.content}{' '}
+                            {msg.content}
+                            {' '}
                           </span>
                         </div>
                         {/* <span className="font-sans">{msg.senderId}</span> */}
@@ -288,11 +287,7 @@ function ChatWindow() {
                               </span>
                             ) : (
                               <span>
-                                <img
-                                  src="../../../public/defaultimage.png"
-                                  alt="defualt_image"
-                                  className="w-9 h-9 rounded-full mb-2 self-center"
-                                />
+                                <img src="/defaultimage.png" alt="defualt_image" className="w-9 h-9 rounded-full mb-2 self-center" />
                               </span>
                             )}
                             <div className="flex flex-col">
