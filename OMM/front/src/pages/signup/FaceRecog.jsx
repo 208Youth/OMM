@@ -169,6 +169,7 @@ function FaceRecog({ setStep }) {
           setRecog(true);
           setisRight(true);
           setNotice('인증 완료!');
+          navigate('/loading');
         } else {
           setRecog(true);
           console.log('다른사람인디.');
