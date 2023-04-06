@@ -1,10 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { TinyFaceDetectorOptions } from 'face-api.js';
 import * as faceapi from 'face-api.js';
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
+import jwt_decode from 'jwt-decode';
 import './FaceRecog.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import http from '../../api/http';
+import ommheart from '../../assets/ommheart.png';
 
 const MODEL_URL = '/models';
 // 비디오 사이즈 설정
@@ -31,9 +35,97 @@ function FaceRecog({ setStep }) {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const [chatid, setChatId] = useState(null);
+  const token = localStorage.getItem('accesstoken');
+  const senderId = useSelector((state) => state.chat.memberId);
+
+  let stompClient;
+  const decoded = jwt_decode(token);
+
+  const websocket = () => {
+    // const ws = new SockJS('http://localhost:5000/api/chat');
+    const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
+    const headers = {
+      // Authorization: import.meta.env.VITE_TOKEN,
+      Authorization: `Bearer ${token}`,
+    };
+    stompClient = Stomp.over(ws);
+
+    stompClient.connect(
+      headers,
+      (frame) => {
+        console.log('연결성공');
+        stompClient.subscribe(`/sub/chat/room/${decoded.sub}`, (message) => {
+          console.log(message);
+          const recv = JSON.parse(message.body);
+          console.log(recv);
+          console.log('채팅 내용 수신', recv.id);
+          navigate(`/chatwindow/${recv.id}`);
+          // 리다이렉트 또는 다른 작업 수행
+        });
+      },
+      (error) => {
+        // 연결이 끊어졌을 때 재연결 시도 부분
+        // 필요할 때 쓰면 될 듯.
+        // if(reconnect++ < 5) {
+        //   setTimeout(function() {
+        //     console.log("connection reconnect");
+        //     connect();
+        //   },10*1000);
+        // }
+      },
+    );
+  };
+
+  const waitForConnection = (stompClient, callback) => {
+    setTimeout(() => {
+      // 연결되었을 때 콜백함수 실행
+      if (stompClient.ws.readyState === 1) {
+        callback();
+        // 연결이 안 되었으면 재호출
+      } else {
+        waitForConnection(stompClient, callback);
+      }
+    }, 1); // 밀리초 간격으로 실행
+  };
+
+  const createChatting = () => {
+    const headers = {
+      // Authorization: import.meta.env.VITE_TOKEN,
+      Authorization: `Bearer ${token}`, // 매칭 수락한사람의 토큰
+    };
+    console.log(stompClient);
+    const decoded = jwt_decode(token);
+    stompClient.connect(headers, (frame) => {
+      stompClient.send(
+        '/pub/chat/room',
+        headers,
+        // 나한테 알림 보낸사람 id
+        JSON.stringify({ senderId }),
+        console.log('채팅방 만들라구'),
+      );
+    });
+    console.log(stompClient);
+  };
+
+  const subconnect = () => {
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    stompClient.connect(
+      headers,
+      (frame) => {
+        console.log('sub 하기전', decoded.sub);
+      },
+      (error) => {
+        console.log('연결 실패', error);
+      },
+    );
+  };
+
   // axios 로 fastapi 에 사진 요청보내기
   // 이미지 받아오기
-  const token = localStorage.getItem('accesstoken');
   async function getImg() {
     // axios로 fastapi 에 이미지 보내기
     await http({
@@ -215,7 +307,7 @@ function FaceRecog({ setStep }) {
       }, 2000);
       if (whatpage === 'chat') {
         console.log('대기로 이동');
-        navigate('/loading');
+        // navigate(`/chatwindow/${id}`);
       } else {
         setStep(true);
       }
@@ -247,6 +339,8 @@ function FaceRecog({ setStep }) {
     }
     getImg();
     startDetecting();
+    websocket();
+    createChatting();
   }, []);
 
   return (
@@ -260,7 +354,7 @@ function FaceRecog({ setStep }) {
       >
         <div className="mx-auto text-center">
           <img
-            src={whatpage === 'chat' ? '/ommheart.png' : '/heart-step-1.svg'}
+            src={whatpage === 'chat' ? { ommheart } : '/heart-step-1.svg'}
             alt=""
             className={
               whatpage === 'chat'
