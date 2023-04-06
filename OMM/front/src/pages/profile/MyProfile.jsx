@@ -290,23 +290,23 @@ function MyProfile({ profileNav }) {
   } else if (basicInfomation.drinking_style === 'ONLY_FRIENDS') {
     drinkingStyleText = '친구들 만날 떄만';
   } else if (basicInfomation.drinking_style === 'STOPPING') {
-    drinkingStyleText = '금주중';
+    drinkingStyleText = '금주 중';
   }
   let drinkingStyleText2;
   if (filterInfomation.drinking_style === 'NONE') {
     drinkingStyleText2 = '상관없음';
   } else if (filterInfomation.drinking_style === 'PREFER_NO') {
-    drinkingStyleText2 = '안마셨으면 좋겠음';
+    drinkingStyleText2 = '안 마셨으면 좋겠음';
   } else if (filterInfomation.drinking_style === 'PREFER_YES') {
-    drinkingStyleText2 = '잘마셨으면 좋겠음';
+    drinkingStyleText2 = '잘 마셨으면 좋겠음';
   }
   let smokingStyleText;
   if (basicInfomation.smoking_style === 'NOT') {
-    smokingStyleText = '안함';
+    smokingStyleText = '비흡연자';
   } else if (basicInfomation.smoking_style === 'SOMETIMES') {
-    smokingStyleText = '가끔';
+    smokingStyleText = '진짜 가끔';
   } else if (basicInfomation.smoking_style === 'OFTEN') {
-    smokingStyleText = '자주';
+    smokingStyleText = '자주 핌';
   } else if (basicInfomation.smoking_style === 'STOPPING') {
     smokingStyleText = '금연중';
   }
@@ -322,9 +322,9 @@ function MyProfile({ profileNav }) {
   if (basicInfomation.contact_style === 'PREFER_MSG') {
     contactStyleText = '카톡자주하는편';
   } else if (basicInfomation.contact_style === 'PREFER_CALL') {
-    contactStyleText = '전화선호';
+    contactStyleText = '전화 선호';
   } else if (basicInfomation.contact_style === 'PREFER_FACECALL') {
-    contactStyleText = '영상통화선호';
+    contactStyleText = '영상통화 선호';
   } else if (basicInfomation.contact_style === 'NOT_MSG') {
     contactStyleText = '카톡 별로 안하는 편';
   } else if (basicInfomation.contact_style === 'PREFER_OFFLINE') {
@@ -334,11 +334,11 @@ function MyProfile({ profileNav }) {
   if (filterInfomation.contact_style === 'PREFER_MSG') {
     contactStyleText2 = '카톡자주하는편';
   } else if (filterInfomation.contact_style === 'PREFER_CALL') {
-    contactStyleText2 = '전화선호';
+    contactStyleText2 = '전화 선호';
   } else if (filterInfomation.contact_style === 'NONE') {
     contactStyleText2 = '상관없음';
   } else if (filterInfomation.contact_style === 'PREFER_FACECALL') {
-    contactStyleText2 = '영상통화선호';
+    contactStyleText2 = '영상통화 선호';
   } else if (filterInfomation.contact_style === 'NOT_MSG') {
     contactStyleText2 = '카톡 별로 안하는 편';
   } else if (filterInfomation.contact_style === 'PREFER_OFFLINE') {

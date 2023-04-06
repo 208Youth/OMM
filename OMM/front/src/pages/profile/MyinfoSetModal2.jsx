@@ -207,8 +207,8 @@ function MyinfoSetModal2({ setModal }) {
                     className={`peer-checked/drink${index + 1}:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1`}
                   >
                     {style === 'NONE' ? '상관없음'
-                      : style === 'PREFER_NO' ? '안마셨으면 좋겠음'
-                        : style === 'PREFER_YES' ? '했으면 좋겠음' : ''}
+                      : style === 'PREFER_NO' ? '안 마셨으면 좋겠음'
+                        : style === 'PREFER_YES' ? '잘 마셨으면 좋겠음' : ''}
                   </label>
                 </div>
               ))}
@@ -240,11 +240,11 @@ function MyinfoSetModal2({ setModal }) {
                     className={`peer-checked/contact${index + 1}:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1`}
                   >
                     {style === 'NONE' ? '상관없음'
-                      : style === 'PREFER_MSG' ? '카톡'
+                      : style === 'PREFER_MSG' ? '카톡 자주'
                         : style === 'PREFER_CALL' ? '전화'
                           : style === 'PREFER_FACECALL' ? '영상통화'
                             : style === 'NOT_MSG' ? '카톡 별로'
-                              : style === 'PREFER_OFFLINE' ? '만남 선호'
+                              : style === 'PREFER_OFFLINE' ? '직접 만나'
                                 : ''}
                   </label>
                 </div>
@@ -277,8 +277,8 @@ function MyinfoSetModal2({ setModal }) {
                     className={`peer-checked/smoke${index + 1}:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1`}
                   >
                     {style === 'NONE' ? '상관없음'
-                      : style === 'PREFER_NO' ? '안했으면 좋겠음'
-                        : style === 'PREFER_YES' ? '했으면 좋겠음'
+                      : style === 'PREFER_NO' ? '비흡연자 선호'
+                        : style === 'PREFER_YES' ? '흡연자 선호'
                           : ''}
                   </label>
                 </div>
