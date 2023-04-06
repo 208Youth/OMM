@@ -12,10 +12,12 @@ function MyinfoSetModal3({ setModal }) {
   const [interests, setInterests] = useState([]);
   const [newInterest, setNewInterest] = useState('');
   const memberId = 1;
-  const interestList = interests.map((interest, index) => ({
-    interest_list_id: index + 1,
-    name: interest,
-  }));
+  // 아래는 초기 데이터 형식을 마추기 위해 interest_list_id라는 값과 name이 담긴객채로 만들어 주는 코드였으나 지금은 단순한 배열로 건내주면 된다.
+  // const interestList = interests.map((interest, index) => ({
+  //   interest_list_id: index + 1,
+  //   name: interest,
+  // }));
+  const interestList = interests;
 
   // API에서 관심사 리스트를 가져오는 함수
   async function fetchInterests() {
@@ -27,6 +29,7 @@ function MyinfoSetModal3({ setModal }) {
       },
     })
       .then((res) => {
+        console.log('바뀐자료한번보자', res);
         console.log(res);
         console.log(res.data.interestList);
         setInterests(res.data.interestList);
@@ -57,10 +60,10 @@ function MyinfoSetModal3({ setModal }) {
       },
 
       // data: interestList,
-      // data: 'interestList:'{interestList},
-      data: {
-        interestList,
-      },
+      data: { interestList },
+      // data: {
+      //   interestList,
+      // },
     })
       .then((res) => {
         console.log(res);
