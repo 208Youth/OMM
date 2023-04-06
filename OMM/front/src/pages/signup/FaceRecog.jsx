@@ -35,95 +35,7 @@ function FaceRecog({ setStep }) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [chatid, setChatId] = useState(null);
   const token = localStorage.getItem('accesstoken');
-  const senderId = useSelector((state) => state.chat.memberId);
-
-  let stompClient;
-  const decoded = jwt_decode(token);
-
-  const websocket = () => {
-    // const ws = new SockJS('http://localhost:5000/api/chat');
-    const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
-    const headers = {
-      // Authorization: import.meta.env.VITE_TOKEN,
-      Authorization: `Bearer ${token}`,
-    };
-    stompClient = Stomp.over(ws);
-
-    stompClient.connect(
-      headers,
-      (frame) => {
-        console.log('연결성공');
-        stompClient.subscribe(`/sub/chat/room/${decoded.sub}`, (message) => {
-          console.log(message);
-          const recv = JSON.parse(message.body);
-          console.log(recv);
-          console.log('채팅 내용 수신', recv.id);
-          setChatId(recv.id);
-          // navigate(`/chatwindow/${recv.id}`);
-          // 리다이렉트 또는 다른 작업 수행
-        });
-      },
-      (error) => {
-        // 연결이 끊어졌을 때 재연결 시도 부분
-        // 필요할 때 쓰면 될 듯.
-        // if(reconnect++ < 5) {
-        //   setTimeout(function() {
-        //     console.log("connection reconnect");
-        //     connect();
-        //   },10*1000);
-        // }
-      },
-    );
-  };
-
-  const waitForConnection = (stompClient, callback) => {
-    setTimeout(() => {
-      // 연결되었을 때 콜백함수 실행
-      if (stompClient.ws.readyState === 1) {
-        callback();
-        // 연결이 안 되었으면 재호출
-      } else {
-        waitForConnection(stompClient, callback);
-      }
-    }, 1); // 밀리초 간격으로 실행
-  };
-
-  const createChatting = () => {
-    const headers = {
-      // Authorization: import.meta.env.VITE_TOKEN,
-      Authorization: `Bearer ${token}`, // 매칭 수락한사람의 토큰
-    };
-    console.log(stompClient);
-    const decoded = jwt_decode(token);
-    stompClient.connect(headers, (frame) => {
-      stompClient.send(
-        '/pub/chat/room',
-        headers,
-        // 나한테 알림 보낸사람 id
-        JSON.stringify({ senderId }),
-        console.log('채팅방 만들라구'),
-      );
-    });
-    console.log(stompClient);
-  };
-
-  const subconnect = () => {
-    const headers = {
-      Authorization: `Bearer ${token}`,
-    };
-
-    stompClient.connect(
-      headers,
-      (frame) => {
-        console.log('sub 하기전', decoded.sub);
-      },
-      (error) => {
-        console.log('연결 실패', error);
-      },
-    );
-  };
 
   // axios 로 fastapi 에 사진 요청보내기
   // 이미지 받아오기
@@ -225,7 +137,6 @@ function FaceRecog({ setStep }) {
 
     // 안면 인식 부분
     const faceDetecting = async () => {
-      // setNotice(['인', '증', '중', '입', '니', '다']);
       setNotice('인증 중입니다.');
       const detections = await faceapi
         .detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions())
@@ -307,7 +218,7 @@ function FaceRecog({ setStep }) {
         canvas.remove();
       }, 2000);
       console.log('대기로 이동');
-      navigate('/chattings', { state: { reload: true } });
+      navigate('/loading');
     } else if (recog && !isRight) {
       const stream = videoRef.current.srcObject;
       const tracks = stream.getTracks();
@@ -336,8 +247,6 @@ function FaceRecog({ setStep }) {
     }
     getImg();
     startDetecting();
-    websocket();
-    createChatting();
   }, []);
 
   return (
@@ -387,14 +296,6 @@ function FaceRecog({ setStep }) {
               className="w-64 mx-auto my-10 rounded-3xl absolute left-7"
             />
           </div>
-          {/* {isStartDetect &&
-            notice &&
-            Array.isArray(notice) &&
-            notice.map((one) => (
-              <div className="text-center text-[#364C63] mt-5 bouncing-text">
-                <div className={one}>{one}</div>
-              </div>
-            ))} */}
           {isStartDetect && notice && (
             <div className="text-center text-[#364C63] mt-5">{notice}</div>
           )}
