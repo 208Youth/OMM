@@ -391,7 +391,7 @@ function OtherProfile() {
                           className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
                           data-tooltip-id="my-tooltip"
                           data-tooltip-content={`${
-                            newCertinfo.health_info
+                            newCertinfo.health
                               ? newCertinfo.health_info
                               : '정보 없음'
                           }`}
@@ -408,7 +408,7 @@ function OtherProfile() {
                           className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
                           data-tooltip-id="my-tooltip"
                           data-tooltip-content={`${
-                            newCertinfo.unversity_name
+                            newCertinfo.university
                               ? newCertinfo.unversity_name
                               : '정보 없음'
                           }`}
@@ -421,7 +421,7 @@ function OtherProfile() {
                           className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
                           data-tooltip-id="my-tooltip"
                           data-tooltip-content={`${
-                            newCertinfo.job_name ? newCertinfo.job_name : '정보 없음'
+                            newCertinfo.job ? newCertinfo.job_name : '정보 없음'
                           }`}
                         />
                       </div>
@@ -451,8 +451,8 @@ function OtherProfile() {
                           className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
                           data-tooltip-id="my-tooltip"
                           data-tooltip-content={`${
-                            newCertinfo.astate_amount
-                              ? newCertinfo.astate_amount
+                            newCertinfo.estate
+                              ? newCertinfo.estate_amount
                               : '정보 없음'
                           }`}
                         />
@@ -466,7 +466,7 @@ function OtherProfile() {
                           className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
                           data-tooltip-id="my-tooltip"
                           data-tooltip-content={`${
-                            newCertinfo.income_amount
+                            newCertinfo.income
                               ? newCertinfo.income_amount
                               : '정보 없음'
                           }`}
