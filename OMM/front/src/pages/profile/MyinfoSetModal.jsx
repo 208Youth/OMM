@@ -5,10 +5,12 @@ import http from '../../api/http';
 // import CloseBtn from '../../assets/CloseBtn.svg';
 import './Profile.css';
 import CloseBtn from '../../assets/CloseBtn.svg';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function MyinfoSetModal(props) {
   const { setModal, basicInformation } = props;
   const [myinfo, setMyInfo] = useState(basicInformation);
+  const navigate = useNavigate();
 
   const token = localStorage.getItem('accesstoken');
   //   height: '',
@@ -63,6 +65,7 @@ function MyinfoSetModal(props) {
         console.log(data);
 
         setModal(false);
+        navigate('myprofile');
       })
       .catch((err) => {
         console.log(err);
