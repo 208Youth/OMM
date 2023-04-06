@@ -32,7 +32,10 @@ function AlertMsg({ msg, deletemsg }) {
   return (
     <div className="w-[312px] h-[4.7rem] flex p-3 bg-white bg-opacity-60 text-xs rounded-lg mb-1">
       <div className="w-10 h-10 self-center rounded-full object-cover">
-        <img src={msg.sender.imageContent} alt="사진" />
+        <img
+          src={`data:image/png;base64,${msg.sender.imageContent}`}
+          alt="사진"
+        />
       </div>
       <div className="self-center w-40 ml-3 font-sans">
         <span className="font-sans font-bold inline-block whitespace-nowrap overflow-hidden text-ellipsis">

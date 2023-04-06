@@ -21,6 +21,18 @@ function Navbar({
    */
   const [chatAlert, setChatAlert] = useState(false);
   const [notiAlert, setNotiAlert] = useState(false);
+  const [heartState, setHeartState] = useState();
+
+  const unfilledheart = "bi-chat-heart";
+  const filledheart = "bi-chat-heart-fill";
+
+  useEffect (()=>{
+    if(chatAlert){
+      setHeartState(filledheart);
+    }else{
+      setHeartState(unfilledheart);
+    }
+  },[chatAlert]);
 
   const mainconnect = () => {
     const headers = {
@@ -174,17 +186,6 @@ function Navbar({
       });
   };
 
-  const alertConnect = (headers) => {
-    stompClient.connect(
-      headers,
-      (frame) => {
-        
-      },
-      (error) => {
-      },
-    );
-  };
-
   /**
    * 처음 렌더링 시 내 안읽은 채팅 있는지 확인
    */
@@ -196,7 +197,7 @@ function Navbar({
     })
       .then((res) => {
         console.log('출력해보렴', res);
-        setChatAlert(res.data);
+        setChatAlert(res.data.alert);
       })
       .catch((err) => {
         console.log(err);
@@ -214,7 +215,7 @@ function Navbar({
     })
       .then((res) => {
         console.log('출력해보렴', res);
-        setNotiAlert(res.data);
+        setNotiAlert(res.data.alert);
       })
       .catch((err) => {
         console.log(err);
@@ -254,10 +255,10 @@ function Navbar({
               to="/chattings"
               className="transition duration-300 hover:scale-125"
             >
-              <i className="bi bi-chat-heart" />
+              <i className={heartState} />
             </Link>
           )}
-          {chatlistNav && <i className="bi bi-chat-heart-fill" />}
+          {chatlistNav && <i className="bi bi-chat-heart-fill chatlistNav" />}
         </div>
         {!mainNav && (
           <Link
@@ -286,10 +287,15 @@ function Navbar({
           </div>
         )}
         <div className="menu-item">
-          {notiNav && <i className="bi bi-bell-fill" />}
+          {notiNav && <i className="bi bi-bell-fill notiNav" />}
           {!notiNav && (
             <Link to="/notification" className="menu-item">
-              <i className="bi bi-bell transition duration-300 hover:scale-125" />
+              {!notiAlert  && (
+              <i className="my-2 bi bi-bell transition duration-300 hover:scale-125" />
+              )}
+              {notiAlert  && (
+              <i className="my-2 bi bi-bell-fill transition duration-300 hover:scale-125" />
+              )}
             </Link>
           )}
         </div>
