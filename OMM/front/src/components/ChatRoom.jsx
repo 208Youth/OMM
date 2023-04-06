@@ -52,7 +52,7 @@ function ChatRoom({ chat, moveTo }) {
     >
       <div className="w-10 h-10 self-center rounded-full">
         <img
-          src={`data:image/png;base64,${chat.other.image_content}`}
+          src={`data:image/png;base64,${chat.other.image.imageContent}`}
           alt="사진"
         />
         {/* <img src={Img} alt="사진" /> */}
