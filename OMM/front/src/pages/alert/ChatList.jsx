@@ -36,6 +36,7 @@ function ChatList() {
   };
 
   useEffect(() => {
+    location.reload();
     getChatList();
   }, []);
 
