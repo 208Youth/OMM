@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import AOS from 'aos';
 import ChatRoom from '../../components/ChatRoom';
 import Navbar from '../../components/nav-bar';
 import http from '../../api/http';
@@ -30,7 +31,7 @@ function ChatList() {
   }
 
   const gotoChatwindow = (id) => {
-    navigate(`/Chatwindow/${id}`);
+    navigate(`/chatwindow/${id}`);
     console.log('가자');
   };
 
@@ -39,29 +40,38 @@ function ChatList() {
   }, []);
 
   useEffect(() => {
+    AOS.init();
+  });
+
+  useEffect(() => {
     console.log('바꼇니', chats);
   }, [chats]);
 
   return (
     <div className="text-[#364C63] w-[22.5rem] h-[48.75rem] mx-auto">
       <div className="text-2xl mx-6 py-8">
-        <span onClick={handleGoBack} className="hover:cursor-pointer ">
+        <span
+          onClick={handleGoBack}
+          className="hover:cursor-pointer"
+          aria-hidden
+        >
           <span>&lt;</span>
           <span className="ml-3 font-sans font-bold">Chattings</span>
         </span>
-
       </div>
       <div className="mx-6">
-        {chats
-          && chats.map((chat) => (
-            <ChatRoom
-              chat={chat}
-              moveTo={(res) => {
-                if (res) {
-                  gotoChatwindow(chat.id);
-                }
-              }}
-            />
+        {chats &&
+          chats.map((chat) => (
+            <div data-aos="fade-up">
+              <ChatRoom
+                chat={chat}
+                moveTo={(res) => {
+                  if (res) {
+                    gotoChatwindow(chat.id);
+                  }
+                }}
+              />
+            </div>
           ))}
         {!chats && (
           <div className="h-[22.5rem] flex justify-center">

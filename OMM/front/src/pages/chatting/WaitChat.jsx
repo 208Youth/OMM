@@ -55,7 +55,7 @@ function WaitChat() {
         const recv = JSON.parse(message.body);
         console.log(recv);
         console.log('채팅 내용 수신', recv.id);
-        navigate(`/Chatwindow/${recv.id}`);
+        navigate(`/chatwindow/${recv.id}`);
         // 리다이렉트 또는 다른 작업 수행
       });
       stompClient.send(

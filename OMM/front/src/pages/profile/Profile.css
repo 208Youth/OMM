@@ -29,15 +29,14 @@
   
 }
 
-
 .infodetail {
   margin: 1.3rem;
 }
 
 .badges {
-  width: 50px;
-  height: 50px;
-  margin: 20px;
+  width: 3.125rem;
+  height: 3.125rem;
+  margin: 1rem;
 }
 
 .imagesetting {

@@ -56,11 +56,11 @@ function Pslider({ mainImg, profileImg, name, age }) {
       >
         {/* 이미지 리스트 들어오는 코드 작성한 후에 아래 주석풀어주세요 */}
         {!mainImg && location.pathname.includes('main') && (
-          <SwiperSlide className="static flex content-center">
+          <SwiperSlide className="absolute top-5 flex content-center">
             <img src={slide_image_1} alt="slide_image" />
-            <div className="flex absolute bottom-[10%] left-[5%] w-fit h-[10%] mx-auto">
+            <div className="flex absolute bottom-0 max-sm:bottom-[12%] left-[5%] w-fit h-[10%] mx-auto">
               <div className="flex px-6 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full my-auto">
-                <span className="text-xl max-sm:w-28 h-12 mt-2 mx-auto text-white inline-block whitespace-nowrap overflow-hidden text-ellipsis">
+                <span className="text-xl w-28 h-12 mt-2 mx-auto text-white inline-block whitespace-nowrap overflow-hidden text-ellipsis">
                   {name}
                 </span>
               </div>
@@ -75,11 +75,11 @@ function Pslider({ mainImg, profileImg, name, age }) {
         {mainImg &&
           location.pathname.includes('main') &&
           mainImg.map((img, i) => (
-            <SwiperSlide className="static flex content-center" key={i}>
+            <SwiperSlide className="absolute top-5 flex content-center " key={i}>
               <img src={`data:image/png;base64,${img}`} alt="slide_image" />
-              <div className="flex absolute bottom-[10%] left-[5%] w-fit h-[10%] mx-auto">
+              <div className="flex absolute bottom-0 max-sm:bottom-[12%] left-[5%] w-fit h-[10%] mx-auto">
                 <div className="flex px-6 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full my-auto">
-                  <span className="text-xl max-sm:w-28 h-12 mt-2 mx-auto text-white inline-block whitespace-nowrap overflow-hidden text-ellipsis">
+                  <span className="text-xl w-28 h-12 mt-2 mx-auto text-white inline-block whitespace-nowrap overflow-hidden text-ellipsis">
                     {name}
                   </span>
                 </div>
@@ -92,41 +92,21 @@ function Pslider({ mainImg, profileImg, name, age }) {
             </SwiperSlide>
           ))}
         {!profileImg && location.pathname.includes('profile') && (
-          <SwiperSlide className="static flex content-center">
+          <SwiperSlide className="absolute top-5 flex content-center">
             <img src={slide_image_1} alt="slide_image" />
-            <div className="flex absolute bottom-[10%] left-[5%] w-fit h-[10%] mx-auto">
-              <div className="flex px-6 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full my-auto">
-                <span className="text-xl max-sm:w-28 h-12 mt-2 mx-auto text-white inline-block whitespace-nowrap overflow-hidden text-ellipsis">
-                  {name}
-                </span>
-              </div>
-              <div className="flex w-12 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full my-auto ml-2">
-                <span className="text-xl mx-auto my-auto text-white">
-                  {age}
-                </span>
-              </div>
-            </div>
+            <div className="flex absolute bottom-0 left-[5%] w-fit h-[10%] mx-auto" />
           </SwiperSlide>
         )}
         {profileImg &&
           location.pathname.includes('profile') &&
           profileImg.map((img, index) => (
             <div key={index}>
-              <SwiperSlide className="static flex content-center">
+              <SwiperSlide className="absolute top-5 flex content-center">
                 <img src={`data:image/png;base64,${img}`} alt="이미지" />
               </SwiperSlide>
               ;
             </div>
           ))}
-        {/* <div className="slider-controler">
-          <div className="swiper-button-prev slider-arrow">
-            <ion-icon name="arrow-back-outline" />
-          </div>
-          <div className="swiper-button-next slider-arrow">
-            <ion-icon name="arrow-forward-outline" />
-          </div>
-          <div className="swiper-pagination" />
-        </div> */}
       </Swiper>
     </div>
   );

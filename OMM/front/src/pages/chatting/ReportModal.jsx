@@ -14,7 +14,7 @@ function ReportModal({ setReportModal, targetId }) {
     state: false,
     category: 'SEXUAL_HARASS',
   });
-  const token = localStorage.getItem('accessToken');
+  const token = localStorage.getItem('accesstoken');
   const encodeFileToBase64 = (fileBlob) => {
     let editFile = null;
     editFile = new File([fileBlob], { type: fileBlob.type });
@@ -42,23 +42,22 @@ function ReportModal({ setReportModal, targetId }) {
     formData.append('image', imgfile);
     console.log(formData);
 
-    await http
-      .post('/admin/report', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`,
-          // Authorization: import.meta.env.VITE_TOKEN,
-          // Authorization: `Bearer ${token}`, // TODO: 임시 토큰 부여
-          data: formData,
-        },
-      })
-      .then((res) => {
-        console.log(res);
-        setReportModal(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    http({
+      method: 'post',
+      url: `/admin/report`,
+      data: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((res) => {
+      console.log(res);
+      setReportModal(false);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   }
 
   useEffect(() => {

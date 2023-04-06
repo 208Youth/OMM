@@ -48,6 +48,7 @@ function ImageUploader({ setModal }) {
       data: formData,
     }).then((response) => {
       console.log(response.data);
+      location.reload();
     });
   };
 
