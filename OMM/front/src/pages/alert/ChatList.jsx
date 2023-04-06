@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ChatRoom from '@/components/ChatRoom.jsx';
-import Navbar from '@/components/nav-bar.jsx';
-import http from '@/api/http.js';
+import ChatRoom from '../../components/ChatRoom';
+import Navbar from '../../components/nav-bar';
+import http from '../../api/http';
 
 function ChatList() {
   const [chats, setChats] = useState([]);
@@ -17,7 +17,6 @@ function ChatList() {
       method: 'get',
       url: '/chat/room',
       headers: {
-        // Authorization: import.meta.env.VITE_TOKEN,
         Authorization: `Bearer ${token}`,
       },
     })

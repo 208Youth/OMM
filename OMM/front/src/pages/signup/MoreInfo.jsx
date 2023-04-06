@@ -9,22 +9,23 @@ import { moreInfo1 } from '../../store/userSlice';
 function MoreInfo({ setStep }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  console.log(user.nickname);
   const [moreinfo, setMoreInfo] = useState({
-    nickname: '',
-    height: '',
-    lat: '',
-    lng: '',
-    highschool: '',
-    military: '',
+    nickname: user.nickname,
+    height: user.height,
+    lat: user.lat,
+    lng: user.lng,
+    highschool: user.highschool,
+    military: user.military,
   });
   const next = () => {
     if (
-      moreinfo.nickname &&
-      moreinfo.height &&
-      moreinfo.lat &&
-      moreinfo.lng &&
-      moreinfo.highschool &&
-      moreinfo.military
+      user.nickname &&
+      user.height &&
+      user.lat &&
+      user.lng &&
+      user.highschool &&
+      user.military
     ) {
       setStep(2);
     } else {
@@ -58,22 +59,30 @@ function MoreInfo({ setStep }) {
     setIsOpen(false);
   };
   
+  // const onChangeHandler = (e) => {
+  //   setMoreInfo(() => {
+  //     return {
+  //     ...moreinfo,
+  //       [e.target.name]: e.target.value,
+  //     };
+  //   })
+  // }
   useEffect(() => {
     console.log(moreinfo);
   }, [moreinfo]);
 
-  useEffect(() => {
-    console.log(user);
-    document.getElementById('nickname').value = user.nickname;
-    document.getElementById('height').value = user.height;
-    document.getElementById('highschool').value = user.highschool;
-    setMoreInfo((prev) => ({
-      ...prev,
-      lat: user.lat,
-      lng: user.lng,
-    }));
-    // document.getElementByName('military').value = user.military;
-  }, []);
+  // useEffect(() => {
+  //   console.log(user);
+  //   document.getElementById('nickname').value = user.nickname;
+  //   document.getElementById('height').value = user.height;
+  //   document.getElementById('highschool').value = user.highschool;
+  //   setMoreInfo((prev) => ({
+  //     ...prev,
+  //     lat: user.lat,
+  //     lng: user.lng,
+  //   }));
+  //   // document.getElementByName('military').value = user.military;
+  // }, []);
   return (
     <div className="bg-white w-[22.5rem] h-[48.75rem]">
       <img src="/heart-step-1.svg" alt="" className="mx-auto w-48 pt-16 pb-8" />
@@ -95,8 +104,9 @@ function MoreInfo({ setStep }) {
                 ...prevInfo,
                 nickname: e.target.value,
               }));
-              // checkNickname();
             }}
+            // value = { moreinfo.nickname } 
+            // onChange={ onChangeHandlerId }
             type="text"
             id="nickname"
             className="w-full font-sans text-[#364C63] font-semibold tracking-wide bg-white border-2 border-[#f59fb277] focus:border-[#F094A7] placeholder-[#f59fb277] text-sm rounded-3xl block p-2.5 drop-shadow-md"
@@ -122,6 +132,8 @@ function MoreInfo({ setStep }) {
           id="height"
           type="text"
           placeholder="키"
+          // value = { moreinfo.height } 
+          // onChange={ onChangeHandlerId }
           className="w-20 h-10 font-sans font-semibold text-[#364C63] bg-white border-2 border-[#f59fb277] focus:border-[#F094A7] placeholder-[#f59fb277] text-sm text-center rounded-3xl block p-2.5 drop-shadow-md"
         />
         <span className="self-center ml-4 text-[#364C63] font-sans font-semibold">
@@ -178,6 +190,8 @@ function MoreInfo({ setStep }) {
           id="highschool"
           type="text"
           placeholder="싸피"
+          // value = { moreinfo.highschool } 
+          // onChange={ onChangeHandlerId }
           className="w-20 h-10 font-sans font-semibold text-[#364C63] bg-white border-2 border-[#f59fb277] focus:border-[#F094A7] placeholder-[#f59fb277] text-sm text-center rounded-3xl block p-2.5 drop-shadow-md"
         />
         <span className="self-center ml-4 text-[#364C63] font-sans font-semibold">
@@ -200,7 +214,9 @@ function MoreInfo({ setStep }) {
               id="military1"
               type="radio"
               name="military"
-              value="NONE"
+              value="NONE" 
+              // checked={moreinfo.military === 'NONE'}
+              // onChange={onChangeHandler}
               className="peer/military1"
             />
             <label
@@ -222,6 +238,8 @@ function MoreInfo({ setStep }) {
               type="radio"
               name="military"
               value="COMPLETE"
+              // checked={moreinfo.military === 'COMPLETE'}
+              // onChange={onChangeHandler}
               className="peer/military3"
             />
             <label
@@ -243,6 +261,8 @@ function MoreInfo({ setStep }) {
               type="radio"
               name="military"
               value="EXEMPT"
+              // checked={moreinfo.military === 'EXEMPT'}
+              // onChange={onChangeHandler}
               className="peer/military5"
             />
             <label
@@ -264,6 +284,8 @@ function MoreInfo({ setStep }) {
               type="radio"
               name="military"
               value="YET"
+              // checked={moreinfo.military === 'YET'}
+              // onChange={ onChangeHandler }
               className="peer/military2"
             />
             <label

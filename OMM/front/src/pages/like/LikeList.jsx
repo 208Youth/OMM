@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import http from '../../api/http';
-import TestImg from '../../components/assets/images/img_1.jpg';
 import Navbar from '../../components/nav-bar';
 
 function LikeList() {
@@ -19,7 +18,7 @@ function LikeList() {
       },
     })
       .then((res) => {
-        console.log(res.data.liked_list);
+        console.log('좋아요 목록 가져오기', res.data.liked_list);
         setLikes(res.data.liked_list);
       })
       .catch((err) => {
@@ -33,7 +32,7 @@ function LikeList() {
 
   useEffect(() => {
     getLikes();
-  });
+  }, []);
 
   return (
     <div className="text-[#364C63] w-[22.5rem] h-[48.75rem] mx-auto">
@@ -42,8 +41,8 @@ function LikeList() {
         <span className="ml-3 font-sans font-bold">OMM List</span>
       </div>
       <div className="mx-6 grid grid-cols-2 gap-y-4">
-        {likes
-          && likes.map((person) => (
+        {likes &&
+          likes.map((person) => (
             <div
               className="relative"
               onClick={() => {
@@ -52,7 +51,7 @@ function LikeList() {
               aria-hidden
             >
               <img
-                src={person.image_main}
+                src={`data:image/png;base64,${person.image_main}`}
                 alt=""
                 className="w-36 h-56 rounded-2xl"
               />
@@ -64,17 +63,6 @@ function LikeList() {
               </div>
             </div>
           ))}
-        <div className="relative">
-          <img src={TestImg} alt="" className="w-36 h-56 rounded-2xl" />
-          <div>
-            <span className="absolute bottom-4 left-4 text-white font-sans font-semibold">
-              정우성 47
-            </span>
-          </div>
-        </div>
-        <img src={TestImg} alt="" className="w-36 h-56 rounded-2xl" />
-        <img src={TestImg} alt="" className="w-36 h-56 rounded-2xl" />
-        <img src={TestImg} alt="" className="w-36 h-56 rounded-2xl" />
       </div>
       <Navbar likesNav />
     </div>
