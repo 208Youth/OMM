@@ -49,7 +49,7 @@ function ChatWindow() {
   };
   const navigate = useNavigate();
   function handleGoBack() {
-    navigate(-1);
+    navigate('/chattings');
   }
   const closeModal = () => {
     setIsOpen(false);
@@ -86,7 +86,9 @@ function ChatWindow() {
   };
   // 아래는 read처리를 위한 fastapi의 조언, 저 함수는 다른 유자거 들어 올떄 실행되야함
   const markAsRead = (messageId) => {
-    const updatedMessages = messages.map((message) => (message.id === messageId ? { ...message, read: true } : message));
+    const updatedMessages = messages.map((message) =>
+      message.id === messageId ? { ...message, read: true } : message,
+    );
     setMessages(updatedMessages);
   };
 
@@ -218,7 +220,8 @@ function ChatWindow() {
     <div className=" text-[#364C63] w-[22.5rem] h-[48.75rem] mx-auto">
       <div
         onClick={handleGoBack}
-        className="text-2xl mx-6 py-8 hover:cursor-pointer "
+        className="text-2xl mx-6 py-8 hover:cursor-pointer fixed"
+        aria-hidden
       >
         <span>&lt;</span>
 
@@ -267,8 +270,7 @@ function ChatWindow() {
 
                         <div className="max-w-[12.5rem]  inline-block bg-gray-200 p-2 rounded-lg">
                           <span className="text-sm font-sans font-bold break-words whitespace-pre-line">
-                            {msg.content}
-                            {' '}
+                            {msg.content}{' '}
                           </span>
                         </div>
                         {/* <span className="font-sans">{msg.senderId}</span> */}
@@ -287,14 +289,18 @@ function ChatWindow() {
                               </span>
                             ) : (
                               <span>
-                                <img src="/ommheart.png" alt="defualt_image" className="w-9 h-9 rounded-full mb-2 self-center" />
+                                <img
+                                  src="/ommheart.png"
+                                  alt="defualt_image"
+                                  className="w-9 h-9 rounded-full mb-2 self-center"
+                                />
                               </span>
                             )}
                             <div className="flex flex-col">
                               <div className="font-mono ml-2 mb-1 ">
                                 {otherNickname}
                               </div>
-                              <span className="text-sm ml-2 mr-2 font-sans font-bold break-words max-w-[12.5rem] inline-block bg-[#E6C9C6] p-2 rounded-lg m">
+                              <span className="text-sm ml-2 mr-2 font-sans font-bold break-words w-fit max-w-[12.5rem] inline-block bg-[#E6C9C6] p-2 rounded-lg m">
                                 {msg.content}
                               </span>
                             </div>
