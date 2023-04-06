@@ -182,6 +182,7 @@ function ChatWindow() {
       );
     });
     setMessage('');
+    stompClient.disconnect();
   };
 
   const recvReadDto = (readIndex) => {
