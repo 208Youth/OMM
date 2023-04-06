@@ -2,7 +2,9 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import Modal from 'react-modal';
-import { useLocation, Link } from 'react-router-dom';
+import {
+  useLocation, useNavigate,
+} from 'react-router-dom';
 import http from '@/api/http.js';
 import BottomModal from '@/pages/chatting/BottomModal.jsx';
 import ReportModal from '@/pages/chatting/ReportModal.jsx';
@@ -45,7 +47,10 @@ function ChatWindow() {
   const openModal = () => {
     setIsOpen(true);
   };
-
+  const navigate = useNavigate();
+  function handleGoBack() {
+    navigate(-1);
+  }
   const closeModal = () => {
     setIsOpen(false);
   };
@@ -79,6 +84,11 @@ function ChatWindow() {
   const roomHeader = {
     roomId,
   };
+  // 아래는 read처리를 위한 fastapi의 조언, 저 함수는 다른 유자거 들어 올떄 실행되야함
+  const markAsRead = (messageId) => {
+    const updatedMessages = messages.map((message) => (message.id === messageId ? { ...message, read: true } : message));
+    setMessages(updatedMessages);
+  };
 
   // const ws = new SockJS('http://localhost:5000/api/chat');
   const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
@@ -94,6 +104,7 @@ function ChatWindow() {
   // );
 
   const connect = () => {
+    console.log('connect');
     stompClient.connect(
       headers,
       (frame) => {
@@ -131,11 +142,11 @@ function ChatWindow() {
         console.log(response);
         // setRoom(response.data.roomInfo);
         console.log(response.data.roomInfo.msgs);
-        console.log(response.data.roomInfo);
+        console.log(response.data.roomInfo.other.image.imageContent);
         setMessages([...response.data.payload]);
         setRoom(response.data.roomInfo);
         setOtherNickname(response.data.roomInfo.other.nickname);
-        setOtherImage(response.data.roomInfo.other.image);
+        setOtherImage(response.data.roomInfo.other.image.imageContent);
       })
       .catch((error) => {
         console.log(error);
@@ -191,16 +202,21 @@ function ChatWindow() {
   };
 
   useEffect(() => {
+    const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
+    const stompClient = Stomp.over(ws);
+    ws.onmes = () => {
+      console.log('WebSocket connected!!!');
+    };
     findRoom();
     connect();
   }, []);
 
   return (
     <div className=" text-[#364C63] w-[22.5rem] h-[48.75rem] mx-auto">
-      <div className="text-2xl mx-6 py-8">
-        <Link to="/main" className="">
-          <span>&lt;</span>
-        </Link>
+      <div onClick={handleGoBack} className="text-2xl mx-6 py-8 hover:cursor-pointer ">
+
+        <span>&lt;</span>
+
         <span className="ml-3 font-sans font-extrabold text-[1.3rem]">
           {otherNickname}
         </span>
@@ -211,8 +227,8 @@ function ChatWindow() {
           <div id="Chat">
             <div>
               {}
-              <div>{room.id}</div>
-              <div>{room.id}</div>
+              {/* <div>{room.id}</div>
+              <div>{room.id}</div> */}
               <ul>
                 {messages.map((msg, index) => (
                   <li
@@ -227,8 +243,10 @@ function ChatWindow() {
 
                         {lastchatindex === index && (
                         <span id="readen" className="text-[0.5rem] mr-1 self-end">
+
                           {msg.read ? '' : '안읽음'}
                         </span>
+
                         )}
 
                         {/* {msg === latestMyChat && (
@@ -249,19 +267,23 @@ function ChatWindow() {
                         {/* <span className="font-sans">{msg.senderId}</span> */}
                       </div>
                     ) : (
-                      <div className="w-60 ">
-                        <div>
-                          <span className="">{msg.senderId}</span>
-                          <span className="">{otherImage}</span>
-                        </div>
+                      <div className="w-60 flex flex-row">
+                        <span className="ml-[0.3rem]">
+                          <div className="flex flex-row">
+                            <span>
+                              <img src={`data:image/png;base64,${otherImage}`} alt="slide_image" className="w-9 h-9 rounded-full mb-2 self-center" />
+                            </span>
+                            <div className="flex flex-col">
 
-                        <div className="max-w-[12.5rem] inline-block bg-[#E6C9C6] p-2 rounded-lg">
-                          <span className="text-sm mr-2 font-sans font-bold break-words ">
+                              <div className="font-mono ml-2 mb-1 ">{otherNickname}</div>
+                              <span className="text-sm ml-2 mr-2 font-sans font-bold break-words max-w-[12.5rem] inline-block bg-[#E6C9C6] p-2 rounded-lg m">
 
-                            {msg.content}
-                          </span>
+                                {msg.content}
+                              </span>
+                            </div>
+                          </div>
 
-                        </div>
+                        </span>
 
                         <span className="text-[0.5rem] ml-1 self-end">
                           {/* {msg.isRead ? '' : (
