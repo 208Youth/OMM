@@ -40,29 +40,37 @@ function LikeList() {
         <span>&lt;</span>
         <span className="ml-3 font-sans font-bold">OMM List</span>
       </div>
-      <div className="mx-6 grid grid-cols-2 gap-y-4">
+      <div className="mx-6 flex flex-wrap justify-between">
         {likes &&
           likes.map((person) => (
             <div
-              className="relative"
+              className="relative mb-6"
               onClick={() => {
                 gotoProfile(person.member_id);
               }}
               aria-hidden
+              data-aos="zoom-in"
+              data-aos-offse="120"
             >
               <img
                 src={`data:image/png;base64,${person.image_main}`}
                 alt=""
-                className="w-36 h-56 rounded-2xl"
+                className="w-36 h-56 rounded-2xl object-cover"
               />
               <div className="text-white font-sans">
                 <span className="absolute bottom-4 left-4">
-                  {person.nickname}
-                  {person.age}
+                  {person.nickname} {person.age}
                 </span>
               </div>
             </div>
           ))}
+        {!likes && (
+          <div className="h-[22.5rem] flex justify-center" data-aos="zoom-in">
+            <div className="text-center text-md my-auto">
+              아직 좋아요한 사람이 없네요.
+            </div>
+          </div>
+        )}
       </div>
       <Navbar likesNav />
     </div>
