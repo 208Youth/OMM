@@ -1,0 +1,49 @@
+#container {
+  width: 400px;
+  height: 400px;
+  border: 1px solid black;
+  background: ivory;
+}
+
+#chatView {
+  height: 90%;
+  overflow-y: scroll;
+}
+
+#chatForm {
+  height: 10%;
+  border-top: 1px solid black;
+  text-align: center;
+}
+
+#msg {
+  width: 80%;
+  height: 32px;
+  border-radius: 8px;
+}
+
+#send {
+  width: 16%;
+  height: 34px;
+  border-radius: 50px;
+  background: black;
+  color: white;
+}
+
+.msgLine {
+  margin: 15px;
+  text-align: right;
+}
+
+.msgBox {
+  border: 1px solid black;
+  background: skyblue;
+  padding: 2px 5px;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+.me .msgBox {
+  background: pink;
+  text-align: left;
+}

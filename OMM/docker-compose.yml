@@ -1,0 +1,47 @@
+version: '3.7'
+
+services:
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - 6379:6379
+    command: redis-server --requirepass rladbsal123@@ --port 6379
+    networks:
+      - omm
+  back:
+    container_name: back
+    build:
+      context: ./back
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    depends_on:
+      - redis
+    networks:
+      - omm
+  fast:
+    container_name: fast
+    build:
+      context: ./fastapi
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
+    networks:
+      - omm
+  front:
+    container_name: front
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    volumes:
+      - /etc/letsencrypt/:/etc/letsencrypt/
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - omm
+networks:
+  omm:
+    external:
+      name: omm
