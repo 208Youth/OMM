@@ -28,6 +28,14 @@ function WaitChat() {
       headers,
       (frame) => {
         console.log('연결성공');
+        stompClient.subscribe(`/sub/chat/room/${decoded.sub}`, (message) => {
+          console.log(message);
+          const recv = JSON.parse(message.body);
+          console.log(recv);
+          console.log('채팅 내용 수신', recv.id);
+          navigate(`/chatwindow/${recv.id}`);
+          // 리다이렉트 또는 다른 작업 수행
+        });
       },
       (error) => {
         // 연결이 끊어졌을 때 재연결 시도 부분
@@ -49,23 +57,13 @@ function WaitChat() {
     };
     console.log(stompClient);
     const decoded = jwt_decode(token);
-    stompClient.connect(headers, (frame) => {
-      stompClient.subscribe(`/sub/chat/room/${decoded.sub}`, (message) => {
-        console.log(message);
-        const recv = JSON.parse(message.body);
-        console.log(recv);
-        console.log('채팅 내용 수신', recv.id);
-        navigate(`/chatwindow/${recv.id}`);
-        // 리다이렉트 또는 다른 작업 수행
-      });
-      stompClient.send(
-        '/pub/chat/room',
-        headers,
-        // 나한테 알림 보낸사람 id
-        JSON.stringify({ senderId }),
-        console.log('채팅방 만들라구'),
-      );
-    });
+    stompClient.send(
+      '/pub/chat/room',
+      headers,
+      // 나한테 알림 보낸사람 id
+      JSON.stringify({ senderId }),
+      console.log('채팅방 만들라구'),
+    );
     console.log(stompClient);
   };
 
