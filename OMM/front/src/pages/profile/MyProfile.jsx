@@ -904,7 +904,7 @@ function MyProfile({ profileNav }) {
                         data-tooltip-content={`${
                           newCertinfo.health_info
                             ? newCertinfo.health_info
-                            : '건강검진 기록 없음'
+                            : '정보 없음'
                         }`}
                       />
                     </div>
@@ -921,7 +921,7 @@ function MyProfile({ profileNav }) {
                         data-tooltip-content={`${
                           newCertinfo.unversity_name
                             ? newCertinfo.unversity_name
-                            : '대학교 정보 없음'
+                            : '정보 없음'
                         }`}
                       />
                     </div>
@@ -932,7 +932,7 @@ function MyProfile({ profileNav }) {
                         className="badges"
                         data-tooltip-id="my-tooltip"
                         data-tooltip-content={`${
-                          newCertinfo.job_name ? newCertinfo.job_name : '무직'
+                          newCertinfo.job_name ? newCertinfo.job_name : '정보 없음'
                         }`}
                       />
                     </div>
@@ -949,7 +949,7 @@ function MyProfile({ profileNav }) {
                         data-tooltip-content={`${
                           newCertinfo.certificate
                             ? newCertinfo.certificate_names
-                            : '자격증 없음'
+                            : '정보 없음'
                         }`}
                       />
                     </div>
@@ -964,7 +964,7 @@ function MyProfile({ profileNav }) {
                         data-tooltip-content={`${
                           newCertinfo.astate_amount
                             ? newCertinfo.astate_amount
-                            : '부동산 없음'
+                            : '정보 없음'
                         }`}
                       />
                     </div>
@@ -979,7 +979,7 @@ function MyProfile({ profileNav }) {
                         data-tooltip-content={`${
                           newCertinfo.income_amount
                             ? newCertinfo.income_amount
-                            : '소득 없음'
+                            : '정보 없음'
                         }`}
                       />
                     </div>
