@@ -287,7 +287,7 @@ function ChatWindow() {
                               </span>
                             ) : (
                               <span>
-                                <img src="/defaultimage.png" alt="defualt_image" className="w-9 h-9 rounded-full mb-2 self-center" />
+                                <img src="/ommheart.png" alt="defualt_image" className="w-9 h-9 rounded-full mb-2 self-center" />
                               </span>
                             )}
                             <div className="flex flex-col">
