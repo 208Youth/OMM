@@ -182,7 +182,6 @@ function ChatWindow() {
       );
     });
     setMessage('');
-    stompClient.disconnect();
   };
 
   const recvReadDto = (readIndex) => {
@@ -213,6 +212,9 @@ function ChatWindow() {
     };
     findRoom();
     connect();
+    return function cleanup() {
+      stompClient.disconnect();
+  }
   }, []);
 
   return (
