@@ -14,7 +14,7 @@ function ReportModal({ setReportModal, targetId }) {
     state: false,
     category: 'SEXUAL_HARASS',
   });
-  const token = localStorage.getItem('accessToken');
+  const token = localStorage.getItem('accesstoken');
   const encodeFileToBase64 = (fileBlob) => {
     let editFile = null;
     editFile = new File([fileBlob], { type: fileBlob.type });
