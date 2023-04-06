@@ -14,7 +14,7 @@ function WaitChat() {
   const senderId = useSelector((state) => state.chat.memberId);
 
   let stompClient;
-  
+  const decoded = jwt_decode(token);
 
   const websocket = () => {
     // const ws = new SockJS('http://localhost:5000/api/chat');
@@ -70,7 +70,9 @@ function WaitChat() {
     };
     console.log(stompClient);
     const decoded = jwt_decode(token);
-    waitForConnection(stompClient, () => {
+    stompClient.connect(
+      headers,
+      (frame) => {
       stompClient.send(
         '/pub/chat/room',
         headers,
