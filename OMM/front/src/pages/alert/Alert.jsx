@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import SockJS from 'sockjs-client/dist/sockjs';
 import Stomp from 'stompjs';
 import jwt_decode from 'jwt-decode';
-import axios from 'axios';
+import AOS from 'aos';
 import Navbar from '../../components/nav-bar';
 import AlertMsg from '../../components/AlertMsg';
 import '../../components/AlertMsg.css';
@@ -35,8 +35,8 @@ function Alert() {
           `/sub/matching/noti/${decoded.sub}`,
           (message) => {
             const recv = JSON.parse(message.body);
-            console.log("내가 받은 메세지: ")
-            console.log(recv)
+            console.log('내가 받은 메세지: ');
+            console.log(recv);
             setAlertList((prev) => {
               const newList = [recv, ...prev];
               return newList;
@@ -105,6 +105,10 @@ function Alert() {
   }, []);
 
   useEffect(() => {
+    AOS.init();
+  });
+
+  useEffect(() => {
     console.log('알림변경됨', alertlist);
   }, [alertlist]);
 
@@ -116,9 +120,9 @@ function Alert() {
       </div>
       <div className="mx-6 text-lg mb-3" id="msgs">
         <div className="mt-3">
-          {alertlist
-            && alertlist.map((msg) => (
-              <div>
+          {alertlist &&
+            alertlist.map((msg) => (
+              <div data-aos="fade-up">
                 <AlertMsg
                   msg={msg}
                   deletemsg={(res) => {
