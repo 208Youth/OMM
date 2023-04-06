@@ -105,6 +105,7 @@ function ChatWindow() {
 
   const connect = () => {
     console.log('connect');
+    let reconnect = 0;
     stompClient.connect(
       headers,
       (frame) => {
@@ -119,12 +120,12 @@ function ChatWindow() {
         });
       },
       (error) => {
-        // if(reconnect++ < 5) {
-        //   setTimeout(function() {
-        //     console.log("connection reconnect");
-        //     connect();
-        //   },10*1000);
-        // }
+        if(reconnect++ < 5) {
+          setTimeout(function() {
+            console.log("connection reconnect");
+            connect();
+          },10*1000);
+        }
       },
     );
   };
@@ -139,9 +140,9 @@ function ChatWindow() {
     })
       .then((response) => {
         console.log('채팅방 정보를 가져옴');
-        console.log(response);
+        // console.log(response);
         // setRoom(response.data.roomInfo);
-        console.log(response.data.roomInfo.msgs);
+        // console.log(response.data.roomInfo.msgs);
         // console.log(response.data.roomInfo.other.image.imageContent);
         setMessages([...response.data.payload]);
         setRoom(response.data.roomInfo);
