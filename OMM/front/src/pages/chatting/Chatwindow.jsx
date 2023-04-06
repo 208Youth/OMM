@@ -391,6 +391,7 @@ function ChatWindow() {
               setReportModal={() => {
                 closeReportModal();
               }}
+              targetId={room.other.otherId}
             />
           </Modal>
         </div>
