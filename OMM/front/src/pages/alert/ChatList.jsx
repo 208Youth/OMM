@@ -73,9 +73,12 @@ function ChatList() {
               />
             </div>
           ))}
-        {!chats && (
-          <div className="h-[22.5rem] flex justify-center">
-            <div className="my-auto">아직 매칭이 되지 않았어요ㅠ.ㅠ</div>
+        {chats.length === 0 && (
+          <div className="h-[22.5rem] flex justify-center" data-aos="zoom-in">
+            <div className="flex-col my-auto text-center">
+              <div className="mb-2">아직 매칭이 되지 않았어요ㅠ.ㅠ</div>
+              <div>메인에서 하트를 눌러 매칭을 시작해보세요!</div>
+            </div>
           </div>
         )}
       </div>
