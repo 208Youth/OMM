@@ -16,7 +16,6 @@ function MyinfoSetModal3({ setModal }) {
   //   interest_list_id: index + 1,
   //   name: interest,
   // }));
-  // const interestList = interests;
 
   // API에서 관심사 리스트를 가져오는 함수
   async function fetchInterests() {
@@ -32,6 +31,7 @@ function MyinfoSetModal3({ setModal }) {
         // console.log(res);
         console.log(res.data.interestList);
         console.log((res.data.interestList).length);
+
         setInterests(res.data.interestList);
         console.log('인터레스트 정보좀 보여다오', interests);
       })
@@ -41,6 +41,8 @@ function MyinfoSetModal3({ setModal }) {
   }
 
   const sendInterests = async () => {
+    // const interestList = interests;
+    const interestList = interests.map((interest) => (typeof interest === 'object' ? interest.name : interest));
     await http({
       method: 'PUT',
       url: '/member/interest-list',
@@ -124,10 +126,21 @@ function MyinfoSetModal3({ setModal }) {
           </button>
         ))}
       </div> */}
+      {/* 1.1 혼합속성 코드...객체일경우엔 name을 표시하고 아니면 그대로 표기 */}
+      {/* <div className="relative w-30 top-4">
+        {interests.map((interest, index) => (
+          <button
+            className="bg-white border border-black rounded-xl m-1 px-1"
+            key={index}
+            onClick={() => handleRemoveInterest(index)}
+          >
+            {typeof interest === 'string' ? interest : interest.name}
+          </button>
+        ))}
+      </div> */}
 
       {/* 2. 아래는 관심 리스트가 단순히 str만을 요소로 가질떄 코드 */}
       <div className="relative w-30 top-4">
-        {interests.length}
         {interests.map((interest, index) => (
           <button
             className="bg-white border border-black rounded-xl m-1 px-1"
