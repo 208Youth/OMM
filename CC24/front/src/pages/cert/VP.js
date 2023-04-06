@@ -43,7 +43,9 @@ function VP() {
       credentialName = 'HealthCredential';
     }
     for (var j of VCs) {
+      if (j in certKeys) {
       vc.push(j[credentialName])
+      }
     }
     console.log(vc);
     const vpPayload = {
