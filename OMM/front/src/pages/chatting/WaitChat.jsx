@@ -70,9 +70,7 @@ function WaitChat() {
     };
     console.log(stompClient);
     const decoded = jwt_decode(token);
-    stompClient.connect(
-      headers,
-      (frame) => {
+    stompClient.connect(headers, (frame) => {
       stompClient.send(
         '/pub/chat/room',
         headers,
@@ -148,13 +146,7 @@ function WaitChat() {
 
   return (
     <div>
-      <button
-        onClick={() => {
-          createChatting();
-        }}
-      >
-        채팅방 생성
-      </button>
+      <div className="text-3xl text-center mt-48">채팅방을 생성중입니다.</div>
     </div>
   );
 }
