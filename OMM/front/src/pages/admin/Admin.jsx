@@ -6,10 +6,7 @@ import Report from '@/components/Report';
 function Admin() {
   const [notProcessed, setNotProcessed] = useState([]);
   const [processed, setProcessed] = useState([]);
-
-  const headers = {
-    Authorization: import.meta.env.VITE_AUTH_TOKEN,
-  };
+  const token = localStorage.getItem('accesstoken');
 
   const navigate = useNavigate();
 
@@ -20,7 +17,14 @@ function Admin() {
   useEffect(() => {
     const process = [];
     const notProcess = [];
-    http.get('/admin/report', headers).then(({ data }) => {
+
+    http({
+      method: 'get',
+      url: '/admin/report',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }).then(({ data }) => {
       data.list.map((report) => {
         if (report.state) process.push(report);
         else notProcess.push(report);
@@ -55,8 +59,8 @@ function Admin() {
               </tr>
             </thead>
             <tbody>
-              {notProcessed
-                && notProcessed.map((report, index) => (
+              {notProcessed &&
+                notProcessed.map((report, index) => (
                   <Report
                     report={report}
                     index={index}
@@ -91,8 +95,8 @@ function Admin() {
               </tr>
             </thead>
             <tbody>
-              {processed
-                && processed.map((report, index) => (
+              {processed &&
+                processed.map((report, index) => (
                   <Report report={report} isProcessed index={index} />
                 ))}
             </tbody>
