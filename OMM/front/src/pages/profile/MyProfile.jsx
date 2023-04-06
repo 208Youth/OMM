@@ -280,29 +280,29 @@ function MyProfile({ profileNav }) {
   }
   let drinkingStyleText;
   if (basicInfomation.drinking_style === 'NOT') {
-    drinkingStyleText = '논 알코올';
+    drinkingStyleText = '안함';
   } else if (basicInfomation.drinking_style === 'SOMETIMES') {
     drinkingStyleText = '가끔';
   } else if (basicInfomation.drinking_style === 'OFTEN') {
     drinkingStyleText = '자주';
   } else if (basicInfomation.drinking_style === 'EVERYDAY') {
-    drinkingStyleText = '술고래';
+    drinkingStyleText = '매일';
   } else if (basicInfomation.drinking_style === 'ONLY_FRIENDS') {
-    drinkingStyleText = '친구들이랑';
+    drinkingStyleText = '친구들 만날 떄만';
   } else if (basicInfomation.drinking_style === 'STOPPING') {
-    drinkingStyleText = '금주령';
+    drinkingStyleText = '금주중';
   }
   let drinkingStyleText2;
   if (filterInfomation.drinking_style === 'NONE') {
     drinkingStyleText2 = '상관없음';
   } else if (filterInfomation.drinking_style === 'PREFER_NO') {
-    drinkingStyleText2 = '안마셨으면';
+    drinkingStyleText2 = '안마셨으면 좋겠음';
   } else if (filterInfomation.drinking_style === 'PREFER_YES') {
-    drinkingStyleText2 = '잘마셨으면';
+    drinkingStyleText2 = '잘마셨으면 좋겠음';
   }
   let smokingStyleText;
   if (basicInfomation.smoking_style === 'NOT') {
-    smokingStyleText = '비흡연자';
+    smokingStyleText = '안함';
   } else if (basicInfomation.smoking_style === 'SOMETIMES') {
     smokingStyleText = '가끔';
   } else if (basicInfomation.smoking_style === 'OFTEN') {
@@ -320,19 +320,19 @@ function MyProfile({ profileNav }) {
   }
   let contactStyleText;
   if (basicInfomation.contact_style === 'PREFER_MSG') {
-    contactStyleText = '카톡러';
+    contactStyleText = '카톡자주하는편';
   } else if (basicInfomation.contact_style === 'PREFER_CALL') {
     contactStyleText = '전화선호';
   } else if (basicInfomation.contact_style === 'PREFER_FACECALL') {
     contactStyleText = '영상통화선호';
   } else if (basicInfomation.contact_style === 'NOT_MSG') {
-    contactStyleText = '카톡 안보는 편';
+    contactStyleText = '카톡 별로 안하는 편';
   } else if (basicInfomation.contact_style === 'PREFER_OFFLINE') {
-    contactStyleText = '직접 만나는거 선호';
+    contactStyleText = '직접 만나는 걸 선호';
   }
   let contactStyleText2;
   if (filterInfomation.contact_style === 'PREFER_MSG') {
-    contactStyleText2 = '카톡러';
+    contactStyleText2 = '카톡자주하는편';
   } else if (filterInfomation.contact_style === 'PREFER_CALL') {
     contactStyleText2 = '전화선호';
   } else if (filterInfomation.contact_style === 'NONE') {
@@ -340,9 +340,9 @@ function MyProfile({ profileNav }) {
   } else if (filterInfomation.contact_style === 'PREFER_FACECALL') {
     contactStyleText2 = '영상통화선호';
   } else if (filterInfomation.contact_style === 'NOT_MSG') {
-    contactStyleText2 = '카톡 안보는 편';
+    contactStyleText2 = '카톡 별로 안하는 편';
   } else if (filterInfomation.contact_style === 'PREFER_OFFLINE') {
-    contactStyleText2 = '직접 만나는거 선호';
+    contactStyleText2 = '직접 만나는 걸 선호';
   }
 
   let petText;
@@ -392,7 +392,7 @@ function MyProfile({ profileNav }) {
         >
           <MyinfoSetModal
             setModal={closeMyModal}
-            basicInfomation={basicInfomation}
+            basicInformation={basicInfomation}
           />
         </Modal>
       </div>
