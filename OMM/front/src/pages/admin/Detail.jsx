@@ -40,7 +40,13 @@ function Detail() {
   };
 
   const processReport = async () => {
-    await http.put(`admin/report/${id}`).then(() => {
+    await http({
+      method: 'put',
+      url: `admin/report/${id}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }).then(() => {
       /**
        * TODO : 신고 처리 알림보내기
        */
