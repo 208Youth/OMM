@@ -250,7 +250,7 @@ function FaceRecog({ setStep }) {
         const result = faceMatcher.findBestMatch(matched.descriptor);
         const drawBox = new faceapi.draw.DrawBox(box);
         drawBox.draw(canvas);
-        if (result._distance > 0.4 || result._label === 'unknown') {
+        if (result._distance > 0.5 || result._label === 'unknown') {
           setRecog(true);
           console.log('다른사람인디.');
         } else if (result.label === myinfo.didAddress) {
