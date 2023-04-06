@@ -23,12 +23,14 @@ public class AlertPublishService {
         String didAddress = member.getDidAddress();
         AlertResponseDto alertResponseDto = new AlertResponseDto(isChatAlertExist(member));
         messagingTemplate.convertAndSend("/sub/matching/chatalert/" + didAddress, alertResponseDto);
+        messagingTemplate.convertAndSend("/sub/chat/chatalert/" + didAddress, alertResponseDto);
     }
 
     public void publishNotiAlert(Member member) {
         String didAddress = member.getDidAddress();
         AlertResponseDto alertResponseDto = new AlertResponseDto(isNotiAlertExist(member));
         messagingTemplate.convertAndSend("/sub/matching/notialert/" + didAddress, alertResponseDto);
+        messagingTemplate.convertAndSend("/sub/chat/notialert/" + didAddress, alertResponseDto);
     }
 
     /**
