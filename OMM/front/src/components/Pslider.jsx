@@ -60,7 +60,7 @@ function Pslider({ mainImg, profileImg, name, age }) {
             <img src={slide_image_1} alt="slide_image" />
             <div className="flex absolute bottom-0 max-sm:bottom-[12%] left-[5%] w-fit h-[10%] mx-auto">
               <div className="flex px-6 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full my-auto">
-                <span className="text-xl max-sm:w-28 h-12 mt-2 mx-auto text-white inline-block whitespace-nowrap overflow-hidden text-ellipsis">
+                <span className="text-xl w-28 h-12 mt-2 mx-auto text-white inline-block whitespace-nowrap overflow-hidden text-ellipsis">
                   {name}
                 </span>
               </div>
