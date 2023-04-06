@@ -58,8 +58,9 @@ public class SecurityConfig {
 
             .and()
             .authorizeHttpRequests()
-//            .antMatchers("/authenticate", "/authenticate/admin", "/member").permitAll()
-            .antMatchers("**").permitAll()//// 인증없이 접속할 경로 설정
+            .antMatchers("/authenticate", "/authenticate/admin", "/member", "/chat/**", "/matching/**").permitAll()
+            .antMatchers("/admin").hasAuthority("ROLE_ADMIN")
+//            .antMatchers("**").permitAll() // 인증없이 접속할 경로 설정
             .anyRequest().authenticated()
 
             .and()
