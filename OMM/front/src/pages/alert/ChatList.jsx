@@ -14,7 +14,6 @@ function ChatList() {
     navigate(-1);
   }
 
-  const location = useLocation();
   const isReload = location.state.reload;
 
   async function getChatList() {
@@ -47,6 +46,7 @@ function ChatList() {
 
   useEffect(() => {
     getChatList();
+    oneReload();
   }, []);
 
   useEffect(() => {
@@ -56,10 +56,6 @@ function ChatList() {
   useEffect(() => {
     console.log('바꼇니', chats);
   }, [chats]);
-
-  useEffect(() => {
-    window.location.reload();
-  }, [location]);
 
   return (
     <div className="text-[#364C63] w-[22.5rem] h-[48.75rem] mx-auto">
