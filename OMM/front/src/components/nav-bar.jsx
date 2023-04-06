@@ -84,10 +84,11 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav, id }) {
              * TODO : 알림 있는지
              * 알림 존재 여부 -> setnotiAlert
              */
+            const recv = JSON.parse(message.body);
             console.log("알림메세지왓냐고 물었다")
-            console.log(message)
-            if (message.alert) console.log('나 받은 알림이 있다요');
-            setNotiAlert(message.alert);
+            console.log(recv)
+            if (recv.alert) console.log('나 받은 알림이 있다요');
+            setNotiAlert(recv.alert);
           },
           {},
         );
@@ -137,10 +138,11 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav, id }) {
              * TODO : 알림 있는지
              * 알림 존재 여부 -> setnotiAlert
              */
+            const recv = JSON.parse(message.body);
             console.log("알림메세지왓냐고 물었다")
-            console.log(message)
-            if (message.alert) console.log('나 받은 알림이 있다요');
-            setNotiAlert(message.alert);
+            console.log(recv)
+            if (recv.alert) console.log('나 받은 알림이 있다요');
+            setNotiAlert(recv.alert);
           },
           {},
         );
