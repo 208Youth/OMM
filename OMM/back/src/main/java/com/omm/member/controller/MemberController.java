@@ -287,7 +287,7 @@ public class MemberController {
      * @return
      */
     @PutMapping("/interest-list")
-    public ResponseEntity<?> putMyInterestList(PutMyInterestListRequestDto putMyInterestListRequestDto) {
+    public ResponseEntity<?> putMyInterestList(@RequestBody PutMyInterestListRequestDto putMyInterestListRequestDto) {
         memberService.putMyInterestList(SecurityUtil.getCurrentDidAddress().get(), putMyInterestListRequestDto);
         return new ResponseEntity<>("현재 유저 관심사 정보 수정에 성공했습니다.", HttpStatus.OK);
     }
