@@ -7,6 +7,7 @@ import http from '@/api/http.js';
 import BottomModal from '@/pages/chatting/BottomModal';
 import ReportModal from '@/pages/chatting/ReportModal';
 import './ChatModal.css';
+import ommheart from '../../assets/ommheart.png';
 
 function ChatWindow() {
   // const [roomId, setRoomId] = useState(localStorage.getItem('wschat.roomId'));
@@ -231,7 +232,7 @@ function ChatWindow() {
       </div>
       <div
         id="recentChat"
-        className="flex mx-auto w-[20rem] h-[39rem] overscroll-x-none overflow-y-scroll scrollbar-hide touch-pan-y text-xs rounded-lg mb-1"
+        className="flex mt-12 mx-auto w-[20rem] h-[39rem] overscroll-x-none overflow-y-scroll scrollbar-hide touch-pan-y text-xs rounded-lg mb-1"
       >
         <div id="chatdetail" className="w-[20rem] mx-auto">
           <div>{/* 만약 보낸사람이 내가 아니라면 */}</div>
@@ -290,7 +291,7 @@ function ChatWindow() {
                             ) : (
                               <span>
                                 <img
-                                  src="/ommheart.png"
+                                  src={ommheart}
                                   alt="defualt_image"
                                   className="w-9 h-9 rounded-full mb-2 self-center"
                                 />
