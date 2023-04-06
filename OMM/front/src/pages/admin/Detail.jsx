@@ -16,8 +16,16 @@ function Detail() {
   const [successmessage, setMessage] = useState();
   const navigate = useNavigate();
 
+  const token = localStorage.getItem('accesstoken');
+
   useEffect(() => {
-    http.get(`admin/report/${id}`).then(({ data }) => {
+    http({
+      method: 'get',
+      url: `admin/report/${id}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }).then(({ data }) => {
       setReport(data);
       console.log(data);
     });
@@ -32,7 +40,13 @@ function Detail() {
   };
 
   const processReport = async () => {
-    await http.put(`admin/report/${id}`).then(() => {
+    await http({
+      method: 'put',
+      url: `admin/report/${id}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }).then(() => {
       /**
        * TODO : 신고 처리 알림보내기
        */
@@ -72,10 +86,7 @@ function Detail() {
   return (
     <div className="bg-white w-[22.5rem] h-[48.75rem] p-2">
       <h1 className="text-xl m-3">관리자 페이지</h1>
-      <h1 className="text-lg m-3">
-        카테고리 :
-        {category[report.category]}
-      </h1>
+      <h1 className="text-lg m-3">카테고리 :{category[report.category]}</h1>
       <h1 className="text-md m-3">첨부 파일</h1>
       <div className="flex justify-center">
         <img

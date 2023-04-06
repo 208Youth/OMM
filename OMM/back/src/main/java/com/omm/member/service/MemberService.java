@@ -841,6 +841,7 @@ public class MemberService {
 
             List<InterestList> nextList = new ArrayList<>();
 
+            if(list == null || list.size() == 0) return;
             list.forEach((interest) -> {
                 if (interestRepository.existsByName(interest)) {
                     Interest i = interestRepository.findByName(interest)
