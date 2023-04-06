@@ -1,5 +1,8 @@
 // 변경
-import React, { useState, useEffect } from 'react';
+import React, {
+  useState, useEffect, lazy, Suspense,
+} from 'react';
+
 import './Pslider.css';
 // import './Profile.css';
 import { Tooltip } from 'react-tooltip';
@@ -22,7 +25,7 @@ import universityNo from '../../assets/university_no.svg';
 import certificateYes from '../../assets/certificate_yes.svg';
 import certificateNo from '../../assets/certificate_no.svg';
 import location from '../../assets/location.svg';
-import Pslider from '../../components/Pslider';
+// import Pslider from '../../components/Pslider';
 import Navbar from '../../components/nav-bar';
 import userarrow from '../../assets/userarrow.svg';
 import MyinfoSetModal from './MyinfoSetModal';
@@ -31,6 +34,7 @@ import MyinfoSetModal3 from './MyinfoSetModal3';
 import http from '../../api/http';
 // props를 통해 userid를 받고 claose 버튼을 눌러서 해당 userid의
 // 아니면 메인 페이지에 해당 컴포넌트를 아예 합쳐버릴까
+const Pslider = lazy(() => import('../../components/Pslider'));
 
 function InterestList({ interest }) {
   return (
@@ -419,7 +423,9 @@ function MyProfile({ profileNav }) {
       </div>
       <div>
         <div className="absolute w-full z-5">
-          <Pslider profileImg={basicInfomation.profileimgs} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <Pslider profileImg={basicInfomation.profileimgs} />
+          </Suspense>
           <div>
             <Modal
               isOpen={uploadImg}

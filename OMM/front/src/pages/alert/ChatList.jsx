@@ -11,7 +11,7 @@ function ChatList() {
   const location = useLocation();
   const navigate = useNavigate();
   function handleGoBack() {
-    navigate(-1);
+    navigate('/main');
   }
 
   async function getChatList() {
@@ -61,8 +61,8 @@ function ChatList() {
         </span>
       </div>
       <div className="mx-6">
-        {chats &&
-          chats.map((chat) => (
+        {chats
+          && chats.map((chat) => (
             <div data-aos="fade-up">
               <ChatRoom
                 chat={chat}

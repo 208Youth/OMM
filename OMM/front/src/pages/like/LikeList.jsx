@@ -7,6 +7,9 @@ function LikeList() {
   const [likes, setLikes] = useState();
 
   const navigate = useNavigate();
+  function handleGoBack() {
+    navigate('/main');
+  }
   const token = localStorage.getItem('accesstoken');
 
   async function getLikes() {
@@ -36,13 +39,20 @@ function LikeList() {
 
   return (
     <div className="text-[#364C63] w-[22.5rem] h-[48.75rem] mx-auto">
-      <div className="text-2xl mx-6 py-8">
-        <span>&lt;</span>
+      <div
+        onClick={handleGoBack}
+        className="hover:cursor-pointer text-2xl mx-6 py-8"
+        aria-hidden
+      >
+        <span>
+          &lt;
+
+        </span>
         <span className="ml-3 font-sans font-bold">OMM List</span>
       </div>
       <div className="mx-6 flex flex-wrap justify-between">
-        {likes &&
-          likes.map((person) => (
+        {likes
+          && likes.map((person) => (
             <div
               className="relative mb-6"
               onClick={() => {
@@ -59,7 +69,9 @@ function LikeList() {
               />
               <div className="text-white font-sans">
                 <span className="absolute bottom-4 left-4">
-                  {person.nickname} {person.age}
+                  {person.nickname}
+                  {' '}
+                  {person.age}
                 </span>
               </div>
             </div>
