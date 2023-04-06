@@ -77,6 +77,7 @@ function WaitChat() {
         // 나한테 알림 보낸사람 id
         JSON.stringify({ senderId }),
         console.log('채팅방 만들라구'),
+        navigate('/chattings'),
       );
     });
     console.log(stompClient);
