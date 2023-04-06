@@ -122,7 +122,12 @@ public class ChatService {
 
         other.put("otherId", otherInfo.getId());
         other.put("nickname", otherInfo.getNickname());
-        other.put("image", getImg(otherInfo).getImageContent());
+        if(getImg(otherInfo) == null) {
+            other.put("image", null);
+        }
+        else {
+            other.put("image", getImg(otherInfo).getImageContent());
+        }
         other.put("notReadIndex", chatRoom.getLastReadIndex().get(otherInfo.getId()));
 
         return other;
