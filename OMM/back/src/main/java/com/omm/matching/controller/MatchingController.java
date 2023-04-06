@@ -50,6 +50,7 @@ public class MatchingController {
      */
     @GetMapping("/matching/noti")
     public ResponseEntity<?> getNotifications() {
+        System.out.println("내 알림 찾으러 컨트롤러 왔다");
         List<NotificationResponseDto> notifications = matchingService.getNotifications();
         return new ResponseEntity<>(new GetNotificationsResponseDto(notifications), HttpStatus.OK);
     }
