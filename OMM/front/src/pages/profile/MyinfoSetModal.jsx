@@ -82,7 +82,7 @@ function MyinfoSetModal(props) {
           onClick={() => setModal(true)}
           src={CloseBtn}
           alt="닫기"
-          className="w-8 h-8"
+          className="w-8 h-8 hover:cursor-pointer "
           aria-hidden="true"
         />
       </div>

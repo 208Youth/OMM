@@ -252,7 +252,9 @@ function OtherProfile() {
                   <div>
                     <div className="flex items-center">
                       <span className="hover:cursor-pointer font-sans font-semibold text-black ">
-                        {basicInfomation.height} cm
+                        {basicInfomation.height}
+                        {' '}
+                        cm
                       </span>
                     </div>
                   </div>
@@ -356,8 +358,8 @@ function OtherProfile() {
                     <div className="text-2xl my-3 font-light mb-8 text-[#364C63]">
                       관심사
                     </div>
-                    {interest &&
-                      interest.map((item) => (
+                    {interest
+                      && interest.map((item) => (
                         <button
                           key={item.interest_list_id}
                           className="bg-white border border-[#364C63] text-[#364C63] rounded-2xl text-sm px-4 mr-2 h-10 font-sans font-semibold"
@@ -377,93 +379,97 @@ function OtherProfile() {
                     인증정보
                   </div>
 
-                  <div>
-                    <div className="my-5 sm:ml-5 ml-10">
+                  <div className="mb-16">
+                    <div className="my-5 ml-10 flex flex-wrap">
                       <div className="inline-block">
                         <Tooltip id="my-tooltip" />
                         <img
                           src={
-                            newCertinfo.health === true ? healthYes : healthNo
-                          }
+                          newCertinfo.health !== false ? healthYes : healthNo
+                        }
                           alt="#"
-                          className="badges"
+                          className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
                           data-tooltip-id="my-tooltip"
-                          data-tooltip-content={
-                            newCertinfo.health
-                              ? `건강검진날짜 ${newCertinfo.health_info}`
+                          data-tooltip-content={`${
+                            newCertinfo.health_info
+                              ? newCertinfo.health_info
                               : '정보 없음'
-                          }
+                          }`}
                         />
                       </div>
                       <div className="inline-block">
                         <img
                           src={
-                            newCertinfo.university === true
-                              ? universityYes
-                              : universityNo
-                          }
+                          newCertinfo.university !== false
+                            ? universityYes
+                            : universityNo
+                        }
                           alt="#"
-                          className="badges"
+                          className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
                           data-tooltip-id="my-tooltip"
-                          data-tooltip-content={
-                            newCertinfo.university
-                              ? `${newCertinfo.university_name}`
+                          data-tooltip-content={`${
+                            newCertinfo.unversity_name
+                              ? newCertinfo.unversity_name
                               : '정보 없음'
-                          }
+                          }`}
                         />
                       </div>
                       <div className="inline-block">
                         <img
-                          src={newCertinfo.job === true ? jobYes : jobNo}
+                          src={newCertinfo.job !== false ? jobYes : jobNo}
                           alt="#"
-                          className="badges"
+                          className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
                           data-tooltip-id="my-tooltip"
-                          data-tooltip-content={
-                            newCertinfo.job ? `${newCertinfo.job_name}` : '무직'
-                          }
+                          data-tooltip-content={`${
+                            newCertinfo.job_name ? newCertinfo.job_name : '정보 없음'
+                          }`}
                         />
                       </div>
                       <div className="inline-block">
                         <img
                           src={
-                            newCertinfo.certificate === true
-                              ? certificateYes
-                              : certificateNo
-                          }
+                          newCertinfo.certificate !== false
+                            ? certificateYes
+                            : certificateNo
+                        }
                           alt="#"
-                          className="badges"
+                          className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
                           data-tooltip-id="my-tooltip"
-                          data-tooltip-content={
+                          data-tooltip-content={`${
                             newCertinfo.certificate
-                              ? `${newCertinfo.certificate_names}`
+                              ? newCertinfo.certificate_names
                               : '정보 없음'
-                          }
+                          }`}
                         />
                       </div>
                       <div className="inline-block">
                         <img
                           src={
-                            newCertinfo.estate === true ? estateYes : estateNo
-                          }
+                          newCertinfo.estate !== false ? estateYes : estateNo
+                        }
                           alt="#"
-                          className="badges"
+                          className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
                           data-tooltip-id="my-tooltip"
-                          data-tooltip-content={
-                            newCertinfo.estate
-                              ? `${newCertinfo.estate_amount}`
+                          data-tooltip-content={`${
+                            newCertinfo.astate_amount
+                              ? newCertinfo.astate_amount
                               : '정보 없음'
-                          }
+                          }`}
                         />
                       </div>
                       <div className="inline-block">
                         <img
                           src={
-                            newCertinfo.income === true ? incomeYes : incomeNo
-                          }
+                          newCertinfo.income !== false ? incomeYes : incomeNo
+                        }
                           alt="#"
-                          className="badges"
+                          className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
                           data-tooltip-id="my-tooltip"
-                          data-tooltip-content={newCertinfo.income ? `${newCertinfo.income_amount}` : '정보 없음'}
+                          data-tooltip-content={`${
+                            newCertinfo.income_amount
+                              ? newCertinfo.income_amount
+                              : '정보 없음'
+                          }`}
                         />
                       </div>
                     </div>
