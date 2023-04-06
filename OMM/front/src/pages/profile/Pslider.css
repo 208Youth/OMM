@@ -36,23 +36,6 @@
   }
 } */
 
-::-webkit-scrollbar {
-  width: 1.3rem;
-}
-
-::-webkit-scrollbar-thumb {
-  border-radius: 1rem;
-  background: #797979;
-  transition: all 0.5s ease-in-out;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #222224;
-}
-
-::-webkit-scrollbar-track {
-  background: #f9f9f9;
-}
 
 
 .container {
@@ -69,7 +52,7 @@
 
 .swiper_container {
   
-  height: 50rem;
+  height: 35rem;
   padding: 2rem 0;
   position: relative;
 }
@@ -77,7 +60,7 @@
 .swiper-slide {
   flex-shrink: 0;
   /* width: 80%; */
-  width: 37rem;
+  width: 20rem;
   height: 100%;
   position: relative;
   transition-property: transform;
@@ -94,7 +77,7 @@
     height: 36rem !important;
   }
   .swiper-slide img {
-    width: 16rem !important;
+    width: 40rem !important;
     height: 36rem !important;
   }
 }
