@@ -32,7 +32,7 @@ const router = createBrowserRouter([
     element: <Index />,
   },
   {
-    path: '/faceRecog/:page',
+    path: '/facerecog/:page',
     element: <FaceRecog />,
   },
   {
@@ -40,11 +40,11 @@ const router = createBrowserRouter([
     element: <Signup />,
   },
   {
-    path: '/OtherProfile/:id',
+    path: '/otherprofile/:id',
     element: <OtherProfile />,
   },
   {
-    path: '/MyinfoSetModal',
+    path: '/myinfosetModal',
     element: <MyinfoSetModal />,
   },
   {
@@ -84,7 +84,7 @@ const router = createBrowserRouter([
     element: <ChatList />,
   },
   {
-    path: '/Chatwindow/:id',
+    path: '/chatwindow/:id',
     element: <Chatwindow />,
   },
   {
@@ -96,7 +96,7 @@ const router = createBrowserRouter([
     element: <Detail />,
   },
   {
-    path: '/ImageUploader',
+    path: '/imageUploader',
     element: <ImageUploader />,
   },
   {
@@ -107,18 +107,6 @@ const router = createBrowserRouter([
     path: '/likes',
     element: <LikeList />,
   },
-  {
-    path: '/ImageUploader',
-    element: <ImageUploader />,
-  },
-  {
-    path: '/ChatingRobbyClone',
-    element: <ChatingRobbyClone />,
-  },
-  // {
-  //   path: '/ChatingRoomClone',
-  //   element: <ChatingRoomClone />,
-  // },
   {
     path: '/loading',
     element: <WaitChat />,
