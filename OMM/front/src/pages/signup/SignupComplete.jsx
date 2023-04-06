@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router';
+import ommheart from '../../assets/ommheart.png';
 
 function SignupComplete() {
   const navigate = useNavigate();
