@@ -6,8 +6,8 @@ import {
   useLocation, useNavigate,
 } from 'react-router-dom';
 import http from '@/api/http.js';
-import BottomModal from '@/pages/chatting/BottomModal.jsx';
-import ReportModal from '@/pages/chatting/ReportModal.jsx';
+import BottomModal from '@/pages/chatting/BottomModal';
+import ReportModal from '@/pages/chatting/ReportModal';
 import './ChatModal.css';
 
 function ChatWindow() {
@@ -142,11 +142,14 @@ function ChatWindow() {
         console.log(response);
         // setRoom(response.data.roomInfo);
         console.log(response.data.roomInfo.msgs);
-        console.log(response.data.roomInfo.other.image.imageContent);
+        // console.log(response.data.roomInfo.other.image.imageContent);
         setMessages([...response.data.payload]);
         setRoom(response.data.roomInfo);
         setOtherNickname(response.data.roomInfo.other.nickname);
-        setOtherImage(response.data.roomInfo.other.image.imageContent);
+        // console.log(response.data.roomInfo.other);
+        if (response.data.roomInfo.other.image.imageContent) {
+          setOtherImage(response.data.roomInfo.other.image.imageContent);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -214,7 +217,6 @@ function ChatWindow() {
   return (
     <div className=" text-[#364C63] w-[22.5rem] h-[48.75rem] mx-auto">
       <div onClick={handleGoBack} className="text-2xl mx-6 py-8 hover:cursor-pointer ">
-
         <span>&lt;</span>
 
         <span className="ml-3 font-sans font-extrabold text-[1.3rem]">
@@ -270,9 +272,18 @@ function ChatWindow() {
                       <div className="w-60 flex flex-row">
                         <span className="ml-[0.3rem]">
                           <div className="flex flex-row">
-                            <span>
-                              <img src={`data:image/png;base64,${otherImage}`} alt="slide_image" className="w-9 h-9 rounded-full mb-2 self-center" />
-                            </span>
+
+                            {otherImage ? (
+                              <span>
+                                <img src={`data:image/png;base64,${otherImage}`} alt="slide_image" className="w-9 h-9 rounded-full mb-2 self-center" />
+                              </span>
+
+                            ) : (
+
+                              <span>
+                                <img src="../../../public/defaultimage.png" alt="defualt_image" className="w-9 h-9 rounded-full mb-2 self-center" />
+                              </span>
+                            )}
                             <div className="flex flex-col">
 
                               <div className="font-mono ml-2 mb-1 ">{otherNickname}</div>
