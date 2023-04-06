@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/effect-coverflow';
@@ -7,9 +7,7 @@ import 'swiper/css/navigation';
 import './Pslider.css';
 import { useLocation } from 'react-router-dom';
 import { EffectCoverflow, Pagination, Navigation } from 'swiper';
-import { useSelector } from 'react-redux';
-import axios from 'axios';
-import slide_image_1 from '../../public/defaultimage.png';
+import defaultImg from '../../public/defaultimage.png';
 
 function Pslider({ mainImg, profileImg, name, age }) {
   const location = useLocation();
@@ -57,7 +55,7 @@ function Pslider({ mainImg, profileImg, name, age }) {
         {/* 이미지 리스트 들어오는 코드 작성한 후에 아래 주석풀어주세요 */}
         {!mainImg && location.pathname.includes('main') && (
           <SwiperSlide className="absolute top-5 flex content-center">
-            <img src={slide_image_1} alt="slide_image" />
+            <img src={defaultImg} alt="slide_image" />
             <div className="flex absolute bottom-0 max-sm:bottom-[12%] left-[5%] w-fit h-[10%] mx-auto">
               <div className="flex px-6 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full my-auto">
                 <span className="text-xl w-28 h-12 mt-2 mx-auto text-white inline-block whitespace-nowrap overflow-hidden text-ellipsis">
@@ -93,7 +91,7 @@ function Pslider({ mainImg, profileImg, name, age }) {
           ))}
         {!profileImg && location.pathname.includes('profile') && (
           <SwiperSlide className="absolute top-5 flex content-center">
-            <img src={slide_image_1} alt="slide_image" />
+            <img src={defaultImg} alt="slide_image" />
             <div className="flex absolute bottom-0 left-[5%] w-fit h-[10%] mx-auto" />
           </SwiperSlide>
         )}
