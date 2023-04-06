@@ -26,8 +26,8 @@ import Pslider from '../../components/Pslider';
 import Navbar from '../../components/nav-bar';
 import userarrow from '../../assets/userarrow.svg';
 import MyinfoSetModal from './MyinfoSetModal';
-import MyinfoSetModal3 from './MyinfoSetModal3';
 import MyinfoSetModal2 from './MyinfoSetModal2';
+import MyinfoSetModal3 from './MyinfoSetModal3';
 import http from '../../api/http';
 // props를 통해 userid를 받고 claose 버튼을 눌러서 해당 userid의
 // 아니면 메인 페이지에 해당 컴포넌트를 아예 합쳐버릴까
@@ -402,7 +402,10 @@ function MyProfile({ profileNav }) {
           isOpen={MymodalIsOpen2}
           onRequestClose={closeMyModal2}
         >
-          <MyinfoSetModal2 setModal={closeMyModal2} />
+          <MyinfoSetModal2
+            setModal={closeMyModal2}
+            filterInfomation={filterInfomation}
+          />
         </Modal>
       </div>
       <div className="text-center">
@@ -768,10 +771,22 @@ function MyProfile({ profileNav }) {
                     </span>
                   </div>
                   <div>
+
                     <div className="flex items-center">
-                      <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
+                      <span
+                        onClick={() => {
+                          openMyModal2();
+                        }}
+                        aria-hidden
+                        className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
+                      >
                         {' '}
-                        {filterInfomation.age_min} - {filterInfomation.age_max}{' '}
+                        {filterInfomation.age_min}
+                        {' '}
+                        -
+                        {' '}
+                        {filterInfomation.age_max}
+                        {' '}
                         살
                       </span>
                       <div>
@@ -789,8 +804,18 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
-                        {filterInfomation.height_min} - {filterInfomation.max}
+                      <span
+                        onClick={() => {
+                          openMyModal2();
+                        }}
+                        aria-hidden
+                        className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black mr-1"
+                      >
+                        {filterInfomation.height_min}
+                        {' '}
+                        -
+                        {' '}
+                        {filterInfomation.height_max}
                         cm
                       </span>
                       <div>
@@ -802,16 +827,29 @@ function MyProfile({ profileNav }) {
                 <hr />
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
+                    <span
+                      className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
+                    >
                       거리 반경
                     </span>
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
+                      <span
+                        onClick={() => {
+                          openMyModal2();
+                        }}
+                        aria-hidden
+                        className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
+                      >
                         {' '}
-                        {filterInfomation.range_min} -{' '}
-                        {filterInfomation.range_max} km
+                        {filterInfomation.range_min}
+                        {' '}
+                        -
+                        {' '}
+                        {filterInfomation.range_max}
+                        {' '}
+                        km
                       </span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
@@ -828,7 +866,13 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
+                      <span
+                        onClick={() => {
+                          openMyModal2();
+                        }}
+                        aria-hidden
+                        className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
+                      >
                         {contactStyleText2}
                       </span>
                       <div>
@@ -840,13 +884,25 @@ function MyProfile({ profileNav }) {
                 <hr />
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span className="font-sans font-semibold text-black">
+                    <span
+                      onClick={() => {
+                        openMyModal2();
+                      }}
+                      aria-hidden
+                      className="font-sans font-semibold text-black"
+                    >
                       음주 스타일
                     </span>
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
+                      <span
+                        onClick={() => {
+                          openMyModal2();
+                        }}
+                        aria-hidden
+                        className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
+                      >
                         {drinkingStyleText2}
                       </span>
                       <div>
@@ -864,7 +920,13 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
+                      <span
+                        onClick={() => {
+                          openMyModal2();
+                        }}
+                        aria-hidden
+                        className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
+                      >
                         {smokingStyleText2}
                       </span>
                       <div>

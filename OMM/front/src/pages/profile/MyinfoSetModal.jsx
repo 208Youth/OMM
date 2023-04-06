@@ -67,6 +67,7 @@ function MyinfoSetModal(props) {
       .catch((err) => {
         console.log(err);
         console.log('담아줄 데이터', data);
+        alert('모든 정보를 설정해 주세요');
       });
   };
   useEffect(() => {
