@@ -330,7 +330,7 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav, id }) {
           )}
         </div>
         <div className="menu-item">
-          {!notiNav && !notiAlert && (
+          {/* {!notiNav && !notiAlert && (
             <i
               className="bi bi-bell transition duration-300 hover:scale-125"
               onClick={() => {
@@ -347,7 +347,17 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav, id }) {
               }}
               aria-hidden
             />
+          )} */}
+          {!notiNav && (
+            <i
+              className={notiAlert ? "bi bi-bell-fill" : "bi bi-bell transition duration-300 hover:scale-125"}
+              onClick={() => {
+                gotoNoti();
+              }}
+              aria-hidden
+            />
           )}
+
           {notiNav && (
             <i className="bi bi-bell-fill notiNav" />
           )}
