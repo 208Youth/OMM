@@ -14,6 +14,7 @@ function WaitChat() {
   const senderId = useSelector((state) => state.chat.memberId);
 
   let stompClient;
+  const decoded = jwt_decode(token);
 
   const websocket = () => {
     // const ws = new SockJS('http://localhost:5000/api/chat');
@@ -28,6 +29,14 @@ function WaitChat() {
       headers,
       (frame) => {
         console.log('연결성공');
+        stompClient.subscribe(`/sub/chat/room/${decoded.sub}`, (message) => {
+          console.log(message);
+          const recv = JSON.parse(message.body);
+          console.log(recv);
+          console.log('채팅 내용 수신', recv.id);
+          navigate(`/chatwindow/${recv.id}`);
+          // 리다이렉트 또는 다른 작업 수행
+        });
       },
       (error) => {
         // 연결이 끊어졌을 때 재연결 시도 부분
@@ -42,6 +51,18 @@ function WaitChat() {
     );
   };
 
+  const waitForConnection = (stompClient, callback) => {
+    setTimeout(() => {
+      // 연결되었을 때 콜백함수 실행
+      if (stompClient.ws.readyState === 1) {
+        callback();
+        // 연결이 안 되었으면 재호출
+      } else {
+        waitForConnection(stompClient, callback);
+      }
+    }, 1); // 밀리초 간격으로 실행
+  };
+
   const createChatting = () => {
     const headers = {
       // Authorization: import.meta.env.VITE_TOKEN,
@@ -49,15 +70,9 @@ function WaitChat() {
     };
     console.log(stompClient);
     const decoded = jwt_decode(token);
-    stompClient.connect(headers, (frame) => {
-      stompClient.subscribe(`/sub/chat/room/${decoded.sub}`, (message) => {
-        console.log(message);
-        const recv = JSON.parse(message.body);
-        console.log(recv);
-        console.log('채팅 내용 수신', recv.id);
-        navigate(`/chatwindow/${recv.id}`);
-        // 리다이렉트 또는 다른 작업 수행
-      });
+    stompClient.connect(
+      headers,
+      (frame) => {
       stompClient.send(
         '/pub/chat/room',
         headers,

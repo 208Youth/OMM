@@ -26,8 +26,8 @@ import Pslider from '../../components/Pslider';
 import Navbar from '../../components/nav-bar';
 import userarrow from '../../assets/userarrow.svg';
 import MyinfoSetModal from './MyinfoSetModal';
-import MyinfoSetModal3 from './MyinfoSetModal3';
 import MyinfoSetModal2 from './MyinfoSetModal2';
+import MyinfoSetModal3 from './MyinfoSetModal3';
 import http from '../../api/http';
 // props를 통해 userid를 받고 claose 버튼을 눌러서 해당 userid의
 // 아니면 메인 페이지에 해당 컴포넌트를 아예 합쳐버릴까
@@ -280,33 +280,33 @@ function MyProfile({ profileNav }) {
   }
   let drinkingStyleText;
   if (basicInfomation.drinking_style === 'NOT') {
-    drinkingStyleText = '논 알코올';
+    drinkingStyleText = '안함';
   } else if (basicInfomation.drinking_style === 'SOMETIMES') {
     drinkingStyleText = '가끔';
   } else if (basicInfomation.drinking_style === 'OFTEN') {
     drinkingStyleText = '자주';
   } else if (basicInfomation.drinking_style === 'EVERYDAY') {
-    drinkingStyleText = '술고래';
+    drinkingStyleText = '매일';
   } else if (basicInfomation.drinking_style === 'ONLY_FRIENDS') {
-    drinkingStyleText = '친구들이랑';
+    drinkingStyleText = '친구들 만날 떄만';
   } else if (basicInfomation.drinking_style === 'STOPPING') {
-    drinkingStyleText = '금주령';
+    drinkingStyleText = '금주 중';
   }
   let drinkingStyleText2;
   if (filterInfomation.drinking_style === 'NONE') {
     drinkingStyleText2 = '상관없음';
   } else if (filterInfomation.drinking_style === 'PREFER_NO') {
-    drinkingStyleText2 = '안마셨으면';
+    drinkingStyleText2 = '안 마셨으면 좋겠음';
   } else if (filterInfomation.drinking_style === 'PREFER_YES') {
-    drinkingStyleText2 = '잘마셨으면';
+    drinkingStyleText2 = '잘 마셨으면 좋겠음';
   }
   let smokingStyleText;
   if (basicInfomation.smoking_style === 'NOT') {
     smokingStyleText = '비흡연자';
   } else if (basicInfomation.smoking_style === 'SOMETIMES') {
-    smokingStyleText = '가끔';
+    smokingStyleText = '진짜 가끔';
   } else if (basicInfomation.smoking_style === 'OFTEN') {
-    smokingStyleText = '자주';
+    smokingStyleText = '자주 핌';
   } else if (basicInfomation.smoking_style === 'STOPPING') {
     smokingStyleText = '금연중';
   }
@@ -320,29 +320,29 @@ function MyProfile({ profileNav }) {
   }
   let contactStyleText;
   if (basicInfomation.contact_style === 'PREFER_MSG') {
-    contactStyleText = '카톡러';
+    contactStyleText = '카톡자주하는편';
   } else if (basicInfomation.contact_style === 'PREFER_CALL') {
-    contactStyleText = '전화선호';
+    contactStyleText = '전화 선호';
   } else if (basicInfomation.contact_style === 'PREFER_FACECALL') {
-    contactStyleText = '영상통화선호';
+    contactStyleText = '영상통화 선호';
   } else if (basicInfomation.contact_style === 'NOT_MSG') {
-    contactStyleText = '카톡 안보는 편';
+    contactStyleText = '카톡 별로 안하는 편';
   } else if (basicInfomation.contact_style === 'PREFER_OFFLINE') {
-    contactStyleText = '직접 만나는거 선호';
+    contactStyleText = '직접 만나는 걸 선호';
   }
   let contactStyleText2;
   if (filterInfomation.contact_style === 'PREFER_MSG') {
-    contactStyleText2 = '카톡러';
+    contactStyleText2 = '카톡자주하는편';
   } else if (filterInfomation.contact_style === 'PREFER_CALL') {
-    contactStyleText2 = '전화선호';
+    contactStyleText2 = '전화 선호';
   } else if (filterInfomation.contact_style === 'NONE') {
     contactStyleText2 = '상관없음';
   } else if (filterInfomation.contact_style === 'PREFER_FACECALL') {
-    contactStyleText2 = '영상통화선호';
+    contactStyleText2 = '영상통화 선호';
   } else if (filterInfomation.contact_style === 'NOT_MSG') {
-    contactStyleText2 = '카톡 안보는 편';
+    contactStyleText2 = '카톡 별로 안하는 편';
   } else if (filterInfomation.contact_style === 'PREFER_OFFLINE') {
-    contactStyleText2 = '직접 만나는거 선호';
+    contactStyleText2 = '직접 만나는 걸 선호';
   }
 
   let petText;
@@ -392,7 +392,7 @@ function MyProfile({ profileNav }) {
         >
           <MyinfoSetModal
             setModal={closeMyModal}
-            basicInfomation={basicInfomation}
+            basicInformation={basicInfomation}
           />
         </Modal>
       </div>
@@ -402,7 +402,10 @@ function MyProfile({ profileNav }) {
           isOpen={MymodalIsOpen2}
           onRequestClose={closeMyModal2}
         >
-          <MyinfoSetModal2 setModal={closeMyModal2} />
+          <MyinfoSetModal2
+            setModal={closeMyModal2}
+            filterInfomation={filterInfomation}
+          />
         </Modal>
       </div>
       <div className="text-center">
@@ -768,8 +771,15 @@ function MyProfile({ profileNav }) {
                     </span>
                   </div>
                   <div>
+
                     <div className="flex items-center">
-                      <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
+                      <span
+                        onClick={() => {
+                          openMyModal2();
+                        }}
+                        aria-hidden
+                        className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
+                      >
                         {' '}
                         {filterInfomation.age_min}
                         {' '}
@@ -794,12 +804,18 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
+                      <span
+                        onClick={() => {
+                          openMyModal2();
+                        }}
+                        aria-hidden
+                        className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black mr-1"
+                      >
                         {filterInfomation.height_min}
                         {' '}
                         -
                         {' '}
-                        {filterInfomation.max}
+                        {filterInfomation.height_max}
                         cm
                       </span>
                       <div>
@@ -811,13 +827,21 @@ function MyProfile({ profileNav }) {
                 <hr />
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
+                    <span
+                      className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
+                    >
                       거리 반경
                     </span>
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
+                      <span
+                        onClick={() => {
+                          openMyModal2();
+                        }}
+                        aria-hidden
+                        className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
+                      >
                         {' '}
                         {filterInfomation.range_min}
                         {' '}
@@ -842,7 +866,13 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
+                      <span
+                        onClick={() => {
+                          openMyModal2();
+                        }}
+                        aria-hidden
+                        className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
+                      >
                         {contactStyleText2}
                       </span>
                       <div>
@@ -854,13 +884,25 @@ function MyProfile({ profileNav }) {
                 <hr />
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span className="font-sans font-semibold text-black">
+                    <span
+                      onClick={() => {
+                        openMyModal2();
+                      }}
+                      aria-hidden
+                      className="font-sans font-semibold text-black"
+                    >
                       음주 스타일
                     </span>
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
+                      <span
+                        onClick={() => {
+                          openMyModal2();
+                        }}
+                        aria-hidden
+                        className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
+                      >
                         {drinkingStyleText2}
                       </span>
                       <div>
@@ -878,7 +920,13 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
+                      <span
+                        onClick={() => {
+                          openMyModal2();
+                        }}
+                        aria-hidden
+                        className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
+                      >
                         {smokingStyleText2}
                       </span>
                       <div>

@@ -16,6 +16,7 @@ import Alert from './pages/alert/Alert';
 import ChatList from './pages/alert/ChatList';
 import Admin from './pages/admin/Admin';
 import Detail from './pages/admin/Detail';
+import AdminLogin from './pages/admin/AdminLogin';
 import Main from './pages/main/Main';
 import Chatwindow from './pages/chatting/Chatwindow';
 // import ChatingRoomClone from './pages/chatting/ChatingRoomClone';
@@ -114,6 +115,10 @@ const router = createBrowserRouter([
   {
     path: '/imagetest',
     element: <ImageGetTest />,
+  },
+  {
+    path: '/adminlogin',
+    element: <AdminLogin />,
   },
 ]);
 

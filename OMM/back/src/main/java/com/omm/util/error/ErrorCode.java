@@ -15,7 +15,8 @@ public enum ErrorCode {
 
     /* 400 BAD_REQUEST : 잘못된 요청 */
     CANNOT_AUTHORIZE_MEMBER(BAD_REQUEST, "인증에 실패했습니다."),
-    BLACKLIST_MEMBER(BAD_REQUEST, "로그인 할 수 없는 유저입니다."),
+    BLACKLIST_MEMBER(BAD_REQUEST, "블랙리스트 유저입니다."),
+    SUSPEND_MEMBER(BAD_REQUEST, "정지된 사용자입니다."),
     FAIL_TO_LOGIN(BAD_REQUEST, "로그인 실패했습니다. 인증 정보를 확인해주세요."),
     CANNOT_RESOLVE_MESSAGE(BAD_REQUEST, "메시지 객체 생성에 실패했습니다."),
     INVALID_VP(BAD_REQUEST, "잘못된 VP 정보입니다."),

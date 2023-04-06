@@ -40,8 +40,8 @@ function ChatWindow() {
   const myChatList = messages.filter(
     (chat1) => chat1.senderId !== room.other.otherId,
   );
-  console.log(messages);
-  console.log(myChatList);
+  // console.log(messages);
+  // console.log(myChatList);
 
   const latestMyChat = myChatList.find((chat1) => chat1.read === false);
   console.log(latestMyChat);
@@ -82,9 +82,6 @@ function ChatWindow() {
     // Authorization: token,
   };
 
-  const roomHeader = {
-    roomId,
-  };
   // 아래는 read처리를 위한 fastapi의 조언, 저 함수는 다른 유자거 들어 올떄 실행되야함
   const markAsRead = (messageId) => {
     const updatedMessages = messages.map((message) =>
@@ -208,13 +205,16 @@ function ChatWindow() {
   };
 
   useEffect(() => {
-    const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
-    const stompClient = Stomp.over(ws);
-    ws.onmes = () => {
-      console.log('WebSocket connected!!!');
-    };
+    // const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
+    // const stompClient = Stomp.over(ws);
+    // ws.onmes = () => {
+    //   console.log('WebSocket connected!!!');
+    // };
     findRoom();
     connect();
+    return function cleanup() {
+      stompClient.disconnect();
+  }
   }, []);
 
   return (
@@ -398,6 +398,7 @@ function ChatWindow() {
               setReportModal={() => {
                 closeReportModal();
               }}
+              targetId={room?.other?.otherId}
             />
           </Modal>
         </div>
