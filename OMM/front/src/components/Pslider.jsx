@@ -7,7 +7,7 @@ import 'swiper/css/navigation';
 import './Pslider.css';
 import { useLocation } from 'react-router-dom';
 import { EffectCoverflow, Pagination, Navigation } from 'swiper';
-import defaultImg from '../../public/defaultimage.png';
+import defaultImg from '../assets/defaultimage.png';
 
 function Pslider({ mainImg, profileImg, name, age }) {
   const location = useLocation();
