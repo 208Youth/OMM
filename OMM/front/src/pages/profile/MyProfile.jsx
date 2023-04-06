@@ -122,6 +122,7 @@ function MyProfile({ profileNav }) {
     setDisabled(false);
   };
   const openMyModal = () => {
+    console.log('내모달이 열려야');
     setMyIsOpen(true);
   };
   const closeMyModal = () => {
@@ -172,7 +173,7 @@ function MyProfile({ profileNav }) {
     })
       .then((res) => {
         console.log(res);
-        setInfo('내정보', res.data);
+        setInfo(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -191,7 +192,7 @@ function MyProfile({ profileNav }) {
     })
       .then((res) => {
         console.log(res);
-        setCert('인증정보', res.data);
+        setCert(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -227,7 +228,7 @@ function MyProfile({ profileNav }) {
     })
       .then((res) => {
         console.log(res);
-        setFilter('새로 보낼 필터 정보', res.data);
+        setFilter(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -443,7 +444,10 @@ function MyProfile({ profileNav }) {
               </div>
 
               <span className="text-3xl ml-2">{basicInfomation.nickname}</span>
-              <span> {basicInfomation.age}</span>
+              <span>
+                {' '}
+                {basicInfomation.age}
+              </span>
               <div className="text-slate-500 text-sm ml-2">
                 <span className="inline-block">
                   <img src={location} alt="" width={10} />
@@ -462,9 +466,10 @@ function MyProfile({ profileNav }) {
                     <textarea
                       maxLength={40}
                       disabled={disabled}
-                      className=" break-words h-20 resize-none overflow-hidden focus:ring-2 focus:ring-blue-300 text-slate-600 text-sm bg-transparent border-none outline-none w-full font-sans"
+                      className="m-3 break-words h-20 resize-none overflow-hidden focus:ring-2 focus:ring-blue-300 text-slate-600 text-sm bg-transparent border-none outline-none w-full font-sans"
                       type="text"
                       value={newPr}
+                      placeholder={basicInfomation.pr ? (basicInfomation.pr) : '당신에게 OMM...'}
                       onChange={(e) => {
                         setnewPr(e.target.value);
                         console.log(newPr);
@@ -505,9 +510,17 @@ function MyProfile({ profileNav }) {
                       </span>
                     </div>
                     <div>
-                      <div className="flex items-center">
-                        <span className="hover:cursor-pointer font-sans font-semibold text-black">
-                          {basicInfomation.height} cm
+                      <div className="flex items-center ">
+                        <span
+                          onClick={() => {
+                            openMyModal();
+                          }}
+                          aria-hidden
+                          className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
+                        >
+                          {basicInfomation.height}
+                          {' '}
+                          cm
                         </span>
                         <div
                           onClick={() => {
@@ -530,7 +543,13 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="hover:cursor-pointer font-sans font-semibold text-black">
+                        <span
+                          onClick={() => {
+                            openMyModal();
+                          }}
+                          aria-hidden
+                          className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
+                        >
                           {drinkingStyleText}
                         </span>
                         <div
@@ -545,7 +564,7 @@ function MyProfile({ profileNav }) {
                     </div>
                   </div>
                   <hr />
-                  <div className="flex justify-between m-3">
+                  {/* <div className="flex justify-between m-3">
                     <div className="">
                       <span className="font-sans font-semibold text-black">
                         고등학교
@@ -566,7 +585,7 @@ function MyProfile({ profileNav }) {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                   <hr />
                   <div className="flex justify-between m-3">
                     <div className="">
@@ -576,7 +595,13 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="hover:cursor-pointer font-sans font-semibold text-black">
+                        <span
+                          onClick={() => {
+                            openMyModal();
+                          }}
+                          aria-hidden
+                          className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
+                        >
                           {contactStyleText}
                         </span>
                         <div
@@ -599,7 +624,13 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="hover:cursor-pointer font-sans font-semibold text-black">
+                        <span
+                          onClick={() => {
+                            openMyModal();
+                          }}
+                          aria-hidden
+                          className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
+                        >
                           {smokingStyleText}
                         </span>
                         <div
@@ -622,7 +653,13 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="hover:cursor-pointer font-sans font-semibold text-black">
+                        <span
+                          onClick={() => {
+                            openMyModal();
+                          }}
+                          aria-hidden
+                          className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
+                        >
                           {basicInfomation.MBTI}
                         </span>
                         <div
@@ -649,8 +686,8 @@ function MyProfile({ profileNav }) {
                       }}
                       aria-hidden
                     >
-                      <div className="flex items-center hover:cursor-pointer">
-                        <span className="hover:cursor-pointer font-sans font-semibold text-black hover:text-[#F59FB1]">
+                      <div className="flex items-center hover:text-[#F59FB1]">
+                        <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black hover:text-[#F59FB1]">
                           설정
                         </span>
 
@@ -669,7 +706,13 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="font-sans font-semibold text-black">
+                        <span
+                          onClick={() => {
+                            openMyModal();
+                          }}
+                          aria-hidden
+                          className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
+                        >
                           {petText}
                         </span>
                         <div
@@ -692,7 +735,13 @@ function MyProfile({ profileNav }) {
                     </div>
                     <div>
                       <div className="flex items-center">
-                        <span className="font-sans font-semibold text-black">
+                        <span
+                          onClick={() => {
+                            openMyModal();
+                          }}
+                          aria-hidden
+                          className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
+                        >
                           {militaryText}
                         </span>
                         <div
@@ -721,9 +770,14 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="hover:cursor-pointer font-sans font-semibold text-black">
+                      <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
                         {' '}
-                        {filterInfomation.age_min} - {filterInfomation.age_max}{' '}
+                        {filterInfomation.age_min}
+                        {' '}
+                        -
+                        {' '}
+                        {filterInfomation.age_max}
+                        {' '}
                         살
                       </span>
                       <div>
@@ -741,8 +795,12 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="font-sans font-semibold text-black">
-                        {filterInfomation.height_min} - {filterInfomation.max}
+                      <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
+                        {filterInfomation.height_min}
+                        {' '}
+                        -
+                        {' '}
+                        {filterInfomation.max}
                         cm
                       </span>
                       <div>
@@ -754,16 +812,21 @@ function MyProfile({ profileNav }) {
                 <hr />
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span className="font-sans font-semibold text-black">
+                    <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
                       거리 반경
                     </span>
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="font-sans font-semibold text-black">
+                      <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
                         {' '}
-                        {filterInfomation.range_min} -{' '}
-                        {filterInfomation.range_max} km
+                        {filterInfomation.range_min}
+                        {' '}
+                        -
+                        {' '}
+                        {filterInfomation.range_max}
+                        {' '}
+                        km
                       </span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
@@ -780,7 +843,7 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="font-sans font-semibold text-black">
+                      <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
                         {contactStyleText2}
                       </span>
                       <div>
@@ -798,7 +861,7 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="font-sans font-semibold text-black">
+                      <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
                         {drinkingStyleText2}
                       </span>
                       <div>
@@ -816,7 +879,7 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="font-sans font-semibold text-black">
+                      <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
                         {smokingStyleText2}
                       </span>
                       <div>
@@ -833,7 +896,7 @@ function MyProfile({ profileNav }) {
                     aria-hidden
                     className="flex items-center m-2"
                   >
-                    <span className="hover:cursor-pointer font-sans font-semibold text-black hover:text-[#F59FB1]">
+                    <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black hover:text-[#F59FB1]">
                       설정
                     </span>
                     <div>
@@ -853,7 +916,8 @@ function MyProfile({ profileNav }) {
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={`${newCertinfo.health_info}`}
+                        data-tooltip-content={`${newCertinfo.health_info ? newCertinfo.health_info : '없음'}`}
+
                       />
                     </div>
                     <div className="inline-block">
@@ -866,7 +930,7 @@ function MyProfile({ profileNav }) {
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={`${newCertinfo.university_name}`}
+                        data-tooltip-content={`${newCertinfo.unversity_name ? newCertinfo.unversity_name : '없음'}`}
                       />
                     </div>
                     <div className="inline-block">
@@ -875,7 +939,7 @@ function MyProfile({ profileNav }) {
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={`${newCertinfo.job_name}`}
+                        data-tooltip-content={`${newCertinfo.job_name ? newCertinfo.job_name : '무직'}`}
                       />
                     </div>
                     <div className="inline-block">
@@ -887,8 +951,7 @@ function MyProfile({ profileNav }) {
                         }
                         alt="#"
                         className="badges"
-                        data-tooltip-id="my-tooltip"
-                        data-tooltip-content={` ${newCertinfo.certificate_names}`}
+                        data-tooltip-content={`${newCertinfo.certificate_name ? newCertinfo.certificate_name : '없음'}`}
                       />
                     </div>
                     <div className="inline-block">
@@ -899,7 +962,7 @@ function MyProfile({ profileNav }) {
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={` ${newCertinfo.estate_amount}`}
+                        data-tooltip-content={`${newCertinfo.astate_amount ? newCertinfo.astate_amount : '없음'}`}
                       />
                     </div>
                     <div className="inline-block">
@@ -910,7 +973,7 @@ function MyProfile({ profileNav }) {
                         alt="#"
                         className="badges"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={` ${newCertinfo.income_amount}`}
+                        data-tooltip-content={`${newCertinfo.income_amount ? newCertinfo.income_amount : '없음'}`}
                       />
                     </div>
                   </div>
