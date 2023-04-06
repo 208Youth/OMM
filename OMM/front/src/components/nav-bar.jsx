@@ -21,6 +21,18 @@ function Navbar({
    */
   const [chatAlert, setChatAlert] = useState(false);
   const [notiAlert, setNotiAlert] = useState(false);
+  const [heartState, setHeartState] = useState();
+
+  const unfilledheart = "bi-chat-heart";
+  const filledheart = "bi-chat-heart-fill";
+
+  useEffect (()=>{
+    if(chatAlert){
+      setHeartState(filledheart);
+    }else{
+      setHeartState(unfilledheart);
+    }
+  },[chatAlert]);
 
   const mainconnect = () => {
     const headers = {
@@ -243,13 +255,7 @@ function Navbar({
               to="/chattings"
               className="transition duration-300 hover:scale-125"
             >
-              {!chatAlert  && (
-              <i className="bi-chat-heart" />
-              )}
-              {chatAlert  && (
-              <i className="bi-chat-heart-fill" />
-              )}
-
+              <i className={heartState} />
             </Link>
           )}
           {chatlistNav && <i className="bi bi-chat-heart-fill chatlistNav" />}
