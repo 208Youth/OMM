@@ -71,8 +71,9 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav, id }) {
              * TODO : 채팅 알림 있는지
              * 안읽은 채팅 존재 여부 -> setChatAlert
              */
-            if (message.alert) console.log('나 안읽은 채팅이 있다요');
-            setChatAlert(message.alert);
+            const recv = JSON.parse(message.body);
+            if (recv.alert) console.log('나 안읽은 채팅이 있다요');
+            setChatAlert(recv.alert);
           },
           {},
         );
@@ -125,8 +126,9 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav, id }) {
              * TODO : 채팅 알림 있는지
              * 안읽은 채팅 존재 여부 -> setChatAlert
              */
-            if (message.alert) console.log('나 안읽은 채팅이 있다요');
-            setChatAlert(message.alert);
+            const recv = JSON.parse(message.body);
+            if (recv.alert) console.log('나 안읽은 채팅이 있다요');
+            setChatAlert(recv.alert);
           },
           {},
         );
@@ -291,7 +293,19 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav, id }) {
           {likesNav && <i className="bi bi-search-heart-fill" />} */}
         </div>
         <div className="menu-item">
-          <i
+          {!chatlistNav && (
+            <i
+              className={chatAlert ? "bi bi-chat-heart-fill" : "bi bi-chat-heart transition duration-300 hover:scale-125"}
+              onClick={() => {
+                gotoChattings();
+              }}
+              aria-hidden
+            />
+          )}
+          {chatlistNav && (
+            <i className="bi bi-chat-heart-fill chatlistNav" />
+          )}
+          {/* <i
             className={
               chatlistNav
                 ? 'bi bi-chat-heart-fill chatlistNav'
@@ -303,7 +317,7 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav, id }) {
               }
             }}
             aria-hidden
-          />
+          /> */}
           {/* {chatlistNav && <i className="bi bi-chat-heart-fill chatlistNav" />} */}
         </div>
         <div className="menu-item">
@@ -363,7 +377,6 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav, id }) {
               aria-hidden
             />
           )}
-
           {notiNav && (
             <i className="bi bi-bell-fill notiNav" />
           )}
