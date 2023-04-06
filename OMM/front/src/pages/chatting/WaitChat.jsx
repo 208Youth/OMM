@@ -14,6 +14,7 @@ function WaitChat() {
   const senderId = useSelector((state) => state.chat.memberId);
 
   let stompClient;
+  
 
   const websocket = () => {
     // const ws = new SockJS('http://localhost:5000/api/chat');
@@ -50,6 +51,18 @@ function WaitChat() {
     );
   };
 
+  const waitForConnection = (stompClient, callback) => {
+    setTimeout(() => {
+      // 연결되었을 때 콜백함수 실행
+      if (stompClient.ws.readyState === 1) {
+        callback();
+        // 연결이 안 되었으면 재호출
+      } else {
+        waitForConnection(stompClient, callback);
+      }
+    }, 1); // 밀리초 간격으로 실행
+  };
+
   const createChatting = () => {
     const headers = {
       // Authorization: import.meta.env.VITE_TOKEN,
@@ -57,13 +70,15 @@ function WaitChat() {
     };
     console.log(stompClient);
     const decoded = jwt_decode(token);
-    stompClient.send(
-      '/pub/chat/room',
-      headers,
-      // 나한테 알림 보낸사람 id
-      JSON.stringify({ senderId }),
-      console.log('채팅방 만들라구'),
-    );
+    waitForConnection(stompClient, () => {
+      stompClient.send(
+        '/pub/chat/room',
+        headers,
+        // 나한테 알림 보낸사람 id
+        JSON.stringify({ senderId }),
+        console.log('채팅방 만들라구'),
+      );
+    });
     console.log(stompClient);
   };
 
