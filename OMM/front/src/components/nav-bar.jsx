@@ -98,7 +98,7 @@ function Navbar({
       (frame) => {
         console.log('chatlistconnect');
         client.subscribe(
-          `/sub/matching/chatalert/${decoded.sub}`,
+          `/sub/chat/chatalert/${decoded.sub}`,
           (message) => {
             /**
              * TODO : 채팅 알림 있는지
@@ -111,7 +111,7 @@ function Navbar({
         );
 
         client.subscribe(
-          `/sub/matching/notialert/${decoded.sub}`,
+          `/sub/chat/notialert/${decoded.sub}`,
           (message) => {
             /**
              * TODO : 알림 있는지
