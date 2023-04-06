@@ -67,7 +67,7 @@ function ImageUploader({ setModal }) {
       <div className="text-xs text-gray-400 mb-3 font-sans">
         10MB 미만의 파일만 올려주세요.
       </div>
-      <div className="overflow-x-scroll uploadimg-croll mt-5">
+      <div className="overflow-x-scroll uploadimg-scroll mt-5">
         <div className="flex flex-row w-fit">
           {images.map((image, index) => (
             <div0
