@@ -101,7 +101,7 @@ function Main() {
 
   const toOther = () => {
     console.log('남의집');
-    navigate(`/OtherProfile/${id}`);
+    navigate(`/otherprofile/${id}`);
   };
   return (
     <div className="flex flex-col">

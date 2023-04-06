@@ -30,7 +30,7 @@ function ChatList() {
   }
 
   const gotoChatwindow = (id) => {
-    navigate(`/Chatwindow/${id}`);
+    navigate(`/chatwindow/${id}`);
     console.log('가자');
   };
 
