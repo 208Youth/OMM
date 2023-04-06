@@ -215,7 +215,7 @@ function ChatWindow() {
     connect();
     return function cleanup() {
       stompClient.disconnect();
-  }
+    };
   }, []);
 
   return (
@@ -345,10 +345,15 @@ function ChatWindow() {
                 </button>
                 <input
                   type="text"
-                  className="rounded-md bg-[#F2EAF2] w-60 h-11 self-center"
+                  className="rounded-md bg-[#F2EAF2] w-60 h-11 self-center pl-2"
                   value={message}
                   onChange={(e) => {
                     setMessage(e.target.value);
+                  }}
+                  onKeyUp={(e) => {
+                    if (e.key === 'Enter') {
+                      sendMessage();
+                    }
                   }}
                 />
                 {/* <button onClick={sendMessage}>Send</button> */}

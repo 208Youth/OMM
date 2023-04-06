@@ -306,13 +306,8 @@ function FaceRecog({ setStep }) {
         video.remove();
         canvas.remove();
       }, 2000);
-      if (whatpage === 'chat') {
-        console.log('대기로 이동');
-        // navigate(`/chatwindow/${chatid}`);
-        navigate(`/chattings`);
-      } else {
-        setStep(true);
-      }
+      console.log('대기로 이동');
+      navigate('/chattings', { state: { reload: true } });
     } else if (recog && !isRight) {
       const stream = videoRef.current.srcObject;
       const tracks = stream.getTracks();

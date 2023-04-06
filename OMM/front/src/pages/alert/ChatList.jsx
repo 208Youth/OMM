@@ -14,6 +14,9 @@ function ChatList() {
     navigate(-1);
   }
 
+  const location = useLocation();
+  const isReload = location.state.reload;
+
   async function getChatList() {
     await http({
       method: 'get',
@@ -34,6 +37,12 @@ function ChatList() {
   const gotoChatwindow = (id) => {
     navigate(`/chatwindow/${id}`);
     console.log('가자');
+  };
+
+  const oneReload = () => {
+    if (isReload) {
+      location.reload();
+    }
   };
 
   useEffect(() => {
@@ -72,6 +81,7 @@ function ChatList() {
                 chat={chat}
                 moveTo={(res) => {
                   if (res) {
+                    oneReload();
                     gotoChatwindow(chat.id);
                   }
                 }}
