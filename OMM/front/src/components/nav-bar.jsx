@@ -4,14 +4,14 @@ import SockJS from 'sockjs-client';
 // import SockJS from 'sockjs-client/dist/sockjs';
 import Stomp from 'stompjs';
 import './nav-bar.scss';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { likey } from '@/store/recSlice.jsx';
-import http from '@/api/http.js';
+import { likey } from '@/store/recSlice';
+import http from '@/api/http';
+import ommheart from '../assets/ommheart.png';
+import pastelheart from '../assets/pastelheart.png';
 
-function Navbar({
-  profileNav, mainNav, notiNav, chatlistNav, likesNav, id,
-}) {
+function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav, id }) {
   const token = localStorage.getItem('accesstoken');
   const decoded = jwt_decode(token);
   const dispatch = useDispatch();
@@ -23,16 +23,34 @@ function Navbar({
   const [notiAlert, setNotiAlert] = useState(false);
   const [heartState, setHeartState] = useState();
 
-  const unfilledheart = "bi-chat-heart";
-  const filledheart = "bi-chat-heart-fill";
+  const unfilledheart = 'bi-chat-heart transition duration-300 hover:scale-125';
+  const filledheart = 'bi-chat-heart-fill';
 
-  useEffect (()=>{
-    if(chatAlert){
+  const navigate = useNavigate();
+
+  const gotoLikes = () => {
+    navigate('/likes');
+  };
+  const gotoChattings = () => {
+    navigate('/chattings');
+  };
+  const gotoNoti = () => {
+    navigate('/notification');
+  };
+  const gotoMyProfile = () => {
+    navigate('/myprofile');
+  };
+  const gotoMain = () => {
+    navigate('/main');
+  };
+
+  useEffect(() => {
+    if (chatAlert) {
       setHeartState(filledheart);
-    }else{
+    } else {
       setHeartState(unfilledheart);
     }
-  },[chatAlert]);
+  }, [chatAlert]);
 
   const mainconnect = () => {
     const headers = {
@@ -53,7 +71,7 @@ function Navbar({
              * TODO : 채팅 알림 있는지
              * 안읽은 채팅 존재 여부 -> setChatAlert
              */
-            if(message.alert) console.log('나 안읽은 채팅이 있다요')
+            if (message.alert) console.log('나 안읽은 채팅이 있다요');
             setChatAlert(message.alert);
           },
           {},
@@ -66,8 +84,8 @@ function Navbar({
              * TODO : 알림 있는지
              * 알림 존재 여부 -> setnotiAlert
              */
-            if(message.alert) console.log('나 받은 알림이 있다요')
-            setNotiAlert(message.alert)
+            if (message.alert) console.log('나 받은 알림이 있다요');
+            setNotiAlert(message.alert);
           },
           {},
         );
@@ -104,7 +122,7 @@ function Navbar({
              * TODO : 채팅 알림 있는지
              * 안읽은 채팅 존재 여부 -> setChatAlert
              */
-            if(message.alert) console.log('나 안읽은 채팅이 있다요')
+            if (message.alert) console.log('나 안읽은 채팅이 있다요');
             setChatAlert(message.alert);
           },
           {},
@@ -117,8 +135,8 @@ function Navbar({
              * TODO : 알림 있는지
              * 알림 존재 여부 -> setnotiAlert
              */
-            if(message.alert) console.log('나 받은 알림이 있다요')
-            setNotiAlert(message.alert)
+            if (message.alert) console.log('나 받은 알림이 있다요');
+            setNotiAlert(message.alert);
           },
           {},
         );
@@ -193,7 +211,7 @@ function Navbar({
     await http({
       method: 'get',
       url: '/alert/chat',
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
         console.log('출력해보렴', res);
@@ -211,7 +229,7 @@ function Navbar({
     await http({
       method: 'get',
       url: '/alert/noti',
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
         console.log('출력해보렴', res);
@@ -242,70 +260,111 @@ function Navbar({
     <div className="flex justify-center">
       <nav className="menu">
         <div className="menu-item">
-          {!likesNav && (
-            <Link to="/likes" className="menu-item">
-              <i className="bi bi-search-heart transition duration-300 hover:scale-125" />
-            </Link>
-          )}
-          {likesNav && <i className="bi bi-search-heart-fill" />}
-        </div>
-        <div className="menu-item">
-          {!chatlistNav && (
-            <Link
-              to="/chattings"
-              className="transition duration-300 hover:scale-125"
-            >
-              <i className={heartState} />
-            </Link>
-          )}
-          {chatlistNav && <i className="bi bi-chat-heart-fill chatlistNav" />}
-        </div>
-        {!mainNav && (
-          <Link
-            to="/main"
-            className="flex w-16 h-16 transition duration-500 hover:scale-110 bg-red-100 rounded-full mx-auto my-auto shadow-md"
-          >
-            <img
-              className="w-10 h-10 mx-auto my-auto"
-              src="/pastelheart.png"
-              alt=""
-            />
-          </Link>
-        )}
-        {mainNav && (
-          <div className="flex w-16 h-16 transition duration-500 hover:scale-110 bg-red-100 rounded-full mx-auto my-auto shadow-md">
-            <img
-              className="w-10 h-10 mx-auto my-auto"
-              src="/ommheart.png"
-              alt=""
+          <i
+            className={
+              likesNav
+                ? 'bi bi-search-heart-fill'
+                : 'bi bi-search-heart transition duration-300 hover:scale-125'
+            }
+            onClick={() => {
+              if (!likesNav) {
+                gotoLikes();
+              }
+            }}
+            aria-hidden
+          />
+          {/* {!likesNav && (
+            <i
+              className="bi bi-search-heart transition duration-300 hover:scale-125"
               onClick={() => {
-                sendMatch();
-                like();
+                gotoLikes();
               }}
-              aria-hidden="true"
+              aria-hidden
             />
-          </div>
-        )}
+          )}
+          {likesNav && <i className="bi bi-search-heart-fill" />} */}
+        </div>
         <div className="menu-item">
-          {notiNav && <i className="bi bi-bell-fill notiNav" />}
-          {!notiNav && (
-            <Link to="/notification" className="menu-item">
-              {!notiAlert  && (
-              <i className="my-2 bi bi-bell transition duration-300 hover:scale-125" />
-              )}
-              {notiAlert  && (
-              <i className="my-2 bi bi-bell-fill transition duration-300 hover:scale-125" />
-              )}
-            </Link>
+          <i
+            className={
+              chatlistNav
+                ? 'bi bi-chat-heart-fill chatlistNav'
+                : 'bi bi-chat-heart transition duration-300 hover:scale-125'
+            }
+            onClick={() => {
+              if (!chatlistNav) {
+                gotoChattings();
+              }
+            }}
+            aria-hidden
+          />
+          {/* {chatlistNav && <i className="bi bi-chat-heart-fill chatlistNav" />} */}
+        </div>
+        <div className="menu-item">
+          {!mainNav && (
+            <div className="flex w-16 h-16 transition duration-500 hover:scale-110 rounded-full mx-auto my-auto">
+              <img
+                className="w-10 h-10 mx-auto my-auto"
+                src={pastelheart}
+                alt=""
+                onClick={() => {
+                  gotoMain();
+                }}
+                aria-hidden
+              />
+            </div>
+          )}
+          {mainNav && (
+            <div className="flex w-16 h-16 transition duration-500 hover:scale-110 bg-red-100 rounded-full mx-auto my-auto shadow-md">
+              <img
+                className="w-10 h-10 mx-auto my-auto"
+                src={ommheart}
+                alt=""
+                onClick={() => {
+                  sendMatch();
+                  like();
+                }}
+                aria-hidden="true"
+              />
+            </div>
+          )}
+        </div>
+        <div className="menu-item">
+          {!notiNav && !notiAlert && (
+            <i
+              className="bi bi-bell transition duration-300 hover:scale-125"
+              onClick={() => {
+                gotoNoti();
+              }}
+              aria-hidden
+            />
+          )}
+          {!notiNav && notiAlert && (
+            <i
+              className="bi bi-bell-fill"
+              onClick={() => {
+                gotoNoti();
+              }}
+              aria-hidden
+            />
+          )}
+          {notiNav && (
+            <i className="bi bi-bell-fill notiNav" />
           )}
         </div>
         <div className="menu-item">
           {!profileNav && (
-            <Link to="/myprofile" className="menu-item">
-              <i className="bi bi-person transition duration-300 hover:scale-125" />
-            </Link>
+            <i
+              className="bi bi-person transition duration-300 hover:scale-125"
+              onClick={() => {
+                gotoMyProfile();
+              }}
+              aria-hidden
+            />
           )}
-          {profileNav && <i className="bi bi-person-fill" />}
+          {profileNav && (
+            <i className="bi bi-person-fill" />
+          )}
         </div>
       </nav>
     </div>
