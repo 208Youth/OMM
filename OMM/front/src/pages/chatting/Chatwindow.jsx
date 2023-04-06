@@ -2,9 +2,7 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import Modal from 'react-modal';
-import {
-  useLocation, useNavigate,
-} from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import http from '@/api/http.js';
 import BottomModal from '@/pages/chatting/BottomModal';
 import ReportModal from '@/pages/chatting/ReportModal';
@@ -38,7 +36,9 @@ function ChatWindow() {
   // 3. 내가 보낸 채팅 중에서 가장 최근에 보낸 채팅을 찾습니다.
   // 4. 내가 보낸 채팅이면서 가장 최근에 보낸 채팅인 경우에만 "읽음" 혹은 "안읽음" 정보를 보여줍니다.
 
-  const myChatList = messages.filter((chat1) => chat1.senderId !== room.other.otherId);
+  const myChatList = messages.filter(
+    (chat1) => chat1.senderId !== room.other.otherId,
+  );
   console.log(messages);
   console.log(myChatList);
 
@@ -86,7 +86,9 @@ function ChatWindow() {
   };
   // 아래는 read처리를 위한 fastapi의 조언, 저 함수는 다른 유자거 들어 올떄 실행되야함
   const markAsRead = (messageId) => {
-    const updatedMessages = messages.map((message) => (message.id === messageId ? { ...message, read: true } : message));
+    const updatedMessages = messages.map((message) =>
+      message.id === messageId ? { ...message, read: true } : message,
+    );
     setMessages(updatedMessages);
   };
 
@@ -147,8 +149,8 @@ function ChatWindow() {
         setRoom(response.data.roomInfo);
         setOtherNickname(response.data.roomInfo.other.nickname);
         // console.log(response.data.roomInfo.other);
-        if (response.data.roomInfo.other.image.imageContent) {
-          setOtherImage(response.data.roomInfo.other.image.imageContent);
+        if (response.data.roomInfo.other.image) {
+          setOtherImage(response.data.roomInfo.other.image);
         }
       })
       .catch((error) => {
@@ -216,14 +218,20 @@ function ChatWindow() {
 
   return (
     <div className=" text-[#364C63] w-[22.5rem] h-[48.75rem] mx-auto">
-      <div onClick={handleGoBack} className="text-2xl mx-6 py-8 hover:cursor-pointer ">
+      <div
+        onClick={handleGoBack}
+        className="text-2xl mx-6 py-8 hover:cursor-pointer "
+      >
         <span>&lt;</span>
 
         <span className="ml-3 font-sans font-extrabold text-[1.3rem]">
           {otherNickname}
         </span>
       </div>
-      <div id="recentChat" className="flex mx-auto w-[20rem] h-[39rem] overscroll-x-none overflow-y-scroll scrollbar-hide touch-pan-y text-xs rounded-lg mb-1">
+      <div
+        id="recentChat"
+        className="flex mx-auto w-[20rem] h-[39rem] overscroll-x-none overflow-y-scroll scrollbar-hide touch-pan-y text-xs rounded-lg mb-1"
+      >
         <div id="chatdetail" className="w-[20rem] mx-auto">
           <div>{/* 만약 보낸사람이 내가 아니라면 */}</div>
           <div id="Chat">
@@ -237,18 +245,20 @@ function ChatWindow() {
                     key={index}
                     className={`my-2 ${
                       // 아래 코드 주의
-                      msg.senderId !== room.other.otherId ? 'text-right' : 'text-left'
+                      msg.senderId !== room.other.otherId
+                        ? 'text-right'
+                        : 'text-left'
                     } ${lastchatindex === index ? '' : ''}`}
                   >
                     {msg.senderId !== room.other.otherId ? (
                       <div className="w-60 flex font-sans ml-20 justify-end">
-
                         {lastchatindex === index && (
-                        <span id="readen" className="text-[0.5rem] mr-1 self-end">
-
-                          {msg.read ? '' : '안읽음'}
-                        </span>
-
+                          <span
+                            id="readen"
+                            className="text-[0.5rem] mr-1 self-end"
+                          >
+                            {msg.read ? '' : '안읽음'}
+                          </span>
                         )}
 
                         {/* {msg === latestMyChat && (
@@ -258,13 +268,9 @@ function ChatWindow() {
                         )} */}
 
                         <div className="max-w-[12.5rem]  inline-block bg-gray-200 p-2 rounded-lg">
-
                           <span className="text-sm font-sans font-bold break-words whitespace-pre-line">
-                            {msg.content}
-                            {' '}
-
+                            {msg.content}{' '}
                           </span>
-
                         </div>
                         {/* <span className="font-sans">{msg.senderId}</span> */}
                       </div>
@@ -272,28 +278,32 @@ function ChatWindow() {
                       <div className="w-60 flex flex-row">
                         <span className="ml-[0.3rem]">
                           <div className="flex flex-row">
-
                             {otherImage ? (
                               <span>
-                                <img src={`data:image/png;base64,${otherImage}`} alt="slide_image" className="w-9 h-9 rounded-full mb-2 self-center" />
+                                <img
+                                  src={`data:image/png;base64,${otherImage}`}
+                                  alt="slide_image"
+                                  className="w-9 h-9 rounded-full mb-2 self-center"
+                                />
                               </span>
-
                             ) : (
-
                               <span>
-                                <img src="../../../public/defaultimage.png" alt="defualt_image" className="w-9 h-9 rounded-full mb-2 self-center" />
+                                <img
+                                  src="../../../public/defaultimage.png"
+                                  alt="defualt_image"
+                                  className="w-9 h-9 rounded-full mb-2 self-center"
+                                />
                               </span>
                             )}
                             <div className="flex flex-col">
-
-                              <div className="font-mono ml-2 mb-1 ">{otherNickname}</div>
+                              <div className="font-mono ml-2 mb-1 ">
+                                {otherNickname}
+                              </div>
                               <span className="text-sm ml-2 mr-2 font-sans font-bold break-words max-w-[12.5rem] inline-block bg-[#E6C9C6] p-2 rounded-lg m">
-
                                 {msg.content}
                               </span>
                             </div>
                           </div>
-
                         </span>
 
                         <span className="text-[0.5rem] ml-1 self-end">
