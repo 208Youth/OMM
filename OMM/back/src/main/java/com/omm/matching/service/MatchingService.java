@@ -116,7 +116,7 @@ public class MatchingService {
      */
     public NotificationResponseDto getNotificationResponseDto(Notification notification) {
         Member member = getMember(notification.getSenderId());
-        List<MemberImg> memberImgs = memberImgRepository.findAllById(member.getId());
+        List<MemberImg> memberImgs = memberImgRepository.findAllByMember(member);
         MemberImg profileImg = memberImgs.isEmpty() ? null : memberImgs.get(0);
         Map<String, Object> sender = new HashMap<>();
         sender.put("memberId", member.getId());

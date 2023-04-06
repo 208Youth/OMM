@@ -52,7 +52,7 @@ public class ChatPublisherService {
             Member myInfo = members[i];
             other.put("otherId", otherInfo.getId());
             other.put("nickname", otherInfo.getNickname());
-            other.put("image", getImg(otherInfo.getId()));
+            other.put("image", getImg(otherInfo));
             other.put("notReadIndex", chatRoom.getLastReadIndex().get(otherInfo.getId()));
 
             chatRoomDto.setOther(other);
@@ -72,8 +72,8 @@ public class ChatPublisherService {
         return myIndex == 0 ? 1 : 0;
     }
 
-    public MemberImg getImg(Long id) {
-        List<MemberImg> memberImgs = memberImgRepository.findAllById(id);
+    public MemberImg getImg(Member member) {
+        List<MemberImg> memberImgs = memberImgRepository.findAllByMember(member);
         return memberImgs.isEmpty() ? null : memberImgs.get(0);
     }
 
