@@ -221,7 +221,7 @@ function ChatWindow() {
     <div className=" text-[#364C63] w-[22.5rem] h-[48.75rem] mx-auto">
       <div
         onClick={handleGoBack}
-        className="text-2xl mx-6 py-8 hover:cursor-pointer fixed"
+        className="text-2xl mx-6 py-8 hover:cursor-pointer"
         aria-hidden
       >
         <span>&lt;</span>
@@ -232,7 +232,7 @@ function ChatWindow() {
       </div>
       <div
         id="recentChat"
-        className="flex mt-12 mx-auto w-[20rem] h-[39rem] overscroll-x-none overflow-y-scroll scrollbar-hide touch-pan-y text-xs rounded-lg mb-1"
+        className="flex mx-auto w-[20rem] h-[39rem] overscroll-x-none overflow-y-scroll scrollbar-hide touch-pan-y text-xs rounded-lg mb-1"
       >
         <div id="chatdetail" className="w-[20rem] mx-auto">
           <div>{/* 만약 보낸사람이 내가 아니라면 */}</div>
