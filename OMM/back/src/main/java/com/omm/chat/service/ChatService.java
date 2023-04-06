@@ -136,6 +136,7 @@ public class ChatService {
         ChatRoom chatRoom = chatRepository.getRoom(messageDto.getRoomId());
         chatRoom.setMsgs(id);
         chatRoom.setContent(messageDto.getContent());
+
         Map<Long, Long> lastReadIndex = chatRoom.getLastReadIndex();
         lastReadIndex.put(myInfo.getId(), id);
 
@@ -159,9 +160,12 @@ public class ChatService {
         if(sessionId != null && sessionidWithChatroomId.get(sessionId) != null) {
             if(sessionidWithChatroomId.get(sessionId).equals(messageDto.getRoomId())) {
                 message.setRead(true);
+                lastReadIndex.put(otherId, id);
             }
         }
 
+        chatRoom.setLastReadIndex(lastReadIndex);
+        chatRoom.setLastSendIndex(lastSendIndex);
         chatRepository.setRoom(chatRoom);
         chatRepository.saveMessage(message);
         return message;
