@@ -13,7 +13,7 @@ function SignupComplete() {
   return (
     <div className="bg-white w-[22.5rem] h-[48.75rem] flex">
       <div className="my-auto mx-auto">
-        <img src="./ommheart.png" alt="" className="mx-auto pb-6 w-[10rem]" />
+        <img src={ommheart} alt="" className="mx-auto pb-6 w-[10rem]" />
         <div className="text-center text-3xl text-[#364C63] mb-3">
           회원 가입 완료!
         </div>

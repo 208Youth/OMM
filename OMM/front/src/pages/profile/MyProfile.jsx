@@ -994,7 +994,9 @@ function MyProfile({ profileNav }) {
                         className="badges"
                         data-tooltip-id="my-tooltip"
                         data-tooltip-content={`${
-                          newCertinfo.job_name ? newCertinfo.job_name : '정보 없음'
+                          newCertinfo.job_name
+                            ? newCertinfo.job_name
+                            : '정보 없음'
                         }`}
                       />
                     </div>
@@ -1055,7 +1057,7 @@ function MyProfile({ profileNav }) {
               </div>
             </div>
           </div>
-          <Navbar profileNav={profileNav} />
+          <Navbar profileNav />
         </div>
       </div>
     </div>
