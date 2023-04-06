@@ -7,6 +7,7 @@ import http from '@/api/http.js';
 import BottomModal from '@/pages/chatting/BottomModal';
 import ReportModal from '@/pages/chatting/ReportModal';
 import './ChatModal.css';
+import ommheart from '../../assets/ommheart.png';
 
 function ChatWindow() {
   // const [roomId, setRoomId] = useState(localStorage.getItem('wschat.roomId'));
@@ -220,7 +221,7 @@ function ChatWindow() {
     <div className=" text-[#364C63] w-[22.5rem] h-[48.75rem] mx-auto">
       <div
         onClick={handleGoBack}
-        className="text-2xl mx-6 py-8 hover:cursor-pointer fixed"
+        className="text-2xl mx-6 py-8 hover:cursor-pointer"
         aria-hidden
       >
         <span>&lt;</span>
@@ -290,7 +291,7 @@ function ChatWindow() {
                             ) : (
                               <span>
                                 <img
-                                  src="/ommheart.png"
+                                  src={ommheart}
                                   alt="defualt_image"
                                   className="w-9 h-9 rounded-full mb-2 self-center"
                                 />
