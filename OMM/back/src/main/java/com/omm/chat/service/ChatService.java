@@ -109,8 +109,8 @@ public class ChatService {
         });
     }
 
-    public MemberImg getImg(Long id) {
-        List<MemberImg> memberImgs = memberImgRepository.findAllById(id);
+    public MemberImg getImg(Member member) {
+        List<MemberImg> memberImgs = memberImgRepository.findAllByMember(member);
         return memberImgs.isEmpty() ? null : memberImgs.get(0);
     }
 
@@ -122,7 +122,7 @@ public class ChatService {
 
         other.put("otherId", otherInfo.getId());
         other.put("nickname", otherInfo.getNickname());
-        other.put("image", getImg(otherInfo.getId()));
+        other.put("image", getImg(otherInfo).getImageContent());
         other.put("notReadIndex", chatRoom.getLastReadIndex().get(otherInfo.getId()));
 
         return other;

@@ -13,8 +13,6 @@ public interface MemberImgRepository extends JpaRepository<MemberImg, Long> {
 
     List<MemberImg> findAllByMember(Member member);
 
-    List<MemberImg> findAllById(Long id);
-
     MemberImg findFirstByMember(Member member);
 
 }
