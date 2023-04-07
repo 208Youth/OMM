@@ -14,7 +14,10 @@ function AlertMsg({ msg, deletemsg }) {
 
   const deleteMatch = (msginfo) => {
     deletemsg(msginfo);
-    // alertmsg.current.style.display = 'none';
+  };
+
+  const gotoProfile = () => {
+    navigate(`/otherprofile/${msg.sender.memberId}`);
   };
 
   const successMatch = (msginfo) => {
@@ -24,15 +27,18 @@ function AlertMsg({ msg, deletemsg }) {
       setIsOpen(false);
       setMessage('');
       dispatch(chatInfo(msginfo.senderId));
-      // navigate('/faceRecog/chat', {
-      //   state: { page: 'chat' },
-      // });
       navigate('/facerecog/chat');
     }, 2000);
   };
   return (
     <div className="w-[312px] h-[4.7rem] flex p-3 bg-white bg-opacity-60 text-xs rounded-lg mb-1">
-      <div className="w-10 h-10 self-center rounded-full object-cover">
+      <div
+        className="w-10 h-10 self-center rounded-full object-cover"
+        onClick={() => {
+          gotoProfile();
+        }}
+        aria-hidden
+      >
         {msg.sender.imageContent ? (
           <img
             src={`data:image/png;base64,${msg.sender.imageContent.imageContent}`}
