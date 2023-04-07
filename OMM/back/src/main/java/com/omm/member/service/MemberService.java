@@ -13,6 +13,7 @@ import com.omm.util.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,9 +35,9 @@ public class MemberService {
 
     private final InterestListRepository interestListRepository;
 
-    public void changeNickname(String currentMemberDidAddress,String nickname) {
+    public void changeNickname(String currentMemberDidAddress, String nickname) {
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
-            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         try {
             member.setNickname(nickname);
@@ -45,6 +46,7 @@ public class MemberService {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
         }
     }
+
     /**
      * did address 중복 체크 함수
      *
@@ -70,11 +72,11 @@ public class MemberService {
                 throw new MemberRuntimeException(MemberExceptionCode.MEMBER_ALREADY_EXIST);
             }
             Member member = Member.builder()
-                .didAddress(registDto.getHolderDid())
-                .age(registDto.getAge())
-                .gender(registDto.getGender())
-                .imageUrl(registDto.getImageUrl())
-                .build();
+                    .didAddress(registDto.getHolderDid())
+                    .age(registDto.getAge())
+                    .gender(registDto.getGender())
+                    .imageUrl(registDto.getImageUrl())
+                    .build();
             System.out.println(member.toString());
             memberRepository.save(member);
         } catch (Exception e) {
@@ -89,11 +91,11 @@ public class MemberService {
      */
     public GetMemberImageUrlResponseDto getUserFaceUrl(String didAddress) {
         return GetMemberImageUrlResponseDto.builder()
-            .didAddress(didAddress)
-            .faceUrl(memberRepository.findByDidAddress(didAddress).orElseThrow(
-                    () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS))
-                .getImageUrl())
-            .build();
+                .didAddress(didAddress)
+                .faceUrl(memberRepository.findByDidAddress(didAddress).orElseThrow(
+                                () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS))
+                        .getImageUrl())
+                .build();
     }
 
     /**
@@ -103,28 +105,28 @@ public class MemberService {
      * @param initMemberInfoRequestDto 초기 회원 정보
      */
     public void initMemberInfo(String currentMemberDidAddress,
-        InitMemberInfoRequestDto initMemberInfoRequestDto) {
+                               InitMemberInfoRequestDto initMemberInfoRequestDto) {
 
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
-            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         try {
             member.setNickname(initMemberInfoRequestDto.getNickname());
             memberRepository.save(member);
 
             MyInfo myInfo = myInfoRepository.findByMember(member)
-                .orElseThrow(
-                    () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                    .orElseThrow(
+                            () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
             myInfo.setLat(initMemberInfoRequestDto.getLat());
             myInfo.setLng(initMemberInfoRequestDto.getLng());
             myInfo.setHeight(initMemberInfoRequestDto.getHeight());
             myInfo.setContactStyle(
-                InfoContactStyle.valueOf(initMemberInfoRequestDto.getContactStyle()));
+                    InfoContactStyle.valueOf(initMemberInfoRequestDto.getContactStyle()));
             myInfo.setDrinkingStyle(
-                InfoDrinkingStyle.valueOf(initMemberInfoRequestDto.getDrinkingStyle()));
+                    InfoDrinkingStyle.valueOf(initMemberInfoRequestDto.getDrinkingStyle()));
             myInfo.setSmokingStyle(
-                InfoSmokingStyle.valueOf((initMemberInfoRequestDto.getSmokingStyle())));
+                    InfoSmokingStyle.valueOf((initMemberInfoRequestDto.getSmokingStyle())));
             myInfo.setMilitary(InfoMilitary.valueOf(initMemberInfoRequestDto.getMilitary()));
             myInfo.setPet(InfoPet.valueOf(initMemberInfoRequestDto.getPet()));
             myInfo.setMbti(InfoMBTI.valueOf(initMemberInfoRequestDto.getMbti()));
@@ -143,15 +145,15 @@ public class MemberService {
      * @param memberFilteringDto      등록 정보
      */
     public void initMemberFiltering(String currentMemberDidAddress,
-        MemberFilteringDto memberFilteringDto) {
+                                    MemberFilteringDto memberFilteringDto) {
 
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
-            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         try {
             Filtering filtering = filteringRepository.findByMember(member)
-                .orElseThrow(
-                    () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                    .orElseThrow(
+                            () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
             filtering.setAgeMin(memberFilteringDto.getAgeMin());
             filtering.setAgeMax(memberFilteringDto.getAgeMax());
@@ -160,11 +162,11 @@ public class MemberService {
             filtering.setRangeMin(memberFilteringDto.getRangeMin());
             filtering.setRangeMax(memberFilteringDto.getRangeMax());
             filtering.setContactStyle(
-                FilterContactStyle.valueOf(memberFilteringDto.getContactStyle()));
+                    FilterContactStyle.valueOf(memberFilteringDto.getContactStyle()));
             filtering.setDrinkingStyle(
-                FilterDrinkingStyle.valueOf(memberFilteringDto.getDrinkingStyle()));
+                    FilterDrinkingStyle.valueOf(memberFilteringDto.getDrinkingStyle()));
             filtering.setSmokingStyle(
-                FilterSmokingStyle.valueOf(memberFilteringDto.getSmokingStyle()));
+                    FilterSmokingStyle.valueOf(memberFilteringDto.getSmokingStyle()));
 
             filteringRepository.save(filtering);
 
@@ -181,11 +183,11 @@ public class MemberService {
      */
     public GetMemberInfoResponseDto getMemberInfo(Long memberId) {
         Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         MyInfo myInfo = myInfoRepository.findByMember(member)
-            .orElseThrow(
-                () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+                .orElseThrow(
+                        () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
 
         List<MemberImg> memberimgs = memberImgRepository.findAllByMember(member);
         List<byte[]> memberimgsblobs = new ArrayList<>();
@@ -196,20 +198,20 @@ public class MemberService {
 
         try {
             GetMemberInfoResponseDto getMemberInfoResponseDto = GetMemberInfoResponseDto.builder()
-                .nickname(member.getNickname())
-                .age(member.getAge())
-                .lat(myInfo.getLat())
-                .lng(myInfo.getLng())
-                .pr(myInfo.getPr())
-                .height(myInfo.getHeight())
-                .contactStyle(myInfo.getContactStyle().name())
-                .drinkingStyle(myInfo.getDrinkingStyle().name())
-                .smokingStyle(myInfo.getSmokingStyle().name())
-                .military(myInfo.getMilitary().name())
-                .pet(myInfo.getPet().name())
-                .mbti(myInfo.getMbti().name())
-                .profileimgs(memberimgsblobs)
-                .build();
+                    .nickname(member.getNickname())
+                    .age(member.getAge())
+                    .lat(myInfo.getLat())
+                    .lng(myInfo.getLng())
+                    .pr(myInfo.getPr())
+                    .height(myInfo.getHeight())
+                    .contactStyle(myInfo.getContactStyle().name())
+                    .drinkingStyle(myInfo.getDrinkingStyle().name())
+                    .smokingStyle(myInfo.getSmokingStyle().name())
+                    .military(myInfo.getMilitary().name())
+                    .pet(myInfo.getPet().name())
+                    .mbti(myInfo.getMbti().name())
+                    .profileimgs(memberimgsblobs)
+                    .build();
             return getMemberInfoResponseDto;
         } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
@@ -224,11 +226,11 @@ public class MemberService {
      */
     public GetMemberInfoResponseDto getMyInfo(String currentUserDidAddress) {
         Member member = memberRepository.findByDidAddress(currentUserDidAddress)
-            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         MyInfo myInfo = myInfoRepository.findByMember(member)
-            .orElseThrow(
-                () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+                .orElseThrow(
+                        () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
 
         List<MemberImg> memberimgs = memberImgRepository.findAllByMember(member);
         List<byte[]> memberimgsblobs = new ArrayList<>();
@@ -239,20 +241,20 @@ public class MemberService {
 
         try {
             GetMemberInfoResponseDto getMemberInfoResponseDto = GetMemberInfoResponseDto.builder()
-                .nickname(member.getNickname())
-                .age(member.getAge())
-                .lat(myInfo.getLat())
-                .lng(myInfo.getLng())
-                .pr(myInfo.getPr())
-                .height(myInfo.getHeight())
-                .contactStyle(myInfo.getContactStyle().name())
-                .drinkingStyle(myInfo.getDrinkingStyle().name())
-                .smokingStyle(myInfo.getSmokingStyle().name())
-                .military(myInfo.getMilitary().name())
-                .pet(myInfo.getPet().name())
-                .mbti(myInfo.getMbti().name())
-                .profileimgs(memberimgsblobs)
-                .build();
+                    .nickname(member.getNickname())
+                    .age(member.getAge())
+                    .lat(myInfo.getLat())
+                    .lng(myInfo.getLng())
+                    .pr(myInfo.getPr())
+                    .height(myInfo.getHeight())
+                    .contactStyle(myInfo.getContactStyle().name())
+                    .drinkingStyle(myInfo.getDrinkingStyle().name())
+                    .smokingStyle(myInfo.getSmokingStyle().name())
+                    .military(myInfo.getMilitary().name())
+                    .pet(myInfo.getPet().name())
+                    .mbti(myInfo.getMbti().name())
+                    .profileimgs(memberimgsblobs)
+                    .build();
             return getMemberInfoResponseDto;
         } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
@@ -267,24 +269,24 @@ public class MemberService {
      */
     public GetMemberFilteringResponseDto getMemberFiltering(String currentMemberDidAddress) {
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
-            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         Filtering filtering = filteringRepository.findByMember(member)
-            .orElseThrow(
-                () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_FILTERING_NOT_EXISTS));
+                .orElseThrow(
+                        () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_FILTERING_NOT_EXISTS));
 
         try {
             GetMemberFilteringResponseDto getMemberFilteringResponseDto = GetMemberFilteringResponseDto.builder()
-                .ageMin(filtering.getAgeMin())
-                .ageMax(filtering.getAgeMax())
-                .heightMin(filtering.getHeightMin())
-                .heightMax(filtering.getHeightMax())
-                .rangeMin(filtering.getRangeMin())
-                .rangeMax(filtering.getRangeMax())
-                .contactStyle(filtering.getContactStyle().name())
-                .drinkingStyle(filtering.getDrinkingStyle().name())
-                .smokingStyle(filtering.getSmokingStyle().name())
-                .build();
+                    .ageMin(filtering.getAgeMin())
+                    .ageMax(filtering.getAgeMax())
+                    .heightMin(filtering.getHeightMin())
+                    .heightMax(filtering.getHeightMax())
+                    .rangeMin(filtering.getRangeMin())
+                    .rangeMax(filtering.getRangeMax())
+                    .contactStyle(filtering.getContactStyle().name())
+                    .drinkingStyle(filtering.getDrinkingStyle().name())
+                    .smokingStyle(filtering.getSmokingStyle().name())
+                    .build();
             return getMemberFilteringResponseDto;
         } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_FILTERING_NOT_EXISTS);
@@ -300,14 +302,14 @@ public class MemberService {
      */
     public void postMemberImages(String currentMemberDidAddress, List<byte[]> data) {
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
-            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         try {
             data.forEach((image) -> {
                 MemberImg memberImg = MemberImg.builder()
-                    .member(member)
-                    .imageContent(image)
-                    .build();
+                        .member(member)
+                        .imageContent(image)
+                        .build();
                 memberImgRepository.save(memberImg);
             });
         } catch (Exception e) {
@@ -324,7 +326,7 @@ public class MemberService {
      */
     public void putMemberImages(String currentMemberDidAddress, List<byte[]> data) {
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
-            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         try {
             List<MemberImg> memberImages = memberImgRepository.findAllByMember(member);
@@ -342,9 +344,9 @@ public class MemberService {
 
             data.forEach((image) -> {
                 MemberImg memberImg = MemberImg.builder()
-                    .member(member)
-                    .imageContent(image)
-                    .build();
+                        .member(member)
+                        .imageContent(image)
+                        .build();
                 memberImgRepository.save(memberImg);
             });
         } catch (Exception e) {
@@ -359,24 +361,24 @@ public class MemberService {
      * @param putMemberInfoRequestDto 수정 유저 정보 객체
      */
     public void putMemberInfo(String currentMemberDidAddress,
-        PutMemberInfoRequestDto putMemberInfoRequestDto) {
+                              PutMemberInfoRequestDto putMemberInfoRequestDto) {
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
-            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         MyInfo myInfo = myInfoRepository.findByMember(member)
-            .orElseThrow(
-                () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+                .orElseThrow(
+                        () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
 
         try {
             member.setNickname(putMemberInfoRequestDto.getNickname());
 
             myInfo.setHeight(putMemberInfoRequestDto.getHeight());
             myInfo.setContactStyle(
-                InfoContactStyle.valueOf(putMemberInfoRequestDto.getContactStyle()));
+                    InfoContactStyle.valueOf(putMemberInfoRequestDto.getContactStyle()));
             myInfo.setDrinkingStyle(
-                InfoDrinkingStyle.valueOf(putMemberInfoRequestDto.getDrinkingStyle()));
+                    InfoDrinkingStyle.valueOf(putMemberInfoRequestDto.getDrinkingStyle()));
             myInfo.setSmokingStyle(
-                InfoSmokingStyle.valueOf(putMemberInfoRequestDto.getSmokingStyle()));
+                    InfoSmokingStyle.valueOf(putMemberInfoRequestDto.getSmokingStyle()));
             myInfo.setMilitary(InfoMilitary.valueOf(putMemberInfoRequestDto.getMilitary()));
             myInfo.setPet(InfoPet.valueOf(putMemberInfoRequestDto.getPet()));
             myInfo.setMbti(InfoMBTI.valueOf(putMemberInfoRequestDto.getMbti()));
@@ -397,13 +399,13 @@ public class MemberService {
      * @param memberFilteringDto      필터링 정보 객체
      */
     public void putMemberFiltering(String currentMemberDidAddress,
-        MemberFilteringDto memberFilteringDto) {
+                                   MemberFilteringDto memberFilteringDto) {
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
-            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         Filtering filtering = filteringRepository.findByMember(member)
-            .orElseThrow(
-                () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_FILTERING_NOT_EXISTS));
+                .orElseThrow(
+                        () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_FILTERING_NOT_EXISTS));
 
         try {
             filtering.setAgeMin(memberFilteringDto.getAgeMin());
@@ -413,11 +415,11 @@ public class MemberService {
             filtering.setRangeMin(memberFilteringDto.getRangeMin());
             filtering.setRangeMax(memberFilteringDto.getRangeMax());
             filtering.setContactStyle(
-                FilterContactStyle.valueOf(memberFilteringDto.getContactStyle()));
+                    FilterContactStyle.valueOf(memberFilteringDto.getContactStyle()));
             filtering.setDrinkingStyle(
-                FilterDrinkingStyle.valueOf(memberFilteringDto.getDrinkingStyle()));
+                    FilterDrinkingStyle.valueOf(memberFilteringDto.getDrinkingStyle()));
             filtering.setSmokingStyle(
-                FilterSmokingStyle.valueOf(memberFilteringDto.getSmokingStyle()));
+                    FilterSmokingStyle.valueOf(memberFilteringDto.getSmokingStyle()));
 
             filteringRepository.save(filtering);
         } catch (Exception e) {
@@ -433,13 +435,13 @@ public class MemberService {
      * @param putMemberLocationRequestDto 요청 유저 수정 위치 정보
      */
     public void putMemberLocation(String currentMemberDidAddress,
-        PutMemberLocationRequestDto putMemberLocationRequestDto) {
+                                  PutMemberLocationRequestDto putMemberLocationRequestDto) {
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
-            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         MyInfo myInfo = myInfoRepository.findByMember(member)
-            .orElseThrow(
-                () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+                .orElseThrow(
+                        () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
 
         try {
             myInfo.setLat(putMemberLocationRequestDto.getLat());
@@ -459,13 +461,13 @@ public class MemberService {
      * @param putMemberPrRequestDto   수정 자기소개 정보
      */
     public void putMemberPr(String currentMemberDidAddress,
-        PutMemberPrRequestDto putMemberPrRequestDto) {
+                            PutMemberPrRequestDto putMemberPrRequestDto) {
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
-            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         MyInfo myInfo = myInfoRepository.findByMember(member)
-            .orElseThrow(
-                () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+                .orElseThrow(
+                        () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
 
         try {
             myInfo.setPr(putMemberPrRequestDto.getPr());
@@ -483,27 +485,27 @@ public class MemberService {
      */
     public MemberCertDto getMyCertificate(String currentMemberDidAddress) {
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
-            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         MemberCert memberCert = memberCertRepository.findByMember(member)
-            .orElseThrow(
-                () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+                .orElseThrow(
+                        () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
 
         try {
             MemberCertDto memberCertDto = MemberCertDto.builder()
-                .university(memberCert.isUniversity())
-                .universityName(memberCert.getUniversityName())
-                .job(memberCert.isJob())
-                .jobNames(memberCert.getJobNames())
-                .certificate(memberCert.isCertificate())
-                .certificateNames(memberCert.getCertificateNames())
-                .health(memberCert.isHealth())
-                .healthInfo(memberCert.getHealthInfo())
-                .estate(memberCert.isEstate())
-                .estateAmount(memberCert.getEstateAmount())
-                .income(memberCert.isIncome())
-                .incomeAmount(memberCert.getIncomeAmount())
-                .build();
+                    .university(memberCert.isUniversity())
+                    .universityName(memberCert.getUniversityName())
+                    .job(memberCert.isJob())
+                    .jobNames(memberCert.getJobNames())
+                    .certificate(memberCert.isCertificate())
+                    .certificateNames(memberCert.getCertificateNames())
+                    .health(memberCert.isHealth())
+                    .healthInfo(memberCert.getHealthInfo())
+                    .estate(memberCert.isEstate())
+                    .estateAmount(memberCert.getEstateAmount())
+                    .income(memberCert.isIncome())
+                    .incomeAmount(memberCert.getIncomeAmount())
+                    .build();
             return memberCertDto;
         } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
@@ -512,32 +514,33 @@ public class MemberService {
 
     /**
      * 다른 유저 데이터 가져오기
+     *
      * @param memberId
      * @return
      */
     public MemberCertDto getMemberCertificate(Long memberId) {
         Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         MemberCert memberCert = memberCertRepository.findByMember(member)
-            .orElseThrow(
-                () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+                .orElseThrow(
+                        () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
 
         try {
             MemberCertDto memberCertDto = MemberCertDto.builder()
-                .university(memberCert.isUniversity())
-                .universityName(memberCert.getUniversityName())
-                .job(memberCert.isJob())
-                .jobNames(memberCert.getJobNames())
-                .certificate(memberCert.isCertificate())
-                .certificateNames(memberCert.getCertificateNames())
-                .health(memberCert.isHealth())
-                .healthInfo(memberCert.getHealthInfo())
-                .estate(memberCert.isEstate())
-                .estateAmount(memberCert.getEstateAmount())
-                .income(memberCert.isIncome())
-                .incomeAmount(memberCert.getIncomeAmount())
-                .build();
+                    .university(memberCert.isUniversity())
+                    .universityName(memberCert.getUniversityName())
+                    .job(memberCert.isJob())
+                    .jobNames(memberCert.getJobNames())
+                    .certificate(memberCert.isCertificate())
+                    .certificateNames(memberCert.getCertificateNames())
+                    .health(memberCert.isHealth())
+                    .healthInfo(memberCert.getHealthInfo())
+                    .estate(memberCert.isEstate())
+                    .estateAmount(memberCert.getEstateAmount())
+                    .income(memberCert.isIncome())
+                    .incomeAmount(memberCert.getIncomeAmount())
+                    .build();
             return memberCertDto;
         } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
@@ -552,11 +555,11 @@ public class MemberService {
      */
     public void putMemberCertificate(String currentMemberDidAddress, MemberCertDto memberCertDto) {
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
-            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         MemberCert memberCert = memberCertRepository.findByMember(member)
-            .orElseThrow(
-                () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+                .orElseThrow(
+                        () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
 
         try {
             memberCert.setUniversity(memberCert.isUniversity());
@@ -580,36 +583,6 @@ public class MemberService {
      */
     public GetInterestListResponseDto getMemberInterestList(Long memberId) {
         Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
-
-        try {
-            List<InterestList> interestList = interestListRepository.findAllByMember(member);
-            List<InterestDto> interestDtos = new ArrayList<>();
-            interestList.forEach((interest) -> {
-                interestDtos.add(
-                    InterestDto.builder()
-                        .interestListId(interest.getId())
-                        .name(interest.getInterest().getName())
-                        .build()
-                );
-            });
-
-            GetInterestListResponseDto getInterestListResponseDto = GetInterestListResponseDto.builder()
-                .interestList(interestDtos).build();
-            return getInterestListResponseDto;
-        } catch (Exception e) {
-            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
-        }
-    }
-
-    /**
-     * 현재 유저 관심사 정보 리스트 가져오기
-     *
-     * @param currentMemberDidAddress 멤버 주소 정보
-     * @return
-     */
-    public GetInterestListResponseDto getMyInterestList(String currentMemberDidAddress) {
-        Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
                 .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         try {
@@ -633,6 +606,45 @@ public class MemberService {
     }
 
     /**
+     * 현재 유저 관심사 정보 리스트 가져오기
+     *
+     * @param currentMemberDidAddress 멤버 주소 정보
+     * @return
+     */
+//    public GetInterestListResponseDto getMyInterestList(String currentMemberDidAddress) {
+    public GetInterestNamesResponseDto getMyInterestList(String currentMemberDidAddress) {
+        Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+
+        try {
+            List<InterestList> interestList = interestListRepository.findAllByMember(member);
+//            List<InterestDto> interestDtos = new ArrayList<>();
+//            interestList.forEach((interest) -> {
+//                interestDtos.add(
+//                        InterestDto.builder()
+//                                .interestListId(interest.getId())
+//                                .name(interest.getInterest().getName())
+//                                .build()
+//                );
+//            });
+
+            List<String> interestDtos = new ArrayList<>();
+            interestList.forEach((interest) -> {
+                interestDtos.add(interest.getInterest().getName());
+            });
+
+//            GetInterestListResponseDto getInterestListResponseDto = GetInterestListResponseDto.builder()
+//                    .interestList(interestDtos).build();
+            GetInterestNamesResponseDto getInterestListResponseDto = GetInterestNamesResponseDto.builder()
+                    .interestList(interestDtos)
+                    .build();
+            return getInterestListResponseDto;
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
+        }
+    }
+
+    /**
      * 관심사 정보 삭제
      *
      * @param interestListId 관심사 리스트 아이디
@@ -641,8 +653,8 @@ public class MemberService {
 
         try {
             InterestList interestList = interestListRepository.findById(interestListId)
-                .orElseThrow(
-                    () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+                    .orElseThrow(
+                            () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
 
             interestListRepository.delete(interestList);
         } catch (Exception e) {
@@ -660,7 +672,7 @@ public class MemberService {
     public InterestDto addInterest(String currentMemberDidAddress, String name) {
         // 먼저 현재 유저를 찾는다
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
-            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         try {
             // 현재등록된 관심사 리스트를 검색한다
@@ -673,32 +685,32 @@ public class MemberService {
             // 존재하지 않은 관심사면 새로 만들어준다
             if (!interestRepository.existsByName(name)) {
                 Interest interest = Interest.builder()
-                    .name(name).build();
+                        .name(name).build();
                 interestRepository.save(interest);
             }
 
             // 새 관심사 리스트를 생성하고 저장해준다
             Interest tempInterest = interestRepository.findByName(name)
-                .orElseThrow(
-                    () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+                    .orElseThrow(
+                            () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
 
             InterestList interestList = InterestList.builder()
-                .interest(tempInterest)
-                .member(member)
-                .build();
+                    .interest(tempInterest)
+                    .member(member)
+                    .build();
 
             interestListRepository.save(interestList);
 
             // 방금 저장한 관심사 리스트를 불러와서, 아이디값을 알아낸다. 이 값을 바탕으로 DTO를 생성해서 반환한다.
             InterestList uploadedInterestList = interestListRepository.findByMemberAndInterest(
-                    member, tempInterest)
-                .orElseThrow(
-                    () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+                            member, tempInterest)
+                    .orElseThrow(
+                            () -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
 
             InterestDto interestDto = InterestDto.builder()
-                .interestListId(uploadedInterestList.getId())
-                .name(name)
-                .build();
+                    .interestListId(uploadedInterestList.getId())
+                    .name(name)
+                    .build();
             return interestDto;
         } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
@@ -714,7 +726,7 @@ public class MemberService {
     public GetLikedMembersResponseDto getLikedMembers(String currentMemberDidAddress) {
 
         Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
-            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         List<Member> likedMembers = memberRepository.getMembersByFavoredInfo(member.getId());
 
@@ -722,12 +734,19 @@ public class MemberService {
             List<LikedMemberDto> list = new ArrayList<>();
 
             likedMembers.forEach((likedmember) -> {
+                byte[] image = {};
+                if(memberImgRepository.existsByMember(likedmember)){
+                    image = memberImgRepository.findFirstByMember(likedmember).getImageContent();
+                }else{
+                    image = null;
+                }
+
                 LikedMemberDto likedMemberDto = LikedMemberDto.builder()
-                    .memberId(likedmember.getId())
-                    .nickname(likedmember.getNickname())
-                    .age(likedmember.getAge())
-                    .imageMain(memberImgRepository.findFirstByMember(likedmember).getImageContent())
-                    .build();
+                        .memberId(likedmember.getId())
+                        .nickname(likedmember.getNickname())
+                        .age(likedmember.getAge())
+                        .imageMain(image)
+                        .build();
                 list.add(likedMemberDto);
             });
 
@@ -745,11 +764,11 @@ public class MemberService {
      */
     public void addMemberCert(String holderDid) {
         Member member = memberRepository.findByDidAddress(holderDid)
-            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         try {
             MemberCert memberCert = MemberCert.builder()
-                .member(member).build();
+                    .member(member).build();
             memberCertRepository.save(memberCert);
         } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS);
@@ -765,13 +784,13 @@ public class MemberService {
      */
     public void addNewInfo(String holderDid) {
         Member member = memberRepository.findByDidAddress(holderDid)
-            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
 
         try {
             MyInfo myInfo = MyInfo.builder()
-                .member(member)
-                .mbti(InfoMBTI.SECRET)
-                .build();
+                    .member(member)
+                    .mbti(InfoMBTI.SECRET)
+                    .build();
             myInfoRepository.save(myInfo);
         } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
@@ -785,11 +804,11 @@ public class MemberService {
      */
     public void addNewFiltering(String holderDid) {
         Member member = memberRepository.findByDidAddress(holderDid)
-            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
         try {
             Filtering filtering = Filtering.builder()
-                .member(member)
-                .build();
+                    .member(member)
+                    .build();
             filteringRepository.save(filtering);
         } catch (Exception e) {
             throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS);
@@ -803,23 +822,74 @@ public class MemberService {
             throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         });
         MemberCert memberCert = memberCertRepository.findByMember(member)
-            .orElse(new MemberCert());
+                .orElse(new MemberCert());
         return GetMemberCertResponseDto.builder()
-            .university(memberCert.getUniversityName() == null ?
-                null : memberCert.getUniversityName())
-            .job(memberCert.getJobNames() == null ?
-                null : memberCert.getJobNames())
-            .certificate(memberCert.getCertificateNames() == null ?
-                null : memberCert.getCertificateNames())
-            .estate(memberCert.getEstateAmount() == null ?
-                null : Long.valueOf(memberCert.getEstateAmount()))
-            .health(memberCert.getHealthInfo() == null ?
-                null : memberCert.getHealthInfo())
-            .income(memberCert.getIncomeAmount() == null ?
-                null : Long.valueOf(memberCert.getIncomeAmount()))
-            .build();
+                .university(memberCert.getUniversityName() == null ?
+                        null : memberCert.getUniversityName())
+                .job(memberCert.getJobNames() == null ?
+                        null : memberCert.getJobNames())
+                .certificate(memberCert.getCertificateNames() == null ?
+                        null : memberCert.getCertificateNames())
+                .estate(memberCert.getEstateAmount() == null ?
+                        null : Long.valueOf(memberCert.getEstateAmount()))
+                .health(memberCert.getHealthInfo() == null ?
+                        null : memberCert.getHealthInfo())
+                .income(memberCert.getIncomeAmount() == null ?
+                        null : Long.valueOf(memberCert.getIncomeAmount()))
+                .build();
 
     }
 
 
+    /**
+     * 유저 관심사 정보 한번에 넣기
+     * @param currentMemberDidAddress
+     * @param putMyInterestListRequestDto
+     */
+    public void putMyInterestList(String currentMemberDidAddress, PutMyInterestListRequestDto putMyInterestListRequestDto) {
+        Member member = memberRepository.findByDidAddress(currentMemberDidAddress)
+                .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_NOT_EXISTS));
+        try {
+            List<String> list = putMyInterestListRequestDto.getInterestList();
+
+            List<InterestList> previousList = interestListRepository.findAllByMember(member);
+            interestListRepository.deleteAll(previousList);
+
+            List<InterestList> nextList = new ArrayList<>();
+
+            if(list == null || list.size() == 0) return;
+            list.forEach((interest) -> {
+                if (interestRepository.existsByName(interest)) {
+                    Interest i = interestRepository.findByName(interest)
+                            .orElseThrow(() -> new MemberRuntimeException(MemberExceptionCode.MEMBER_INFO_NOT_EXISTS));
+
+                    InterestList interestList = InterestList.builder()
+                            .member(member)
+                            .interest(i)
+                            .build();
+
+                    nextList.add(interestList);
+                } else {
+                    Interest i = Interest.builder()
+                            .name(interest)
+                            .build();
+
+                    interestRepository.save(i);
+
+                    InterestList interestList = InterestList.builder()
+                            .member(member)
+                            .interest(i)
+                            .build();
+
+                    nextList.add(interestList);
+                }
+
+            });
+
+            if (nextList.size() != 0) interestListRepository.saveAll(nextList);
+
+        } catch (Exception e) {
+            throw new MemberRuntimeException(MemberExceptionCode.MEMBER_INPUT_TYPE_WRONG);
+        }
+    }
 }

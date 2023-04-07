@@ -37,7 +37,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private User createUser(Member member) {
         if (member.isBlack()) {
             throw new CustomException(ErrorCode.BLACKLIST_MEMBER);
-        } else if (member.getSuspendDate() != null & member.getSuspendDate().isAfter(LocalDate.now())) {
+        } else if (member.getSuspendDate() != null && member.getSuspendDate().isAfter(LocalDate.now())) {
             throw new CustomException(ErrorCode.SUSPEND_MEMBER);
         }
 

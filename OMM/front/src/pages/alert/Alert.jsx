@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import SockJS from 'sockjs-client/dist/sockjs';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Stomp from 'stompjs';
 import jwt_decode from 'jwt-decode';
 import AOS from 'aos';
@@ -11,6 +12,7 @@ import http from '../../api/http';
 function Alert() {
   const [alertlist, setAlertList] = useState([]);
   const token = localStorage.getItem('accesstoken');
+  const navigate = useNavigate();
   const connect = () => {
     /*
     페이지 렌더링 후 실행되는 connect()
@@ -112,16 +114,25 @@ function Alert() {
     console.log('알림변경됨', alertlist);
   }, [alertlist]);
 
+  function handleGoBack() {
+    navigate('/main');
+  }
   return (
     <div className="text-[#364C63] w-[22.5rem] h-[48.75rem] mx-auto">
       <div className="text-2xl mx-6 py-8">
-        <span>&lt;</span>
-        <span className="font-sans ml-3 font-bold">Notification</span>
+        <span
+          className="hover:cursor-pointer"
+          onClick={handleGoBack}
+          aria-hidden
+        >
+          <span>&lt;</span>
+          <span className="font-sans ml-3 font-bold">Notification</span>
+        </span>
       </div>
       <div className="mx-6 text-lg mb-3" id="msgs">
         <div className="mt-3">
-          {alertlist &&
-            alertlist.map((msg) => (
+          {alertlist
+            && alertlist.map((msg) => (
               <div data-aos="fade-up">
                 <AlertMsg
                   msg={msg}
@@ -133,7 +144,14 @@ function Alert() {
                 />
               </div>
             ))}
-          {/* <AlertMsg deletemsg={false} /> */}
+          {alertlist.length === 0 && (
+            <div className="h-[22.5rem] flex justify-center" data-aos="zoom-in">
+              <div className="flex-col my-auto text-center text-md">
+                <div>메인에서 아래의 하트를 눌러</div>
+                <div>매칭을 보내보세요!</div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
       <Navbar notiNav />

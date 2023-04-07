@@ -7,6 +7,7 @@ import http from '@/api/http.js';
 import BottomModal from '@/pages/chatting/BottomModal';
 import ReportModal from '@/pages/chatting/ReportModal';
 import './ChatModal.css';
+import ommheart from '../../assets/ommheart.png';
 
 function ChatWindow() {
   // const [roomId, setRoomId] = useState(localStorage.getItem('wschat.roomId'));
@@ -39,8 +40,8 @@ function ChatWindow() {
   const myChatList = messages.filter(
     (chat1) => chat1.senderId !== room.other.otherId,
   );
-  console.log(messages);
-  console.log(myChatList);
+  // console.log(messages);
+  // console.log(myChatList);
 
   const latestMyChat = myChatList.find((chat1) => chat1.read === false);
   console.log(latestMyChat);
@@ -49,7 +50,7 @@ function ChatWindow() {
   };
   const navigate = useNavigate();
   function handleGoBack() {
-    navigate(-1);
+    navigate('/chattings');
   }
   const closeModal = () => {
     setIsOpen(false);
@@ -81,12 +82,11 @@ function ChatWindow() {
     // Authorization: token,
   };
 
-  const roomHeader = {
-    roomId,
-  };
   // 아래는 read처리를 위한 fastapi의 조언, 저 함수는 다른 유자거 들어 올떄 실행되야함
   const markAsRead = (messageId) => {
-    const updatedMessages = messages.map((message) => (message.id === messageId ? { ...message, read: true } : message));
+    const updatedMessages = messages.map((message) =>
+      message.id === messageId ? { ...message, read: true } : message,
+    );
     setMessages(updatedMessages);
   };
 
@@ -105,6 +105,7 @@ function ChatWindow() {
 
   const connect = () => {
     console.log('connect');
+    let reconnect = 0;
     stompClient.connect(
       headers,
       (frame) => {
@@ -119,12 +120,12 @@ function ChatWindow() {
         });
       },
       (error) => {
-        // if(reconnect++ < 5) {
-        //   setTimeout(function() {
-        //     console.log("connection reconnect");
-        //     connect();
-        //   },10*1000);
-        // }
+        if(reconnect++ < 5) {
+          setTimeout(function() {
+            console.log("connection reconnect");
+            connect();
+          },10*1000);
+        }
       },
     );
   };
@@ -139,9 +140,9 @@ function ChatWindow() {
     })
       .then((response) => {
         console.log('채팅방 정보를 가져옴');
-        console.log(response);
+        // console.log(response);
         // setRoom(response.data.roomInfo);
-        console.log(response.data.roomInfo.msgs);
+        // console.log(response.data.roomInfo.msgs);
         // console.log(response.data.roomInfo.other.image.imageContent);
         setMessages([...response.data.payload]);
         setRoom(response.data.roomInfo);
@@ -182,7 +183,6 @@ function ChatWindow() {
       );
     });
     setMessage('');
-    stompClient.disconnect();
   };
 
   const recvReadDto = (readIndex) => {
@@ -206,20 +206,24 @@ function ChatWindow() {
   };
 
   useEffect(() => {
-    const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
-    const stompClient = Stomp.over(ws);
-    ws.onmes = () => {
-      console.log('WebSocket connected!!!');
-    };
+    // const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
+    // const stompClient = Stomp.over(ws);
+    // ws.onmes = () => {
+    //   console.log('WebSocket connected!!!');
+    // };
     findRoom();
     connect();
+    return function cleanup() {
+      stompClient.disconnect();
+    };
   }, []);
 
   return (
     <div className=" text-[#364C63] w-[22.5rem] h-[48.75rem] mx-auto">
       <div
         onClick={handleGoBack}
-        className="text-2xl mx-6 py-8 hover:cursor-pointer "
+        className="text-2xl mx-6 py-8 hover:cursor-pointer"
+        aria-hidden
       >
         <span>&lt;</span>
 
@@ -268,8 +272,7 @@ function ChatWindow() {
 
                         <div className="max-w-[12.5rem]  inline-block bg-gray-200 p-2 rounded-lg">
                           <span className="text-sm font-sans font-bold break-words whitespace-pre-line">
-                            {msg.content}
-                            {' '}
+                            {msg.content}{' '}
                           </span>
                         </div>
                         {/* <span className="font-sans">{msg.senderId}</span> */}
@@ -288,14 +291,18 @@ function ChatWindow() {
                               </span>
                             ) : (
                               <span>
-                                <img src="/ommheart.png" alt="defualt_image" className="w-9 h-9 rounded-full mb-2 self-center" />
+                                <img
+                                  src={ommheart}
+                                  alt="defualt_image"
+                                  className="w-9 h-9 rounded-full mb-2 self-center"
+                                />
                               </span>
                             )}
                             <div className="flex flex-col">
                               <div className="font-mono ml-2 mb-1 ">
                                 {otherNickname}
                               </div>
-                              <span className="text-sm ml-2 mr-2 font-sans font-bold break-words max-w-[12.5rem] inline-block bg-[#E6C9C6] p-2 rounded-lg m">
+                              <span className="text-sm ml-2 mr-2 font-sans font-bold break-words w-fit max-w-[12.5rem] inline-block bg-[#E6C9C6] p-2 rounded-lg m">
                                 {msg.content}
                               </span>
                             </div>
@@ -338,10 +345,15 @@ function ChatWindow() {
                 </button>
                 <input
                   type="text"
-                  className="rounded-md bg-[#F2EAF2] w-60 h-11 self-center"
+                  className="rounded-md bg-[#F2EAF2] w-60 h-11 self-center pl-2"
                   value={message}
                   onChange={(e) => {
                     setMessage(e.target.value);
+                  }}
+                  onKeyUp={(e) => {
+                    if (e.key === 'Enter') {
+                      sendMessage();
+                    }
                   }}
                 />
                 {/* <button onClick={sendMessage}>Send</button> */}

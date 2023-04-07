@@ -19,7 +19,7 @@ function Login() {
   const [iden, setIden] = useState(null);
   const [pk, setPK] = useState(null);
   const [isMember, setIsMember] = useState(false);
-  const didVC = JSON.parse(localStorage.getItem('DIDvc'))
+  const didVC = JSON.parse(localStorage.getItem('DIDvc'));
   // let ethrDidOnGoerliNamed = '';
   const [ethrDidOnGoerliNamed, setEthrDidOnGoerliNamed] = useState(null);
   useEffect(() => {
@@ -28,9 +28,9 @@ function Login() {
         navigate('/signup');
       }, 3000);
     } else if (localStorage.getItem('DID') != null) {
-      const PK = JSON.parse(localStorage.getItem('keypair')).privateKey
-      const IDEN = JSON.parse(localStorage.getItem('keypair')).identifier
-      const DID = JSON.parse(localStorage.getItem('DID')).did
+      const PK = JSON.parse(localStorage.getItem('keypair')).privateKey;
+      const IDEN = JSON.parse(localStorage.getItem('keypair')).identifier;
+      const DID = JSON.parse(localStorage.getItem('DID')).did;
       setIsMember(true);
       setDid(JSON.parse(localStorage.getItem('DID')).did);
       setIden(JSON.parse(localStorage.getItem('keypair')).identifier);
@@ -74,6 +74,7 @@ function Login() {
   //   // navigate('/main');
   // };
   const ommLogin = async () => {
+    setIsLoading(true);
     console.log(didVC);
     const vpPayload = {
       vp: {
@@ -82,7 +83,7 @@ function Login() {
         verifiableCredential: didVC,
       },
     };
-    console.log(vpPayload)
+    console.log(vpPayload);
     console.log('왜안와', ethrDidOnGoerliNamed);
     const vpJwt = await createVerifiablePresentationJwt(vpPayload, ethrDidOnGoerliNamed);
     console.log(vpJwt);

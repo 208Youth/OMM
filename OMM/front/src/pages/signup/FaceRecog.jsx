@@ -1,10 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { TinyFaceDetectorOptions } from 'face-api.js';
 import * as faceapi from 'face-api.js';
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
+import jwt_decode from 'jwt-decode';
 import './FaceRecog.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import http from '../../api/http';
+import ommheart from '../../assets/ommheart.png';
 
 const MODEL_URL = '/models';
 // 비디오 사이즈 설정
@@ -31,9 +35,10 @@ function FaceRecog({ setStep }) {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const token = localStorage.getItem('accesstoken');
+
   // axios 로 fastapi 에 사진 요청보내기
   // 이미지 받아오기
-  const token = localStorage.getItem('accesstoken');
   async function getImg() {
     // axios로 fastapi 에 이미지 보내기
     await http({
@@ -132,7 +137,6 @@ function FaceRecog({ setStep }) {
 
     // 안면 인식 부분
     const faceDetecting = async () => {
-      // setNotice(['인', '증', '중', '입', '니', '다']);
       setNotice('인증 중입니다.');
       const detections = await faceapi
         .detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions())
@@ -157,7 +161,7 @@ function FaceRecog({ setStep }) {
         const result = faceMatcher.findBestMatch(matched.descriptor);
         const drawBox = new faceapi.draw.DrawBox(box);
         drawBox.draw(canvas);
-        if (result._distance > 0.4 || result._label === 'unknown') {
+        if (result._distance > 0.5 || result._label === 'unknown') {
           setRecog(true);
           console.log('다른사람인디.');
         } else if (result.label === myinfo.didAddress) {
@@ -165,6 +169,7 @@ function FaceRecog({ setStep }) {
           setRecog(true);
           setisRight(true);
           setNotice('인증 완료!');
+          navigate('/loading');
         } else {
           setRecog(true);
           console.log('다른사람인디.');
@@ -213,12 +218,8 @@ function FaceRecog({ setStep }) {
         video.remove();
         canvas.remove();
       }, 2000);
-      if (whatpage === 'chat') {
-        console.log('대기로 이동');
-        navigate('/loading');
-      } else {
-        setStep(true);
-      }
+      console.log('대기로 이동');
+      navigate('/loading');
     } else if (recog && !isRight) {
       const stream = videoRef.current.srcObject;
       const tracks = stream.getTracks();
@@ -260,7 +261,7 @@ function FaceRecog({ setStep }) {
       >
         <div className="mx-auto text-center">
           <img
-            src={whatpage === 'chat' ? '/ommheart.png' : '/heart-step-1.svg'}
+            src={whatpage === 'chat' ? { ommheart } : '/heart-step-1.svg'}
             alt=""
             className={
               whatpage === 'chat'
@@ -296,14 +297,6 @@ function FaceRecog({ setStep }) {
               className="w-64 mx-auto my-10 rounded-3xl absolute left-7"
             />
           </div>
-          {/* {isStartDetect &&
-            notice &&
-            Array.isArray(notice) &&
-            notice.map((one) => (
-              <div className="text-center text-[#364C63] mt-5 bouncing-text">
-                <div className={one}>{one}</div>
-              </div>
-            ))} */}
           {isStartDetect && notice && (
             <div className="text-center text-[#364C63] mt-5">{notice}</div>
           )}

@@ -1,5 +1,6 @@
 // 변경
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
+
 import './Pslider.css';
 // import './Profile.css';
 import { Tooltip } from 'react-tooltip';
@@ -22,15 +23,16 @@ import universityNo from '../../assets/university_no.svg';
 import certificateYes from '../../assets/certificate_yes.svg';
 import certificateNo from '../../assets/certificate_no.svg';
 import location from '../../assets/location.svg';
-import Pslider from '../../components/Pslider';
+// import Pslider from '../../components/Pslider';
 import Navbar from '../../components/nav-bar';
 import userarrow from '../../assets/userarrow.svg';
 import MyinfoSetModal from './MyinfoSetModal';
-import MyinfoSetModal3 from './MyinfoSetModal3';
 import MyinfoSetModal2 from './MyinfoSetModal2';
+import MyinfoSetModal3 from './MyinfoSetModal3';
 import http from '../../api/http';
 // props를 통해 userid를 받고 claose 버튼을 눌러서 해당 userid의
 // 아니면 메인 페이지에 해당 컴포넌트를 아예 합쳐버릴까
+const Pslider = lazy(() => import('../../components/Pslider'));
 
 function InterestList({ interest }) {
   return (
@@ -402,7 +404,10 @@ function MyProfile({ profileNav }) {
           isOpen={MymodalIsOpen2}
           onRequestClose={closeMyModal2}
         >
-          <MyinfoSetModal2 setModal={closeMyModal2} />
+          <MyinfoSetModal2
+            setModal={closeMyModal2}
+            filterInfomation={filterInfomation}
+          />
         </Modal>
       </div>
       <div className="text-center">
@@ -415,8 +420,10 @@ function MyProfile({ profileNav }) {
         </Modal>
       </div>
       <div>
-        <div className="absolute top-20 left-0 w-full z-5">
-          <Pslider profileImg={basicInfomation.profileimgs} />
+        <div className="absolute w-full z-5">
+          <Suspense fallback={<div>Loading...</div>}>
+            <Pslider profileImg={basicInfomation.profileimgs} />
+          </Suspense>
           <div>
             <Modal
               isOpen={uploadImg}
@@ -443,19 +450,14 @@ function MyProfile({ profileNav }) {
                 </div>
               </div>
 
-              <span className="text-3xl ml-2">{basicInfomation.nickname}</span>
-              <span>
-                {' '}
-                {basicInfomation.age}
-              </span>
-              <div className="text-slate-500 text-sm ml-2">
-                <span className="inline-block">
-                  <img src={location} alt="" width={10} />
+              <div className="mb-8">
+                <span className="text-4xl m-3 font-light mb-8 text-[#364C63]">
+                  {basicInfomation.nickname}
                 </span>
-                <div className="flex justify-between">
-                  <span className="mb-1">{basicInfomation.lat}</span>
-                  <span className="flex justify-end">위치수정</span>
-                </div>
+                <span className="text-[#364C63] text-2xl">
+                  {' '}
+                  {basicInfomation.age}
+                </span>
               </div>
               <div>
                 <hr className="thickhr" />
@@ -466,10 +468,14 @@ function MyProfile({ profileNav }) {
                     <textarea
                       maxLength={40}
                       disabled={disabled}
-                      className="m-3 break-words h-20 resize-none overflow-hidden focus:ring-2 focus:ring-blue-300 text-slate-600 text-sm bg-transparent border-none outline-none w-full font-sans"
+                      className="m-3 break-words h-20 resize-none overflow-hidden focus:ring-2 focus:ring-blue-200 text-slate-600 text-sm bg-transparent border-none outline-none w-full font-sans"
                       type="text"
                       value={newPr}
-                      placeholder={basicInfomation.pr ? (basicInfomation.pr) : '당신에게 OMM...'}
+                      placeholder={
+                        basicInfomation.pr
+                          ? basicInfomation.pr
+                          : '당신에게 OMM...'
+                      }
                       onChange={(e) => {
                         setnewPr(e.target.value);
                         console.log(newPr);
@@ -518,9 +524,7 @@ function MyProfile({ profileNav }) {
                           aria-hidden
                           className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
                         >
-                          {basicInfomation.height}
-                          {' '}
-                          cm
+                          {basicInfomation.height} cm
                         </span>
                         <div
                           onClick={() => {
@@ -687,7 +691,7 @@ function MyProfile({ profileNav }) {
                       aria-hidden
                     >
                       <div className="flex items-center hover:text-[#F59FB1]">
-                        <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black hover:text-[#F59FB1]">
+                        <span className="hover:cursor-pointer font-sans font-semibold text-black hover:text-[#F59FB1]">
                           설정
                         </span>
 
@@ -770,14 +774,15 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
+                      <span
+                        onClick={() => {
+                          openMyModal2();
+                        }}
+                        aria-hidden
+                        className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
+                      >
                         {' '}
-                        {filterInfomation.age_min}
-                        {' '}
-                        -
-                        {' '}
-                        {filterInfomation.age_max}
-                        {' '}
+                        {filterInfomation.age_min} - {filterInfomation.age_max}{' '}
                         살
                       </span>
                       <div>
@@ -795,12 +800,15 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
-                        {filterInfomation.height_min}
-                        {' '}
-                        -
-                        {' '}
-                        {filterInfomation.max}
+                      <span
+                        onClick={() => {
+                          openMyModal2();
+                        }}
+                        aria-hidden
+                        className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black mr-1"
+                      >
+                        {filterInfomation.height_min} -{' '}
+                        {filterInfomation.height_max}
                         cm
                       </span>
                       <div>
@@ -818,15 +826,16 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
+                      <span
+                        onClick={() => {
+                          openMyModal2();
+                        }}
+                        aria-hidden
+                        className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
+                      >
                         {' '}
-                        {filterInfomation.range_min}
-                        {' '}
-                        -
-                        {' '}
-                        {filterInfomation.range_max}
-                        {' '}
-                        km
+                        {filterInfomation.range_min} -{' '}
+                        {filterInfomation.range_max} km
                       </span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
@@ -843,7 +852,13 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
+                      <span
+                        onClick={() => {
+                          openMyModal2();
+                        }}
+                        aria-hidden
+                        className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
+                      >
                         {contactStyleText2}
                       </span>
                       <div>
@@ -855,13 +870,25 @@ function MyProfile({ profileNav }) {
                 <hr />
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span className="font-sans font-semibold text-black">
+                    <span
+                      onClick={() => {
+                        openMyModal2();
+                      }}
+                      aria-hidden
+                      className="font-sans font-semibold text-black"
+                    >
                       음주 스타일
                     </span>
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
+                      <span
+                        onClick={() => {
+                          openMyModal2();
+                        }}
+                        aria-hidden
+                        className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
+                      >
                         {drinkingStyleText2}
                       </span>
                       <div>
@@ -879,7 +906,13 @@ function MyProfile({ profileNav }) {
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
+                      <span
+                        onClick={() => {
+                          openMyModal2();
+                        }}
+                        aria-hidden
+                        className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
+                      >
                         {smokingStyleText2}
                       </span>
                       <div>
@@ -896,7 +929,7 @@ function MyProfile({ profileNav }) {
                     aria-hidden
                     className="flex items-center m-2"
                   >
-                    <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black hover:text-[#F59FB1]">
+                    <span className="hover:cursor-pointer font-sans font-semibold text-black hover:text-[#F59FB1]">
                       설정
                     </span>
                     <div>
@@ -906,7 +939,7 @@ function MyProfile({ profileNav }) {
                 </div>
 
                 <div className="mb-16">
-                  <div className="my-5 ml-10">
+                  <div className="my-5 ml-10 flex flex-wrap">
                     <div className="inline-block">
                       <Tooltip id="my-tooltip" />
                       <img
@@ -914,10 +947,13 @@ function MyProfile({ profileNav }) {
                           newCertinfo.health !== false ? healthYes : healthNo
                         }
                         alt="#"
-                        className="badges"
+                        className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={`${newCertinfo.health_info ? newCertinfo.health_info : '없음'}`}
-
+                        data-tooltip-content={`${
+                          newCertinfo.health
+                            ? newCertinfo.health_info
+                            : '정보 없음'
+                        }`}
                       />
                     </div>
                     <div className="inline-block">
@@ -928,18 +964,24 @@ function MyProfile({ profileNav }) {
                             : universityNo
                         }
                         alt="#"
-                        className="badges"
+                        className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={`${newCertinfo.unversity_name ? newCertinfo.unversity_name : '없음'}`}
+                        data-tooltip-content={`${
+                          newCertinfo.university
+                            ? newCertinfo.university_name
+                            : '정보 없음'
+                        }`}
                       />
                     </div>
                     <div className="inline-block">
                       <img
                         src={newCertinfo.job !== false ? jobYes : jobNo}
                         alt="#"
-                        className="badges"
+                        className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={`${newCertinfo.job_name ? newCertinfo.job_name : '무직'}`}
+                        data-tooltip-content={`${
+                          newCertinfo.job ? newCertinfo.job_name : '정보 없음'
+                        }`}
                       />
                     </div>
                     <div className="inline-block">
@@ -950,8 +992,13 @@ function MyProfile({ profileNav }) {
                             : certificateNo
                         }
                         alt="#"
-                        className="badges"
-                        data-tooltip-content={`${newCertinfo.certificate_name ? newCertinfo.certificate_name : '없음'}`}
+                        className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
+                        data-tooltip-id="my-tooltip"
+                        data-tooltip-content={`${
+                          newCertinfo.certificate
+                            ? newCertinfo.certificate_names
+                            : '정보 없음'
+                        }`}
                       />
                     </div>
                     <div className="inline-block">
@@ -960,9 +1007,13 @@ function MyProfile({ profileNav }) {
                           newCertinfo.estate !== false ? estateYes : estateNo
                         }
                         alt="#"
-                        className="badges"
+                        className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={`${newCertinfo.astate_amount ? newCertinfo.astate_amount : '없음'}`}
+                        data-tooltip-content={`${
+                          newCertinfo.estate
+                            ? newCertinfo.estate_amount
+                            : '정보 없음'
+                        }`}
                       />
                     </div>
                     <div className="inline-block">
@@ -971,9 +1022,13 @@ function MyProfile({ profileNav }) {
                           newCertinfo.income !== false ? incomeYes : incomeNo
                         }
                         alt="#"
-                        className="badges"
+                        className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
                         data-tooltip-id="my-tooltip"
-                        data-tooltip-content={`${newCertinfo.income_amount ? newCertinfo.income_amount : '없음'}`}
+                        data-tooltip-content={`${
+                          newCertinfo.income
+                            ? newCertinfo.income_amount
+                            : '정보 없음'
+                        }`}
                       />
                     </div>
                   </div>
@@ -986,7 +1041,7 @@ function MyProfile({ profileNav }) {
               </div>
             </div>
           </div>
-          <Navbar profileNav={profileNav} />
+          <Navbar profileNav />
         </div>
       </div>
     </div>

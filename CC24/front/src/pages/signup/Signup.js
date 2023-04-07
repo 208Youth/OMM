@@ -32,7 +32,7 @@ function Signup() {
   const customStyles = {
     content: {
       borderRadius: '20px',
-      width:'300px',
+      width: '300px',
       top: '50%',
       left: '50%',
       right: 'auto',
@@ -45,7 +45,9 @@ function Signup() {
 
   console.log(localStorage.getItem('DID'));
   if (localStorage.getItem('DID')) {
-    setTimeout(() => {navigate('/main');}, 3000)  
+    setTimeout(() => {
+      navigate('/main');
+    }, 1000);
   }
   const sendInfo = () => {
     const info = {
@@ -114,14 +116,16 @@ function Signup() {
         window.localStorage.setItem('IdenVC', JSON.stringify(res.data.vcJwt));
       })
       .then((res) => {
-        console.log(res)
-        getVC()
+        console.log(res);
+        getVC();
       })
       .catch((err) => {
         console.log(err);
       });
-      setAlertModal(true); 
-      setTimeout(() => {navigate('/main');}, 3000)  
+    setAlertModal(true);
+    setTimeout(() => {
+      navigate('/main');
+    }, 3000);
   };
 
   useEffect(() => {
@@ -469,7 +473,13 @@ function Signup() {
                 </button>
               )}
               {faceComplete && idenComplete && passwordComplete && (
-                <button onClick={() => { signup(); }} type="button" className="btn">
+                <button
+                  onClick={() => {
+                    signup();
+                  }}
+                  type="button"
+                  className="btn"
+                >
                   회원 가입
                 </button>
               )}

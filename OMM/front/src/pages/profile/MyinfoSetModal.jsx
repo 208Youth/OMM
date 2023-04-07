@@ -5,10 +5,12 @@ import http from '../../api/http';
 // import CloseBtn from '../../assets/CloseBtn.svg';
 import './Profile.css';
 import CloseBtn from '../../assets/CloseBtn.svg';
+// import { useLocation, useNavigate } from 'react-router-dom';
 
 function MyinfoSetModal(props) {
   const { setModal, basicInformation } = props;
   const [myinfo, setMyInfo] = useState(basicInformation);
+  // const navigate = useNavigate();
 
   const token = localStorage.getItem('accesstoken');
   //   height: '',
@@ -63,10 +65,13 @@ function MyinfoSetModal(props) {
         console.log(data);
 
         setModal(false);
+        location.reload();
       })
       .catch((err) => {
         console.log(err);
-        console.log('담아줄 데이터', data);
+        console.log('담아줄 데이터');
+        alert('모든 정보를 설정해 주세요');
+        // location.reload();
       });
   };
   useEffect(() => {
@@ -81,7 +86,7 @@ function MyinfoSetModal(props) {
           onClick={() => setModal(true)}
           src={CloseBtn}
           alt="닫기"
-          className="w-8 h-8"
+          className="w-8 h-8 hover:cursor-pointer "
           aria-hidden="true"
         />
       </div>
@@ -154,11 +159,11 @@ function MyinfoSetModal(props) {
                     htmlFor={`contact${index + 1}`}
                     className={`peer-checked/contact${index + 1}:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1`}
                   >
-                    {style === 'PREFER_MSG' ? '카톡러'
+                    {style === 'PREFER_MSG' ? '카톡 자주'
                       : style === 'PREFER_CALL' ? '전화'
                         : style === 'PREFER_FACECALL' ? '영상통화'
                           : style === 'NOT_MSG' ? '카톡 별로'
-                            : style === 'PREFER_OFFLINE' ? '당장 만나'
+                            : style === 'PREFER_OFFLINE' ? '직접 만나'
                               : ''}
                   </label>
                 </div>
@@ -190,9 +195,9 @@ function MyinfoSetModal(props) {
                     htmlFor={`smoke${index + 1}`}
                     className={`peer-checked/smoke${index + 1}:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1`}
                   >
-                    {style === 'NOT' ? '비흡연러'
-                      : style === 'SOMETIMES' ? '가끔'
-                        : style === 'OFTEN' ? '구름과자 예술가'
+                    {style === 'NOT' ? '비흡연자'
+                      : style === 'SOMETIMES' ? '진짜 가끔'
+                        : style === 'OFTEN' ? '자주 핌'
                           : style === 'STOPPING' ? '금연중' : ''}
                   </label>
                 </div>
