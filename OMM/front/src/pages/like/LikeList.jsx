@@ -21,7 +21,6 @@ function LikeList() {
       },
     })
       .then((res) => {
-        console.log('좋아요 목록 가져오기', res.data.liked_list);
         setLikes(res.data.liked_list);
       })
       .catch((err) => {
@@ -63,7 +62,7 @@ function LikeList() {
               data-aos-offse="120"
             >
               <img
-                src={`data:image/png;base64,${person.image_main}`}
+                src={person.image_main ? `data:image/png;base64,${person.image_main}` : '/defaultimage.png'}
                 alt=""
                 className="w-36 h-56 rounded-2xl object-cover"
               />
