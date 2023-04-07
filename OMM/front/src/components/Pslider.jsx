@@ -93,12 +93,13 @@ function Pslider({ mainImg, profileImg, name, age }) {
               </div>
             </SwiperSlide>
           ))}
-        {!profileImg && location.pathname.includes('profile') && (
-          <SwiperSlide className="absolute top-5 flex content-center">
-            <img src="/defaultimage.png" alt="slide_image" />
-            <div className="flex absolute bottom-0 left-[5%] w-fit h-[10%] mx-auto" />
-          </SwiperSlide>
-        )}
+        {!profileImg ||
+          (profileImg?.length == 0 && location.pathname.includes('profile') && (
+            <SwiperSlide className="absolute top-5 flex content-center">
+              <img src="/defaultimage.png" alt="slide_image" />
+              <div className="flex absolute bottom-0 left-[5%] w-fit h-[10%] mx-auto" />
+            </SwiperSlide>
+          ))}
         {profileImg &&
           location.pathname.includes('profile') &&
           profileImg.map((img, index) => (

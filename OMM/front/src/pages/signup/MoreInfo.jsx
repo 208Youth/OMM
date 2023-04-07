@@ -11,12 +11,12 @@ function MoreInfo({ setStep }) {
   const user = useSelector((state) => state.user);
   console.log(user.nickname);
   const [moreinfo, setMoreInfo] = useState({
-    nickname: user.nickname,
-    height: user.height,
-    lat: user.lat,
-    lng: user.lng,
-    highschool: user.highschool,
-    military: user.military,
+    nickname: '',
+    height: 0,
+    lat: '',
+    lng: '',
+    highschool: '',
+    military: '',
   });
   const next = () => {
     if (
