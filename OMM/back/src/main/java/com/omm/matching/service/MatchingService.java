@@ -121,7 +121,12 @@ public class MatchingService {
         Map<String, Object> sender = new HashMap<>();
         sender.put("memberId", member.getId());
         sender.put("nickname", member.getNickname());
-        sender.put("imageContent", profileImg);
+        if(profileImg == null) {
+            sender.put("imageContent", null);
+        }
+        else {
+            sender.put("imageContent", profileImg.getImageContent());
+        }
         return NotificationResponseDto.builder()
                 .id(notification.getId())
                 .sender(sender)
