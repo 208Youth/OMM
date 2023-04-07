@@ -734,11 +734,18 @@ public class MemberService {
             List<LikedMemberDto> list = new ArrayList<>();
 
             likedMembers.forEach((likedmember) -> {
+                byte[] image = {};
+                if(memberImgRepository.existsByMember(likedmember)){
+                    image = memberImgRepository.findFirstByMember(likedmember).getImageContent();
+                }else{
+                    image = null;
+                }
+
                 LikedMemberDto likedMemberDto = LikedMemberDto.builder()
                         .memberId(likedmember.getId())
                         .nickname(likedmember.getNickname())
                         .age(likedmember.getAge())
-                        .imageMain(memberImgRepository.findFirstByMember(likedmember).getImageContent())
+                        .imageMain(image)
                         .build();
                 list.add(likedMemberDto);
             });
