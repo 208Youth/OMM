@@ -968,7 +968,7 @@ function MyProfile({ profileNav }) {
                         data-tooltip-id="my-tooltip"
                         data-tooltip-content={`${
                           newCertinfo.university
-                            ? newCertinfo.unversity_name
+                            ? newCertinfo.university_name
                             : '정보 없음'
                         }`}
                       />
