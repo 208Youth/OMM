@@ -65,7 +65,7 @@ function MyinfoSetModal(props) {
         console.log(data);
 
         setModal(false);
-        navigate('myprofile');
+        location.reload();
       })
       .catch((err) => {
         console.log(err);
