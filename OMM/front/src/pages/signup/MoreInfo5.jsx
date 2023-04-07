@@ -87,6 +87,7 @@ function MoreInfo5({ setStep }) {
   }, [moreinfo]);
 
   async function sendMyInfo() {
+    console.log('보낼 내정보', myInfo);
     await http({
       method: 'post',
       url: '/member/info',
@@ -106,6 +107,7 @@ function MoreInfo5({ setStep }) {
   }
 
   async function sendPreferInfo() {
+    console.log('보낼 선호정보', myFav);
     await http({
       method: 'post',
       url: '/member/filtering',
