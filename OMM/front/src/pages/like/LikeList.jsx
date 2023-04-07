@@ -38,16 +38,19 @@ function LikeList() {
 
   return (
     <div className="text-[#364C63] w-[22.5rem] h-[48.75rem] mx-auto">
-      <div
-        onClick={handleGoBack}
-        className="hover:cursor-pointer text-2xl mx-6 py-8"
-        aria-hidden
-      >
-        <span>
-          &lt;
+      <div>
+        <span
+          onClick={handleGoBack}
+          className=" text-2xl mx-6 py-8 hover:cursor-pointer"
+          aria-hidden
 
+        >
+          <span>
+            &lt;
+
+          </span>
+          <span className="ml-3 font-sans font-bold">OMM List</span>
         </span>
-        <span className="ml-3 font-sans font-bold">OMM List</span>
       </div>
       <div className="mx-6 flex flex-wrap justify-between">
         {likes

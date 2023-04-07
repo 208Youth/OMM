@@ -60,10 +60,13 @@ function MyinfoSetModal3({ setModal }) {
         console.log(res);
         alert('관심사가 저장되었습니다.');
         setModal(true);
+        location.reload();
       })
       .catch((err) => {
         console.log(err);
+        alert('모든 정보를 입력해 주세요.');
         console.log(interestList);
+        // location.reload();
       });
   };
 

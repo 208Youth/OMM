@@ -5,10 +5,12 @@ import http from '../../api/http';
 // import CloseBtn from '../../assets/CloseBtn.svg';
 import './Profile.css';
 import CloseBtn from '../../assets/CloseBtn.svg';
+// import { useLocation, useNavigate } from 'react-router-dom';
 
 function MyinfoSetModal(props) {
   const { setModal, basicInformation } = props;
   const [myinfo, setMyInfo] = useState(basicInformation);
+  // const navigate = useNavigate();
 
   const token = localStorage.getItem('accesstoken');
   //   height: '',
@@ -63,11 +65,13 @@ function MyinfoSetModal(props) {
         console.log(data);
 
         setModal(false);
+        location.reload();
       })
       .catch((err) => {
         console.log(err);
-        console.log('담아줄 데이터', data);
+        console.log('담아줄 데이터');
         alert('모든 정보를 설정해 주세요');
+        // location.reload();
       });
   };
   useEffect(() => {
