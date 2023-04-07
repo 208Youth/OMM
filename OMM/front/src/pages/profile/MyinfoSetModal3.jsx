@@ -64,8 +64,9 @@ function MyinfoSetModal3({ setModal }) {
       })
       .catch((err) => {
         console.log(err);
+        alert('모든 정보를 입력해 주세요.');
         console.log(interestList);
-        location.reload();
+        // location.reload();
       });
   };
 

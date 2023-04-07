@@ -73,11 +73,13 @@ function MyinfoSetModal2({ setModal }) {
         console.log(res);
         console.log(data);
         setModal(false);
+        alert('정보가 저장되었습니다.');
         location.reload();
       })
       .catch((err) => {
         console.log(err);
-        location.reload();
+        alert('모든 정보를 입력해 주세요..');
+        // location.reload();
         console.log('담아줄 데이터', data);
       });
   };
