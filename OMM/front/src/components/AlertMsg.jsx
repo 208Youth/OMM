@@ -51,8 +51,8 @@ function AlertMsg({ msg, deletemsg }) {
       <div className="self-center w-40 ml-3 font-sans">
         <span className="font-sans font-bold inline-block whitespace-nowrap overflow-hidden text-ellipsis">
           {msg.sender.nickname}
+          님이 당신에게 옴
         </span>
-        님이 당신에게 옴
       </div>
       <div className="w-8 h-8 self-center mr-3 mt-1">
         <img
