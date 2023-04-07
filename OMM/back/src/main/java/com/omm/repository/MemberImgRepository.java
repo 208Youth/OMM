@@ -15,4 +15,6 @@ public interface MemberImgRepository extends JpaRepository<MemberImg, Long> {
 
     MemberImg findFirstByMember(Member member);
 
+    boolean existsByMember(Member member);
+
 }
