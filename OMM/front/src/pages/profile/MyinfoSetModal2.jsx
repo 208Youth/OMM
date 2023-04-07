@@ -72,12 +72,12 @@ function MyinfoSetModal2({ setModal }) {
       .then((res) => {
         console.log(res);
         console.log(data);
-
         setModal(false);
+        location.reload();
       })
       .catch((err) => {
-        alert('모든 정보를 설정해 주세요');
         console.log(err);
+        location.reload();
         console.log('담아줄 데이터', data);
       });
   };
