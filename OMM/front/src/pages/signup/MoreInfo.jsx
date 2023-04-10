@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import './MoreInfo.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { HttpProxy } from 'vite';
 import Kakaomap from './Kakaomap';
 import http from '../../api/http';
 import { moreInfo1 } from '../../store/userSlice';
