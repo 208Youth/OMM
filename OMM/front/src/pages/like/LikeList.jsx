@@ -38,23 +38,19 @@ function LikeList() {
 
   return (
     <div className="text-[#364C63] w-[22.5rem] h-[48.75rem] mx-auto">
-      <div>
+      <div className="text-2xl mx-6 py-8 ">
         <span
           onClick={handleGoBack}
-          className=" text-2xl mx-6 py-8 hover:cursor-pointer"
+          className="hover:cursor-pointer"
           aria-hidden
-
         >
-          <span>
-            &lt;
-
-          </span>
+          <span>&lt;</span>
           <span className="ml-3 font-sans font-bold">OMM List</span>
         </span>
       </div>
       <div className="mx-6 flex flex-wrap justify-between">
-        {likes
-          && likes.map((person) => (
+        {likes &&
+          likes.map((person) => (
             <div
               className="relative mb-6"
               onClick={() => {
@@ -65,15 +61,17 @@ function LikeList() {
               data-aos-offse="120"
             >
               <img
-                src={person.image_main ? `data:image/png;base64,${person.image_main}` : '/defaultimage.png'}
+                src={
+                  person.image_main
+                    ? `data:image/png;base64,${person.image_main}`
+                    : '/defaultimage.png'
+                }
                 alt=""
                 className="w-36 h-56 rounded-2xl object-cover"
               />
               <div className="text-white font-sans">
-                <span className="absolute bottom-4 left-4">
-                  {person.nickname}
-                  {' '}
-                  {person.age}
+                <span className="absolute bottom-4 left-3 px-1 rounded-md bg-gradient-to-r from-purple-600 to-blue-600">
+                  {person.nickname} {person.age}
                 </span>
               </div>
             </div>
