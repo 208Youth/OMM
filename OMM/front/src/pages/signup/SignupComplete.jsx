@@ -12,7 +12,7 @@ function SignupComplete() {
   });
 
   return (
-    <div className="bg-white w-[22.5rem] h-[48.75rem] flex">
+    <div className="bg-white w-[24rem] h-[48.75rem] flex mx-auto">
       <div className="my-auto mx-auto">
         <img src={ommheart} alt="" className="mx-auto pb-6 w-[10rem]" />
         <div className="text-center text-3xl text-[#364C63] mb-3">
