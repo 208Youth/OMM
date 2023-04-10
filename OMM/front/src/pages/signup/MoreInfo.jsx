@@ -3,10 +3,13 @@ import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import './MoreInfo.css';
 import { useDispatch, useSelector } from 'react-redux';
+import { HttpProxy } from 'vite';
 import Kakaomap from './Kakaomap';
+import http from '../../api/http';
 import { moreInfo1 } from '../../store/userSlice';
 
 function MoreInfo({ setStep }) {
+  const token = localStorage.getItem('accesstoken');
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   console.log(user.nickname);
@@ -20,16 +23,16 @@ function MoreInfo({ setStep }) {
   });
   const next = () => {
     if (
-      user.nickname &&
-      user.height &&
-      user.lat &&
-      user.lng &&
-      user.highschool &&
-      user.military
+      user.nickname
+      && user.height
+      && user.lat
+      && user.lng
+      && user.highschool
+      && user.military
     ) {
       setStep(2);
     } else {
-      alert('모든 정보를 입력해주세요!');
+      // alert('모든 정보를 입력해주세요!');
     }
   };
   const sendInfo = () => {
@@ -46,6 +49,70 @@ function MoreInfo({ setStep }) {
   };
   console.log(user);
   const [modalIsOpen, setIsOpen] = useState(false);
+
+  async function sendMyInfo() {
+    const myInfo = {
+      nickname: '박성완',
+      lat: 10,
+      lng: 10,
+      height: 170,
+      contact_style: 'NOT_MSG ',
+      drinking_style: 'NOT',
+      smoking_style: 'NOT',
+      military: 'COMPLETE',
+      pet: 'DOG',
+      MBTI: 'INFP',
+    };
+    console.log('보낼 내정보', myInfo);
+    await http({
+      method: 'post',
+      url: '/member/info',
+      data: myInfo,
+      headers: {
+        // Authorization: import.meta.env.VITE_TOKEN,
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        // console.log(user);
+        console.log(err);
+      });
+  }
+
+  async function sendPreferInfo() {
+    const myFav = {
+      age_min: 20,
+      age_max: 25,
+      height_min: 150,
+      height_max: 170,
+      range_min: 0,
+      range_max: 10000,
+      contact_style: 'NONE',
+      drinking_style: 'NONE',
+      smoking_style: 'NONE',
+      military: 'NONE',
+    };
+    console.log('보낼 선호정보', myFav);
+    await http({
+      method: 'post',
+      url: '/member/filtering',
+      data: myFav,
+      headers: {
+        // Authorization: import.meta.env.VITE_TOKEN,
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        console.log(res.data);
+        next();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   const openModal = () => {
     setIsOpen(true);
@@ -140,6 +207,17 @@ function MoreInfo({ setStep }) {
           cm
         </span>
       </div>
+      <button
+        type="button"
+        onClick={() => {
+          sendInfo();
+          sendMyInfo();
+          sendPreferInfo();
+        }}
+        className="w-20 h-10 rounded-3xl bg-[#F59FB1] text-white font-sans font-semibold text-sm drop-shadow-md hover:bg-white hover:border-[#F59FB1] hover:border-2 hover:text-[#F59FB1]"
+      >
+        스킵
+      </button>
       <Modal
         isOpen={modalIsOpen}
         // onAfterOpen={afterOpenModal}

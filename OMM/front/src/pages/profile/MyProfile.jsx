@@ -1,5 +1,7 @@
 // 변경
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, {
+  useState, useEffect, lazy, Suspense,
+} from 'react';
 
 import './Pslider.css';
 // import './Profile.css';
@@ -524,7 +526,9 @@ function MyProfile({ profileNav }) {
                           aria-hidden
                           className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
                         >
-                          {basicInfomation.height} cm
+                          {basicInfomation.height}
+                          {' '}
+                          cm
                         </span>
                         <div
                           onClick={() => {
@@ -773,6 +777,7 @@ function MyProfile({ profileNav }) {
                     </span>
                   </div>
                   <div>
+
                     <div className="flex items-center">
                       <span
                         onClick={() => {
@@ -782,7 +787,12 @@ function MyProfile({ profileNav }) {
                         className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
                       >
                         {' '}
-                        {filterInfomation.age_min} - {filterInfomation.age_max}{' '}
+                        {filterInfomation.age_min}
+                        {' '}
+                        -
+                        {' '}
+                        {filterInfomation.age_max}
+                        {' '}
                         살
                       </span>
                       <div>
@@ -807,7 +817,10 @@ function MyProfile({ profileNav }) {
                         aria-hidden
                         className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black mr-1"
                       >
-                        {filterInfomation.height_min} -{' '}
+                        {filterInfomation.height_min}
+                        {' '}
+                        -
+                        {' '}
                         {filterInfomation.height_max}
                         cm
                       </span>
@@ -820,7 +833,9 @@ function MyProfile({ profileNav }) {
                 <hr />
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
+                    <span
+                      className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
+                    >
                       거리 반경
                     </span>
                   </div>
@@ -834,8 +849,13 @@ function MyProfile({ profileNav }) {
                         className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
                       >
                         {' '}
-                        {filterInfomation.range_min} -{' '}
-                        {filterInfomation.range_max} km
+                        {filterInfomation.range_min}
+                        {' '}
+                        -
+                        {' '}
+                        {filterInfomation.range_max}
+                        {' '}
+                        km
                       </span>
                       <div>
                         <img src={userarrow} alt="" className="w-3 ml-2" />
