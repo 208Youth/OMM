@@ -38,7 +38,7 @@ function Signup() {
   }, [step]);
 
   return (
-    <div className="bg-white w-[22.5rem] h-[48.75rem]">
+    <div className="bg-white w-[24rem] h-[48.75rem] mx-auto">
       {step === 1 && <MoreInfo setStep={setStep} />}
       {step === 2 && <MoreInfo2 setStep={setStep} />}
       {step === 3 && <MoreInfo3 setStep={setStep} />}

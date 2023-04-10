@@ -22,12 +22,12 @@ function MoreInfo({ setStep }) {
   });
   const next = () => {
     if (
-      user.nickname
-      && user.height
-      && user.lat
-      && user.lng
-      && user.highschool
-      && user.military
+      user.nickname &&
+      user.height &&
+      user.lat &&
+      user.lng &&
+      user.highschool &&
+      user.military
     ) {
       setStep(2);
     } else {
@@ -150,7 +150,20 @@ function MoreInfo({ setStep }) {
   //   // document.getElementByName('military').value = user.military;
   // }, []);
   return (
-    <div className="bg-white w-[22.5rem] h-[48.75rem]">
+    <div className="bg-white w-[24rem] h-[48.75rem] mx-auto">
+      <div className="flex">
+        <button
+          type="button"
+          onClick={() => {
+            sendInfo();
+            sendMyInfo();
+            sendPreferInfo();
+          }}
+          className="ml-auto mr-2 text-xs"
+        >
+          &gt;&gt;
+        </button>
+      </div>
       <img src="/heart-step-1.svg" alt="" className="mx-auto w-48 pt-16 pb-8" />
       <h1 className="text-center text-2xl text-[#364C63] mb-3">더 많은 정보</h1>
       <p className="text-center text-xs text-gray-400 font-sans">
@@ -206,17 +219,6 @@ function MoreInfo({ setStep }) {
           cm
         </span>
       </div>
-      <button
-        type="button"
-        onClick={() => {
-          sendInfo();
-          sendMyInfo();
-          sendPreferInfo();
-        }}
-        className="w-20 h-10 rounded-3xl bg-[#F59FB1] text-white font-sans font-semibold text-sm drop-shadow-md hover:bg-white hover:border-[#F59FB1] hover:border-2 hover:text-[#F59FB1]"
-      >
-        스킵
-      </button>
       <Modal
         isOpen={modalIsOpen}
         // onAfterOpen={afterOpenModal}
