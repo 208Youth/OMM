@@ -72,6 +72,8 @@ function MyinfoSetModal(props) {
         console.log('담아줄 데이터');
         alert('모든 정보를 설정해 주세요');
         // location.reload();
+        console.log('담아줄 데이터', data);
+        alert('모든 정보를 설정해 주세요');
       });
   };
   useEffect(() => {

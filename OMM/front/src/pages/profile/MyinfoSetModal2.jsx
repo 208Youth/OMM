@@ -72,14 +72,12 @@ function MyinfoSetModal2({ setModal }) {
       .then((res) => {
         console.log(res);
         console.log(data);
+
         setModal(false);
-        alert('정보가 저장되었습니다.');
-        location.reload();
       })
       .catch((err) => {
+        alert('모든 정보를 설정해 주세요');
         console.log(err);
-        alert('모든 정보를 입력해 주세요..');
-        // location.reload();
         console.log('담아줄 데이터', data);
       });
   };
@@ -209,8 +207,8 @@ function MyinfoSetModal2({ setModal }) {
                     className={`peer-checked/drink${index + 1}:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1`}
                   >
                     {style === 'NONE' ? '상관없음'
-                      : style === 'PREFER_NO' ? '안 마셨으면 좋겠음'
-                        : style === 'PREFER_YES' ? '잘 마셨으면 좋겠음' : ''}
+                      : style === 'PREFER_NO' ? '안마셨으면 좋겠음'
+                        : style === 'PREFER_YES' ? '했으면 좋겠음' : ''}
                   </label>
                 </div>
               ))}
@@ -242,11 +240,11 @@ function MyinfoSetModal2({ setModal }) {
                     className={`peer-checked/contact${index + 1}:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1`}
                   >
                     {style === 'NONE' ? '상관없음'
-                      : style === 'PREFER_MSG' ? '카톡 자주'
+                      : style === 'PREFER_MSG' ? '카톡'
                         : style === 'PREFER_CALL' ? '전화'
                           : style === 'PREFER_FACECALL' ? '영상통화'
                             : style === 'NOT_MSG' ? '카톡 별로'
-                              : style === 'PREFER_OFFLINE' ? '직접 만나'
+                              : style === 'PREFER_OFFLINE' ? '만남 선호'
                                 : ''}
                   </label>
                 </div>

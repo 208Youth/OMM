@@ -15,9 +15,9 @@ function MoreInfo2({ setStep }) {
   };
   const next = () => {
     if (
-      moreinfo.my_drinking_style &&
-      moreinfo.my_smoking_style &&
-      moreinfo.my_contact_style
+      moreinfo.my_drinking_style
+      && moreinfo.my_smoking_style
+      && moreinfo.my_contact_style
     ) {
       setStep(3);
     } else {
