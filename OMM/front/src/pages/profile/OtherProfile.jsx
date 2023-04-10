@@ -1,55 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 import http from '../../api/http';
 import CloseBtn from '../../assets/CloseBtn.svg';
-import estate_yes from '../../assets/estate_yes.svg';
-import estate_no from '../../assets/estate_no.svg';
-import job_yes from '../../assets/job_yes.svg';
-import job_no from '../../assets/job_no.svg';
-import income_yes from '../../assets/income_yes.svg';
-import income_no from '../../assets/income_no.svg';
-import health_yes from '../../assets/health_yes.svg';
-import health_no from '../../assets/health_no.svg';
-import university_yes from '../../assets/university_yes.svg';
-import university_no from '../../assets/university_no.svg';
-import certificate_yes from '../../assets/certificate_yes.svg';
-import certificate_no from '../../assets/certificate_no.svg';
-import location from '../../assets/location.svg';
+import estateYes from '../../assets/estate_yes.svg';
+import estateNo from '../../assets/estate_no.svg';
+import jobYes from '../../assets/job_yes.svg';
+import jobNo from '../../assets/job_no.svg';
+import incomeYes from '../../assets/income_yes.svg';
+import incomeNo from '../../assets/income_no.svg';
+import healthYes from '../../assets/health_yes.svg';
+import healthNo from '../../assets/health_no.svg';
+import universityYes from '../../assets/university_yes.svg';
+import universityNo from '../../assets/university_no.svg';
+import certificateYes from '../../assets/certificate_yes.svg';
+import certificateNo from '../../assets/certificate_no.svg';
 import Pslider from '../../components/Pslider';
 import './Pslider.css';
-
-const interest = [
-  {
-    interest_list_id: 1,
-    name: '관심사 이름1',
-  },
-  {
-    interest_list_id: 2,
-    name: '관심사 이름2',
-  },
-  {
-    interest_list_id: 3,
-    name: '관심사 이름3',
-  },
-];
-
-function InterestList({ interest }) {
-  return (
-    <div>
-      <div>
-
-        <div />
-      </div>
-
-      {interest.map((item) => (
-        <button key={item.interest_list_id} className="bg-white border border-black rounded-full text-sm px-4">{item.name}</button>
-      ))}
-    </div>
-  );
-}
 
 // props를 통해 userid를 받고 claose 버튼을 눌러서 해당 userid의
 // 아니면 메인 페이지에 해당 컴포넌트를 아예 합쳐버릴까
@@ -63,10 +33,10 @@ function OtherProfile() {
 
   const memberId = parseInt(id);
 
-  console.log(memberId);
+  console.log('상대방 아이디요', memberId);
   console.log(typeof memberId);
 
-  const [new_certinfo, setCert] = useState([]);
+  const [newCertinfo, setCert] = useState([]);
   const [interest, setInterest] = useState([]);
   const [basicInfomation, setInfo] = useState([]);
   // new_certinfo인지 certinfo인지 axios주고받으면서 확인
@@ -81,7 +51,7 @@ function OtherProfile() {
       },
     })
       .then((res) => {
-        console.log(res);
+        console.log('상대방정보인뎁쇼', res.data);
         setInfo(res.data);
       })
       .catch((err) => {
@@ -93,7 +63,7 @@ function OtherProfile() {
   async function FreshCert() {
     await http({
       method: 'get',
-      url: `/member/${memberId}/cert`,
+      url: `/member/${memberId}/certificate`,
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -112,10 +82,26 @@ function OtherProfile() {
   //     .then((response) => setCert(response.data))
   //     .catch((error) => console.error(error));
   // };
-  const FreshInterest = () => {
-    http.get(`/member/${memberId}/interest-list`)
-      .then((response) => setInterest(response.data.interestList))
-      .catch((error) => console.error(error));
+  const FreshInterest = async () => {
+    await http({
+      method: 'get',
+      url: `/member/${memberId}/interest-list`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        console.log('관심사멉니까', res.data);
+        setInterest(res.data.interestList);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const navigate = useNavigate();
+  const goBack = () => {
+    navigate(-1);
   };
 
   useEffect(() => {
@@ -123,6 +109,10 @@ function OtherProfile() {
     FreshCert();
     FreshInterest();
   }, []);
+
+  useEffect(() => {
+    AOS.init();
+  });
 
   let drinkingStyleText;
   if (basicInfomation.drinking_style === 'NOT') {
@@ -189,73 +179,83 @@ function OtherProfile() {
     militaryText = '미필';
   }
 
-  // useEffect(() => {
-  //   axios.get('')
-  //     .then((response) => setInterest(response.data.interestList))
-  //     .catch((error) => console.error(error));
-  // }, []);
-  // useEffect의 두 번째 매개변수는 의존성 배열(dependency array)로,
-  //  이 배열에 포함된 값이 변경될 때마다
-  // useEffect 콜백 함수가 호출됩니다.
-  // 의존성 배열이 빈 배열([])인 경우에는
-  // 컴포넌트가 처음 마운트될 때만 useEffect 콜백 함수가 호출되고,
-  // 그 이후에는 호출되지 않습니다.
   return (
     <div>
-
       <div>
-        <div className="absolute top-20 left-0 w-full z-5">
-          <Pslider />
+        <div
+          id="otherslider"
+          className="top-0 left-0 w-full sticky transition-all"
+        >
+          <Pslider profileImg={basicInfomation.profileimgs} />
         </div>
-        <div className="profileinfo">
+        <div
+          id="otherinfos"
+          data-aos="fade-up"
+          data-aos-anchor-placement="top-bottom"
+          className="mx-auto z-7 sticky transition-all sm:w-[37rem] w-96 rounded-3xl bg-white text-left z-10 shadow-lg border-t"
+        >
           <div className="infodetail">
-
             <div className="text-right">
-              <img src={CloseBtn} alt="closbtn" className="w-8 h-8 inline-block object-right" />
+              <img
+                src={CloseBtn}
+                alt="closbtn"
+                className="w-8 h-8 inline-block object-right hover:cursor-pointer"
+                onClick={() => {
+                  goBack();
+                }}
+                aria-hidden
+              />
             </div>
-
-            <span className="text-3xl ml-2">
-              {basicInfomation.nickname}
-            </span>
-            <span>
-              {' '}
-              {basicInfomation.age}
-            </span>
-            <div
-              className="text-slate-500 text-sm ml-2"
-            >
+            <div className="mb-8">
+              <span className="text-4xl m-3 font-light mb-8 text-[#364C63]">
+                {basicInfomation.nickname}
+              </span>
+              <span className="text-[#364C63] text-2xl">
+                {' '}
+                {basicInfomation.age}
+              </span>
+            </div>
+            {/* <div className="text-slate-500 text-sm ml-2">
               <span className="inline-block">
                 <img src={location} alt="" width={10} />
               </span>
               <span className="mb-1" />
-
-            </div>
+            </div> */}
             <div>
-
               <hr />
-              <div className="my-1">
-                <div className="text-2xl m-3">자기소개</div>
-                <div
-                  className="text-slate-600 text-sm"
-                >
-                  {basicInfomation.pr}
+              <div className="my-1" data-aos="fade-up">
+                <div className="text-2xl m-3 font-light mb-8 text-[#364C63]">
+                  자기소개
                 </div>
+                {basicInfomation.pr && (
+                  <div className="text-slate-600 text-sm font-sans m-3">
+                    {basicInfomation.pr}
+                  </div>
+                )}
+                {!basicInfomation.pr && (
+                  <div className="text-slate-600 text-sm font-sans m-3">
+                    당신에게 OMM...
+                  </div>
+                )}
+                <hr className="thickhr" />
               </div>
-              <hr className="thickhr" />
-              <div className="font-light">
-                <div className="text-2xl m-3 font-light">내 정보</div>
+              <div className="font-light" data-aos="fade-up">
+                <div className="text-2xl m-3 font-light mb-8 text-[#364C63]">
+                  내 정보
+                </div>
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span>키</span>
+                    <span className="font-sans font-semibold text-black">
+                      키
+                    </span>
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="hover:cursor-pointer">
+                      <span className="hover:cursor-pointer font-sans font-semibold text-black ">
                         {basicInfomation.height}
                         {' '}
                         cm
                       </span>
-
                     </div>
                   </div>
                 </div>
@@ -263,51 +263,61 @@ function OtherProfile() {
 
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span>음주 스타일</span>
+                    <span className="font-sans font-semibold text-black">
+                      음주 스타일
+                    </span>
                   </div>
                   <div>
                     <div className="flex items-center">
-                      {/* <span className="hover:cursor-pointer">{basicInfomation.drinking_style}</span> */}
-                      <span className="hover:cursor-pointer">{drinkingStyleText}</span>
-
+                      <span className="hover:cursor-pointer font-sans font-semibold text-black">
+                        {drinkingStyleText}
+                      </span>
                     </div>
                   </div>
                 </div>
                 <hr />
 
-                <hr />
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span>연락 스타일</span>
+                    <span className="font-sans font-semibold text-black">
+                      연락 스타일
+                    </span>
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="hover:cursor-pointer">{contactStyleText}</span>
-
-                    </div>
-                  </div>
-                </div>
-                <hr />
-                <div className="flex justify-between m-3">
-                  <div className="">
-                    <span>흡연 스타일</span>
-                  </div>
-                  <div>
-                    <div className="flex items-center">
-                      <span className="hover:cursor-pointer">{smokingStyleText}</span>
-
+                      <span className="hover:cursor-pointer font-sans font-semibold text-black">
+                        {contactStyleText}
+                      </span>
                     </div>
                   </div>
                 </div>
                 <hr />
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span>MBTI</span>
+                    <span className="font-sans font-semibold text-black">
+                      흡연 스타일
+                    </span>
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="hover:cursor-pointer">{basicInfomation.MBTI}</span>
-
+                      <span className="hover:cursor-pointer font-sans font-semibold text-black">
+                        {smokingStyleText}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <hr />
+                <div className="flex justify-between m-3">
+                  <div className="">
+                    <span className="font-sans font-semibold text-black">
+                      MBTI
+                    </span>
+                  </div>
+                  <div>
+                    <div className="flex items-center">
+                      <span className="hover:cursor-pointer font-sans font-semibold text-black">
+                        {basicInfomation.MBTI}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -315,118 +325,161 @@ function OtherProfile() {
                 <hr />
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span>반려동물</span>
+                    <span className="font-sans font-semibold text-black">
+                      반려동물
+                    </span>
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="">{petText}</span>
-
+                      <span className="font-sans font-semibold text-black">
+                        {petText}
+                      </span>
                     </div>
                   </div>
                 </div>
                 <hr />
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span>병역여부</span>
+                    <span className="font-sans font-semibold text-black">
+                      병역여부
+                    </span>
                   </div>
                   <div>
                     <div className="flex items-center">
-                      <span className="">{militaryText}</span>
-
+                      <span className="font-sans font-semibold text-black">
+                        {militaryText}
+                      </span>
                     </div>
                   </div>
                 </div>
                 <hr />
-                <div className="flex justify-between m-3">
-                  <div className="">
-                    <div>관심사</div>
-                    <div>
-                      <InterestList interest={interest} />
-
+                <div data-aos="fade-up">
+                  <div className="flex-col m-3">
+                    <div className="text-2xl my-3 font-light mb-8 text-[#364C63]">
+                      관심사
                     </div>
+                    {interest
+                      && interest.map((item) => (
+                        <button
+                          key={item.interest_list_id}
+                          className="bg-white border border-[#364C63] text-[#364C63] rounded-2xl text-sm px-4 mr-2 h-10 font-sans font-semibold"
+                        >
+                          {item.name}
+                        </button>
+                      ))}
+                    {interest.length === 0 && (
+                      <div className="text-slate-600 text-sm font-sans my-3">
+                        아직 등록된 관심사가 없습니다.
+                      </div>
+                    )}
+                    <div />
+                    <hr className="thickhr" />
                   </div>
-                  <div>
-                    <div className="flex items-center">
-                      <span className="">{militaryText}</span>
+                  <div className="text-2xl m-3 font-light mb-8 text-[#364C63]">
+                    인증정보
+                  </div>
 
+                  <div className="mb-16">
+                    <div className="my-5 ml-10 flex flex-wrap">
+                      <div className="inline-block">
+                        <Tooltip id="my-tooltip" />
+                        <img
+                          src={
+                          newCertinfo.health !== false ? healthYes : healthNo
+                        }
+                          alt="#"
+                          className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
+                          data-tooltip-id="my-tooltip"
+                          data-tooltip-content={`${
+                            newCertinfo.health
+                              ? newCertinfo.health_info
+                              : '정보 없음'
+                          }`}
+                        />
+                      </div>
+                      <div className="inline-block">
+                        <img
+                          src={
+                          newCertinfo.university !== false
+                            ? universityYes
+                            : universityNo
+                        }
+                          alt="#"
+                          className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
+                          data-tooltip-id="my-tooltip"
+                          data-tooltip-content={`${
+                            newCertinfo.university
+                              ? newCertinfo.university_name
+                              : '정보 없음'
+                          }`}
+                        />
+                      </div>
+                      <div className="inline-block">
+                        <img
+                          src={newCertinfo.job !== false ? jobYes : jobNo}
+                          alt="#"
+                          className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
+                          data-tooltip-id="my-tooltip"
+                          data-tooltip-content={`${
+                            newCertinfo.job ? newCertinfo.job_name : '정보 없음'
+                          }`}
+                        />
+                      </div>
+                      <div className="inline-block">
+                        <img
+                          src={
+                          newCertinfo.certificate !== false
+                            ? certificateYes
+                            : certificateNo
+                        }
+                          alt="#"
+                          className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
+                          data-tooltip-id="my-tooltip"
+                          data-tooltip-content={`${
+                            newCertinfo.certificate
+                              ? newCertinfo.certificate_names
+                              : '정보 없음'
+                          }`}
+                        />
+                      </div>
+                      <div className="inline-block">
+                        <img
+                          src={
+                          newCertinfo.estate !== false ? estateYes : estateNo
+                        }
+                          alt="#"
+                          className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
+                          data-tooltip-id="my-tooltip"
+                          data-tooltip-content={`${
+                            newCertinfo.estate
+                              ? newCertinfo.estate_amount
+                              : '정보 없음'
+                          }`}
+                        />
+                      </div>
+                      <div className="inline-block">
+                        <img
+                          src={
+                          newCertinfo.income !== false ? incomeYes : incomeNo
+                        }
+                          alt="#"
+                          className="badges transition duration-500 hover:scale-110 bg-red-100 rounded-full"
+                          data-tooltip-id="my-tooltip"
+                          data-tooltip-content={`${
+                            newCertinfo.income
+                              ? newCertinfo.income_amount
+                              : '정보 없음'
+                          }`}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <hr className="thickhr" />
-
-              <hr />
-              <div className="text-xl m-3">
-                인증정보
-              </div>
-
-              <div>
-                <div className="my-5 ml-5">
-                  <div className="inline-block">
-                    <Tooltip id="my-tooltip" />
-                    <img
-                      src={new_certinfo.health === true ? health_yes : health_no}
-                      alt="#"
-                      className="badges"
-                      data-tooltip-id="my-tooltip"
-                      data-tooltip-content={`건강데이터넣을것임 ${new_certinfo.health}`}
-                    />
-                  </div>
-                  <div className="inline-block">
-                    <img
-                      src={new_certinfo.university === true ? university_yes : university_no}
-                      alt="#"
-                      className="badges"
-                      data-tooltip-id="my-tooltip"
-                      data-tooltip-content={`${new_certinfo.university}`}
-                    />
-                  </div>
-                  <div className="inline-block">
-                    <img
-                      src={new_certinfo.job === true ? job_yes : job_no}
-                      alt="#"
-                      className="badges"
-                      data-tooltip-id="my-tooltip"
-                      data-tooltip-content={`${new_certinfo.job}`}
-                    />
-                  </div>
-                  <div className="inline-block">
-                    <img
-                      src={new_certinfo.certificate === true ? certificate_yes : certificate_no}
-                      alt="#"
-                      className="badges"
-                      data-tooltip-id="my-tooltip"
-                      data-tooltip-content={` ${new_certinfo.certificate}`}
-                    />
-                  </div>
-                  <div className="inline-block">
-                    <img
-                      src={new_certinfo.estate === true ? estate_yes : estate_no}
-                      alt="#"
-                      className="badges"
-                      data-tooltip-id="my-tooltip"
-                      data-tooltip-content={` ${new_certinfo.estate}`}
-                    />
-                  </div>
-                  <div className="inline-block">
-                    <img
-                      src={new_certinfo.income === true ? income_yes : income_no}
-                      alt="#"
-                      className="badges"
-                      data-tooltip-id="my-tooltip"
-                      data-tooltip-content={` ${new_certinfo.income}`}
-                    />
-                  </div>
-                </div>
-              </div>
-              <hr />
-
             </div>
-
+            <hr />
           </div>
-
         </div>
-
       </div>
     </div>
   );

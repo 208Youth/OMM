@@ -58,8 +58,10 @@ public class MatchingService {
      */
     public List<NotificationResponseDto> getNotifications() {
         Member member = getMember();
+        System.out.println("내 알림 찾으러 서비스 왔음");
         List<NotificationResponseDto> notificationResponseDtos = new ArrayList<>();
         List<Notification> notifications = matchingRepository.getNotifications(member.getId());
+        System.out.println("내 알림 내놔 내 아이디는?: " + member.getId());
         for(Object notificationObject : notifications) {
             Notification notification = objectMapper.convertValue(notificationObject, Notification.class);
             notificationResponseDtos.add(getNotificationResponseDto(notification));
@@ -89,6 +91,7 @@ public class MatchingService {
         String didAddress = SecurityUtil.getCurrentDidAddress().orElseThrow(() -> {
             throw new CustomException(ErrorCode.INVALID_AUTH_TOKEN);
         });
+        System.out.println("내 정보 찾으러 서비스 왔다 내 did 주소는:????: " + didAddress);
         return memberRepository.findByDidAddress(didAddress).orElseThrow(() -> {
             throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
         });
@@ -113,12 +116,17 @@ public class MatchingService {
      */
     public NotificationResponseDto getNotificationResponseDto(Notification notification) {
         Member member = getMember(notification.getSenderId());
-        List<MemberImg> memberImgs = memberImgRepository.findAllById(member.getId());
+        List<MemberImg> memberImgs = memberImgRepository.findAllByMember(member);
         MemberImg profileImg = memberImgs.isEmpty() ? null : memberImgs.get(0);
         Map<String, Object> sender = new HashMap<>();
         sender.put("memberId", member.getId());
         sender.put("nickname", member.getNickname());
-        sender.put("imageContent", profileImg);
+        if(profileImg == null) {
+            sender.put("imageContent", null);
+        }
+        else {
+            sender.put("imageContent", profileImg.getImageContent());
+        }
         return NotificationResponseDto.builder()
                 .id(notification.getId())
                 .sender(sender)

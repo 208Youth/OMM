@@ -44,18 +44,7 @@ function MoreInfo5({ setStep }) {
   // my_info.append('military', user.military);
   // my_info.append('pet', user.pet);
   // my_info.append('MBTI1', user.MBTI);
-  const myInfo = {
-    nickname: user.nickname,
-    lat: user.lat,
-    lng: user.lng,
-    height: user.height,
-    contact_style: user.my_contact_style,
-    drinking_style: user.my_drinking_style,
-    smoking_style: user.my_smoking_style,
-    military: user.military,
-    pet: user.pet,
-    MBTI: user.MBTI,
-  };
+
 
   // const my_fav = new FormData();
   // my_fav.append('age_min', user.age_min);
@@ -68,18 +57,7 @@ function MoreInfo5({ setStep }) {
   // my_fav.append('drinking_style', user.drinking_style);
   // my_fav.append('smoking_style', user.smoking_style);
 
-  const myFav = {
-    age_min: user.age_min,
-    age_max: user.age_max,
-    height_min: user.height_min,
-    height_max: user.height_max,
-    range_min: user.range_min,
-    range_max: user.range_max,
-    contact_style: user.contact_style,
-    drinking_style: user.drinking_style,
-    smoking_style: user.smoking_style,
-    military: user.military,
-  };
+
 
   useEffect(() => {
     console.log(moreinfo);
@@ -87,6 +65,19 @@ function MoreInfo5({ setStep }) {
   }, [moreinfo]);
 
   async function sendMyInfo() {
+    const myInfo = {
+      nickname: user.nickname,
+      lat: user.lat,
+      lng: user.lng,
+      height: user.height,
+      contact_style: user.my_contact_style,
+      drinking_style: user.my_drinking_style,
+      smoking_style: user.my_smoking_style,
+      military: user.military,
+      pet: moreinfo.pet,
+      MBTI: moreinfo.MBTI,
+    };
+    console.log('보낼 내정보', myInfo);
     await http({
       method: 'post',
       url: '/member/info',
@@ -106,6 +97,19 @@ function MoreInfo5({ setStep }) {
   }
 
   async function sendPreferInfo() {
+    const myFav = {
+      age_min: user.age_min,
+      age_max: user.age_max,
+      height_min: user.height_min,
+      height_max: user.height_max,
+      range_min: user.range_min,
+      range_max: user.range_max,
+      contact_style: user.contact_style,
+      drinking_style: user.drinking_style,
+      smoking_style: user.smoking_style,
+      military: user.military,
+    };
+    console.log('보낼 선호정보', myFav);
     await http({
       method: 'post',
       url: '/member/filtering',
@@ -366,7 +370,7 @@ function MoreInfo5({ setStep }) {
               F
             </label>
           </div>
-          <div>
+          <div className="ml-1">
             <input
               onClick={(e) => {
                 setMBTI3(e.target.value);
@@ -408,7 +412,7 @@ function MoreInfo5({ setStep }) {
               J
             </label>
           </div>
-          <div>
+          <div className="ml-1">
             <input
               onClick={(e) => {
                 setMBTI4(e.target.value);
@@ -432,7 +436,7 @@ function MoreInfo5({ setStep }) {
           </div>
         </div>
       </div>
-      <div className="flex justify-between mx-8 text-[#364C63] text-lg">
+      <div className="flex mt-32 justify-between mx-8 text-[#364C63] text-lg">
         <button
           type="button"
           aria-hidden

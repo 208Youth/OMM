@@ -2,11 +2,12 @@ import React, { useEffect, useLayoutEffect, useState } from 'react';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import Modal from 'react-modal';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import http from '@/api/http.js';
-import BottomModal from '@/pages/chatting/BottomModal.jsx';
-import ReportModal from '@/pages/chatting/ReportModal.jsx';
+import BottomModal from '@/pages/chatting/BottomModal';
+import ReportModal from '@/pages/chatting/ReportModal';
 import './ChatModal.css';
+import ommheart from '../../assets/ommheart.png';
 
 function ChatWindow() {
   // const [roomId, setRoomId] = useState(localStorage.getItem('wschat.roomId'));
@@ -36,16 +37,21 @@ function ChatWindow() {
   // 3. 내가 보낸 채팅 중에서 가장 최근에 보낸 채팅을 찾습니다.
   // 4. 내가 보낸 채팅이면서 가장 최근에 보낸 채팅인 경우에만 "읽음" 혹은 "안읽음" 정보를 보여줍니다.
 
-  const myChatList = messages.filter((chat1) => chat1.senderId !== room.other.otherId);
-  console.log(messages);
-  console.log(myChatList);
+  const myChatList = messages.filter(
+    (chat1) => chat1.senderId !== room.other.otherId,
+  );
+  // console.log(messages);
+  // console.log(myChatList);
 
   const latestMyChat = myChatList.find((chat1) => chat1.read === false);
   console.log(latestMyChat);
   const openModal = () => {
     setIsOpen(true);
   };
-
+  const navigate = useNavigate();
+  function handleGoBack() {
+    navigate('/chattings');
+  }
   const closeModal = () => {
     setIsOpen(false);
   };
@@ -76,8 +82,12 @@ function ChatWindow() {
     // Authorization: token,
   };
 
-  const roomHeader = {
-    roomId,
+  // 아래는 read처리를 위한 fastapi의 조언, 저 함수는 다른 유자거 들어 올떄 실행되야함
+  const markAsRead = (messageId) => {
+    const updatedMessages = messages.map((message) =>
+      message.id === messageId ? { ...message, read: true } : message,
+    );
+    setMessages(updatedMessages);
   };
 
   // const ws = new SockJS('http://localhost:5000/api/chat');
@@ -94,6 +104,8 @@ function ChatWindow() {
   // );
 
   const connect = () => {
+    console.log('connect');
+    let reconnect = 0;
     stompClient.connect(
       headers,
       (frame) => {
@@ -108,12 +120,12 @@ function ChatWindow() {
         });
       },
       (error) => {
-        // if(reconnect++ < 5) {
-        //   setTimeout(function() {
-        //     console.log("connection reconnect");
-        //     connect();
-        //   },10*1000);
-        // }
+        if(reconnect++ < 5) {
+          setTimeout(function() {
+            console.log("connection reconnect");
+            connect();
+          },10*1000);
+        }
       },
     );
   };
@@ -128,14 +140,17 @@ function ChatWindow() {
     })
       .then((response) => {
         console.log('채팅방 정보를 가져옴');
-        console.log(response);
+        // console.log(response);
         // setRoom(response.data.roomInfo);
-        console.log(response.data.roomInfo.msgs);
-        console.log(response.data.roomInfo);
+        // console.log(response.data.roomInfo.msgs);
+        // console.log(response.data.roomInfo.other.image.imageContent);
         setMessages([...response.data.payload]);
         setRoom(response.data.roomInfo);
         setOtherNickname(response.data.roomInfo.other.nickname);
-        setOtherImage(response.data.roomInfo.other.image);
+        // console.log(response.data.roomInfo.other);
+        if (response.data.roomInfo.other.image) {
+          setOtherImage(response.data.roomInfo.other.image);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -191,44 +206,62 @@ function ChatWindow() {
   };
 
   useEffect(() => {
+    // const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
+    // const stompClient = Stomp.over(ws);
+    // ws.onmes = () => {
+    //   console.log('WebSocket connected!!!');
+    // };
     findRoom();
     connect();
+    return function cleanup() {
+      stompClient.disconnect();
+    };
   }, []);
 
   return (
     <div className=" text-[#364C63] w-[22.5rem] h-[48.75rem] mx-auto">
-      <div className="text-2xl mx-6 py-8">
-        <Link to="/main" className="">
-          <span>&lt;</span>
-        </Link>
+      <div
+        onClick={handleGoBack}
+        className="text-2xl mx-6 py-8 hover:cursor-pointer"
+        aria-hidden
+      >
+        <span>&lt;</span>
+
         <span className="ml-3 font-sans font-extrabold text-[1.3rem]">
           {otherNickname}
         </span>
       </div>
-      <div id="recentChat" className="flex mx-auto w-[20rem] h-[39rem] overscroll-x-none overflow-y-scroll scrollbar-hide touch-pan-y text-xs rounded-lg mb-1">
+      <div
+        id="recentChat"
+        className="flex mx-auto w-[20rem] h-[39rem] overscroll-x-none overflow-y-scroll scrollbar-hide touch-pan-y text-xs rounded-lg mb-1"
+      >
         <div id="chatdetail" className="w-[20rem] mx-auto">
           <div>{/* 만약 보낸사람이 내가 아니라면 */}</div>
           <div id="Chat">
             <div>
               {}
-              <div>{room.id}</div>
-              <div>{room.id}</div>
+              {/* <div>{room.id}</div>
+              <div>{room.id}</div> */}
               <ul>
                 {messages.map((msg, index) => (
                   <li
                     key={index}
                     className={`my-2 ${
                       // 아래 코드 주의
-                      msg.senderId !== room.other.otherId ? 'text-right' : 'text-left'
+                      msg.senderId !== room.other.otherId
+                        ? 'text-right'
+                        : 'text-left'
                     } ${lastchatindex === index ? '' : ''}`}
                   >
                     {msg.senderId !== room.other.otherId ? (
                       <div className="w-60 flex font-sans ml-20 justify-end">
-
                         {lastchatindex === index && (
-                        <span id="readen" className="text-[0.5rem] mr-1 self-end">
-                          {msg.read ? '' : '안읽음'}
-                        </span>
+                          <span
+                            id="readen"
+                            className="text-[0.5rem] mr-1 self-end"
+                          >
+                            {msg.read ? '' : '안읽음'}
+                          </span>
                         )}
 
                         {/* {msg === latestMyChat && (
@@ -238,30 +271,43 @@ function ChatWindow() {
                         )} */}
 
                         <div className="max-w-[12.5rem]  inline-block bg-gray-200 p-2 rounded-lg">
-
                           <span className="text-sm font-sans font-bold break-words whitespace-pre-line">
-                            {msg.content}
-                            {' '}
-
+                            {msg.content}{' '}
                           </span>
-
                         </div>
                         {/* <span className="font-sans">{msg.senderId}</span> */}
                       </div>
                     ) : (
-                      <div className="w-60 ">
-                        <div>
-                          <span className="">{msg.senderId}</span>
-                          <span className="">{otherImage}</span>
-                        </div>
-
-                        <div className="max-w-[12.5rem] inline-block bg-[#E6C9C6] p-2 rounded-lg">
-                          <span className="text-sm mr-2 font-sans font-bold break-words ">
-
-                            {msg.content}
-                          </span>
-
-                        </div>
+                      <div className="w-60 flex flex-row">
+                        <span className="ml-[0.3rem]">
+                          <div className="flex flex-row">
+                            {otherImage ? (
+                              <span>
+                                <img
+                                  src={`data:image/png;base64,${otherImage}`}
+                                  alt="slide_image"
+                                  className="w-9 h-9 rounded-full mb-2 self-center"
+                                />
+                              </span>
+                            ) : (
+                              <span>
+                                <img
+                                  src={ommheart}
+                                  alt="defualt_image"
+                                  className="w-9 h-9 rounded-full mb-2 self-center"
+                                />
+                              </span>
+                            )}
+                            <div className="flex flex-col">
+                              <div className="font-mono ml-2 mb-1 ">
+                                {otherNickname}
+                              </div>
+                              <span className="text-sm ml-2 mr-2 font-sans font-bold break-words w-fit max-w-[12.5rem] inline-block bg-[#E6C9C6] p-2 rounded-lg m">
+                                {msg.content}
+                              </span>
+                            </div>
+                          </div>
+                        </span>
 
                         <span className="text-[0.5rem] ml-1 self-end">
                           {/* {msg.isRead ? '' : (
@@ -299,10 +345,15 @@ function ChatWindow() {
                 </button>
                 <input
                   type="text"
-                  className="rounded-md bg-[#F2EAF2] w-60 h-11 self-center"
+                  className="rounded-md bg-[#F2EAF2] w-60 h-11 self-center pl-2"
                   value={message}
                   onChange={(e) => {
                     setMessage(e.target.value);
+                  }}
+                  onKeyUp={(e) => {
+                    if (e.key === 'Enter') {
+                      sendMessage();
+                    }
                   }}
                 />
                 {/* <button onClick={sendMessage}>Send</button> */}
@@ -353,6 +404,7 @@ function ChatWindow() {
               setReportModal={() => {
                 closeReportModal();
               }}
+              targetId={room?.other?.otherId}
             />
           </Modal>
         </div>

@@ -109,8 +109,8 @@ public class ChatService {
         });
     }
 
-    public MemberImg getImg(Long id) {
-        List<MemberImg> memberImgs = memberImgRepository.findAllById(id);
+    public MemberImg getImg(Member member) {
+        List<MemberImg> memberImgs = memberImgRepository.findAllByMember(member);
         return memberImgs.isEmpty() ? null : memberImgs.get(0);
     }
 
@@ -122,7 +122,12 @@ public class ChatService {
 
         other.put("otherId", otherInfo.getId());
         other.put("nickname", otherInfo.getNickname());
-        other.put("image", getImg(otherInfo.getId()));
+        if(getImg(otherInfo) == null) {
+            other.put("image", null);
+        }
+        else {
+            other.put("image", getImg(otherInfo).getImageContent());
+        }
         other.put("notReadIndex", chatRoom.getLastReadIndex().get(otherInfo.getId()));
 
         return other;
@@ -136,6 +141,7 @@ public class ChatService {
         ChatRoom chatRoom = chatRepository.getRoom(messageDto.getRoomId());
         chatRoom.setMsgs(id);
         chatRoom.setContent(messageDto.getContent());
+
         Map<Long, Long> lastReadIndex = chatRoom.getLastReadIndex();
         lastReadIndex.put(myInfo.getId(), id);
 
@@ -159,9 +165,12 @@ public class ChatService {
         if(sessionId != null && sessionidWithChatroomId.get(sessionId) != null) {
             if(sessionidWithChatroomId.get(sessionId).equals(messageDto.getRoomId())) {
                 message.setRead(true);
+                lastReadIndex.put(otherId, id);
             }
         }
 
+        chatRoom.setLastReadIndex(lastReadIndex);
+        chatRoom.setLastSendIndex(lastSendIndex);
         chatRepository.setRoom(chatRoom);
         chatRepository.saveMessage(message);
         return message;

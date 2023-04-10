@@ -16,6 +16,7 @@ import Alert from './pages/alert/Alert';
 import ChatList from './pages/alert/ChatList';
 import Admin from './pages/admin/Admin';
 import Detail from './pages/admin/Detail';
+import AdminLogin from './pages/admin/AdminLogin';
 import Main from './pages/main/Main';
 import Chatwindow from './pages/chatting/Chatwindow';
 // import ChatingRoomClone from './pages/chatting/ChatingRoomClone';
@@ -32,7 +33,7 @@ const router = createBrowserRouter([
     element: <Index />,
   },
   {
-    path: '/faceRecog/:page',
+    path: '/facerecog/:page',
     element: <FaceRecog />,
   },
   {
@@ -40,11 +41,11 @@ const router = createBrowserRouter([
     element: <Signup />,
   },
   {
-    path: '/OtherProfile/:id',
+    path: '/otherprofile/:id',
     element: <OtherProfile />,
   },
   {
-    path: '/MyinfoSetModal',
+    path: '/myinfosetModal',
     element: <MyinfoSetModal />,
   },
   {
@@ -84,7 +85,7 @@ const router = createBrowserRouter([
     element: <ChatList />,
   },
   {
-    path: '/Chatwindow/:id',
+    path: '/chatwindow/:id',
     element: <Chatwindow />,
   },
   {
@@ -96,7 +97,7 @@ const router = createBrowserRouter([
     element: <Detail />,
   },
   {
-    path: '/ImageUploader',
+    path: '/imageUploader',
     element: <ImageUploader />,
   },
   {
@@ -108,24 +109,16 @@ const router = createBrowserRouter([
     element: <LikeList />,
   },
   {
-    path: '/ImageUploader',
-    element: <ImageUploader />,
-  },
-  {
-    path: '/ChatingRobbyClone',
-    element: <ChatingRobbyClone />,
-  },
-  // {
-  //   path: '/ChatingRoomClone',
-  //   element: <ChatingRoomClone />,
-  // },
-  {
     path: '/loading',
     element: <WaitChat />,
   },
   {
     path: '/imagetest',
     element: <ImageGetTest />,
+  },
+  {
+    path: '/adminlogin',
+    element: <AdminLogin />,
   },
 ]);
 

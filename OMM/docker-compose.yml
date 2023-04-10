@@ -1,4 +1,4 @@
-version: "3.7"
+version: '3.7'
 
 services:
   redis:
@@ -6,6 +6,7 @@ services:
     container_name: redis
     ports:
       - 6379:6379
+    command: redis-server --requirepass rladbsal123@@ --port 6379
     networks:
       - omm
   back:

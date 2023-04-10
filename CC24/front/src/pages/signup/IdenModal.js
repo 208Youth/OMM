@@ -111,12 +111,12 @@ function IdenModal({
   };
 
   return (
-    <div className="flex-col w-80 mx-auto">
-      <p className="flex">
+    <div className="flex-col mx-auto">
+      <p className="flex justify-end">
         <img
           onClick={() => setIdenModal(false)}
           src={CloseBtn}
-          className="w-8 h-8 ml-auto mt-2"
+          className="w-8 h-8"
           alt="닫기"
         />
       </p>
@@ -135,7 +135,7 @@ function IdenModal({
         <br />
       </div>
       <div className="mx-auto text-center flex">
-        <div className="mx-auto">
+        <div className="mx-auto mt-3">
           {!imageSrc && (
             <label htmlFor="imginput">
               <div className="fileinput" />
@@ -149,11 +149,11 @@ function IdenModal({
           />
         </div>
       </div>
-      <div className="preview" style={{ marginLeft: '2rem' }}>
-        {imageSrc && <img src={imageSrc} alt="preview-img" className="idenimage" />}
+      <div>
+        {imageSrc && <img src={imageSrc} alt="preview-img"  className="max-w-xs mx-auto mt-3" />}
       </div>
       <br />
-      <div>
+      <div className='mx-auto'>
         {imageSrc && (
           <Result
             data={{
@@ -212,7 +212,7 @@ function Result({ data, setIdenModal, setIdenComplete }) {
   }
 
   return (
-    <div>
+    <div className="max-w-xs mx-auto mt-3">
       <div className="flex mx-5 justify-between">
         <div>
           <span className="keys">이름</span>

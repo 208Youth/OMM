@@ -2,6 +2,7 @@ import React from 'react';
 import './Index.css';
 // import { Link } from 'react-router-dom';
 import http from '../../api/http';
+import logo from '../../assets/ommlogo.png';
 
 function Index() {
   async function sign(type) {
@@ -21,11 +22,7 @@ function Index() {
     <div className="background">
       <div className="logo">
         <div className="flex">
-          <img
-            className="self-center"
-            src="../../../public/ommlogo.png"
-            alt=""
-          />
+          <img className="self-center" src={logo} alt="" />
         </div>
       </div>
       <div className="buttons mx-auto">
