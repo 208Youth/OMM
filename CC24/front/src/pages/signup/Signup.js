@@ -156,7 +156,7 @@ function Signup() {
     days.push(i);
   }
   return (
-    <div className="wrap-box">
+    <div className="flex-col w-80 mx-auto mt-10">
       <Modal
         isOpen={faceModal}
         onRequestClose={() => setFaceModal(false)}
