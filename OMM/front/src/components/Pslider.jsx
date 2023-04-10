@@ -55,7 +55,7 @@ function Pslider({ mainImg, profileImg, name, age }) {
         {/* 이미지 리스트 들어오는 코드 작성한 후에 아래 주석풀어주세요 */}
         {!mainImg ||
           (mainImg?.length == 0 && location.pathname.includes('main') && (
-            <SwiperSlide className="absolute top-5 flex content-center">
+            <SwiperSlide className="absolute flex content-center">
               <img src="/defaultimage.png" alt="slide_image" />
               <div className="flex absolute bottom-0 max-sm:bottom-[12%] left-[5%] w-fit h-[10%] mx-auto">
                 <div className="flex px-6 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full my-auto">
@@ -75,7 +75,7 @@ function Pslider({ mainImg, profileImg, name, age }) {
           location.pathname.includes('main') &&
           mainImg.map((img, i) => (
             <SwiperSlide
-              className="absolute top-5 flex content-center "
+              className="absolute flex content-center"
               key={i}
             >
               <img src={`data:image/png;base64,${img}`} alt="slide_image" />
