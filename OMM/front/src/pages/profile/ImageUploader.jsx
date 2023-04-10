@@ -4,7 +4,8 @@ import http from '../../api/http';
 import CloseBtn from '../../assets/CloseBtn.svg';
 
 function ImageUploader({ setModal }) {
-  const [images, setImages] = useState(Array(6).fill(null));
+  // const [images, setImages] = useState(Array(6).fill(null));
+  const [images, setImages] = useState(Array(1).fill(null));
   const token = localStorage.getItem('accesstoken');
 
   const onDrop = (acceptedFiles, index) => {
@@ -67,10 +68,11 @@ function ImageUploader({ setModal }) {
       <div className="text-xs text-gray-400 mb-3 font-sans">
         10MB 미만의 파일만 올려주세요.
       </div>
-      <div className="overflow-x-scroll uploadimg-scroll mt-5">
-        <div className="flex flex-row w-fit">
+      <div className="overflow-x-scroll uploadimg-scroll mt-5 flex justify-center">
+        {/* <div className="flex flex-row w-fit"> */}
+        <div className="px-auto">
           {images.map((image, index) => (
-            <div0
+            <div
               key={index}
               className={
                 image
@@ -102,7 +104,7 @@ function ImageUploader({ setModal }) {
                   Click to upload
                 </div>
               )}
-            </div0>
+            </div>
           ))}
         </div>
       </div>
