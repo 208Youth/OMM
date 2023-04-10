@@ -12,20 +12,19 @@ html {
   background-color: white;
   color: rgb(145, 133, 255);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  margin: 5px;
+  margin: 0.313rem;
   z-index: 5;
 }
 
-.btn-white :hover {
+.btn-white:hover {
   border-radius: 20px;
   width: 17rem;
   height: 3rem;
   font-size: 1rem;
   font-weight: 700;
-  color: white;
   border: 0.1rem solid rgb(145, 133, 255);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  margin: 5px;
+  margin: 0.313rem;
   z-index: 5;
 }
 
@@ -38,7 +37,20 @@ html {
   color: white;
   border: 0.1rem solid white;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  margin: 5px;
+  margin: 0.313rem;
+  z-index: 5;
+}
+
+.btn-transparent:hover {
+  border-radius: 20px;
+  width: 17rem;
+  height: 3rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: white;
+  border: 0.1rem solid rgb(145, 133, 255);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  margin: 0.313rem;
   z-index: 5;
 }
 
@@ -61,8 +73,10 @@ html {
   z-index: 2;
   width: 320px;
   height: 320px;
-  top: 200px;
-  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
   animation: fadein 3s;
   -moz-animation: fadein 3s; /* Firefox */
   -webkit-animation: fadein 3s; /* Safari and Chrome */
