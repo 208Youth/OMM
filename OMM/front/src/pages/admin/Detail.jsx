@@ -69,18 +69,29 @@ function Detail() {
         console.log(penalty);
         http.post('admin/penalty', penalty).then(() => {
           console.log('패널티 처리');
+          setIsOpen(true);
+          setMessage('성공적으로 처리되었습니다!');
+    
+          setTimeout(() => {
+            setIsOpen(false);
+            setMessage('');
+            navigate('/admin');
+          }, 2000);
+        })
+        .catch((err) => {
+          console.log(err);
+          setIsOpen(true);
+          setMessage('처리 실패!');
+          setTimeout(() => {
+            setIsOpen(false);
+            setMessage('');
+          }, 2000);
+    
         });
       }
-
-      setIsOpen(true);
-      setMessage('성공적으로 처리되었습니다!');
-
-      setTimeout(() => {
-        setIsOpen(false);
-        setMessage('');
-        navigate('/admin');
-      }, 2000);
+      
     });
+    
   };
 
   return (
