@@ -84,9 +84,7 @@ function ChatWindow() {
 
   // 아래는 read처리를 위한 fastapi의 조언, 저 함수는 다른 유자거 들어 올떄 실행되야함
   const markAsRead = (messageId) => {
-    const updatedMessages = messages.map((message) =>
-      message.id === messageId ? { ...message, read: true } : message,
-    );
+    const updatedMessages = messages.map((message) => (message.id === messageId ? { ...message, read: true } : message));
     setMessages(updatedMessages);
   };
 
@@ -120,11 +118,11 @@ function ChatWindow() {
         });
       },
       (error) => {
-        if(reconnect++ < 5) {
-          setTimeout(function() {
-            console.log("connection reconnect");
+        if (reconnect++ < 5) {
+          setTimeout(() => {
+            console.log('connection reconnect');
             connect();
-          },10*1000);
+          }, 10 * 1000);
         }
       },
     );
@@ -185,6 +183,11 @@ function ChatWindow() {
     setMessage('');
   };
 
+  const unsubscribe = () => {
+    stompClient.unsubscribe();
+    console.log('unsubscribe!!');
+  };
+
   const recvReadDto = (readIndex) => {
     const { lastReadIndex } = readIndex;
     console.log(messages);
@@ -214,6 +217,8 @@ function ChatWindow() {
     findRoom();
     connect();
     return function cleanup() {
+      // react에서 언마운트(cleanup())될 때 비구독 앤드 접속 해제
+      stompClient.unsubscribe();
       stompClient.disconnect();
     };
   }, []);
@@ -272,7 +277,8 @@ function ChatWindow() {
 
                         <div className="max-w-[12.5rem]  inline-block bg-gray-200 p-2 rounded-lg">
                           <span className="text-sm font-sans font-bold break-words whitespace-pre-line">
-                            {msg.content}{' '}
+                            {msg.content}
+                            {' '}
                           </span>
                         </div>
                         {/* <span className="font-sans">{msg.senderId}</span> */}
