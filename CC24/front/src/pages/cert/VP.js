@@ -132,6 +132,7 @@ function VP() {
           <br />
           리스트
         </p>
+        {(VCs == null) && <p className='text-xl mt-20 text-center'>아직 발급받은 인증서가 없습니다...</p>}
         <Swiper effect={'cards'} grabCursor={true} modules={[EffectCards]} className="mySwiper">
           {certList.map((cert) => (
             <SwiperSlide className="flex-row content-start">
