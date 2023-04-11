@@ -40,10 +40,7 @@ function AlertMsg({ msg, deletemsg }) {
         aria-hidden
       >
         {msg.sender.imageContent ? (
-          <img
-            src={`data:image/png;base64,${msg.sender.imageContent.imageContent}`}
-            alt="사진"
-          />
+          <img src={`data:image/png;base64,${msg.sender.imageContent}`} alt="사진" />
         ) : (
           <img src={ommheart} alt="사진" />
         )}
