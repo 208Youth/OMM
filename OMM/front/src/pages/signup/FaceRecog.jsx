@@ -236,6 +236,7 @@ function FaceRecog({ setStep }) {
       setNotice('인증에 실패하였습니다.');
       setTimeout(() => {
         navigate('/main');
+        window.location.reload();
       }, 2000);
     }
   }, [recog]);
