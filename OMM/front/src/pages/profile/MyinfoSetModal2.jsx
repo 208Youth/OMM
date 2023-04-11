@@ -4,19 +4,22 @@ import http from '../../api/http';
 import './Profile.css';
 import CloseBtn from '../../assets/CloseBtn.svg';
 
-function MyinfoSetModal2({ setModal }) {
-  const [myinfo, setMoreInfo] = useState({
-    age_min: '',
-    age_max: '',
-    height_min: '',
-    height_max: '',
-    range_min: '',
-    range_max: '',
-    contact_style: '',
-    drinking_style: '',
-    smoking_style: '',
+// function MyinfoSetModal2({ setModal }) {
+function MyinfoSetModal2(props) {
+  const { setModal, filterInfomation } = props;
+  const [myinfo, setMoreInfo] = useState(filterInfomation);
+  // const [myinfo, setMoreInfo] = useState({
+  //   age_min: '',
+  //   age_max: '',
+  //   height_min: '',
+  //   height_max: '',
+  //   range_min: '',
+  //   range_max: '',
+  //   contact_style: '',
+  //   drinking_style: '',
+  //   smoking_style: '',
 
-  });
+  // });
   const token = localStorage.getItem('accesstoken');
   // const data = myinfo;
 
@@ -71,14 +74,15 @@ function MyinfoSetModal2({ setModal }) {
     })
       .then((res) => {
         console.log(res);
-        console.log(data);
-
         setModal(false);
+        location.reload();
       })
       .catch((err) => {
-        alert('모든 정보를 설정해 주세요');
+        // alert('모든 정보를 설정해 주세요');
         console.log(err);
-        console.log('담아줄 데이터', data);
+        setModal(false);
+        // 새로고침말고 원래 화면 리렌더링 어떻게해
+        location.reload();
       });
   };
   useEffect(() => {
@@ -102,7 +106,6 @@ function MyinfoSetModal2({ setModal }) {
         <div className="">
           <div className="flex justify-between m-3">
             <span>키</span>
-            <span>키값</span>
 
           </div>
           <div className="mx-10">

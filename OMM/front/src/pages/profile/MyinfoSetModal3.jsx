@@ -105,7 +105,8 @@ function MyinfoSetModal3({ setModal }) {
         />
       </div>
 
-      <div className="text-center">
+      <div className="text-center mt-4">
+        관심사:
         <input
           className="rounded-lg"
           size={10}
@@ -156,7 +157,7 @@ function MyinfoSetModal3({ setModal }) {
       </div>
 
       <div className="relative top-10 text-center ">
-        <button className="text-white rounded-xl bg-slate-600 w-20" onClick={sendInterests}>완료</button>
+        <button className="text-white rounded-xl bg-slate-600 w-20 mt-3" onClick={sendInterests}>완료</button>
       </div>
 
     </div>
