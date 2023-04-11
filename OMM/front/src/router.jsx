@@ -22,6 +22,7 @@ import Chatwindow from './pages/chatting/Chatwindow';
 // import ChatingRoomClone from './pages/chatting/ChatingRoomClone';
 import ChatingRobbyClone from './pages/chatting/ChatingRobbyClone';
 import ImageUploader from './pages/profile/ImageUploader';
+import ImageUploader2 from './pages/profile/ImageUploader2';
 import Login from './pages/login/login';
 import LikeList from './pages/like/LikeList';
 import WaitChat from './pages/chatting/WaitChat';
@@ -99,6 +100,10 @@ const router = createBrowserRouter([
   {
     path: '/imageUploader',
     element: <ImageUploader />,
+  },
+  {
+    path: '/imageUploader2',
+    element: <ImageUploader2 />,
   },
   {
     path: '/login',
