@@ -41,7 +41,7 @@ function AlertMsg({ msg, deletemsg }) {
       >
         {msg.sender.imageContent ? (
           <img
-            src={`data:image/png;base64,${msg.sender.imageContent}`}
+            src={`data:image/png;base64,${msg.sender.imageContent.imageContent}`}
             alt="사진"
           />
         ) : (
