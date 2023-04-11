@@ -1,7 +1,5 @@
 // 변경
-import React, {
-  useState, useEffect, lazy, Suspense,
-} from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 
 import './Pslider.css';
 // import './Profile.css';
@@ -387,7 +385,7 @@ function MyProfile({ profileNav }) {
   // 컴포넌트가 처음 마운트될 때만 useEffect 콜백 함수가 호출되고,
   // 그 이후에는 호출되지 않습니다.
   return (
-    <div className="relative ">
+    <div className="relative h-[48.75rem] overflow-x-hidden">
       <div className="text-center">
         <Modal
           className="MyinfoModal"
@@ -468,7 +466,7 @@ function MyProfile({ profileNav }) {
               <ImageUploader setModal={closeImageModal} />
             </Modal>
           </div>
-          <div className="mx-auto sm:w-[37rem] w-96 rounded-3xl bg-white text-left z-10 shadow-lg border-t">
+          <div className="mx-auto sm:w-[37rem] w-[22.5rem] rounded-3xl bg-white text-left z-10 shadow-lg border-t">
             <div className="infodetail">
               <div className="text-right">
                 <div
@@ -807,7 +805,6 @@ function MyProfile({ profileNav }) {
                     </span>
                   </div>
                   <div>
-
                     <div className="flex items-center">
                       <span
                         onClick={() => {
@@ -863,9 +860,7 @@ function MyProfile({ profileNav }) {
                 <hr />
                 <div className="flex justify-between m-3">
                   <div className="">
-                    <span
-                      className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black"
-                    >
+                    <span className="hover:text-[#F59FB1] hover:cursor-pointer font-sans font-semibold text-black">
                       거리 반경
                     </span>
                   </div>
@@ -977,7 +972,7 @@ function MyProfile({ profileNav }) {
                   <div
                     onClick={toCert}
                     aria-hidden
-                    className="flex items-center m-2"
+                    className="flex items-center m-3"
                   >
                     <span className="hover:cursor-pointer font-sans font-semibold text-black hover:text-[#F59FB1]">
                       설정
@@ -1091,9 +1086,9 @@ function MyProfile({ profileNav }) {
               </div>
             </div>
           </div>
-          <Navbar profileNav />
         </div>
       </div>
+      <Navbar profileNav />
     </div>
   );
 }

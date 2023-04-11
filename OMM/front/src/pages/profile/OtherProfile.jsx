@@ -192,7 +192,7 @@ function OtherProfile() {
           id="otherinfos"
           data-aos="fade-up"
           data-aos-anchor-placement="top-bottom"
-          className="mx-auto z-7 sticky transition-all sm:w-[37rem] w-96 rounded-3xl bg-white text-left z-10 shadow-lg border-t"
+          className="mx-auto z-7 sticky transition-all sm:w-[37rem] w-[22.5rem] rounded-3xl bg-white text-left z-10 shadow-lg border-t"
         >
           <div className="infodetail">
             <div className="text-right">
