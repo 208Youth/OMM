@@ -104,10 +104,7 @@ function MyinfoSetModal2(props) {
       <div className="">
         <h1>선호하는 상대 정보</h1>
         <div className="">
-          <div className="flex justify-between m-3">
-            <span>키</span>
-
-          </div>
+          <div className="flex justify-between m-3" />
           <div className="mx-10">
             <Slider
               range
