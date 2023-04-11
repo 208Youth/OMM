@@ -22,12 +22,12 @@ function MoreInfo({ setStep }) {
   });
   const next = () => {
     if (
-      user.nickname &&
-      user.height &&
-      user.lat &&
-      user.lng &&
-      user.highschool &&
-      user.military
+      user.nickname
+      && user.height
+      && user.lat
+      && user.lng
+      && user.highschool
+      && user.military
     ) {
       setStep(2);
     } else {
