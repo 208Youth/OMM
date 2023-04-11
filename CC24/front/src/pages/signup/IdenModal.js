@@ -218,7 +218,7 @@ function Result({ data, setIdenModal, setIdenComplete }) {
       <div className="flex mx-5 justify-between">
         <div>
           <div className='mx-auto text-center'>
-            <p className='ml-12 text-center' >{msg}</p>
+            <p className='ml-12 text-center'>{msg}</p>
           </div>
           <span className="keys">이름</span>
           <img src="../../../Vector76.png" alt="#" className="inline ml-2" />
