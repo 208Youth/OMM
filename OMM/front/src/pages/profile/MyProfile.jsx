@@ -387,12 +387,22 @@ function MyProfile({ profileNav }) {
   // 컴포넌트가 처음 마운트될 때만 useEffect 콜백 함수가 호출되고,
   // 그 이후에는 호출되지 않습니다.
   return (
-    <div className="relative">
+    <div className="relative ">
       <div className="text-center">
         <Modal
           className="MyinfoModal"
           isOpen={MymodalIsOpen}
           onRequestClose={closeMyModal}
+          style={{
+            content: {
+              top: '50%',
+              left: '50%',
+              right: 'auto',
+              bottom: 'auto',
+              marginRight: '-50%',
+              transform: 'translate(-50%, -50%)',
+            },
+          }}
         >
           <MyinfoSetModal
             setModal={closeMyModal}
@@ -405,6 +415,16 @@ function MyProfile({ profileNav }) {
           className="MyinfoModal"
           isOpen={MymodalIsOpen2}
           onRequestClose={closeMyModal2}
+          style={{
+            content: {
+              top: '50%',
+              left: '50%',
+              right: 'auto',
+              bottom: 'auto',
+              marginRight: '-50%',
+              transform: 'translate(-50%, -50%)',
+            },
+          }}
         >
           <MyinfoSetModal2
             setModal={closeMyModal2}
@@ -417,6 +437,16 @@ function MyProfile({ profileNav }) {
           className="MyinfoModal3"
           isOpen={MymodalIsOpen3}
           onRequestClose={closeMyModal3}
+          style={{
+            content: {
+              top: '50%',
+              left: '50%',
+              right: 'auto',
+              bottom: 'auto',
+              marginRight: '-50%',
+              transform: 'translate(-50%, -50%)',
+            },
+          }}
         >
           <MyinfoSetModal3 setModal={closeMyModal3} />
         </Modal>
