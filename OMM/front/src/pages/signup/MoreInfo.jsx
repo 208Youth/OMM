@@ -6,11 +6,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import Kakaomap from './Kakaomap';
 import http from '../../api/http';
 import { moreInfo1 } from '../../store/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 function MoreInfo({ setStep }) {
   const token = localStorage.getItem('accesstoken');
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
   console.log(user.nickname);
   const [moreinfo, setMoreInfo] = useState({
     nickname: '',
@@ -55,7 +57,7 @@ function MoreInfo({ setStep }) {
       lat: 10,
       lng: 10,
       height: 170,
-      contact_style: 'NOT_MSG ',
+      contact_style: 'NOT_MSG',
       drinking_style: 'NOT',
       smoking_style: 'NOT',
       military: 'COMPLETE',
@@ -106,7 +108,8 @@ function MoreInfo({ setStep }) {
     })
       .then((res) => {
         console.log(res.data);
-        next();
+        navigate('/main');
+        // next();
       })
       .catch((err) => {
         console.log(err);
