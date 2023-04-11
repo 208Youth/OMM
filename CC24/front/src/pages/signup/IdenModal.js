@@ -23,6 +23,7 @@ function IdenModal({
   const [name, setName] = useState('');
   const [gender, setGender] = useState('');
   const [birthday, setBirthday] = useState('');
+  const [msg, setmessage] = useState('');
   const dispatch = useDispatch();
 
   // fastapi의 idening를 실행시키기 위한 코드
@@ -60,6 +61,7 @@ function IdenModal({
       .then((res) => {
         console.log('fastapi로 이미지를 보냈습니다.');
         console.log(res.data);
+        setmessage(res.data.message);
         setName(res.data.personalId.name);
         setBirthday(res.data.personalId.birthdate);
         setGender(res.data.personalId.gender);
@@ -160,6 +162,7 @@ function IdenModal({
               name,
               gender,
               birthday,
+              msg
             }}
             setIdenModal={setIdenModal}
             setIdenComplete={setIdenComplete}
@@ -171,7 +174,7 @@ function IdenModal({
 }
 
 function Result({ data, setIdenModal, setIdenComplete }) {
-  let { name, gender, birthday } = data;
+  let { name, gender, birthday, msg } = data;
   const strbirth = String(birthday);
   let year = strbirth.slice(0, 4);
   let month = strbirth.slice(5, 7);
@@ -210,11 +213,13 @@ function Result({ data, setIdenModal, setIdenComplete }) {
   if (nameCheck && genderCheck && birthdayCheck) {
     complete = true;
   }
-
   return (
     <div className="max-w-xs mx-auto mt-3">
       <div className="flex mx-5 justify-between">
         <div>
+          <div className='mx-auto text-center'>
+            <p className='ml-12 text-center'>{msg}</p>
+          </div>
           <span className="keys">이름</span>
           <img src="../../../Vector76.png" alt="#" className="inline ml-2" />
         </div>
