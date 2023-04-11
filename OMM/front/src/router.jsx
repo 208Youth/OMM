@@ -20,7 +20,7 @@ import AdminLogin from './pages/admin/AdminLogin';
 import Main from './pages/main/Main';
 import Chatwindow from './pages/chatting/Chatwindow';
 // import ChatingRoomClone from './pages/chatting/ChatingRoomClone';
-import ChatingRobbyClone from './pages/chatting/ChatingRobbyClone';
+// import ChatingRobbyClone from './pages/chatting/ChatingRobbyClone';
 import ImageUploader from './pages/profile/ImageUploader';
 import ImageUploader2 from './pages/profile/ImageUploader2';
 import Login from './pages/login/login';
