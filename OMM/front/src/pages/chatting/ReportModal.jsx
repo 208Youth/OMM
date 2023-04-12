@@ -58,7 +58,7 @@ function ReportModal({ setReportModal, targetId }) {
       })
       .catch((err) => {
         console.log(err);
-        ('신고에 실패했습니다.');
+        alert('신고에 실패했습니다.');
       });
   }
 
