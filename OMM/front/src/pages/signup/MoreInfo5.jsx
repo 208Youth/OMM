@@ -128,7 +128,7 @@ function MoreInfo5({ setStep }) {
       });
   }
   return (
-    <div className="bg-white w-[24rem] h-[48.75rem] mx-auto">
+    <div className="bg-white w-[22.5rem] h-[48.75rem] mx-auto">
       <img
         src="/heart-step-5.svg"
         alt=""
