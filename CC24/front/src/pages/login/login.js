@@ -40,7 +40,6 @@ function Login() {
         chainNameOrId: 'goerli',
       });
       setEthrDidOnGoerliNamed(ethrDidOnGoerli);
-      console.log(ethrDidOnGoerliNamed);
     }
   }, []);
   const [isLoading, setIsLoading] = useState(false);
