@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import http from '@/api/http';
-import Report from '@/components/Report';
+import http from '../../api/http';
+import Report from '../../components/Report';
 
 function Admin() {
   const [notProcessed, setNotProcessed] = useState([]);
