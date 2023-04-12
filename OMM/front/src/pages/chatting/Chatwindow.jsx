@@ -1,21 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import Modal from 'react-modal';
 import { useLocation, useNavigate } from 'react-router-dom';
-import http from '../../api/http';
-import BottomModal from './BottomModal';
-import ReportModal from './ReportModal';
+import http from '@/api/http.js';
+import BottomModal from '@/pages/chatting/BottomModal';
+import ReportModal from '@/pages/chatting/ReportModal';
 import './ChatModal.css';
 import ommheart from '../../assets/ommheart.png';
 
 function ChatWindow() {
+  // const [roomId, setRoomId] = useState(localStorage.getItem('wschat.roomId'));
+  const [sender, setSender] = useState(localStorage.getItem('wschat.sender'));
   const [room, setRoom] = useState({});
   const location = useLocation();
-  const [arrivalChat, setArrivalChat] = useState(null);
+  const [arrivalChat, setArrivalChat] = useState(null); // 도착한 메세지 저장
   const [message, setMessage] = useState('');
   const token = localStorage.getItem('accesstoken');
-
+  // 임시로 메시지를 저장
   const [messages, setMessages] = useState([]);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
@@ -23,10 +25,26 @@ function ChatWindow() {
   const [otherImage, setOtherImage] = useState('');
 
   function setrecenctmes() {
+    // 태그의 클래스를 이용하여 선택하기
     const chatBox = document.querySelector('#recentChat');
+
+    // 스크롤을 마지막으로 이동하기
     chatBox.scrollTop = chatBox.scrollHeight;
   }
+  // 내가 보낸 채팅만 읽음 안읽음 처리하기 위한 로직
+  // 1.채팅 목록을 역순으로 정렬합니다.
+  // 2. 반복문을 사용하여 채팅 목록을 출력합니다.
+  // 3. 내가 보낸 채팅 중에서 가장 최근에 보낸 채팅을 찾습니다.
+  // 4. 내가 보낸 채팅이면서 가장 최근에 보낸 채팅인 경우에만 "읽음" 혹은 "안읽음" 정보를 보여줍니다.
 
+  const myChatList = messages.filter(
+    (chat1) => chat1.senderId !== room.other.otherId,
+  );
+  // console.log(messages);
+  // console.log(myChatList);
+
+  const latestMyChat = myChatList.find((chat1) => chat1.read === false);
+  console.log(latestMyChat);
   const openModal = () => {
     setIsOpen(true);
   };
@@ -48,11 +66,12 @@ function ChatWindow() {
   const [lastchatindex, setLastchatindex] = useState(-1);
 
   useEffect(() => {
-    setMessages((prev) => [...prev, arrivalChat]);
+    arrivalChat && setMessages((prev) => [...prev, arrivalChat]);
     setTimeout(() => {
       setrecenctmes();
     }, 1);
     setLastchatindex(messages.length);
+    // 채팅 리스트에 추가
   }, [arrivalChat]);
 
   const roomId = location.pathname.substring(12, location.pathname.lastIndex);
@@ -60,12 +79,30 @@ function ChatWindow() {
   const headers = {
     Authorization: `Bearer ${token}`,
     roomId,
+    // Authorization: token,
   };
 
+  // 아래는 read처리를 위한 fastapi의 조언, 저 함수는 다른 유자거 들어 올떄 실행되야함
+  const markAsRead = (messageId) => {
+    const updatedMessages = messages.map((message) => (message.id === messageId ? { ...message, read: true } : message));
+    setMessages(updatedMessages);
+  };
+
+  // const ws = new SockJS('http://localhost:5000/api/chat');
   const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
   const stompClient = Stomp.over(ws);
 
+  // useEffect(
+  //   () => () => {
+  //     http.get('/chat/test').then((res) => {
+  //       console.log('요청함');
+  //     });
+  //   },
+  //   [location, stompClient],
+  // );
+
   const connect = () => {
+    console.log('connect');
     let reconnect = 0;
     stompClient.connect(
       headers,
@@ -83,6 +120,7 @@ function ChatWindow() {
       (error) => {
         if (reconnect++ < 5) {
           setTimeout(() => {
+            console.log('connection reconnect');
             connect();
           }, 10 * 1000);
         }
@@ -99,9 +137,15 @@ function ChatWindow() {
       },
     })
       .then((response) => {
+        console.log('채팅방 정보를 가져옴');
+        // console.log(response);
+        // setRoom(response.data.roomInfo);
+        // console.log(response.data.roomInfo.msgs);
+        // console.log(response.data.roomInfo.other.image.imageContent);
         setMessages([...response.data.payload]);
         setRoom(response.data.roomInfo);
         setOtherNickname(response.data.roomInfo.other.nickname);
+        // console.log(response.data.roomInfo.other);
         if (response.data.roomInfo.other.image) {
           setOtherImage(response.data.roomInfo.other.image);
         }
@@ -113,15 +157,18 @@ function ChatWindow() {
 
   const waitForConnection = (stompClient, callback) => {
     setTimeout(() => {
+      // 연결되었을 때 콜백함수 실행
       if (stompClient.ws.readyState === 1) {
         callback();
+        // 연결이 안 되었으면 재호출
       } else {
         waitForConnection(stompClient, callback);
       }
-    }, 1);
+    }, 1); // 밀리초 간격으로 실행
   };
 
   const sendMessage = () => {
+    // stompClient.connect(headers, (frame) => {
     waitForConnection(stompClient, () => {
       stompClient.send(
         `/pub/chat/room/${roomId}`,
@@ -136,10 +183,41 @@ function ChatWindow() {
     setMessage('');
   };
 
+  const unsubscribe = () => {
+    stompClient.unsubscribe();
+    console.log('unsubscribe!!');
+  };
+
+  const recvReadDto = (readIndex) => {
+    const { lastReadIndex } = readIndex;
+    console.log(messages);
+    console.log(`메세지길이.${messages.length}`);
+
+    const copies = [...messages];
+
+    for (let i = lastReadIndex; i < copies.length; i++) {
+      copies[i].isRead = true;
+    }
+
+    setMessages(copies);
+  };
+
+  const recvMessage = (recv) => {
+    console.log(recv);
+    const tempMsgs = [...messages, recv];
+    setMessages([...tempMsgs]);
+  };
+
   useEffect(() => {
+    // const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
+    // const stompClient = Stomp.over(ws);
+    // ws.onmes = () => {
+    //   console.log('WebSocket connected!!!');
+    // };
     findRoom();
     connect();
     return function cleanup() {
+      // react에서 언마운트(cleanup())될 때 비구독 앤드 접속 해제
       stompClient.unsubscribe();
       stompClient.disconnect();
     };
@@ -163,13 +241,18 @@ function ChatWindow() {
         className="flex mx-auto w-[20rem] h-[39rem] overscroll-x-none overflow-y-scroll scrollbar-hide touch-pan-y text-xs rounded-lg mb-1"
       >
         <div id="chatdetail" className="w-[20rem] mx-auto">
+          <div>{/* 만약 보낸사람이 내가 아니라면 */}</div>
           <div id="Chat">
             <div>
+              {}
+              {/* <div>{room.id}</div>
+              <div>{room.id}</div> */}
               <ul>
                 {messages.map((msg, index) => (
                   <li
                     key={index}
                     className={`my-2 ${
+                      // 아래 코드 주의
                       msg.senderId !== room.other.otherId
                         ? 'text-right'
                         : 'text-left'
@@ -185,12 +268,20 @@ function ChatWindow() {
                             {msg.read ? '' : '안읽음'}
                           </span>
                         )}
+
+                        {/* {msg === latestMyChat && (
+                          <span className="text-[0.5rem] ml-1 self-end">
+                            {msg.read ? '읽음' : '안읽음'}
+                          </span>
+                        )} */}
+
                         <div className="max-w-[12.5rem]  inline-block bg-gray-200 p-2 rounded-lg">
                           <span className="text-sm font-sans font-bold break-words whitespace-pre-line">
                             {msg.content}
                             {' '}
                           </span>
                         </div>
+                        {/* <span className="font-sans">{msg.senderId}</span> */}
                       </div>
                     ) : (
                       <div className="w-60 flex flex-row">
@@ -223,13 +314,21 @@ function ChatWindow() {
                             </div>
                           </div>
                         </span>
+
+                        <span className="text-[0.5rem] ml-1 self-end">
+                          {/* {msg.isRead ? '' : (
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-check" viewBox="0 0 16 16">
+                              <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
+                            </svg>
+                          )} */}
+                        </span>
                       </div>
                     )}
                   </li>
                 ))}
               </ul>
 
-              <div className="flex fixed bottom-0 mx-auto pt-5">
+              <div className="flex fixed bottom-0 ml-[0.2rem] pt-5">
                 <button
                   onClick={() => {
                     openModal();
@@ -263,6 +362,8 @@ function ChatWindow() {
                     }
                   }}
                 />
+                {/* <button onClick={sendMessage}>Send</button> */}
+
                 <button
                   className="flex justify-center items-center h-12 w-12 relative bg-[#F2EAF2] rounded-full m-1 hover:border"
                   onClick={sendMessage}
