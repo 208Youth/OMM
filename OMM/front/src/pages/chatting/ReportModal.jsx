@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import http from '@/api/http';
+import http from '../../api/http';
 import './ChatModal.css';
 import CloseBtn from '../../assets/CloseBtn.svg';
 import UploadIcon from '../../assets/fileuploadicon.png';
@@ -23,7 +23,7 @@ function ReportModal({ setReportModal, targetId }) {
       ...prev,
       image: fileBlob,
     }));
-    // 업로드한 이미지 보여주기
+
     const reader = new FileReader();
     reader.readAsDataURL(fileBlob);
     const uploadicon = document.getElementById('uploadicon');
@@ -40,7 +40,6 @@ function ReportModal({ setReportModal, targetId }) {
     const formData = new FormData();
     formData.append('report', JSON.stringify(report));
     formData.append('image', imgfile);
-    console.log(formData);
 
     http({
       method: 'post',
@@ -51,8 +50,7 @@ function ReportModal({ setReportModal, targetId }) {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then((res) => {
-        console.log(res);
+      .then(() => {
         alert('신고 완료되었습니다.');
         setReportModal(false);
       })
@@ -68,10 +66,6 @@ function ReportModal({ setReportModal, targetId }) {
       targetId,
     }));
   }, []);
-
-  useEffect(() => {
-    console.log(report);
-  }, [report]);
 
   return (
     <div>
@@ -130,7 +124,6 @@ function ReportModal({ setReportModal, targetId }) {
         type="file"
         accept="image/*"
         required
-        // multiple
         style={{ display: 'none' }}
         onChange={(e) => {
           encodeFileToBase64(e.target.files[0]);
