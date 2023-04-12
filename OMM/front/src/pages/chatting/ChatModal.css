@@ -21,8 +21,6 @@
 
 .BottomModal {
   position: absolute;
-  left: 50%;
-  transform: translate(-50%, 0%);
   bottom: 0;
   background-color: rgba(242, 234, 242, 1);
   border-radius: 20px;
