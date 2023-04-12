@@ -1,18 +1,13 @@
-import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
+import React, { useState } from 'react';
 import Modal from 'react-modal';
 import './MoreInfo.css';
 import { useDispatch, useSelector } from 'react-redux';
 import Kakaomap from './Kakaomap';
-import http from '../../api/http';
 import { moreInfo1 } from '../../store/userSlice';
-import { useNavigate } from 'react-router-dom';
 
 function MoreInfo({ setStep }) {
-  const token = localStorage.getItem('accesstoken');
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const navigate = useNavigate();
 
   const [moreinfo, setMoreInfo] = useState({
     nickname: '',
@@ -47,65 +42,6 @@ function MoreInfo({ setStep }) {
   };
   const [modalIsOpen, setIsOpen] = useState(false);
 
-  async function sendMyInfo() {
-    const myInfo = {
-      nickname: '박성완',
-      lat: 10,
-      lng: 10,
-      height: 170,
-      contact_style: 'NOT_MSG',
-      drinking_style: 'NOT',
-      smoking_style: 'NOT',
-      military: 'COMPLETE',
-      pet: 'DOG',
-      MBTI: 'INFP',
-    };
-    await http({
-      method: 'post',
-      url: '/member/info',
-      data: myInfo,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
-  async function sendPreferInfo() {
-    const myFav = {
-      age_min: 20,
-      age_max: 25,
-      height_min: 150,
-      height_max: 170,
-      range_min: 0,
-      range_max: 10000,
-      contact_style: 'NONE',
-      drinking_style: 'NONE',
-      smoking_style: 'NONE',
-      military: 'NONE',
-    };
-    await http({
-      method: 'post',
-      url: '/member/filtering',
-      data: myFav,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => {
-        console.log(res);
-        navigate('/main');
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
   const openModal = () => {
     setIsOpen(true);
   };
@@ -116,19 +52,6 @@ function MoreInfo({ setStep }) {
 
   return (
     <div className="bg-white w-[22.5rem] h-[48.75rem] mx-auto">
-      <div className="flex">
-        <button
-          type="button"
-          onClick={() => {
-            sendInfo();
-            sendMyInfo();
-            sendPreferInfo();
-          }}
-          className="ml-auto mr-2 text-xs"
-        >
-          &gt;&gt;
-        </button>
-      </div>
       <img src="/heart-step-1.svg" alt="" className="mx-auto w-48 pt-16 pb-8" />
       <h1 className="text-center text-2xl text-[#364C63] mb-3">더 많은 정보</h1>
       <p className="text-center text-xs text-gray-400 font-sans">
