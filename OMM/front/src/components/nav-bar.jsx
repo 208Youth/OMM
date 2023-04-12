@@ -1,13 +1,12 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import jwt_decode from 'jwt-decode';
 import SockJS from 'sockjs-client';
-// import SockJS from 'sockjs-client/dist/sockjs';
 import Stomp from 'stompjs';
 import './nav-bar.scss';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { likey } from '@/store/recSlice';
-import http from '@/api/http';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { likey } from '../store/recSlice';
+import http from '../api/http';
 import ommheart from '../assets/ommheart.png';
 import pastelheart from '../assets/pastelheart.png';
 
@@ -16,9 +15,7 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav, id }) {
   const decoded = jwt_decode(token);
   const dispatch = useDispatch();
   const [stompClient, setStompClient] = useState(null);
-  /**
-   * 채팅 알림, 좋아요 알림 useState
-   */
+
   const [chatAlert, setChatAlert] = useState(false);
   const [notiAlert, setNotiAlert] = useState(false);
   const [heartState, setHeartState] = useState();
@@ -54,25 +51,17 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav, id }) {
 
   const mainconnect = () => {
     const headers = {
-      // Authorization: import.meta.env.VITE_TOKEN,
       Authorization: `Bearer ${token}`,
     };
-    // const ws = new SockJS('http://localhost:5000/api/matching');
     const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/matching`);
     let client = Stomp.over(ws);
     client.connect(
       headers,
       (frame) => {
-        console.log('mainconnect');
         client.subscribe(
           `/sub/matching/chatalert/${decoded.sub}`,
           (message) => {
-            /**
-             * TODO : 채팅 알림 있는지
-             * 안읽은 채팅 존재 여부 -> setChatAlert
-             */
             const recv = JSON.parse(message.body);
-            if (recv.alert) console.log('나 안읽은 채팅이 있다요');
             setChatAlert(recv.alert);
           },
           {},
@@ -81,118 +70,56 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav, id }) {
         client.subscribe(
           `/sub/matching/notialert/${decoded.sub}`,
           (message) => {
-            /**
-             * TODO : 알림 있는지
-             * 알림 존재 여부 -> setnotiAlert
-             */
             const recv = JSON.parse(message.body);
-            console.log("알림메세지왓냐고 물었다")
-            console.log(recv)
-            if (recv.alert) console.log('나 받은 알림이 있다요');
             setNotiAlert(recv.alert);
           },
           {},
         );
       },
-      (error) => {
-        // 연결이 끊어졌을 때 재연결 시도 부분
-        // 필요할 때 쓰면 될 듯.
-        // if(reconnect++ < 5) {
-        //   setTimeout(function() {
-        //     console.log("connection reconnect");
-        //     connect();
-        //   },10*1000);
-        // }
-      },
+      (error) => {},
     );
     setStompClient(client);
   };
   const chatlistconnect = () => {
     const headers = {
-      // Authorization: import.meta.env.VITE_TOKEN,
       Authorization: `Bearer ${token}`,
     };
-    // const ws = new SockJS('http://localhost:5000/api/chat');
     const ws = new SockJS(`${import.meta.env.VITE_OMM_URL}/api/chat`);
     let client = Stomp.over(ws);
-    client.connect(
-      headers,
-      (frame) => {
-        console.log('chatlistconnect');
-        client.subscribe(
-          `/sub/chat/chatalert/${decoded.sub}`,
-          (message) => {
-            /**
-             * TODO : 채팅 알림 있는지
-             * 안읽은 채팅 존재 여부 -> setChatAlert
-             */
-            const recv = JSON.parse(message.body);
-            if (recv.alert) console.log('나 안읽은 채팅이 있다요');
-            setChatAlert(recv.alert);
-          },
-          {},
-        );
+    client.connect(headers, (frame) => {
+      client.subscribe(
+        `/sub/chat/chatalert/${decoded.sub}`,
+        (message) => {
+          const recv = JSON.parse(message.body);
+          setChatAlert(recv.alert);
+        },
+        {},
+      );
 
-        client.subscribe(
-          `/sub/chat/notialert/${decoded.sub}`,
-          (message) => {
-            /**
-             * TODO : 알림 있는지
-             * 알림 존재 여부 -> setnotiAlert
-             */
-            const recv = JSON.parse(message.body);
-            console.log("알림메세지왓냐고 물었다")
-            console.log(recv)
-            if (recv.alert) console.log('나 받은 알림이 있다요');
-            setNotiAlert(recv.alert);
-          },
-          {},
-        );
-      },
-      (error) => {
-        // 연결이 끊어졌을 때 재연결 시도 부분
-        // 필요할 때 쓰면 될 듯.
-        // if(reconnect++ < 5) {
-        //   setTimeout(function() {
-        //     console.log("connection reconnect");
-        //     connect();
-        //   },10*1000);
-        // }
-      },
-    );
+      client.subscribe(
+        `/sub/chat/notialert/${decoded.sub}`,
+        (message) => {
+          const recv = JSON.parse(message.body);
+          setNotiAlert(recv.alert);
+        },
+        {},
+      );
+    });
     setStompClient(client);
   };
 
   const sendMatch = () => {
-    // redux 에서 첫번째사람 지우는 함수 작성
-    // match 알림 보내기
     const headers = {
-      // Authorization: import.meta.env.VITE_TOKEN,
       Authorization: `Bearer ${token}`,
     };
-    console.log(stompClient);
     stompClient.send(
       '/pub/matching/noti',
       headers,
-      // 좋아요 할 사람 id
       JSON.stringify({ receiverId: id }),
-      // JSON.stringify({ receiverId: 503 }),
     );
-    console.log(stompClient);
-    // stompClient.disconnect();
   };
-  // const sendMatch = async () => {
-  //   await axios
-  //     .get('member/1')
-  //     .then((response) => {
-  //       console.log(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.log('에러 발생');
-  //       console.log(error);
-  //     });
-  // };
-  const like = async function () {
+
+  const like = async () => {
     const data = {
       sender_id: id,
       favor: true,
@@ -203,8 +130,7 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav, id }) {
       headers: { Authorization: `Bearer ${token}` },
       data,
     })
-      .then((res) => {
-        console.log('조아요오오오', res);
+      .then(() => {
         dispatch(likey(id));
       })
       .catch((err) => {
@@ -212,9 +138,6 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav, id }) {
       });
   };
 
-  /**
-   * 처음 렌더링 시 내 안읽은 채팅 있는지 확인
-   */
   const getChatAlert = async () => {
     await http({
       method: 'get',
@@ -222,17 +145,13 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav, id }) {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
-        console.log('출력해보렴', res);
         setChatAlert(res.data.alert);
       })
-      .catch((err) => {                   
+      .catch((err) => {
         console.log(err);
       });
   };
 
-  /**
-   * 처음 렌더링 시 내 알림 있는지 확인
-   */
   const getLikeAlert = async () => {
     await http({
       method: 'get',
@@ -240,7 +159,6 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav, id }) {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
-        console.log('출력해보렴', res);
         setNotiAlert(res.data.alert);
       })
       .catch((err) => {
@@ -249,13 +167,7 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav, id }) {
   };
 
   useEffect(() => {
-    /**
-     * 내게 온 채팅 알림 초기화
-     */
     getChatAlert();
-    /**
-     * 내게 온 알림 초기화
-     */
     getLikeAlert();
     if (mainNav) {
       mainconnect();
@@ -281,44 +193,22 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav, id }) {
             }}
             aria-hidden
           />
-          {/* {!likesNav && (
-            <i
-              className="bi bi-search-heart transition duration-300 hover:scale-125"
-              onClick={() => {
-                gotoLikes();
-              }}
-              aria-hidden
-            />
-          )}
-          {likesNav && <i className="bi bi-search-heart-fill" />} */}
         </div>
         <div className="menu-item">
           {!chatlistNav && (
             <i
-              className={chatAlert ? "bi bi-chat-heart-fill" : "bi bi-chat-heart transition duration-300 hover:scale-125"}
+              className={
+                chatAlert
+                  ? 'bi bi-chat-heart-fill'
+                  : 'bi bi-chat-heart transition duration-300 hover:scale-125'
+              }
               onClick={() => {
                 gotoChattings();
               }}
               aria-hidden
             />
           )}
-          {chatlistNav && (
-            <i className="bi bi-chat-heart-fill chatlistNav" />
-          )}
-          {/* <i
-            className={
-              chatlistNav
-                ? 'bi bi-chat-heart-fill chatlistNav'
-                : 'bi bi-chat-heart transition duration-300 hover:scale-125'
-            }
-            onClick={() => {
-              if (!chatlistNav) {
-                gotoChattings();
-              }
-            }}
-            aria-hidden
-          /> */}
-          {/* {chatlistNav && <i className="bi bi-chat-heart-fill chatlistNav" />} */}
+          {chatlistNav && <i className="bi bi-chat-heart-fill chatlistNav" />}
         </div>
         <div className="menu-item">
           {!mainNav && (
@@ -350,36 +240,20 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav, id }) {
           )}
         </div>
         <div className="menu-item">
-          {/* {!notiNav && !notiAlert && (
-            <i
-              className="bi bi-bell transition duration-300 hover:scale-125"
-              onClick={() => {
-                gotoNoti();
-              }}
-              aria-hidden
-            />
-          )}
-          {!notiNav && notiAlert && (
-            <i
-              className="bi bi-bell-fill"
-              onClick={() => {
-                gotoNoti();
-              }}
-              aria-hidden
-            />
-          )} */}
           {!notiNav && (
             <i
-              className={notiAlert ? "bi bi-bell-fill" : "bi bi-bell transition duration-300 hover:scale-125"}
+              className={
+                notiAlert
+                  ? 'bi bi-bell-fill'
+                  : 'bi bi-bell transition duration-300 hover:scale-125'
+              }
               onClick={() => {
                 gotoNoti();
               }}
               aria-hidden
             />
           )}
-          {notiNav && (
-            <i className="bi bi-bell-fill notiNav" />
-          )}
+          {notiNav && <i className="bi bi-bell-fill notiNav" />}
         </div>
         <div className="menu-item">
           {!profileNav && (
@@ -391,9 +265,7 @@ function Navbar({ profileNav, mainNav, notiNav, chatlistNav, likesNav, id }) {
               aria-hidden
             />
           )}
-          {profileNav && (
-            <i className="bi bi-person-fill" />
-          )}
+          {profileNav && <i className="bi bi-person-fill" />}
         </div>
       </nav>
     </div>
