@@ -10,17 +10,12 @@ function ChatRoom({ chat, moveTo }) {
     const compareTime = new Date(chat.lastMsgTime);
     let timeDiff = now.getTime() - compareTime.getTime() - 9 * 60 * 60 * 1000; // 밀리초 단위의 차이
     let minutesDiff = Math.floor(timeDiff / 1000 / 60); // 분 단위의 차이
-    console.log('채팅방시작.')
-    console.log("분 단위의 차이 내놔라")
     console.log(minutesDiff)
     if (minutesDiff >= 60) {
       const hourDiff = Math.floor(minutesDiff / 60);
-      console.log("시 단위의 차이 내놔라")
-      console.log(hourDiff)
+      setLasttime(`${hourDiff}시간 전`);
       if (hourDiff >= 24 && hourDiff <= 72) {
         const dayDiff = Math.floor(hourDiff / 24);
-        console.log("일 단위의 차이 내놔라")
-        console.log(dayDiff)
         setLasttime(`${dayDiff}일 전`);
       } else if (hourDiff > 73) {
         const year = compareTime.getFullYear();
@@ -28,13 +23,11 @@ function ChatRoom({ chat, moveTo }) {
         const day = compareTime.getDay();
         setLasttime(`${year}.${month}.${day}`);
       }
-      setLasttime(`${hourDiff}시간 전`);
     } else if (minutesDiff) {
       setLasttime(`${minutesDiff}분 전`);
     } else {
       setLasttime('방금 전');
     }
-    console.log("채팅끝낫다고")
     // console.log(now); // Thu Mar 30 2023 01:19:35 GMT+0900
     // 날짜비교 후 setLasttime 변경
     // 오늘 -> 몇 초(1분 이내), 몇 분(1시간 이내), 몇 시간(24시간 이내)
