@@ -11,32 +11,15 @@ import defaultImg from '../../public/defaultimage.png';
 
 function Pslider({ mainImg, profileImg, name, age }) {
   const location = useLocation();
-  console.log(profileImg);
-  console.log(mainImg);
-  // console.log(imgs);
-  // // let imgs = [];
-  // useEffect(() => {
-  //   if (location.pathname.includes('main') && mainImg) {
-  //     setImages(mainImg);
-  //   }
-  //   console.log(mainImg);
-  // }, []);
-
-  console.log('이름', name);
-  console.log(age);
-  console.log(mainImg);
 
   return (
     <div className="pcontainer">
-      {/* <h1 className="heading">1222</h1> */}
       <Swiper
         effect="coverflow"
         grabCursor
         centeredSlides
         freeMode
-        // loop
         slidesPerView="auto"
-        // spaceBetween={-1500} // 슬라이드 요소간 간격을 20px로 설정
         coverflowEffect={{
           rotate: 0,
           stretch: 0,
@@ -52,7 +35,6 @@ function Pslider({ mainImg, profileImg, name, age }) {
         modules={[EffectCoverflow, Pagination, Navigation]}
         className="swiper_container"
       >
-        {/* 이미지 리스트 들어오는 코드 작성한 후에 아래 주석풀어주세요 */}
         {!mainImg ||
           (mainImg?.length == 0 && location.pathname.includes('main') && (
             <SwiperSlide className="absolute flex content-center">
