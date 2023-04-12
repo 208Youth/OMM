@@ -1,8 +1,6 @@
-// 변경
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 
 import './Pslider.css';
-// import './Profile.css';
 import { Tooltip } from 'react-tooltip';
 import 'react-tooltip/dist/react-tooltip.css';
 import Modal from 'react-modal';
@@ -22,16 +20,13 @@ import universityYes from '../../assets/university_yes.svg';
 import universityNo from '../../assets/university_no.svg';
 import certificateYes from '../../assets/certificate_yes.svg';
 import certificateNo from '../../assets/certificate_no.svg';
-import location from '../../assets/location.svg';
-// import Pslider from '../../components/Pslider';
 import Navbar from '../../components/nav-bar';
 import userarrow from '../../assets/userarrow.svg';
 import MyinfoSetModal from './MyinfoSetModal';
 import MyinfoSetModal2 from './MyinfoSetModal2';
 import MyinfoSetModal3 from './MyinfoSetModal3';
 import http from '../../api/http';
-// props를 통해 userid를 받고 claose 버튼을 눌러서 해당 userid의
-// 아니면 메인 페이지에 해당 컴포넌트를 아예 합쳐버릴까
+
 const Pslider = lazy(() => import('../../components/Pslider'));
 
 function InterestList({ interest }) {
@@ -63,58 +58,21 @@ function MyProfile({ profileNav }) {
     income: false,
   };
 
-  // const interest = [
-  //   {
-  //     interest_list_id: 1,
-  //     name: '관심사 이름1',
-  //   },
-  //   {
-  //     interest_list_id: 2,
-  //     name: '관심사 이름2',
-  //   },
-  //   {
-  //     interest_list_id: 3,
-  //     name: '관심사 이름3',
-  //   },
-  // ];
-  // const basicInfomation = [{
-  //   nickname: '12',
-  //   age: 20,
-  //   pr: 1,
-  //   height: 180,
-  //   drinking_stlye: 1,
-  //   highschool: 1,
-  //   contact_stlye: 1,
-  //   military: 1,
-  //   mbti: 1,
-  //   interest: null,
-  //   pet: null,
-  // },
-  // ];
-  // const filterInfomation = [{
-  //   age_min: 1,
-  //   age_max: 100,
-  //   range_min: 1,
-  //   range_max: 100,
-  //   height_min: 1,
-  //   height_max: 100,
-  // }];
   const whereLoca = async () => {
     await fetch(
       'https://dapi.kakao.com/v2/local/geo/coord2address.json?x=126.8115825&y=35.205739&input_coord=WGS84',
     )
       .then((res) => {
-        console.log('장소가져옴', res);
+        console.log(res);
       })
       .catch((err) => {
-        console.log('실패', err);
+        console.log(err);
       });
   };
   const [MymodalIsOpen, setMyIsOpen] = useState(false);
   const [MymodalIsOpen2, setMyIsOpen2] = useState(false);
   const [MymodalIsOpen3, setMyIsOpen3] = useState(false);
   const [uploadImg, setuploadImg] = useState(false);
-  // const memberId = localStorage.getItem('member_id');\
   const [disabled, setDisabled] = useState(true);
   const [newPr, setnewPr] = useState('');
 
@@ -124,7 +82,6 @@ function MyProfile({ profileNav }) {
     setDisabled(false);
   };
   const openMyModal = () => {
-    console.log('내모달이 열려야');
     setMyIsOpen(true);
   };
   const closeMyModal = () => {
@@ -153,18 +110,6 @@ function MyProfile({ profileNav }) {
   const [basicInfomation, setInfo] = useState([]);
   const [filterInfomation, setFilter] = useState([]);
 
-  // const [isHovered, setIsHovered] = useState(false);
-  // const handleMouseEnter = () => {
-  //   setIsHovered(true);
-  // };
-  // const handleMouseLeave = () => {
-  //   setIsHovered(false);
-  // };
-  // newCertinfo인지 certinfo인지 axios주고받으면서 확인
-  // const GetuserInfo = () => {
-  //   http
-  //   .get(`/api/member/${memberId}`)
-  // }
   async function Freshinfo() {
     await http({
       method: 'get',
@@ -174,13 +119,10 @@ function MyProfile({ profileNav }) {
       },
     })
       .then((res) => {
-        console.log(res);
         setInfo(res.data);
       })
       .catch((err) => {
         console.log(err);
-        console.log('내기본정보 실패');
-        console.log();
       });
   }
 
@@ -193,7 +135,6 @@ function MyProfile({ profileNav }) {
       },
     })
       .then((res) => {
-        console.log(res);
         setCert(res.data);
       })
       .catch((err) => {
@@ -211,11 +152,8 @@ function MyProfile({ profileNav }) {
     })
       .then((res) => {
         console.log(res);
-        console.log('새로 보낼 정보', newPr);
       })
       .catch((err) => {
-        console.log(newPr);
-        console.log(typeof newPr);
         console.log(err);
       });
   }
@@ -229,7 +167,6 @@ function MyProfile({ profileNav }) {
       },
     })
       .then((res) => {
-        console.log(res);
         setFilter(res.data);
       })
       .catch((err) => {
@@ -246,13 +183,10 @@ function MyProfile({ profileNav }) {
       },
     })
       .then((res) => {
-        console.log(res);
-        console.log('관심사성공');
         setInterest(res.data.interestList);
       })
       .catch((err) => {
         console.log(err);
-        console.log('관심사실패');
       });
   }
 
@@ -269,7 +203,7 @@ function MyProfile({ profileNav }) {
       method: 'get',
       url: '/sign/certificate',
       headers: {
-        Authorization: `Bearer ${token}`, // TODO: 임시 토큰 부여
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => {
@@ -373,17 +307,6 @@ function MyProfile({ profileNav }) {
     militaryText = '미필';
   }
 
-  // useEffect(() => {
-  //   axios.get('')
-  //     .then((response) => setInterest(response.data.interestList))
-  //     .catch((error) => console.error(error));
-  // }, []);
-  // useEffect의 두 번째 매개변수는 의존성 배열(dependency array)로,
-  //  이 배열에 포함된 값이 변경될 때마다
-  // useEffect 콜백 함수가 호출됩니다.
-  // 의존성 배열이 빈 배열([])인 경우에는
-  // 컴포넌트가 처음 마운트될 때만 useEffect 콜백 함수가 호출되고,
-  // 그 이후에는 호출되지 않습니다.
   return (
     <div className="relative h-[48.75rem] overflow-x-hidden">
       <div className="text-center">
@@ -508,7 +431,6 @@ function MyProfile({ profileNav }) {
                       }
                       onChange={(e) => {
                         setnewPr(e.target.value);
-                        console.log(newPr);
                       }}
                     />
                   </div>
@@ -600,28 +522,6 @@ function MyProfile({ profileNav }) {
                     </div>
                   </div>
                   <hr />
-                  {/* <div className="flex justify-between m-3">
-                    <div className="">
-                      <span className="font-sans font-semibold text-black">
-                        고등학교
-                      </span>
-                    </div>
-                    <div>
-                      <div className="flex items-center">
-                        <span className="font-sans font-semibold text-black">
-                          {basicInfomation.highschool}
-                        </span>
-                        <div
-                          onClick={() => {
-                            openMyModal();
-                          }}
-                          aria-hidden
-                        >
-                          <img src={userarrow} alt="" className="w-3 ml-2" />
-                        </div>
-                      </div>
-                    </div>
-                  </div> */}
                   <hr />
                   <div className="flex justify-between m-3">
                     <div className="">
@@ -1078,11 +978,6 @@ function MyProfile({ profileNav }) {
                     </div>
                   </div>
                 </div>
-                {/* <hr /> */}
-                {/* <div className="text-2xl">관심사</div>
-                <div>
-                  <InterestList interest={interest} />
-                </div> */}
               </div>
             </div>
           </div>
