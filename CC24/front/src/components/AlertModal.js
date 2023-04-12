@@ -1,6 +1,5 @@
 /* eslint-disable */
 import React, { useState } from 'react';
-import './AlertModal.css';
 import { useNavigate } from 'react-router-dom';
 
 function AlertModal({ setAlertModal, alertTitle, alertMessage }) {

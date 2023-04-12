@@ -20,7 +20,6 @@ function Login() {
   const [pk, setPK] = useState(null);
   const [isMember, setIsMember] = useState(false);
   const didVC = JSON.parse(localStorage.getItem('DIDvc'));
-  // let ethrDidOnGoerliNamed = '';
   const [ethrDidOnGoerliNamed, setEthrDidOnGoerliNamed] = useState(null);
   useEffect(() => {
     if (localStorage.getItem('DID') === null) {
@@ -45,37 +44,8 @@ function Login() {
     }
   }, []);
   const [isLoading, setIsLoading] = useState(false);
-  // let vc = '';
-  // const data = {
-  //   holderDid: did,
-  // };
-
-  // const getVC = async () => {
-  //   setIsLoading(true);
-  //   await http({
-  //     // await axios({
-  //     method: 'post',
-  //     url: '/credential/did-address',
-  //     // url: 'http://localhost:4424/api/node/credential/did-address',
-  //     data: data,
-  //   })
-  //     .then((res) => {
-  //       console.log('성공!!!!!!!!', res);
-  //       console.log(res.data.vcJwt);
-  //       vc = res.data.vcJwt;
-  //     })
-  //     .then((res) => {
-  //       console.log(res);
-  //       ommLogin();
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  //   // navigate('/main');
-  // };
   const ommLogin = async () => {
     setIsLoading(true);
-    console.log(didVC);
     const vpPayload = {
       vp: {
         '@context': ['https://www.w3.org/2018/credentials/v1'],
@@ -83,10 +53,7 @@ function Login() {
         verifiableCredential: didVC,
       },
     };
-    console.log(vpPayload);
-    console.log('왜안와', ethrDidOnGoerliNamed);
     const vpJwt = await createVerifiablePresentationJwt(vpPayload, ethrDidOnGoerliNamed);
-    console.log(vpJwt);
     const data = {
       type: type,
       holderDid: did,
@@ -97,7 +64,6 @@ function Login() {
       .then((res) => {
         console.log(res);
         if (res.data == '#') {
-          // window.location.href = 'http://localhost:3000/login?type=SIGNUP';
           window.location.href = `${process.env.REACT_APP_OMM_FRONT}/login?type=SIGNUP`;
         } else {
           setIsLoading(false);

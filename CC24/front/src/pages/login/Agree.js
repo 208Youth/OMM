@@ -46,7 +46,6 @@ function Agree({ setIsLoading }) {
   const checkHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(!isChecked);
     checkedItemHandler(e.target.checked);
-    console.log(e.target.checked);
   };
 
   const toOMM = async () => {
