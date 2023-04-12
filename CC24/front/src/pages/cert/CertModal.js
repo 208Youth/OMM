@@ -90,6 +90,7 @@ function CertModal({ cert, info, isClose }) {
       method: 'post',
       url: '/credential',
       data: {
+        holderDid: did,
         vpJwt: vpJwt,
         credentialName: credentialName,
         id: select.id,
