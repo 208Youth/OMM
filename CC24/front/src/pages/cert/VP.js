@@ -10,7 +10,6 @@ import { EffectCards } from 'swiper';
 import ommapi from '../../api/ommapi';
 
 function VP() {
-  // const certList = useSelector((state) => state.user.cert);
   const [certList, setCertList] = useState([]);
   const VCs = JSON.parse(localStorage.getItem('VC'));
   const iden = JSON.parse(localStorage.getItem('keypair')).identifier;
@@ -44,12 +43,10 @@ function VP() {
       getName(Object.keys(VCs[i])[0]).then((name) => certKeys.push(name));
     }
     setCertList(certKeys);
-    console.log(certKeys);
   }, []);
 
   const getVP = async (e) => {
     setIsLoading(true);
-    console.log(e);
     let vc = [];
     let credentialName = '';
     if (e === '대학교') {
@@ -68,7 +65,6 @@ function VP() {
     for (var j of VCs) {
       vc.push(j[credentialName]);
     }
-    console.log(vc);
     const vpPayload = {
       vp: {
         '@context': ['https://www.w3.org/2018/credentials/v1'],
@@ -78,7 +74,6 @@ function VP() {
     };
 
     const vpJwt = await createVerifiablePresentationJwt(vpPayload, ethrDidOnGoerliNamed);
-    console.log(vpJwt);
     const data = {
       holderDid: ethrDidOnGoerliNamed.did,
       vpJwt: vpJwt,

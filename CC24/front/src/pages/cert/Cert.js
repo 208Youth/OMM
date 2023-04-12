@@ -15,9 +15,6 @@ function Cert() {
     await axios({
       method: 'get',
       url: `cert/${select}`,
-      // headers: {
-      //   Authorization: token,
-      // },
     })
       .then((res) => {
         console.log(res);
@@ -29,14 +26,6 @@ function Cert() {
         setModal(true);
       });
   }
-
-  useEffect(() => {
-    if (modal) {
-      console.log('모달 열림');
-    } else {
-      console.log('모달 닫힘');
-    }
-  }, [modal]);
   return (
     <div className="flex mt-20">
       <div className="w-80 mx-auto">
