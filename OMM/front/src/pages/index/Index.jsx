@@ -1,6 +1,5 @@
 import React from 'react';
 import './Index.css';
-// import { Link } from 'react-router-dom';
 import http from '../../api/http';
 import logo from '../../assets/ommlogo.png';
 
@@ -9,13 +8,11 @@ function Index() {
     await http
       .get(`sign/${type}`)
       .then(({ data }) => {
-        console.log(data);
         window.location.href = data;
       })
       .catch((err) => {
         console.log(err);
       });
-    // window.location.href = `http://localhost:3000/login?type=${type}`;
   }
 
   return (
