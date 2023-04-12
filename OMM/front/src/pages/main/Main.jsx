@@ -23,20 +23,15 @@ function Main() {
     localStorage.setItem('accesstoken', jwt);
   }
   const token = localStorage.getItem('accesstoken');
-  console.log(people);
-  useEffect(() => {
-    firstPerson();
-  }, [firstperson]);
+
   const firstPerson = async () => {
     await http({
       method: 'get',
       url: `/recommend/member/${firstperson}`,
       headers: {
-        // Authorization: import.meta.env.VITE_TOKEN,
         Authorization: `Bearer ${token}`,
       },
     }).then((res) => {
-      console.log('첫번째 사람 정보', res);
       setImage(res.data.imageList);
       setName(res.data.nickname);
       setAge(res.data.age);
@@ -44,36 +39,29 @@ function Main() {
     });
   };
   const getRecommend = async () => {
-    // 추천알고리즘 으로 나온 상대방 id 리스트 axios 요청
-    console.log(localStorage.getItem('accesstoken'));
     if (localStorage.getItem('accesstoken') === null) {
       navigate('/');
     }
-    console.log(token);
     await http({
       method: 'get',
       url: '/recommend',
       headers: {
-        // Authorization: import.meta.env.VITE_TOKEN,
         Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => {
-        console.log(res);
-        console.log(res.data.userList);
         setUserList(res.data.userList);
-        console.log(userlist);
         dispatch(lists(res.data.userList));
-        console.log(firstperson);
         firstPerson();
       })
       .catch((err) => {
         console.log(err);
-        if (err.message === 'Request failed with status code 400') {
-          // window.location.href = '/';
-        }
       });
   };
+
+  useEffect(() => {
+    firstPerson();
+  }, [firstperson]);
 
   useEffect(() => {
     getRecommend();
@@ -90,8 +78,7 @@ function Main() {
       headers: { Authorization: `Bearer ${token}` },
       data,
     })
-      .then((res) => {
-        console.log('시러요오오오', res);
+      .then(() => {
         dispatch(dis(id));
       })
       .catch((err) => {
@@ -100,9 +87,9 @@ function Main() {
   };
 
   const toOther = () => {
-    console.log('남의집');
     navigate(`/otherprofile/${id}`);
   };
+
   return (
     <div className="flex flex-col">
       <div
@@ -127,7 +114,6 @@ function Main() {
       >
         <Pslider mainImg={img} name={name} age={age} />
       </div>
-      {/* <Navbar mainNav={firstperson} /> */}
       <Navbar mainNav id={id} />
     </div>
   );

@@ -4,7 +4,6 @@ import http from '../../api/http';
 import CloseBtn from '../../assets/CloseBtn.svg';
 
 function ImageUploader({ setModal }) {
-  // const [images, setImages] = useState(Array(6).fill(null));
   const [images, setImages] = useState(Array(1).fill(null));
   const token = localStorage.getItem('accesstoken');
 
@@ -24,19 +23,14 @@ function ImageUploader({ setModal }) {
         canvas.toBlob((blob) => {
           setImages(images.map((image, i) => (i === index ? blob : image)));
         });
-        console.log('images');
-        console.log(images);
-        console.log(typeof images);
       };
     };
   };
 
   const handleSubmit = async () => {
-    console.log('이미지배열', images);
     const formData = new FormData();
     images.forEach((image) => {
       formData.append('images', image);
-      console.log(image);
     });
 
     await http({
@@ -47,8 +41,7 @@ function ImageUploader({ setModal }) {
         Authorization: `Bearer ${token}`,
       },
       data: formData,
-    }).then((response) => {
-      console.log(response.data);
+    }).then(() => {
       location.reload();
     });
   };
@@ -69,7 +62,6 @@ function ImageUploader({ setModal }) {
         10MB 미만의 파일만 올려주세요.
       </div>
       <div className="overflow-x-scroll uploadimg-scroll mt-5 flex justify-center">
-        {/* <div className="flex flex-row w-fit"> */}
         <div className="px-auto">
           {images.map((image, index) => (
             <div

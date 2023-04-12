@@ -1,27 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Slider from 'rc-slider';
 import http from '../../api/http';
 import './Profile.css';
 import CloseBtn from '../../assets/CloseBtn.svg';
 
-// function MyinfoSetModal2({ setModal }) {
 function MyinfoSetModal2(props) {
   const { setModal, filterInfomation } = props;
   const [myinfo, setMoreInfo] = useState(filterInfomation);
-  // const [myinfo, setMoreInfo] = useState({
-  //   age_min: '',
-  //   age_max: '',
-  //   height_min: '',
-  //   height_max: '',
-  //   range_min: '',
-  //   range_max: '',
-  //   contact_style: '',
-  //   drinking_style: '',
-  //   smoking_style: '',
-
-  // });
   const token = localStorage.getItem('accesstoken');
-  // const data = myinfo;
 
   const changeRange = (e) => {
     let min = e[0];
@@ -72,23 +58,15 @@ function MyinfoSetModal2(props) {
       },
       data: myinfo,
     })
-      .then((res) => {
-        console.log(res);
+      .then(() => {
         setModal(false);
         location.reload();
       })
-      .catch((err) => {
-        // alert('모든 정보를 설정해 주세요');
-        console.log(err);
+      .catch(() => {
         setModal(false);
-        // 새로고침말고 원래 화면 리렌더링 어떻게해
         location.reload();
       });
   };
-  useEffect(() => {
-    console.log(myinfo);
-    // console.log(mbti);
-  }, [myinfo]);
 
   return (
     <div className="overflow-y-auto">
@@ -110,7 +88,6 @@ function MyinfoSetModal2(props) {
               range
               min={20}
               max={45}
-              // defaultValue={[20, 25]}
               marks={{
                 20: 20,
                 25: 25,
@@ -122,7 +99,6 @@ function MyinfoSetModal2(props) {
               step={5}
               onChange={(e) => {
                 if (!e[0] || !e[1]) {
-                  console.log('????');
                   alert('최저, 최대 나이를 설정해주세요');
                 } else {
                   setMoreInfo((prevInfo) => ({
@@ -140,7 +116,6 @@ function MyinfoSetModal2(props) {
                 range
                 min={150}
                 max={200}
-                // defaultValue={[160, 180]}
                 marks={{
                   150: 150,
                   160: 160,
@@ -165,7 +140,6 @@ function MyinfoSetModal2(props) {
               range
               min={3}
               max={500}
-              // defaultValue={[3, 80]}
               marks={{
                 1: 3,
                 50: 10,

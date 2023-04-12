@@ -21,28 +21,18 @@ import certificateNo from '../../assets/certificate_no.svg';
 import Pslider from '../../components/Pslider';
 import './Pslider.css';
 
-// props를 통해 userid를 받고 claose 버튼을 눌러서 해당 userid의
-// 아니면 메인 페이지에 해당 컴포넌트를 아예 합쳐버릴까
 function OtherProfile() {
-  // const token = localStorage.getItem('accesstoken');
-  // const memberId = 2;
   const token = localStorage.getItem('accesstoken');
 
   const { id } = useParams();
-  console.log(id);
 
   const memberId = parseInt(id);
-
-  console.log('상대방 아이디요', memberId);
-  console.log(typeof memberId);
 
   const [newCertinfo, setCert] = useState([]);
   const [interest, setInterest] = useState([]);
   const [basicInfomation, setInfo] = useState([]);
-  // new_certinfo인지 certinfo인지 axios주고받으면서 확인
 
   async function Freshinfo() {
-    console.log('멤버아이디', memberId);
     await http({
       method: 'get',
       url: `/member/${memberId}`,
@@ -51,12 +41,10 @@ function OtherProfile() {
       },
     })
       .then((res) => {
-        console.log('상대방정보인뎁쇼', res.data);
         setInfo(res.data);
       })
       .catch((err) => {
         console.log(err);
-        console.log(memberId);
       });
   }
 
@@ -69,7 +57,6 @@ function OtherProfile() {
       },
     })
       .then((res) => {
-        console.log(res);
         setCert(res.data);
       })
       .catch((err) => {
@@ -77,11 +64,6 @@ function OtherProfile() {
       });
   }
 
-  // const FreshCert = () => {
-  //   http.get(`member/${memberId}/cert`, { headers: { Authorization: `Bearer ${token}` } })
-  //     .then((response) => setCert(response.data))
-  //     .catch((error) => console.error(error));
-  // };
   const FreshInterest = async () => {
     await http({
       method: 'get',
@@ -91,7 +73,6 @@ function OtherProfile() {
       },
     })
       .then((res) => {
-        console.log('관심사멉니까', res.data);
         setInterest(res.data.interestList);
       })
       .catch((err) => {
@@ -215,12 +196,6 @@ function OtherProfile() {
                 {basicInfomation.age}
               </span>
             </div>
-            {/* <div className="text-slate-500 text-sm ml-2">
-              <span className="inline-block">
-                <img src={location} alt="" width={10} />
-              </span>
-              <span className="mb-1" />
-            </div> */}
             <div>
               <hr />
               <div className="my-1" data-aos="fade-up">
