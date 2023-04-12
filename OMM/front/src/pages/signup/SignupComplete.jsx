@@ -6,7 +6,6 @@ function SignupComplete() {
   const navigate = useNavigate();
   useEffect(() => {
     setTimeout(() => {
-      // 회원가입 성공후 보낼 메인페이지로 이동
       navigate('/main');
     }, 2000);
   });

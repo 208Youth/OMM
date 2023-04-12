@@ -23,11 +23,3 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     </Provider>
   </React.StrictMode>,
 );
-
-// ReactDOM.render(<Routes />, document.getElementById("root"));
-
-// ReactDOM.createRoot(document.getElementById('root')).render(
-//   <React.StrictMode>
-//     <App />
-//   </React.StrictMode>,
-// )
