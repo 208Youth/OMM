@@ -14,7 +14,7 @@ function BottomModal({ setModal, setReportModal }) {
           aria-hidden="true"
         />
       </p>
-      <div className="mx-auto flex justify-between mt-8">
+      <div className="mx-auto flex justify-center mt-8">
         <div
           onClick={() => {
             setReportModal(true);
