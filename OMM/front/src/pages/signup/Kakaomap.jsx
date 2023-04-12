@@ -23,7 +23,6 @@ function Kakaomap({ setModal, location }) {
     let callback = (result, status) => {
       if (status === kakao.maps.services.Status.OK) {
         const newSearch = result[0];
-        console.log(newSearch);
         setState((prev) => ({
           ...prev,
           center: { lat: newSearch.y, lng: newSearch.x },
@@ -41,12 +40,11 @@ function Kakaomap({ setModal, location }) {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          console.log(position);
           setState((prev) => ({
             ...prev,
             center: {
-              lat: position.coords.latitude, // 위도
-              lng: position.coords.longitude, // 경도
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
             },
             isLoading: false,
           }));
@@ -60,7 +58,6 @@ function Kakaomap({ setModal, location }) {
         },
       );
     } else {
-      // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
       setState((prev) => ({
         ...prev,
         errMsg: '현위치를 알고 싶다면 위치를 허용해주세요.',
@@ -96,10 +93,9 @@ function Kakaomap({ setModal, location }) {
         placeholder="시/구/동 및 주소를 입력해주세요"
       />
       <div className="ring-2 ring-[#364C63] rounded-2xl">
-        <Map // 지도를 표시할 Container
+        <Map
           center={state.center}
           style={{
-            // 지도의 크기
             width: '100%',
             height: '250px',
             borderRadius: '16px',
@@ -143,7 +139,7 @@ function Kakaomap({ setModal, location }) {
             </MapMarker>
           )}
           {!newposition && (
-            <MapMarker // 마커를 생성합니다
+            <MapMarker
               position={state.center}
               clickable
               onClick={() => setIsOpen(true)}

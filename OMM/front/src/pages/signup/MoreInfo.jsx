@@ -13,7 +13,7 @@ function MoreInfo({ setStep }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
-  console.log(user.nickname);
+
   const [moreinfo, setMoreInfo] = useState({
     nickname: '',
     height: 0,
@@ -32,8 +32,6 @@ function MoreInfo({ setStep }) {
       && user.military
     ) {
       setStep(2);
-    } else {
-      // alert('모든 정보를 입력해주세요!');
     }
   };
   const sendInfo = () => {
@@ -45,10 +43,8 @@ function MoreInfo({ setStep }) {
       highschool: moreinfo.highschool,
       military: moreinfo.military,
     };
-    console.log(info);
     dispatch(moreInfo1(info));
   };
-  console.log(user);
   const [modalIsOpen, setIsOpen] = useState(false);
 
   async function sendMyInfo() {
@@ -64,21 +60,18 @@ function MoreInfo({ setStep }) {
       pet: 'DOG',
       MBTI: 'INFP',
     };
-    console.log('보낼 내정보', myInfo);
     await http({
       method: 'post',
       url: '/member/info',
       data: myInfo,
       headers: {
-        // Authorization: import.meta.env.VITE_TOKEN,
         Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => {
-        console.log(res.data);
+        console.log(res);
       })
       .catch((err) => {
-        // console.log(user);
         console.log(err);
       });
   }
@@ -96,20 +89,17 @@ function MoreInfo({ setStep }) {
       smoking_style: 'NONE',
       military: 'NONE',
     };
-    console.log('보낼 선호정보', myFav);
     await http({
       method: 'post',
       url: '/member/filtering',
       data: myFav,
       headers: {
-        // Authorization: import.meta.env.VITE_TOKEN,
         Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => {
-        console.log(res.data);
+        console.log(res);
         navigate('/main');
-        // next();
       })
       .catch((err) => {
         console.log(err);
@@ -120,38 +110,10 @@ function MoreInfo({ setStep }) {
     setIsOpen(true);
   };
 
-  // const afterOpenModal = () => {
-  //   subtitle.style.color = '#f00';
-  // };
-
   const closeModal = () => {
     setIsOpen(false);
   };
 
-  // const onChangeHandler = (e) => {
-  //   setMoreInfo(() => {
-  //     return {
-  //     ...moreinfo,
-  //       [e.target.name]: e.target.value,
-  //     };
-  //   })
-  // }
-  useEffect(() => {
-    console.log(moreinfo);
-  }, [moreinfo]);
-
-  // useEffect(() => {
-  //   console.log(user);
-  //   document.getElementById('nickname').value = user.nickname;
-  //   document.getElementById('height').value = user.height;
-  //   document.getElementById('highschool').value = user.highschool;
-  //   setMoreInfo((prev) => ({
-  //     ...prev,
-  //     lat: user.lat,
-  //     lng: user.lng,
-  //   }));
-  //   // document.getElementByName('military').value = user.military;
-  // }, []);
   return (
     <div className="bg-white w-[22.5rem] h-[48.75rem] mx-auto">
       <div className="flex">
@@ -187,8 +149,6 @@ function MoreInfo({ setStep }) {
                 nickname: e.target.value,
               }));
             }}
-            // value = { moreinfo.nickname }
-            // onChange={ onChangeHandlerId }
             type="text"
             id="nickname"
             className="w-full font-sans text-[#364C63] font-semibold tracking-wide bg-white border-2 border-[#f59fb277] focus:border-[#F094A7] placeholder-[#f59fb277] text-sm rounded-3xl block p-2.5 drop-shadow-md"
@@ -214,8 +174,6 @@ function MoreInfo({ setStep }) {
           id="height"
           type="text"
           placeholder="키"
-          // value = { moreinfo.height }
-          // onChange={ onChangeHandlerId }
           className="w-20 h-10 font-sans font-semibold text-[#364C63] bg-white border-2 border-[#f59fb277] focus:border-[#F094A7] placeholder-[#f59fb277] text-sm text-center rounded-3xl block p-2.5 drop-shadow-md"
         />
         <span className="self-center ml-4 text-[#364C63] font-sans font-semibold">
@@ -224,7 +182,6 @@ function MoreInfo({ setStep }) {
       </div>
       <Modal
         isOpen={modalIsOpen}
-        // onAfterOpen={afterOpenModal}
         onRequestClose={closeModal}
         className="KakaomapModal"
         overlayClassName="KakaomapOverlay"
@@ -272,8 +229,6 @@ function MoreInfo({ setStep }) {
           id="highschool"
           type="text"
           placeholder="싸피"
-          // value = { moreinfo.highschool }
-          // onChange={ onChangeHandlerId }
           className="w-20 h-10 font-sans font-semibold text-[#364C63] bg-white border-2 border-[#f59fb277] focus:border-[#F094A7] placeholder-[#f59fb277] text-sm text-center rounded-3xl block p-2.5 drop-shadow-md"
         />
         <span className="self-center ml-4 text-[#364C63] font-sans font-semibold">
@@ -297,8 +252,6 @@ function MoreInfo({ setStep }) {
               type="radio"
               name="military"
               value="NONE"
-              // checked={moreinfo.military === 'NONE'}
-              // onChange={onChangeHandler}
               className="peer/military1"
             />
             <label
@@ -320,8 +273,6 @@ function MoreInfo({ setStep }) {
               type="radio"
               name="military"
               value="COMPLETE"
-              // checked={moreinfo.military === 'COMPLETE'}
-              // onChange={onChangeHandler}
               className="peer/military3"
             />
             <label
@@ -343,8 +294,6 @@ function MoreInfo({ setStep }) {
               type="radio"
               name="military"
               value="EXEMPT"
-              // checked={moreinfo.military === 'EXEMPT'}
-              // onChange={onChangeHandler}
               className="peer/military5"
             />
             <label
@@ -366,8 +315,6 @@ function MoreInfo({ setStep }) {
               type="radio"
               name="military"
               value="YET"
-              // checked={moreinfo.military === 'YET'}
-              // onChange={ onChangeHandler }
               className="peer/military2"
             />
             <label

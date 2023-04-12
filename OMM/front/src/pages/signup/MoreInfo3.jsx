@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import { moreInfo3 } from '../../store/userSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
-function MoreInfo3({setStep}) {
+function MoreInfo3({ setStep }) {
   const dispatch = useDispatch();
-  const user = useSelector(state => state.user);
   const [moreinfo, setMoreInfo] = useState({
     age_min: 20,
     age_max: 25,
@@ -15,22 +14,12 @@ function MoreInfo3({setStep}) {
     range_min: 3,
     range_max: 20,
   });
-  const prev = ()=> {
+  const prev = () => {
     setStep(2);
-  }
-  const next = () => { 
-    // if (
-    //   moreinfo.age_min && 
-    //   moreinfo.age_max && 
-    //   moreinfo.height_min && 
-    //   moreinfo.height_max && 
-    //   moreinfo.range_min &&
-    //   moreinfo.range_max){
-        setStep(4)
-      // } else {
-      //   alert('모든 정보를 입력해주세요!');
-      // }
-  }
+  };
+  const next = () => {
+    setStep(4);
+  };
   const sendInfo = () => {
     const info = {
       age_min: moreinfo.age_min,
@@ -40,7 +29,6 @@ function MoreInfo3({setStep}) {
       range_min: moreinfo.range_min,
       range_max: moreinfo.range_max,
     };
-    console.log(info);
     dispatch(moreInfo3(info));
   };
   const changeRange = (e) => {
@@ -82,11 +70,6 @@ function MoreInfo3({setStep}) {
       range_max: max,
     }));
   };
-
-  useEffect(() => {
-    console.log(moreinfo);
-    console.log(user);
-  }, [moreinfo]);
 
   return (
     <div className="bg-white w-[22.5rem] h-[48.75rem] mx-auto">
@@ -191,18 +174,18 @@ function MoreInfo3({setStep}) {
       </div>
       <div className="flex justify-between mx-8 text-[#364C63] text-lg">
         <button
-            type="button"
-            aria-hidden
-            onClick={() => {prev()}}
-          >
-            &lt;
-          </button>
-          <button
-            type="button"
-            aria-hidden
-            onClick={() => {next(); sendInfo()}}
-          >
-            &gt;
+          type="button"
+          aria-hidden
+          onClick={() => { prev(); }}
+        >
+          &lt;
+        </button>
+        <button
+          type="button"
+          aria-hidden
+          onClick={() => { next(); sendInfo(); }}
+        >
+          &gt;
         </button>
       </div>
     </div>
