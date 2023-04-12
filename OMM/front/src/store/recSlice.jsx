@@ -19,7 +19,6 @@ const recSlice = createSlice({
           i--;
         }
       }
-      console.log(state.list);
     },
     likey: (state, action) => {
       for(let i = 0; i < state.list.length; i++) {
@@ -28,12 +27,9 @@ const recSlice = createSlice({
           i--;
         }
       }
-      console.log(state.list);
     },
   },
 });
-
-// reducer 사용시 import { userInfo } from '../../store/userSlice'; 이렇게 사용
 
 export const { lists, dis, likey } = recSlice.actions;
 export default recSlice;
