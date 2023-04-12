@@ -140,8 +140,8 @@ function ChatWindow() {
     findRoom();
     connect();
     return function cleanup() {
-      stompClient.unsubscribe();
-      stompClient.disconnect();
+      // stompClient.unsubscribe();
+      // stompClient.disconnect();
     };
   }, []);
 
@@ -166,29 +166,28 @@ function ChatWindow() {
           <div id="Chat">
             <div>
               <ul>
-                {messages.map((msg, index) => (
+                {messages?.map((msg, index) => (
                   <li
                     key={index}
                     className={`my-2 ${
-                      msg.senderId !== room.other.otherId
+                      msg?.senderId !== room?.other?.otherId
                         ? 'text-right'
                         : 'text-left'
                     } ${lastchatindex === index ? '' : ''}`}
                   >
-                    {msg.senderId !== room.other.otherId ? (
+                    {msg?.senderId !== room?.other?.otherId ? (
                       <div className="w-60 flex font-sans ml-20 justify-end">
                         {lastchatindex === index && (
                           <span
                             id="readen"
                             className="text-[0.5rem] mr-1 self-end"
                           >
-                            {msg.read ? '' : '안읽음'}
+                            {msg?.read ? '' : '안읽음'}
                           </span>
                         )}
                         <div className="max-w-[12.5rem]  inline-block bg-gray-200 p-2 rounded-lg">
                           <span className="text-sm font-sans font-bold break-words whitespace-pre-line">
-                            {msg.content}
-                            {' '}
+                            {msg?.content}{' '}
                           </span>
                         </div>
                       </div>
@@ -218,7 +217,7 @@ function ChatWindow() {
                                 {otherNickname}
                               </div>
                               <span className="text-sm ml-2 mr-2 font-sans font-bold break-words w-fit max-w-[12.5rem] inline-block bg-[#E6C9C6] p-2 rounded-lg m">
-                                {msg.content}
+                                {msg?.content}
                               </span>
                             </div>
                           </div>
