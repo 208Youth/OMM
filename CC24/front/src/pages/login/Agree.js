@@ -21,8 +21,6 @@ function Agree({ setIsLoading }) {
       setDid(JSON.parse(localStorage.getItem('DID')).did);
       setIden(JSON.parse(localStorage.getItem('keypair')).identifier);
       setPK(JSON.parse(localStorage.getItem('keypair')).privateKey);
-      console.log(JSON.parse(localStorage.getItem('keypair')).privateKey);
-      console.log(JSON.parse(localStorage.getItem('keypair')).identifier);
       const ethrDidOnGoerli = new EthrDID({
         identifier: JSON.parse(localStorage.getItem('keypair')).identifier,
         privateKey: JSON.parse(localStorage.getItem('keypair')).privateKey,
@@ -49,7 +47,6 @@ function Agree({ setIsLoading }) {
   };
 
   const toOMM = async () => {
-
     const vpPayload = {
       vp: {
         '@context': ['https://www.w3.org/2018/credentials/v1'],
@@ -57,11 +54,7 @@ function Agree({ setIsLoading }) {
         verifiableCredential: [idvc, didvc],
       },
     };
-    console.log(did);
-    console.log(vpPayload);
-    console.log(ethrDidOnGoerliNamed);
     const vpJwt = await createVerifiablePresentationJwt(vpPayload, ethrDidOnGoerliNamed);
-    console.log(vpJwt);
     const data = {
       type: type,
       holderDid: did,
