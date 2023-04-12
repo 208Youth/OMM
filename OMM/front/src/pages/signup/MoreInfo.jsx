@@ -153,7 +153,7 @@ function MoreInfo({ setStep }) {
   //   // document.getElementByName('military').value = user.military;
   // }, []);
   return (
-    <div className="bg-white w-[24rem] h-[48.75rem] mx-auto">
+    <div className="bg-white w-[22.5rem] h-[48.75rem] mx-auto">
       <div className="flex">
         <button
           type="button"
