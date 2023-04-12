@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import http from '@/api/http';
+import http from '../../api/http';
 
 function LoginForm() {
   const [username, setUsername] = useState('');

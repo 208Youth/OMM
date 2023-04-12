@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import AOS from 'aos';
 import ChatRoom from '../../components/ChatRoom';
 import Navbar from '../../components/nav-bar';
@@ -8,7 +8,6 @@ import http from '../../api/http';
 function ChatList() {
   const [chats, setChats] = useState([]);
   const token = localStorage.getItem('accesstoken');
-  const location = useLocation();
   const navigate = useNavigate();
   function handleGoBack() {
     navigate('/main');
@@ -23,7 +22,6 @@ function ChatList() {
       },
     })
       .then((res) => {
-        console.log('받은데이터', res.data.list);
         setChats(res.data.list);
       })
       .catch((err) => {
@@ -33,7 +31,6 @@ function ChatList() {
 
   const gotoChatwindow = (id) => {
     navigate(`/chatwindow/${id}`);
-    console.log('가자');
   };
 
   useEffect(() => {
@@ -43,10 +40,6 @@ function ChatList() {
   useEffect(() => {
     AOS.init();
   });
-
-  useEffect(() => {
-    console.log('바꼇니', chats);
-  }, [chats]);
 
   return (
     <div className="text-[#364C63] w-[22.5rem] h-[48.75rem] mx-auto">

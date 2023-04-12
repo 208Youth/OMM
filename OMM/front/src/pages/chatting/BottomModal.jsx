@@ -1,7 +1,5 @@
 import React from 'react';
 import './ChatModal.css';
-import Modal from 'react-modal';
-import ReportModal from './ReportModal';
 import CloseBtn from '../../assets/CloseBtn.svg';
 
 function BottomModal({ setModal, setReportModal }) {
@@ -52,10 +50,7 @@ function BottomModal({ setModal, setReportModal }) {
           </svg>
         </div>
       </div>
-      <div className="flex justify-between mt-4 text-gray-500">
-        <div className="w-20 ml-8 text-center font-sans font-semibold">
-          일정
-        </div>
+      <div className="flex justify-center mt-4 text-gray-500">
         <div className="w-20 mr-8 text-center font-sans font-semibold">
           신고
         </div>
