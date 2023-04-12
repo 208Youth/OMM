@@ -15,21 +15,6 @@ function BottomModal({ setModal, setReportModal }) {
         />
       </p>
       <div className="mx-auto flex justify-between mt-8">
-        <div className="relative bg-[#A8ADE5] w-20 h-20 rounded-full ml-8">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="2rem"
-            height="2rem"
-            fill="currentColor"
-            className="bi bi-calendar-heart absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white"
-            viewBox="0 0 16 16"
-          >
-            <path
-              fillRule="evenodd"
-              d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5ZM1 14V4h14v10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1Zm7-6.507c1.664-1.711 5.825 1.283 0 5.132-5.825-3.85-1.664-6.843 0-5.132Z"
-            />
-          </svg>
-        </div>
         <div
           onClick={() => {
             setReportModal(true);
