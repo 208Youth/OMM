@@ -44,20 +44,22 @@ function ReportModal({ setReportModal, targetId }) {
 
     http({
       method: 'post',
-      url: `/admin/report`,
+      url: '/admin/report',
       data: formData,
       headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
       },
     })
-    .then((res) => {
-      console.log(res);
-      setReportModal(false);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+      .then((res) => {
+        console.log(res);
+        alert('신고 완료되었습니다.');
+        setReportModal(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        alert('신고에 실패했습니다.');
+      });
   }
 
   useEffect(() => {
