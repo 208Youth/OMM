@@ -5,20 +5,15 @@ import CC24Logo from '../../assets/cc24trans.svg';
 
 function Index() {
   return (
-    <div className="wrap-box-index">
-      <div className="logo-box">
+    <div className="flex-col w-80 mx-auto">
+      <div className="flex-col w-80 mx-auto mt-20 mb-10">
         <img src={CC24Logo} className="" alt="CC24 logo" />
       </div>
-      <div>
+      <div className="flex-col mx-auto text-center">
         <Link to="/signup">
           <button className="btn">회원가입</button>
         </Link>
       </div>
-      {/* <div>
-        <Link to="/login">
-          <button className="btn">로그인</button>
-        </Link>
-      </div> */}
     </div>
   );
 }

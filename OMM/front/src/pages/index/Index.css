@@ -12,20 +12,19 @@ html {
   background-color: white;
   color: rgb(145, 133, 255);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  margin: 5px;
+  margin: 0.313rem;
   z-index: 5;
 }
 
-.btn-white :hover {
+.btn-white:hover {
   border-radius: 20px;
   width: 17rem;
   height: 3rem;
   font-size: 1rem;
   font-weight: 700;
-  color: white;
   border: 0.1rem solid rgb(145, 133, 255);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  margin: 5px;
+  margin: 0.313rem;
   z-index: 5;
 }
 
@@ -38,22 +37,33 @@ html {
   color: white;
   border: 0.1rem solid white;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  margin: 5px;
+  margin: 0.313rem;
+  z-index: 5;
+}
+
+.btn-transparent:hover {
+  border-radius: 20px;
+  width: 17rem;
+  height: 3rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: white;
+  border: 0.1rem solid rgb(145, 133, 255);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  margin: 0.313rem;
   z-index: 5;
 }
 
 .logo {
   z-index: 1;
-  /* width: 320px;
-  height: 320px; */
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   position: absolute;
   animation: fadeout 3s;
-  -moz-animation: fadeout 3s; /* Firefox */
-  -webkit-animation: fadeout 3s; /* Safari and Chrome */
-  -o-animation: fadeout 3s; /* Opera */
+  -moz-animation: fadeout 3s;
+  -webkit-animation: fadeout 3s;
+  -o-animation: fadeout 3s;
   animation-fill-mode: forwards;
 }
 
@@ -61,12 +71,14 @@ html {
   z-index: 2;
   width: 320px;
   height: 320px;
-  top: 200px;
-  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
   animation: fadein 3s;
-  -moz-animation: fadein 3s; /* Firefox */
-  -webkit-animation: fadein 3s; /* Safari and Chrome */
-  -o-animation: fadein 3s; /* Opera */
+  -moz-animation: fadein 3s;
+  -webkit-animation: fadein 3s;
+  -o-animation: fadein 3s;
 }
 
 @keyframes fadein {
@@ -78,7 +90,6 @@ html {
   }
 }
 @-moz-keyframes fadein {
-  /* Firefox */
   from {
     opacity: 0;
   }
@@ -87,7 +98,6 @@ html {
   }
 }
 @-webkit-keyframes fadein {
-  /* Safari and Chrome */
   from {
     opacity: 0;
   }
@@ -96,7 +106,6 @@ html {
   }
 }
 @-o-keyframes fadein {
-  /* Opera */
   from {
     opacity: 0;
   }
@@ -114,7 +123,6 @@ html {
   }
 }
 @-moz-keyframes fadeout {
-  /* Firefox */
   from {
     opacity: 1;
   }
@@ -123,7 +131,6 @@ html {
   }
 }
 @-webkit-keyframes fadeout {
-  /* Safari and Chrome */
   from {
     opacity: 1;
   }
@@ -132,7 +139,6 @@ html {
   }
 }
 @-o-keyframes fadeout {
-  /* Opera */
   from {
     opacity: 1;
   }

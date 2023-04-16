@@ -1,40 +1,12 @@
-// import { def } from '@vue/shared';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import http from '../../api/http';
-// import '../../index.css';
-// import CloseBtn from '../../assets/CloseBtn.svg';
 import './Profile.css';
 import CloseBtn from '../../assets/CloseBtn.svg';
-// import { useLocation, useNavigate } from 'react-router-dom';
 
 function MyinfoSetModal(props) {
   const { setModal, basicInformation } = props;
   const [myinfo, setMyInfo] = useState(basicInformation);
-  // const navigate = useNavigate();
-
   const token = localStorage.getItem('accesstoken');
-  //   height: '',
-  //   contact_style: '',
-  //   drinking_style: '',
-  //   smoking_style: '',
-  //   military: '',
-  //   pet: '',
-  //  mbti: ''
-
-  // });
-  // console.log(basicInformation);
-  console.log('프롭스', props);
-
-  // const [mbti, setMbti] = useState(['', '', '', '']);
-  // const [mbti, setMbti] = useState('');
-  // const handleMbtiChange = (index, value) => {
-  //   const newMbti = [...mbti];
-  //   newMbti[index] = value;
-  //   console.log(newMbti);
-  //   console.log(newMbti.join(''));
-  //   const newMbtistr = newMbti.join('');
-  //   setMbti(newMbtistr);
-  // };
 
   const [MBTI1, setMBTI1] = useState('');
   const [MBTI2, setMBTI2] = useState('');
@@ -60,24 +32,14 @@ function MyinfoSetModal(props) {
       },
       data,
     })
-      .then((res) => {
-        console.log(res);
-        console.log(data);
-
+      .then(() => {
         setModal(false);
         location.reload();
       })
-      .catch((err) => {
-        console.log(err);
-        console.log('담아줄 데이터');
+      .catch(() => {
         alert('모든 정보를 설정해 주세요');
-        // location.reload();
       });
   };
-  useEffect(() => {
-    console.log(myinfo);
-    // console.log(mbti);
-  }, [myinfo]);
 
   return (
     <div className="overflow-y-auto">
@@ -94,11 +56,6 @@ function MyinfoSetModal(props) {
       <div className="">
         <h1>내 정보</h1>
         <div className="">
-          <div className="flex justify-between m-3">
-            {/* <span>키</span>
-            <span>키값</span> */}
-
-          </div>
           <div className="my-8 mx-8">
             <h3 className="text-[#364C63] block mb-5 text-base">
               음주 스타일
@@ -403,19 +360,6 @@ function MyinfoSetModal(props) {
                 </label>
               </div>
             </div>
-
-            {/* <div className="grid grid-rows-2 grid-flow-col">
-              <button className="border border-black m-1 rounded" onClick={() => handleMbtiChange(0, 'I')}>I</button>
-              <button className="border border-black m-1 rounded" onClick={() => handleMbtiChange(0, 'E')}>E</button>
-              <button className="border border-black m-1 rounded" onClick={() => handleMbtiChange(1, 'N')}>N</button>
-              <button className="border border-black m-1 rounded" onClick={() => handleMbtiChange(1, 'S')}>S</button>
-              <button className="border border-black m-1 rounded" onClick={() => handleMbtiChange(2, 'T')}>T</button>
-              <button className="border border-black m-1 rounded" onClick={() => handleMbtiChange(2, 'F')}>F</button>
-              <button className="border border-black m-1 rounded" onClick={() => handleMbtiChange(3, 'J')}>J</button>
-              <button className="border border-black m-1 rounded" onClick={() => handleMbtiChange(3, 'P')}>P</button>
-
-            </div> */}
-
           </div>
           <div className="my-8 mx-8">
             <h3 className="text-[#364C63] block mb-5 text-base">

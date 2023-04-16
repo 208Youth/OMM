@@ -1,16 +1,17 @@
 .ProfileImgModal {
   position: absolute;
-  /* top: ; */
-  /* left: 40px;
-  right: 40px; */
+  left: 50%;
+  transform: translate(-50%, 0%);
   bottom: 0;
   background-color: rgba(242, 234, 242, 1);
   border-radius: 20px;
   padding: 1.5rem;
+  max-width: 37rem;
   width: 100%;
   min-height: 27rem;
   z-index: 7;
 }
+
 
 .ProfileImgOverlay {
   position: fixed;

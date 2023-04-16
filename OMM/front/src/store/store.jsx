@@ -7,8 +7,6 @@ import userSlice from './userSlice';
 import chatSlice from './chatSlice';
 import recSlice from './recSlice';
 
-// useSelector 사용시  const ... = useSelector(state => state.user); 이렇게 호출
-
 const reducers = combineReducers({
   user: userSlice.reducer,
   chat: chatSlice.reducer,

@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import axios from '../../api/springapi';
@@ -15,9 +16,6 @@ function Cert() {
     await axios({
       method: 'get',
       url: `cert/${select}`,
-      // headers: {
-      //   Authorization: token,
-      // },
     })
       .then((res) => {
         console.log(res);
@@ -29,16 +27,8 @@ function Cert() {
         setModal(true);
       });
   }
-
-  useEffect(() => {
-    if (modal) {
-      console.log('모달 열림');
-    } else {
-      console.log('모달 닫힘');
-    }
-  }, [modal]);
   return (
-    <div className="flex">
+    <div className="flex mt-20">
       <div className="w-80 mx-auto">
         <img src={CC24Logo} className="cert-title" alt="CC24 logo" />
         <Modal
@@ -64,7 +54,7 @@ function Cert() {
             getList('university');
           }}
           aria-hidden="true"
-          className="flex justify-between ml-8 py-3 border-b-2 border-b-gray-200 hover:bg-gray-100"
+          className="flex justify-between py-3 border-b-2 border-b-gray-200 hover:bg-gray-100"
         >
           <div className="text-xl hover:text-blue-900">대학교 인증</div>
           <div className="cert-point text-xl hover:text-stone-900"> &gt;</div>
@@ -75,7 +65,7 @@ function Cert() {
             getList('job');
           }}
           aria-hidden="true"
-          className="flex justify-between ml-8 py-3 border-b-2 border-b-gray-200 hover:bg-gray-100"
+          className="flex justify-between py-3 border-b-2 border-b-gray-200 hover:bg-gray-100"
         >
           <div className="text-xl hover:text-blue-900">회사 인증</div>
           <div className="cert-point text-xl hover:text-stone-900"> &gt;</div>
@@ -86,7 +76,7 @@ function Cert() {
             setModal(true);
           }}
           aria-hidden="true"
-          className="flex justify-between ml-8 py-3 border-b-2 border-b-gray-200 hover:bg-gray-100"
+          className="flex justify-between py-3 border-b-2 border-b-gray-200 hover:bg-gray-100"
         >
           <div className="text-xl hover:text-blue-900">소득 인증</div>
           <div className="cert-point text-xl hover:text-stone-900"> &gt;</div>
@@ -97,7 +87,7 @@ function Cert() {
             setModal(true);
           }}
           aria-hidden="true"
-          className="flex justify-between ml-8 py-3 border-b-2 border-b-gray-200 hover:bg-gray-100"
+          className="flex justify-between py-3 border-b-2 border-b-gray-200 hover:bg-gray-100"
         >
           <div className="text-xl hover:text-blue-900">부동산 인증</div>
           <div className="cert-point text-xl hover:text-stone-900"> &gt;</div>
@@ -108,7 +98,7 @@ function Cert() {
             setModal(true);
           }}
           aria-hidden="true"
-          className="flex justify-between ml-8 py-3 border-b-2 border-b-gray-200 hover:bg-gray-100"
+          className="flex justify-between py-3 border-b-2 border-b-gray-200 hover:bg-gray-100"
         >
           <div className="text-xl hover:text-blue-900">건강검진서</div>
           <div className="cert-point text-xl hover:text-stone-900"> &gt;</div>
@@ -119,7 +109,7 @@ function Cert() {
             getList('certificate');
           }}
           aria-hidden="true"
-          className="flex justify-between ml-8 py-3 border-b-2 border-b-gray-200 hover:bg-gray-100"
+          className="flex justify-between py-3 border-b-2 border-b-gray-200 hover:bg-gray-100"
         >
           <div className="text-xl hover:text-blue-900">자격증 인증</div>
           <div className="cert-point text-xl hover:text-stone-900"> &gt;</div>

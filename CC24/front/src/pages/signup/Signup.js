@@ -43,7 +43,6 @@ function Signup() {
     },
   };
 
-  console.log(localStorage.getItem('DID'));
   if (localStorage.getItem('DID')) {
     setTimeout(() => {
       navigate('/main');
@@ -57,7 +56,6 @@ function Signup() {
       day,
       gender,
     };
-    console.log(info);
     dispatch(userInfo(info));
   };
   const signup = async function () {
@@ -73,30 +71,21 @@ function Signup() {
     window.localStorage.setItem('keypair', JSON.stringify(keypair));
     window.localStorage.setItem('DID', JSON.stringify(ethrDidOnGoerliNamed));
     const localData = JSON.parse(localStorage.getItem('DID'));
-    // console.log(localData.did);
-    // console.log(id.personalId);
     const data = new FormData();
     data.append('holderDid', localData.did);
     data.append('personalId', JSON.stringify(id.personalId));
     data.append('signature', id.signature);
     data.append('image', img);
-    for (let key of data.keys()) {
-      console.log(key, ':', data.get(key));
-    }
     const didData = {
       holderDid: localData.did,
     };
     const getVC = async () => {
       await http({
-        // await axios({
         method: 'post',
         url: '/credential/did-address',
-        // url: 'http://localhost:4424/api/node/credential/did-address',
         data: didData,
       })
         .then((res) => {
-          console.log('성공!!!!!!!!', res);
-          console.log(res.data.vcJwt);
           localStorage.setItem('DIDvc', JSON.stringify(res.data.vcJwt));
         })
         .catch((err) => {
@@ -111,7 +100,6 @@ function Signup() {
       data: data,
     })
       .then((res) => {
-        console.log('성공!!!!!!!!', res);
         dispatch(idenVC(res.data.vcJwt));
         window.localStorage.setItem('IdenVC', JSON.stringify(res.data.vcJwt));
       })
@@ -128,21 +116,6 @@ function Signup() {
     }, 3000);
   };
 
-  useEffect(() => {
-    if (faceModal) {
-      console.log('모달 열림');
-    } else {
-      console.log('모달 닫힘');
-    }
-  }, [faceModal]);
-  useEffect(() => {
-    if (idenModal) {
-      console.log('모달 열림');
-    } else {
-      console.log('모달 닫힘');
-    }
-  }, [idenModal]);
-
   const years = [];
   for (let i = 1980; i < 2004; i++) {
     years.push(i);
@@ -156,7 +129,7 @@ function Signup() {
     days.push(i);
   }
   return (
-    <div className="wrap-box">
+    <div className="flex-col w-80 mx-auto mt-10">
       <Modal
         isOpen={faceModal}
         onRequestClose={() => setFaceModal(false)}

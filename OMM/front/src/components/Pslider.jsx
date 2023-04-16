@@ -7,36 +7,18 @@ import 'swiper/css/navigation';
 import './Pslider.css';
 import { useLocation } from 'react-router-dom';
 import { EffectCoverflow, Pagination, Navigation } from 'swiper';
-import defaultImg from '../../public/defaultimage.png';
 
 function Pslider({ mainImg, profileImg, name, age }) {
   const location = useLocation();
-  console.log(profileImg);
-  console.log(mainImg);
-  // console.log(imgs);
-  // // let imgs = [];
-  // useEffect(() => {
-  //   if (location.pathname.includes('main') && mainImg) {
-  //     setImages(mainImg);
-  //   }
-  //   console.log(mainImg);
-  // }, []);
-
-  console.log('이름', name);
-  console.log(age);
-  console.log(mainImg);
 
   return (
     <div className="pcontainer">
-      {/* <h1 className="heading">1222</h1> */}
       <Swiper
         effect="coverflow"
         grabCursor
         centeredSlides
         freeMode
-        // loop
         slidesPerView="auto"
-        // spaceBetween={-1500} // 슬라이드 요소간 간격을 20px로 설정
         coverflowEffect={{
           rotate: 0,
           stretch: 0,
@@ -52,10 +34,9 @@ function Pslider({ mainImg, profileImg, name, age }) {
         modules={[EffectCoverflow, Pagination, Navigation]}
         className="swiper_container"
       >
-        {/* 이미지 리스트 들어오는 코드 작성한 후에 아래 주석풀어주세요 */}
         {!mainImg ||
           (mainImg?.length == 0 && location.pathname.includes('main') && (
-            <SwiperSlide className="absolute top-5 flex content-center">
+            <SwiperSlide className="absolute flex content-center">
               <img src="/defaultimage.png" alt="slide_image" />
               <div className="flex absolute bottom-0 max-sm:bottom-[12%] left-[5%] w-fit h-[10%] mx-auto">
                 <div className="flex px-6 h-12 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full my-auto">
@@ -75,7 +56,7 @@ function Pslider({ mainImg, profileImg, name, age }) {
           location.pathname.includes('main') &&
           mainImg.map((img, i) => (
             <SwiperSlide
-              className="absolute top-5 flex content-center "
+              className="absolute flex content-center"
               key={i}
             >
               <img src={`data:image/png;base64,${img}`} alt="slide_image" />

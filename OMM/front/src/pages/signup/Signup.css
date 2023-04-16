@@ -1,5 +1,3 @@
-
-
 .wrap-page {
     width: 360px;
     height: 780px;
@@ -36,9 +34,6 @@
   
   .Modal {
     position: absolute;
-    /* top: ; */
-    /* left: 40px;
-    right: 40px; */
     bottom: 0;
     background-color: white;
     border-radius: 20px;
@@ -70,5 +65,4 @@
     display: inline;
     width: 1.5rem;
     margin-left: 0.1rem;
-  
   }

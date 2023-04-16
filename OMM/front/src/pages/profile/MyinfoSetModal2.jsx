@@ -1,24 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Slider from 'rc-slider';
 import http from '../../api/http';
 import './Profile.css';
 import CloseBtn from '../../assets/CloseBtn.svg';
 
-function MyinfoSetModal2({ setModal }) {
-  const [myinfo, setMoreInfo] = useState({
-    age_min: '',
-    age_max: '',
-    height_min: '',
-    height_max: '',
-    range_min: '',
-    range_max: '',
-    contact_style: '',
-    drinking_style: '',
-    smoking_style: '',
-
-  });
+function MyinfoSetModal2(props) {
+  const { setModal, filterInfomation } = props;
+  const [myinfo, setMoreInfo] = useState(filterInfomation);
   const token = localStorage.getItem('accesstoken');
-  // const data = myinfo;
 
   const changeRange = (e) => {
     let min = e[0];
@@ -69,24 +58,15 @@ function MyinfoSetModal2({ setModal }) {
       },
       data: myinfo,
     })
-      .then((res) => {
-        console.log(res);
-        console.log(data);
+      .then(() => {
         setModal(false);
-        alert('정보가 저장되었습니다.');
         location.reload();
       })
-      .catch((err) => {
-        console.log(err);
-        alert('모든 정보를 입력해 주세요..');
-        // location.reload();
-        console.log('담아줄 데이터', data);
+      .catch(() => {
+        setModal(false);
+        location.reload();
       });
   };
-  useEffect(() => {
-    console.log(myinfo);
-    // console.log(mbti);
-  }, [myinfo]);
 
   return (
     <div className="overflow-y-auto">
@@ -102,17 +82,12 @@ function MyinfoSetModal2({ setModal }) {
       <div className="">
         <h1>선호하는 상대 정보</h1>
         <div className="">
-          <div className="flex justify-between m-3">
-            <span>키</span>
-            <span>키값</span>
-
-          </div>
+          <div className="flex justify-between m-3" />
           <div className="mx-10">
             <Slider
               range
               min={20}
               max={45}
-              // defaultValue={[20, 25]}
               marks={{
                 20: 20,
                 25: 25,
@@ -124,7 +99,6 @@ function MyinfoSetModal2({ setModal }) {
               step={5}
               onChange={(e) => {
                 if (!e[0] || !e[1]) {
-                  console.log('????');
                   alert('최저, 최대 나이를 설정해주세요');
                 } else {
                   setMoreInfo((prevInfo) => ({
@@ -142,7 +116,6 @@ function MyinfoSetModal2({ setModal }) {
                 range
                 min={150}
                 max={200}
-                // defaultValue={[160, 180]}
                 marks={{
                   150: 150,
                   160: 160,
@@ -167,7 +140,6 @@ function MyinfoSetModal2({ setModal }) {
               range
               min={3}
               max={500}
-              // defaultValue={[3, 80]}
               marks={{
                 1: 3,
                 50: 10,
@@ -209,8 +181,8 @@ function MyinfoSetModal2({ setModal }) {
                     className={`peer-checked/drink${index + 1}:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1`}
                   >
                     {style === 'NONE' ? '상관없음'
-                      : style === 'PREFER_NO' ? '안 마셨으면 좋겠음'
-                        : style === 'PREFER_YES' ? '잘 마셨으면 좋겠음' : ''}
+                      : style === 'PREFER_NO' ? '안마셨으면 좋겠음'
+                        : style === 'PREFER_YES' ? '했으면 좋겠음' : ''}
                   </label>
                 </div>
               ))}
@@ -242,11 +214,11 @@ function MyinfoSetModal2({ setModal }) {
                     className={`peer-checked/contact${index + 1}:text-sky-500 font-sans text-[#364C63] font-semibold text-sm ml-1`}
                   >
                     {style === 'NONE' ? '상관없음'
-                      : style === 'PREFER_MSG' ? '카톡 자주'
+                      : style === 'PREFER_MSG' ? '카톡'
                         : style === 'PREFER_CALL' ? '전화'
                           : style === 'PREFER_FACECALL' ? '영상통화'
                             : style === 'NOT_MSG' ? '카톡 별로'
-                              : style === 'PREFER_OFFLINE' ? '직접 만나'
+                              : style === 'PREFER_OFFLINE' ? '만남 선호'
                                 : ''}
                   </label>
                 </div>

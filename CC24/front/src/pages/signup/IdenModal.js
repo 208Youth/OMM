@@ -3,8 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import CloseBtn from '../../assets/CloseBtn.svg';
 import './IdenModal.css';
-// import fastapi from '../../api/fastapi.js';
-import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { idInfo } from '../../store/userSlice';
 import http from '../../api/fastapi';
@@ -23,61 +21,41 @@ function IdenModal({
   const [name, setName] = useState('');
   const [gender, setGender] = useState('');
   const [birthday, setBirthday] = useState('');
+  const [msg, setmessage] = useState('');
   const dispatch = useDispatch();
 
   // fastapi의 idening를 실행시키기 위한 코드
   async function sendImg() {
     const formData = new FormData();
-    // formData.append('pay', JSON.stringify(pay));
-
     formData.append('inputday', inputday);
     formData.append('inputname', inputname);
     formData.append('inputyear', inputyear);
     formData.append('inputmonth', inputmonth);
     formData.append('inputgender', inputgender);
     formData.append('file', imgfile);
-    // for (let key of formData.keys()) {
-    //   console.log(key, formData.get(key))
-    // }
-
-    console.log(formData);
-    // await axios({
     await http({
       method: 'post',
-      // url: 'http://localhost:8000/api/fast/idenimg',
       url: '/idenimg',
       data: formData,
-      // {
-      //   // 데이터의 파일부분에 문제가 있는 것 같다.
-      //   // formData
-      //   // ...formData
-      //   // file:imgfile
-      // },
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     })
       .then((res) => {
-        console.log('fastapi로 이미지를 보냈습니다.');
-        console.log(res.data);
+        setmessage(res.data.message);
         setName(res.data.personalId.name);
         setBirthday(res.data.personalId.birthdate);
         setGender(res.data.personalId.gender);
         dispatch(idInfo(res.data));
       })
       .catch((err) => {
-        console.log(imgfile);
         console.log(err);
         console.log('fastapi로 이미지를 보내는데 실패했습니다.');
-        for (let key of formData.keys()) {
-          console.log(key, formData.get(key));
-        }
       });
   }
 
   const encodeFileToBase64 = (fileBlob) => {
     const reader = new FileReader();
-
     reader.readAsDataURL(fileBlob);
     setFile(fileBlob);
     return new Promise((resolve) => {
@@ -95,19 +73,9 @@ function IdenModal({
   }, [imgfile]);
   const handleFileInputChange = async (event) => {
     const file = event.target.files[0];
-
     await encodeFileToBase64(file);
-
-    // fastapi/iden_img에 이미지를 저장하는 코드를 써야한다.
     const formData = new FormData();
     formData.append('file', file);
-    // const { data } = await fastapi.get('/');
-
-    // fastapi.post('/idenimg', { file: imgfile });
-    // const { data } = await fastapi.post('/ocr');
-
-    // console.log(data); // 처리 결과 출력
-    // const { data } = await fastapi.post('/ocr', { path });
   };
 
   return (
@@ -160,6 +128,7 @@ function IdenModal({
               name,
               gender,
               birthday,
+              msg
             }}
             setIdenModal={setIdenModal}
             setIdenComplete={setIdenComplete}
@@ -171,7 +140,7 @@ function IdenModal({
 }
 
 function Result({ data, setIdenModal, setIdenComplete }) {
-  let { name, gender, birthday } = data;
+  let { name, gender, birthday, msg } = data;
   const strbirth = String(birthday);
   let year = strbirth.slice(0, 4);
   let month = strbirth.slice(5, 7);
@@ -210,11 +179,13 @@ function Result({ data, setIdenModal, setIdenComplete }) {
   if (nameCheck && genderCheck && birthdayCheck) {
     complete = true;
   }
-
   return (
     <div className="max-w-xs mx-auto mt-3">
       <div className="flex mx-5 justify-between">
         <div>
+          <div className='mx-auto text-center'>
+            <p className='ml-12 text-center'>{msg}</p>
+          </div>
           <span className="keys">이름</span>
           <img src="../../../Vector76.png" alt="#" className="inline ml-2" />
         </div>

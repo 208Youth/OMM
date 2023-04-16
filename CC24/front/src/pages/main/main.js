@@ -9,7 +9,6 @@ import 'swiper/css/effect-cards';
 import { EffectCards } from 'swiper';
 import { useState } from 'react';
 import jwt_decode from 'jwt-decode';
-
 import { useNavigate } from 'react-router-dom';
 
 function Main() {
@@ -19,33 +18,15 @@ function Main() {
   const contentList = [];
   let certList = [];
   let personalId = {};
-  // if (localStorage.getItem('IdenVC')) {
-  //   console.log(localStorage.getItem('IdenVC'));
-  //   certList.push('신분증');
-  //   contentList.push(
-  //     contentList.push(`${user.name}
-  //     ${user.year}-${user.month}-${user.day}
-  //     ${user.gender}`),
-  //   );
-  //   // contentList.push(jwt_decode(localStorage.getItem('IdenVC')));
-  // }
   if (localStorage.getItem('IdenVC')) {
-    console.log(localStorage.getItem('IdenVC'));
     certList.push('신분증');
     let decoded = jwt_decode(localStorage.getItem('IdenVC')).vc.credentialSubject;
     contentList.push(null);
-    // let id = `
-    //   ${decoded.personalId.name} ${decoded.personalId.gender == 'FEMALE' ? '여' : '남'}
-    //   ${decoded.personalId.birthdate}
-    // `;
-    // contentList.push(id);
-    // imageUrl = decoded.personalId.imageUrl;
     personalId = decoded.personalId;
-    // contentList.push(jwt_decode(localStorage.getItem('IdenVC')));
   }
   if (localStorage.getItem('VC')) {
-    const aaa = JSON.parse(localStorage.getItem('VC'));
-    aaa.forEach((element) => {
+    const certs = JSON.parse(localStorage.getItem('VC'));
+    certs.forEach((element) => {
       for (let [key, value] of Object.entries(element)) {
         let decoded = jwt_decode(value).vc.credentialSubject;
         let data = '';

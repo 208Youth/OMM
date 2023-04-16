@@ -6,13 +6,12 @@ function SignupComplete() {
   const navigate = useNavigate();
   useEffect(() => {
     setTimeout(() => {
-      // 회원가입 성공후 보낼 메인페이지로 이동
       navigate('/main');
     }, 2000);
   });
 
   return (
-    <div className="bg-white w-[22.5rem] h-[48.75rem] flex">
+    <div className="bg-white w-[22.5rem] h-[48.75rem] flex mx-auto">
       <div className="my-auto mx-auto">
         <img src={ommheart} alt="" className="mx-auto pb-6 w-[10rem]" />
         <div className="text-center text-3xl text-[#364C63] mb-3">

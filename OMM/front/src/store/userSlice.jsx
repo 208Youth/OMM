@@ -35,7 +35,6 @@ const userSlice = createSlice({
       state.lng = action.payload.lng;
       state.highschool = action.payload.highschool;
       state.military = action.payload.military;
-      console.log(state.military);
     },
     moreInfo2: (state, action) => {
       state.my_contact_style = action.payload.my_contact_style;
@@ -61,8 +60,6 @@ const userSlice = createSlice({
     },
   },
 });
-
-// reducer 사용시 import { userInfo } from '../../store/userSlice'; 이렇게 사용
 
 export const { moreInfo1, moreInfo2, moreInfo3, moreInfo4, moreInfo5 } = userSlice.actions;
 export default userSlice;

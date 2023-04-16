@@ -1,7 +1,6 @@
 /* eslint-disable */
 
 import React, { useState } from 'react';
-import axios from 'axios';
 import CloseBtn from '../../assets/CloseBtn.svg';
 import FaceId from '../../assets/FaceId.svg';
 import './FaceRecogModal.css';
@@ -38,7 +37,6 @@ function FaceRecogModal({ setFaceModal, setFaceComplete, name, img }) {
     img(imgfile)
     setFaceModal(false)
   }
-
   // 얼굴 인증 버튼 누른후 인식이 되면 버튼 변경
   return (
     <div className="flex-col mx-auto">

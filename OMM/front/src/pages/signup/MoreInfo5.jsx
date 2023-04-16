@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import http from '../../api/http';
 import { moreInfo5 } from '../../store/userSlice';
@@ -30,39 +30,8 @@ function MoreInfo5({ setStep }) {
       pet: moreinfo.pet,
       MBTI: moreinfo.MBTI,
     };
-    console.log(info);
     dispatch(moreInfo5(info));
   };
-  // const my_info = new FormData();
-  // my_info.append('nickname', user.nickname);
-  // my_info.append('lat', user.lat);
-  // my_info.append('lng', user.lng);
-  // my_info.append('height', user.height);
-  // my_info.append('contact_style', user.my_contact_style);
-  // my_info.append('drinking_style', user.my_drinking_style);
-  // my_info.append('smoking_style', user.my_smoking_style);
-  // my_info.append('military', user.military);
-  // my_info.append('pet', user.pet);
-  // my_info.append('MBTI1', user.MBTI);
-
-
-  // const my_fav = new FormData();
-  // my_fav.append('age_min', user.age_min);
-  // my_fav.append('age_max', user.age_max);
-  // my_fav.append('height_min', user.height_min);
-  // my_fav.append('height_max', user.height_max);
-  // my_fav.append('range_min', user.range_min);
-  // my_fav.append('range_max', user.range_max);
-  // my_fav.append('contact_style', user.contact_style);
-  // my_fav.append('drinking_style', user.drinking_style);
-  // my_fav.append('smoking_style', user.smoking_style);
-
-
-
-  useEffect(() => {
-    console.log(moreinfo);
-    console.log(user);
-  }, [moreinfo]);
 
   async function sendMyInfo() {
     const myInfo = {
@@ -77,21 +46,18 @@ function MoreInfo5({ setStep }) {
       pet: moreinfo.pet,
       MBTI: moreinfo.MBTI,
     };
-    console.log('보낼 내정보', myInfo);
     await http({
       method: 'post',
       url: '/member/info',
       data: myInfo,
       headers: {
-        // Authorization: import.meta.env.VITE_TOKEN,
         Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => {
-        console.log(res.data);
+        console.log(res);
       })
       .catch((err) => {
-        // console.log(user);
         console.log(err);
       });
   }
@@ -109,18 +75,16 @@ function MoreInfo5({ setStep }) {
       smoking_style: user.smoking_style,
       military: user.military,
     };
-    console.log('보낼 선호정보', myFav);
     await http({
       method: 'post',
       url: '/member/filtering',
       data: myFav,
       headers: {
-        // Authorization: import.meta.env.VITE_TOKEN,
         Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => {
-        console.log(res.data);
+        console.log(res);
         next();
       })
       .catch((err) => {
@@ -128,7 +92,7 @@ function MoreInfo5({ setStep }) {
       });
   }
   return (
-    <div className="bg-white w-[22.5rem] h-[48.75rem]">
+    <div className="bg-white w-[22.5rem] h-[48.75rem] mx-auto">
       <img
         src="/heart-step-5.svg"
         alt=""

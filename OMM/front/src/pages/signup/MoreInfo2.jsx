@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { moreInfo2 } from '../../store/userSlice';
 
 function MoreInfo2({ setStep }) {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
   const [moreinfo, setMoreInfo] = useState({
     my_drinking_style: '',
     my_smoking_style: '',
@@ -15,9 +14,9 @@ function MoreInfo2({ setStep }) {
   };
   const next = () => {
     if (
-      moreinfo.my_drinking_style &&
-      moreinfo.my_smoking_style &&
-      moreinfo.my_contact_style
+      moreinfo.my_drinking_style
+      && moreinfo.my_smoking_style
+      && moreinfo.my_contact_style
     ) {
       setStep(3);
     } else {
@@ -30,16 +29,11 @@ function MoreInfo2({ setStep }) {
       my_smoking_style: moreinfo.my_smoking_style,
       my_contact_style: moreinfo.my_contact_style,
     };
-    console.log(info);
     dispatch(moreInfo2(info));
   };
-  useEffect(() => {
-    console.log(moreinfo);
-    console.log(user);
-  }, [moreinfo]);
 
   return (
-    <div className="bg-white w-[22.5rem] h-[48.75rem]">
+    <div className="bg-white w-[22.5rem] h-[48.75rem] mx-auto">
       <img
         src="/heart-step-2.svg"
         alt=""

@@ -10,8 +10,10 @@ function ChatRoom({ chat, moveTo }) {
     const compareTime = new Date(chat.lastMsgTime);
     let timeDiff = now.getTime() - compareTime.getTime() - 9 * 60 * 60 * 1000; // 밀리초 단위의 차이
     let minutesDiff = Math.floor(timeDiff / 1000 / 60); // 분 단위의 차이
+    console.log(minutesDiff)
     if (minutesDiff >= 60) {
       const hourDiff = Math.floor(minutesDiff / 60);
+      setLasttime(`${hourDiff}시간 전`);
       if (hourDiff >= 24 && hourDiff <= 72) {
         const dayDiff = Math.floor(hourDiff / 24);
         setLasttime(`${dayDiff}일 전`);
@@ -21,17 +23,12 @@ function ChatRoom({ chat, moveTo }) {
         const day = compareTime.getDay();
         setLasttime(`${year}.${month}.${day}`);
       }
-      setLasttime(`${hourDiff}시간 전`);
     } else if (minutesDiff) {
       setLasttime(`${minutesDiff}분 전`);
     } else {
       setLasttime('방금 전');
     }
-    // console.log(now); // Thu Mar 30 2023 01:19:35 GMT+0900
-    // 날짜비교 후 setLasttime 변경
-    // 오늘 -> 몇 초(1분 이내), 몇 분(1시간 이내), 몇 시간(24시간 이내)
-    // 어제
-    // 3일 전이상 -> 날짜로 표시 (올해 이면 월, 일 / 올해가 아니면 년, 월, 일)
+
     const read = chat.msgs - chat.myNotReadIndex;
     if (read === 0) {
       setNotRead('0');
@@ -56,8 +53,6 @@ function ChatRoom({ chat, moveTo }) {
         ) : (
           <img src={ommheart} alt="사진" />
         )}
-        {/* <img src={`data:image/png;base64,${chat.other.image}`} alt="사진" /> */}
-        {/* <img src={Img} alt="사진" /> */}
       </div>
       <div className="self-center w-40 ml-3">
         <div className="text-xs mb-1">{chat.other.nickname}</div>

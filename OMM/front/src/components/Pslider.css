@@ -7,9 +7,9 @@
 }
 .swiper-slide {
 	text-align:center;
-	display:flex; /* 내용을 중앙정렬 하기위해 flex 사용 */
-	align-items:center; /* 위아래 기준 중앙정렬 */
-	justify-content:center; /* 좌우 기준 중앙정렬 */
+	display:flex;
+	align-items:center;
+	justify-content:center;
 }
 .swiper-slide > img {
   -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);

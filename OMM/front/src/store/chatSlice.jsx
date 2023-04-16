@@ -15,7 +15,5 @@ const chatSlice = createSlice({
   },
 });
 
-// reducer 사용시 import { userInfo } from '../../store/userSlice'; 이렇게 사용
-
 export const { chatInfo } = chatSlice.actions;
 export default chatSlice;

@@ -21,9 +21,6 @@
 
 .BottomModal {
   position: absolute;
-  /* top: ; */
-  /* left: 40px;
-  right: 40px; */
   bottom: 0;
   background-color: rgba(242, 234, 242, 1);
   border-radius: 20px;
