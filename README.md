@@ -296,8 +296,6 @@ OMM : [https://j8c2081.p.ssafy.io](https://j8c2081.p.ssafy.io)
 
 </br>
 
-![OMM_report.gif](images/OMM_report.gif)
-
 </br>
 
 - 악성 유저일 시 신고
