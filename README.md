@@ -223,9 +223,6 @@ OMM : [https://j8c2081.p.ssafy.io](https://j8c2081.p.ssafy.io)
     - 본인을 나타낼 수 있는 사진 여러 장 업로드 가능
     - CC24에서 불러온 인증서 조회 가능
 
-</br>
-
-![OMM_myprofile_pic.gif](images/OMM_myprofile_pic.gif)
 
 </br>
 
